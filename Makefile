@@ -13,22 +13,21 @@ SRCEXT			= c
 OBJEXT			= o
 
 CFLAGS			= -Wall -Wextra -Werror -g
-POST_CFLAGS		= -lreadline
+POST_CFLAGS		= 
 INCDEP			= -I$(INCDIR)
 LIBFT_DIR		= libft
 LIBFT_FILE		= libft.a
 LIBFT			= $(LIBFT_DIR)/$(LIBFT_FILE)
 INCLIBFTDEP 	= -I$(LIBFT_DIR)/$(INCDIR)
+OS := $(shell uname -s)
 
-SOURCES			=	src/main.c \
-					src/parser/parser.c \
-					src/parser/tokens.c \
-					src/data/data.c \
-					src/data/free_all.c \
-					src/data/token_type.c \
-					src/data/tokens.c \
+ifeq ($(OS), Linux)
+    POST_CFLAGS := -lreadline
+endif
 
-OBJECTS			= $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+SOURCES     = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+
+OBJECTS		= $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
 all: directories $(TARGETDIR)/$(NAME)
 

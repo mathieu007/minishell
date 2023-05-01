@@ -3,22 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/04/29 17:31:21 by math             ###   ########.fr       */
+/*   Updated: 2023/05/01 15:26:46 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*new_token(void)
+t_token	*new_token_after(t_token *curr)
 {
 	t_token	*token;
 
 	token = malloc(sizeof(t_token));
+	token->value == NULL;
+	token->next = NULL;
 	if (token == NULL)
 		return (NULL);
+	if (curr != NULL)
+		curr->next = token;
+		token->prev = curr;
 	return (token);
 }
 
@@ -28,7 +33,8 @@ inline t_token	*get_tokens(void)
 
 	if (token == NULL)
 	{
-		token = new_token();
+		token = new_token(NULL, NULL);
+		get_data()->last_token = token;
 		return (token);
 	}		
 	return (&token[0]);
@@ -50,29 +56,14 @@ static void	*_set_token(t_token *token, char *token_value, int32_t char_pos,
 
 t_token	*add_token(char *token_value, int32_t char_pos, t_token_type type)
 {
-	t_token		*token;
+	t_token		*last;
 
-	token = get_tokens();
-	if (token == NULL)
-		return (NULL);
-	if (token->value == NULL)
-	{
-		_set_token(token, token_value, char_pos, type);
-		token->prev = NULL;
-		get_data()->token_count++;
-	}
-	while (token->next != NULL)
-		token = token->next;
-	token->next = new_token();
-	if (token->next == NULL)
-		return (NULL);
-	_set_token(token->next, token_value, char_pos, type);
-	token->prev = token->next;
+	last = get_data()->last_token;
+	if (last->prev != NULL)
+		last = new_token_after(last);
+	increment_counter(type);
+	_set_token(last, &token_value[char_pos], char_pos, type);
 	get_data()->token_count++;
-	return (token->next);
-}
-
-t_token	*remove_token(t_token *tokens)
-{
-	
+	get_data()->last_token = last;
+	return (last);
 }

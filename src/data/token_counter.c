@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   token_counter.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/04/30 08:29:14 by math             ###   ########.fr       */
+/*   Updated: 2023/05/01 15:20:43 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-int32_t	*get_token_counter(void)
+inline int32_t	*get_token_counter(void)
 {
 	static int32_t	counter[255 * 255];
 
@@ -37,27 +37,33 @@ int32_t	*reset_token_counter(void)
 	return (counter);
 }
 
-int32_t	get_token_type_count(t_token_type type)
+inline int32_t	get_token_type_count(t_token_type type)
 {
 	int32_t	*counter;
 
+	if (type == TK_UNKNOWN)
+		return (0);
 	counter = get_token_counter();
 	return (counter[(int32_t) type]);
 }
 
-int32_t	increment_counter(t_token_type type)
+inline int32_t	increment_counter(t_token_type type)
 {
 	int32_t	*counter;
 
+	if (type == TK_UNKNOWN)
+		return (0);
 	counter = get_token_counter();
 	counter[(int32_t) type]++;
 	return (counter[(int32_t) type]);
 }
 
-int32_t	decrement_counter(t_token_type type)
+inline int32_t	decrement_counter(t_token_type type)
 {
 	int32_t	*counter;
 
+	if (type == TK_UNKNOWN)
+		return (0);
 	counter = get_token_counter();
 	counter[(int32_t) type]--;
 	return (counter[(int32_t) type]);

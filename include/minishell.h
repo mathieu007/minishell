@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/01 06:52:58 by math             ###   ########.fr       */
+/*   Updated: 2023/05/01 16:40:56 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <unistd.h>
+
+# define BUILTINS_EXPORT "export"
+# define BUILTINS_UNSET "unset"
+# define BUILTINS_ENV "env"
+# define BUILTINS_EXIT "exit"
+# define BUILTINS_PWD "pwd"
+# define BUILTINS_CD "cd"
+# define BUILTINS_ECHO "echo"
 
 /// @brief 
 /// TK_CMD ls, cd, grep...,
@@ -50,7 +58,7 @@
 typedef enum e_token_type
 {
 	TK_UNKNOWN = 0,
-	TK_CMD = 27,
+	TK_CMD = -1,
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -62,6 +70,7 @@ typedef enum e_token_type
 	TK_DOUBLEQUOTE = (int32_t)'"',
 	TK_SINGLEQUOTE = (int32_t)'\'',
 	TK_DOLLAR_SIGN = (int32_t)'$',
+	TK_LAST_PIPE_EXIT = TK_DOLLAR_SIGN * '?' + '?',
 	TK_BACKTICK = (int32_t)'`',
 	TK_SEMICOLON = (int32_t)';',
 	TK_CURLYBRACES_OPEN = (int32_t)'{',
@@ -94,7 +103,7 @@ typedef enum e_escaped_char
 	ESC_VTAB = '\v',
 	ESC_CARRIAGE_RETURN = '\r',
 	ESC_FORM_FEED = '\f',
-	ESC_HEX_DIGIT = '\x',
+	ESC_HEX_DIGIT = '\x0',
 	ESC_BACKSPACE = '\b',
 	ESC_MINUS = '-',
 	ESC_PLUS = '+',
@@ -115,25 +124,25 @@ typedef enum e_continuation_char
 	CONTC_DOUBLE_PIPE = CONTC_PIPE * CONTC_PIPE + CONTC_PIPE
 }			t_continuation_char;
 
-/// @brief
-typedef enum e_builtin_cmd
-{
-	BUILTIN_CD,
-	BUILTIN_ECHO,
-	BUILTIN_ALIAS,
-	BUILTIN_EXPORT,
-	BUILTIN_PWD,
-	BUILTIN_ENV,
-	BUILTIN_HISTORY,
-	BUILTIN_EXIT,
-	BUILTIN_SOURCE,
-	BUILTIN_SET,
-	BUILTIN_UNSET,
-	BUILTIN_TYPE
-}				t_builtin_cmd;
+// /// @brief
+// typedef enum e_builtin_cmd
+// {
+// 	BUILTIN_CD,
+// 	BUILTIN_ECHO,
+// 	BUILTIN_ALIAS,
+// 	BUILTIN_EXPORT,
+// 	BUILTIN_PWD,
+// 	BUILTIN_ENV,
+// 	BUILTIN_HISTORY,
+// 	BUILTIN_EXIT,
+// 	BUILTIN_SOURCE,
+// 	BUILTIN_SET,
+// 	BUILTIN_UNSET,
+// 	BUILTIN_TYPE
+// }				t_builtin_cmd;
 
-/// @brief the type of command sequences
-/// CMD_PIPE = command1 | command2
+/// @brief the type of "command sequences"
+/// CMD_PIPE = command1 | command2\n
 /// CMD_SEQUENTIAL = command1; command2;
 /// CMD_LOG_AND = command1 && command2
 /// CMD_LOG_OR = command1 || command2
@@ -142,7 +151,8 @@ typedef enum e_builtin_cmd
 /// CMD_INPUT_REDIRECT = command < input_file
 /// CMD_OUTPUT_REDIRECT = command > output_file
 /// CMD_APPEND_OUTPUT_REDIRECT = command >> output_file
-/// CMD_GROUPING = (command1; command2) or { command1; command2; }
+/// CMD_GROUPING_PARENTHESE = ( command1; command2 )
+/// CMD_GROUPING_CURLYBRACE = { command1; command2; }
 typedef enum e_cmd_seq
 {
 	CMD_NONE,
@@ -155,7 +165,20 @@ typedef enum e_cmd_seq
 	CMD_SEQUENTIAL
 }			t_cmd_seq;
 
-/// @brief
+typedef struct s_redirect
+{
+	int32_t		fd_in;
+	int32_t		fd_out;
+	char		*file_in;
+	char		*file_out;
+}				t_redirect;
+
+typedef struct s_pipe
+{
+	int32_t		fd_in;
+	int32_t		fd_out;
+}				t_pipe;
+
 typedef struct s_cmd
 {
 	struct s_cmd	*next;
@@ -164,11 +187,13 @@ typedef struct s_cmd
 	char			**args;
 	char			**options;
 	bool			is_builtin;
+	bool			is_grouping;
 	t_cmd_seq		cmd_seq_type;
+	t_pipe			*pipe;
+	t_redirect		*redirect;
 	pid_t			pid;
 }				t_cmd;
 
-/// @brief
 typedef struct s_token
 {
 	struct s_token	*next;
@@ -181,7 +206,6 @@ typedef struct s_token
 	t_token_type	type;
 }				t_token;
 
-
 typedef struct s_data
 {
 	int32_t			argc;
@@ -189,6 +213,7 @@ typedef struct s_data
 	char			**env;
 	char			**paths;
 	int32_t			token_count;
+	t_token			*last_token;
 }				t_data;
 
 /// @brief all the data functions
@@ -200,12 +225,39 @@ t_token_type	get_token_type(char *str);
 int32_t			*get_token_counter(void);
 t_token			*remove_token(t_token *tokens);
 int32_t			get_token_type_count(t_token_type type);
+t_token			*new_token_after(t_token *curr);
+char			**get_builtins_cmd(void);
 
-bool			is_escaped_single_quote(t_token *tokens);
+/// @brief simple helpers methods.
+/// @param str 
+/// @return 
+bool			is_escaped_single_quote(char *str, int32_t i);
+bool			is_escaped_double_quote(char *str, int32_t i);
+bool			is_opening_single_quote(char *str, int32_t i);
+bool			is_closing_single_quote(char *str, int32_t i);
+bool			is_opening_double_quote(char *str, int32_t i);
+bool			is_closing_double_quote(char *str, int32_t i);
+bool			is_opening_parenthese(char *str, int32_t i);
+bool			is_closing_parenthese(char *str, int32_t i);
+bool			is_opening_curlybrace(char *str, int32_t i);
+bool			is_closing_curlybrace(char *str, int32_t i);
+
+int32_t			tokenize_curlybrace(char *str, int32_t i);
+int32_t			tokenize_parenthese(char *str, int32_t i);
+int32_t			tokenize_double_quote(char *str, int32_t i);
+int32_t			tokenize_single_quote(char *str, int32_t i);
 
 int32_t			increment_counter(t_token_type type);
 int32_t			decrement_counter(t_token_type type);	
 
 void			*free_all(void);
+void			*free_all_and_exit(void);
+t_pipe			*new_pipe(t_cmd *cmd);
+void			*free_pipe(t_cmd *cmd);
+t_redirect		*new_redirect(t_cmd *cmd);
+void			*free_redirect(t_cmd *cmd);
+t_cmd			*new_cmd_after(t_cmd *curr);
+t_cmd			*get_cmds(void);
+void			*free_cmd(t_cmd *cmd);
 
 #endif
