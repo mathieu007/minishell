@@ -1,0 +1,12 @@
+1. cd: Change the current working directory.
+2. echo: Display a message or the value of a variable.
+3. alias: Create an alias for a command or series of commands.
+4. export: Set the value of an environment variable for use by child processes.
+5. unset: Remove the value of an environment variable.
+6. pwd: Display the current working directory.
+7. history: Display a list of recently executed commands.
+8. exit: Exit the shell.
+9. source: Execute a shell script in the current shell environment.
+10. set: Set various shell options and parameters.
+11. unset: Remove a shell variable or function.
+12. type: Display information about a command, including whether it is a built-in or external command.

@@ -1,0 +1,21 @@
+- `"` (double quote): to include a literal `"` character inside a double-quoted string
+- `\` (backslash): to include a literal `\` character inside a double-quoted string
+- `$` (dollar sign): to include a literal `$` character inside a double-quoted string without triggering variable expansion
+- ``` (backtick): to include a literal ``` character inside a double-quoted string
+- newline: to include a newline character inside a double-quoted string
+- tab: to include a tab character inside a double-quoted string
+- vertical tab: to include a vertical tab character inside a double-quoted string
+- carriage return: to include a carriage return character inside a double-quoted string
+- form feed: to include a form feed character inside a double-quoted string
+- hex digits: to include a character specified by its hexadecimal value, in the form `\xhh`
+
+For example, the command `echo "Hello, \"world\"!"` would output `Hello, "world"!`. The backslash before the `"` character escaped it, allowing it to be included as a literal within the double-quoted string.
+
+Similarly, the command `echo "First line.\nSecond line."` would output:
+
+```
+First line.
+Second line.
+```
+
+The `\n` sequence is interpreted as a newline character, which causes the output to be split onto two lines.
