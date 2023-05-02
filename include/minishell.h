@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/01 16:40:56 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/02 15:47:22 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,16 @@ typedef enum e_token_type
 	TK_GREATGREAT = TK_GREAT * TK_GREAT + TK_GREAT,
 	TK_LESSLESS = TK_LESS * TK_LESS + TK_LESS,
 	TK_OR = TK_PIPE * TK_PIPE + TK_PIPE,
-	TK_AND = TK_AMPERSAND * TK_AMPERSAND + TK_AMPERSAND,
+	TK_AND = '&' * '&' + '&',
 	TK_DOUBLEQUOTE = (int32_t)'"',
 	TK_SINGLEQUOTE = (int32_t)'\'',
 	TK_DOLLAR_SIGN = (int32_t)'$',
 	TK_LAST_PIPE_EXIT = TK_DOLLAR_SIGN * '?' + '?',
-	TK_BACKTICK = (int32_t)'`',
 	TK_SEMICOLON = (int32_t)';',
-	TK_CURLYBRACES_OPEN = (int32_t)'{',
-	TK_CURLYBRACES_CLOSE = (int32_t)'}',
-	TK_PARENTHESES_OPEN = (int32_t)'(',
-	TK_PARENTHESES_CLOSE = (int32_t)')',
+	// TK_CURLYBRACES_OPEN = (int32_t)'{',
+	// TK_CURLYBRACES_CLOSE = (int32_t)'}',
+	// TK_PARENTHESES_OPEN = (int32_t)'(',
+	// TK_PARENTHESES_CLOSE = (int32_t)')',
 	TK_BACKSLASH = (int32_t)'\\',
 	TK_VAR_ASSIGN = (int32_t)'=',
 	TK_WILDCARD = (int32_t)'*'
@@ -124,23 +123,6 @@ typedef enum e_continuation_char
 	CONTC_DOUBLE_PIPE = CONTC_PIPE * CONTC_PIPE + CONTC_PIPE
 }			t_continuation_char;
 
-// /// @brief
-// typedef enum e_builtin_cmd
-// {
-// 	BUILTIN_CD,
-// 	BUILTIN_ECHO,
-// 	BUILTIN_ALIAS,
-// 	BUILTIN_EXPORT,
-// 	BUILTIN_PWD,
-// 	BUILTIN_ENV,
-// 	BUILTIN_HISTORY,
-// 	BUILTIN_EXIT,
-// 	BUILTIN_SOURCE,
-// 	BUILTIN_SET,
-// 	BUILTIN_UNSET,
-// 	BUILTIN_TYPE
-// }				t_builtin_cmd;
-
 /// @brief the type of "command sequences"
 /// CMD_PIPE = command1 | command2\n
 /// CMD_SEQUENTIAL = command1; command2;
@@ -187,7 +169,7 @@ typedef struct s_cmd
 	char			**args;
 	char			**options;
 	bool			is_builtin;
-	bool			is_grouping;
+	// bool			is_grouping;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
 	t_redirect		*redirect;
@@ -201,16 +183,16 @@ typedef struct s_token
 	char			*value;
 	int32_t			len;
 	int32_t			index;
-	int32_t			start_pos;
-	int32_t			end_pos;
+	int32_t			pos;
 	t_token_type	type;
 }				t_token;
 
 typedef struct s_data
 {
 	int32_t			argc;
+	char			*cmds;
 	char			**argv;
-	char			**env;
+	char			**envp;
 	char			**paths;
 	int32_t			token_count;
 	t_token			*last_token;
@@ -248,7 +230,11 @@ int32_t			tokenize_double_quote(char *str, int32_t i);
 int32_t			tokenize_single_quote(char *str, int32_t i);
 
 int32_t			increment_counter(t_token_type type);
-int32_t			decrement_counter(t_token_type type);	
+int32_t			decrement_counter(t_token_type type);
+
+char			**parse_env(char **envp, char *env_name);
+
+void			close_pipe_fds(t_cmd *cmd);
 
 void			*free_all(void);
 void			*free_all_and_exit(void);

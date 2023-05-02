@@ -29,6 +29,10 @@
 		"__functional_03": "c",
 		"__split_buffer": "c",
 		"sstream": "c",
-		"chrono": "c"
-	}
+		"chrono": "c",
+		"minishell.h": "c",
+		"libft.h": "c"
+	},
+	"C_Cpp.default.intelliSenseMode": "macos-clang-x64",
+	"C_Cpp.intelliSenseEngineFallback": "enabled"
 }

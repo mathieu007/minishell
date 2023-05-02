@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/01 15:26:46 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/02 15:43:51 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	*_set_token(t_token *token, char *token_value, int32_t char_pos,
 {
 	if (token == NULL)
 		return (NULL);
-	token->start_pos = char_pos;
+	token->pos = char_pos;
 	token->index = get_data()->token_count;
 	token->len = ft_strlen(token_value);
 	token->next = NULL;

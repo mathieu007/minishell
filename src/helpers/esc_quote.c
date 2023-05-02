@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/01 10:44:42 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/02 09:12:26 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 /// @brief check if str is an escaped single quote: \'
 /// @param tokens 
 /// @return 
-inline bool	is_escaped_single_quote(char *str)
+inline bool	is_escaped_single_quote(char *str, int32_t i)
 {
-	if (!str || !*str || !str[1])
+	if (!str || !str[i] || !str[i + 1])
 		return (false);
-	return (*str == '\\' && str[1] == '\'');
+	return (str[i] == '\\' && str[i + 1] == '\'');
 }
 
 /// @brief check if str is an escaped double quote: \"
 /// @param tokens 
 /// @return 
-inline bool	is_escaped_double_quote(char *str)
+inline bool	is_escaped_double_quote(char *str, int32_t i)
 {
-	if (!str || !*str || !str[1])
+	if (!str || !str[i] || !str[i + 1])
 		return (false);
-	return (*str == '\\' && str[1] == '\"');
+	return (str[i] == '\\' && str[i + 1] == '\"');
 }

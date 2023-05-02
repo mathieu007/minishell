@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/01 15:28:08 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/02 13:32:21 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void	tokenize(char *str)
 			i += tokenize_single_quote(str, i);
 		else if (is_opening_double_quote(str, i))
 			i += tokenize_double_quote(str, i);
-		else if (is_opening_parenthese(str, i))
-			i += tokenize_parenthese(str, i);
-		else if (is_opening_curlybrace(str, i))
-			i += tokenize_curlybrace(str, i);
+		// else if (is_opening_parenthese(str, i))
+		// 	i += tokenize_parenthese(str, i);
+		// else if (is_opening_curlybrace(str, i))
+		// 	i += tokenize_curlybrace(str, i);
 		else if (token_type != TK_UNKNOWN)
 			add_token(str, i, token_type);
 		i++;
