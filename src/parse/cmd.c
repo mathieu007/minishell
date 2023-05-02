@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/02 16:19:24 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/02 16:20:07 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	is_end_of_cmd(t_token_type type, t_token *token)
 	return (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
 			|| type == TK_AMPERSAND || type == TK_GREATGREAT 
 			|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE
-			|| type == TK
+			|| type == TK_SINGLEQUOTE
 			|| token->next == NULL);
 }
 
