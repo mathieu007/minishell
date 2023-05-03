@@ -1,35 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirect.c                                         :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/02 09:07:10 by mroy             ###   ########.fr       */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/05/03 08:17:19 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_redirect	*new_redirect(t_cmd *cmd)
+char	**get_builtins_cmd(void)
 {
-	t_redirect	*redir;
+	static char	*builtins[8];
 
-	redir = malloc(sizeof(t_redirect));
-	if (redir == NULL)
-		return (NULL);
-	redir->fd_in = -1;
-	redir->fd_out = -1;
-	cmd->redirect = redir;
-	return (redir);
-}
-
-void	*free_redirect(t_cmd *cmd)
-{
-	if (cmd->redirect != NULL)
-		free(cmd->redirect);
-	cmd->redirect = NULL;
-	cmd = cmd->next;
-	return (NULL);
+	if (builtins == NULL)
+	{
+		builtins[0] = BUILTINS_EXPORT;
+		builtins[1] = BUILTINS_UNSET;
+		builtins[2] = BUILTINS_ENV;
+		builtins[3] = BUILTINS_EXIT;
+		builtins[4] = BUILTINS_PWD;
+		builtins[5] = BUILTINS_CD;
+		builtins[6] = BUILTINS_ECHO;
+		builtins[7] = NULL;
+	}
+	return (&builtins[0]);
 }

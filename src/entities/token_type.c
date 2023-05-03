@@ -6,13 +6,13 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/01 15:45:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/03 08:04:08 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token_type	*get_tokens_lookup_table(void)
+static t_token_type	*get_tokens_lookup_table(void)
 {
 	static t_token_type	token_types[255 * 255];
 	static int32_t		i;
@@ -27,8 +27,6 @@ t_token_type	*get_tokens_lookup_table(void)
 	}
 	return (&token_types[0]);
 }
-
-
 
 t_token_type	get_token_type(char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/02 15:47:22 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/03 15:47:51 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define BUILTINS_EXPORT "export"
 # define BUILTINS_UNSET "unset"
@@ -56,7 +57,7 @@
 ///	TK_VAR_ASSIGN =,
 ///	TK_BACKSLASH \,
 typedef enum e_token_type
-{
+{ 
 	TK_UNKNOWN = 0,
 	TK_CMD = -1,
 	TK_GREAT = (int32_t)'>',
@@ -166,10 +167,10 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 	char			*name;
+	char			*full_name;
 	char			**args;
 	char			**options;
 	bool			is_builtin;
-	// bool			is_grouping;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
 	t_redirect		*redirect;
@@ -200,7 +201,7 @@ typedef struct s_data
 
 /// @brief all the data functions
 t_data			*get_data(void);
-t_token			*get_tokens(void);
+t_token			*get_first_token(void);
 t_token			*add_token(char *token_value, int32_t char_pos,
 					t_token_type type);
 t_token_type	get_token_type(char *str);
@@ -211,8 +212,7 @@ t_token			*new_token_after(t_token *curr);
 char			**get_builtins_cmd(void);
 
 /// @brief simple helpers methods.
-/// @param str 
-/// @return 
+
 bool			is_escaped_single_quote(char *str, int32_t i);
 bool			is_escaped_double_quote(char *str, int32_t i);
 bool			is_opening_single_quote(char *str, int32_t i);
@@ -223,6 +223,13 @@ bool			is_opening_parenthese(char *str, int32_t i);
 bool			is_closing_parenthese(char *str, int32_t i);
 bool			is_opening_curlybrace(char *str, int32_t i);
 bool			is_closing_curlybrace(char *str, int32_t i);
+char			*join_free2(const char *path, char *path2);
+char			*join_free1(char *path, const char *path2);
+char			*join(const char *path, const char *path2);
+char			*join_free(char *path, char *path2);
+bool			file_is_exec(char *absolute_path_to_file);
+/// get full path from relative path.
+char			*get_full_path(char *rel_path);
 
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);
@@ -233,6 +240,7 @@ int32_t			increment_counter(t_token_type type);
 int32_t			decrement_counter(t_token_type type);
 
 char			**parse_env(char **envp, char *env_name);
+t_cmd			*parse_cmds(t_token *token);
 
 void			close_pipe_fds(t_cmd *cmd);
 

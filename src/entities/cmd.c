@@ -1,35 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize.c                                         :+:      :+:    :+:   */
+/*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 13:35:35 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/03 08:17:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	tokenize(char *str)
+t_cmd	*new_cmd_after(t_cmd *curr)
 {
-	int32_t			i;
-	t_token_type	token_type;
-	int32_t			len;
-	bool			in_str_literal;
+	t_cmd	*new;
 
-	i = 0;
-	len = ft_strlen(str);
-	while (str[i] < len)
+	new = malloc(sizeof(t_cmd));
+	if (new == NULL)
+		return (NULL);
+	new->next = NULL;
+	if (curr)
 	{
-		token_type = get_token_type(str);
-		if (is_opening_single_quote(str, i))
-			i += tokenize_single_quote(str, i);
-		else if (is_opening_double_quote(str, i))
-			i += tokenize_double_quote(str, i);
-		else if (token_type != TK_UNKNOWN)
-			add_token(str, i, token_type);
-		i++;
+		if (curr->next)
+			new->next = curr->next;
+		curr->next = new;
+		new->prev = curr;
 	}
+	return (new);
+}
+
+inline t_cmd	*get_cmds(void)
+{
+	static t_cmd	*cmd;
+
+	if (cmd == NULL)
+	{
+		cmd = new_cmd_after(NULL);
+		return (cmd);
+	}		
+	return (&cmd[0]);
+}
+
+void	*free_cmd(t_cmd *cmd)
+{
+	free_pipe(cmd);
+	free_redirect(cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/02 15:43:51 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/03 13:49:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,24 @@
 
 t_token	*new_token_after(t_token *curr)
 {
-	t_token	*token;
+	t_token	*new;
 
-	token = malloc(sizeof(t_token));
-	token->value == NULL;
-	token->next = NULL;
-	if (token == NULL)
+	new = malloc(sizeof(t_token));
+	if (new == NULL)
 		return (NULL);
+	new->value = NULL;
+	new->next = NULL;
 	if (curr != NULL)
-		curr->next = token;
-		token->prev = curr;
-	return (token);
+	{
+		if (curr->next)
+			new->next = curr->next;
+		curr->next = new;
+		new->prev = curr;		
+	}	
+	return (new);
 }
 
-inline t_token	*get_tokens(void)
+inline t_token	*get_first_token(void)
 {
 	static t_token	*token;
 
@@ -37,6 +41,15 @@ inline t_token	*get_tokens(void)
 		get_data()->last_token = token;
 		return (token);
 	}		
+	return (&token[0]);
+}
+/// @brief TODO
+/// @param  
+/// @return 
+inline t_token	*get_last_token(void)
+{
+	t_token	*token;
+	
 	return (&token[0]);
 }
 
