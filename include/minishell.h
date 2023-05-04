@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 15:47:51 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/03 18:34:51 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@
 # define BUILTINS_PWD "pwd"
 # define BUILTINS_CD "cd"
 # define BUILTINS_ECHO "echo"
+
+# ifndef PATH_MAX
+
+# define PATH_MAX 1024
+
+#endif
+
 
 /// @brief 
 /// TK_CMD ls, cd, grep...,
@@ -229,7 +236,7 @@ char			*join(const char *path, const char *path2);
 char			*join_free(char *path, char *path2);
 bool			file_is_exec(char *absolute_path_to_file);
 /// get full path from relative path.
-char			*get_full_path(char *rel_path);
+char			*get_full_path(char *cmd_name);
 
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);

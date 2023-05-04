@@ -10,6 +10,7 @@ SRC	=	src/alloc_pool/data_pool.c	\
 		src/ft_fgetc.c	\
 		src/ft_fopen.c	\
 		src/ft_isalnum.c	\
+		src/ft_strn_right_cmp.c	\
 		src/ft_isnum.c	\
 		src/ft_isdouble.c	\
 		src/ft_isalpha.c	\

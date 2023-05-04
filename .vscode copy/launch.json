@@ -1,0 +1,15 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "minishell",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/bin/minishell",
+			"args": [],
+			"environment": [{ "name": "config", "value": "Debug" }],
+			"cwd": "${workspaceFolder}",
+			"preLaunchTask": "minishell"
+		  }
+	]
+}
