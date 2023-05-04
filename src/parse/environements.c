@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 18:30:14 by math             ###   ########.fr       */
+/*   Updated: 2023/05/03 20:34:33 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**parse_env(char **envp, char *env_name)
 {
 	char	**env;
 	int32_t	len;
-	char 	**split_env;
+	char	**split_env;
 
 	len = ft_strlen(env_name);
 	split_env = NULL;

@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 18:34:51 by math             ###   ########.fr       */
+/*   Updated: 2023/05/03 20:50:51 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@
 ///	TK_VAR_ASSIGN =,
 ///	TK_BACKSLASH \,
 typedef enum e_token_type
-{ 
+{
 	TK_UNKNOWN = 0,
 	TK_CMD = -1,
 	TK_GREAT = (int32_t)'>',
@@ -76,14 +76,12 @@ typedef enum e_token_type
 	TK_OR = TK_PIPE * TK_PIPE + TK_PIPE,
 	TK_AND = '&' * '&' + '&',
 	TK_DOUBLEQUOTE = (int32_t)'"',
+	TK_DASH = (int32_t)'-',
+	TK_DASHDASH = TK_DASH * TK_DASH + TK_DASH,
 	TK_SINGLEQUOTE = (int32_t)'\'',
 	TK_DOLLAR_SIGN = (int32_t)'$',
 	TK_LAST_PIPE_EXIT = TK_DOLLAR_SIGN * '?' + '?',
 	TK_SEMICOLON = (int32_t)';',
-	// TK_CURLYBRACES_OPEN = (int32_t)'{',
-	// TK_CURLYBRACES_CLOSE = (int32_t)'}',
-	// TK_PARENTHESES_OPEN = (int32_t)'(',
-	// TK_PARENTHESES_CLOSE = (int32_t)')',
 	TK_BACKSLASH = (int32_t)'\\',
 	TK_VAR_ASSIGN = (int32_t)'=',
 	TK_WILDCARD = (int32_t)'*'

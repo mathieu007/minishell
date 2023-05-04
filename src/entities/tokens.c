@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 13:49:49 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/04 06:53:37 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@ t_token	*new_token_after(t_token *curr)
 	{
 		if (curr->next)
 			new->next = curr->next;
+		else
+			get_data()->last_token = new;
 		curr->next = new;
-		new->prev = curr;		
+		new->prev = curr;
 	}	
 	return (new);
 }
@@ -43,14 +45,15 @@ inline t_token	*get_first_token(void)
 	}		
 	return (&token[0]);
 }
+
 /// @brief TODO
 /// @param  
 /// @return 
 inline t_token	*get_last_token(void)
 {
 	t_token	*token;
-	
-	return (&token[0]);
+
+	return (get_data()->last_token);
 }
 
 static void	*_set_token(t_token *token, char *token_value, int32_t char_pos,
@@ -59,7 +62,6 @@ static void	*_set_token(t_token *token, char *token_value, int32_t char_pos,
 	if (token == NULL)
 		return (NULL);
 	token->pos = char_pos;
-	token->index = get_data()->token_count;
 	token->len = ft_strlen(token_value);
 	token->next = NULL;
 	token->type = type;

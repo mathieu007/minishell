@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 18:28:19 by math             ###   ########.fr       */
+/*   Updated: 2023/05/04 06:54:37 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*join_free2(const char *path1, char *path2)
 	if (!path1 || !path2)
 		return (false);
 	new = _join(path1, path2);
-	return (free(path2), new);	
+	return (free(path2), new);
 }
 
 /// @brief path2 is a constant and not malloc'ed.
@@ -52,12 +52,12 @@ char	*join_free2(const char *path1, char *path2)
 /// @return 
 char	*join_free1(char *path1, const char *path2)
 {
-	char 	*new;
-	
+	char	*new;
+
 	if (!path1 || !path2)
 		return (false);
 	new = _join(path1, path2);
-	return (free(path1), new);	
+	return (free(path1), new);
 }
 
 /// @brief path1 and path2 will not be freed.

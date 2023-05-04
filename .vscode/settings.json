@@ -1,5 +1,5 @@
 {
-	"terminal.integrated.scrollback": 50000,
+	"terminal.integrated.scrollback": 10000,
 	"files.associations": {
 		"array": "c",
 		"deque": "c",
@@ -18,22 +18,11 @@
 		"streambuf": "c",
 		"__threading_support": "c",
 		"iterator": "c",
-		"bitset": "c",
-		"memory_resource": "c",
-		"philo_bonus.h": "c",
-		"__functional_base": "c",
-		"istream": "c",
-		"tuple": "c",
-		"utility": "c",
-		"__bit_reference": "c",
-		"__functional_03": "c",
-		"__split_buffer": "c",
-		"sstream": "c",
-		"chrono": "c",
 		"minishell.h": "c",
-		"libft.h": "c",
-		"typeinfo": "c"
-	},
-	"C_Cpp.default.intelliSenseMode": "macos-clang-x64",
-	"C_Cpp.intelliSenseEngineFallback": "enabled"
+		"history.h": "c",
+		"system_error": "c",
+		"tuple": "c",
+		"type_traits": "c",
+		"utility": "c"
+	}
 }
