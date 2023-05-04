@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 12:54:25 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/04 13:00:55 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ t_cmd	*parse_cmds(t_token *token, char *str)
 			split = ft_split(&str[token->pos], ' ');
 			if (split && *split)
 				cmd->name = *split;
-			cmd->full_name = get_full_path(cmd->name);
+			cmd->full_path_name = get_full_path(cmd->name);
 			cmd->is_builtin = is_builtins(cmd->name);
 			cmd->options = get_options(token, tk_pos);
 			cmd->cmd_seq_type = get_sequence_type(token, tk_pos);

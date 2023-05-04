@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 12:21:09 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/04 13:00:55 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 	char			*name;
-	char			*full_name;
+	char			*full_path_name;
 	char			**args;
 	char			**options;
 	bool			is_builtin;
