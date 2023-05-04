@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 13:00:55 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/04 16:35:33 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@
 # ifndef PATH_MAX
 # define PATH_MAX 1024
 #endif
-
 
 /// @brief 
 /// TK_CMD ls, cd, grep...,
@@ -113,8 +112,6 @@ typedef enum e_escaped_char
 	ESC_QUESTION_MARK = '?',
 	ESC_PERCENT = '%'
 }				t_escaped_char;
-
-/// @brief
 typedef enum e_continuation_char
 {
 	CONTC_BACKSLASH = '\\',
@@ -127,7 +124,7 @@ typedef enum e_continuation_char
 }			t_continuation_char;
 
 /// @brief the type of "command sequences"
-/// CMD_PIPE = command1 | command2\n
+/// CMD_PIPE = echo "|" | command2\n
 /// CMD_SEQUENTIAL = command1; command2;
 /// CMD_LOG_AND = command1 && command2
 /// CMD_LOG_OR = command1 || command2
@@ -183,9 +180,10 @@ typedef struct s_token
 {
 	struct s_token	*next;
 	struct s_token	*prev;
+	char			*start_cmd;
+	char			*end_cmd;
 	char			*value;
 	int32_t			len;
-	int32_t			index;
 	int32_t			pos;
 	t_token_type	type;
 }				t_token;
@@ -243,6 +241,8 @@ int32_t			decrement_counter(t_token_type type);
 
 char			**parse_env(char **envp, char *env_name);
 t_cmd			*parse_cmds(t_token *token);
+t_token			*get_token_at(int32_t index);
+bool			is_end_cmd_tk(t_token *token);
 
 void			close_pipe_fds(t_cmd *cmd);
 
@@ -255,5 +255,6 @@ void			*free_redirect(t_cmd *cmd);
 t_cmd			*new_cmd_after(t_cmd *curr);
 t_cmd			*get_cmds(void);
 void			*free_cmd(t_cmd *cmd);
+char			*ft_strdupn(const char *s1, size_t n);
 
 #endif

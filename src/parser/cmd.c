@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 13:00:55 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/04 16:30:42 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ bool	is_builtins(char *str)
 	return (false);
 }
 
-bool	is_end_cmd(t_token *token)
+bool	is_end_cmd_tk(t_token *token)
 {
 	t_token_type	type;
 
@@ -57,14 +57,14 @@ bool	is_end_cmd(t_token *token)
 	return (false);
 }
 
-int32_t	options_count(t_token *token, int32_t tk_pos)
+int32_t	options_count(t_token *token, int32_t num_tk)
 {
 	int32_t	count;
 	char	**options;
 
 	count = 0;
 	token = token->prev;
-	while (token && token->pos > tk_pos)
+	while (token && token->pos > num_tk)
 	{
 		if (token->type == TK_DASH || token->type == TK_DASHDASH)
 			count++;
@@ -75,40 +75,39 @@ int32_t	options_count(t_token *token, int32_t tk_pos)
 	return (count);
 }
 
-char	**get_options(t_token *token, int32_t tk_pos)
+char	**get_options(t_token *token, int32_t end)
 {
 	int32_t	count;
 	char	**options;
+	char	*value;
 
-	count = options_count(token, tk_pos);
+	count = options_count(token, end);
 	if (count == 0)
-		return (NULL);
+		return (NULL);	
 	options = malloc(sizeof(char *) * count);
 	count--;
-	while (token && token->pos < tk_pos)
+	while (token && end > 0)
 	{
+		value = token->value;
 		if (token->type == TK_DASH || token->type == TK_DASHDASH)
 		{
-			options[count] = ft_strdup(token->value);
+			while (*value != ' ' || *value != '\t')
+				value++;
+			options[count] = ft_strdupn(token->value, value - token->value);
 			count--;
+			end--;
 		}			
-		token = token->prev;		
+		token = token->prev;
 	}
+	return (options);
 }
 
-t_cmd_seq	get_arguments(t_token *token, int32_t tk_pos)
+char	**get_arguments(t_token *token, int32_t tk_pos)
 {
-	t_token_type	type;
-
-	type = token->type;
-	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
-		|| type == TK_AMPERSAND || type == TK_GREATGREAT
-		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE)
-		return ((t_cmd_seq)type);
-	return (CMD_SEQUENTIAL);
+	
 }
 
-t_cmd_seq	get_sequence_type(t_token *token, int32_t tk_pos)
+t_cmd_seq	get_sequence_type(t_token *token)
 {
 	t_token_type	type;
 
@@ -122,28 +121,38 @@ t_cmd_seq	get_sequence_type(t_token *token, int32_t tk_pos)
 
 t_cmd	*parse_cmds(t_token *token, char *str)
 {
-	t_cmd	*cmd;
-	char	*split;
-	int32_t	tk_pos;
+	t_cmd		*cmd;
+	char		*split;
+	int32_t		i;
+	int32_t		start_i;
+	int32_t		char_pos;
 
 	if (!token)
 		return (NULL);
 	cmd = get_cmds();
-	tk_pos = 0;
+	start_i = 0;
+	i = 0;
+	char_pos = 0;
 	while (token)
 	{
-		if (is_end_cmd(token))
+		if (is_end_cmd_tk(token))
 		{
-			split = ft_split(&str[token->pos], ' ');
+			split = ft_split(&str[get_token_at(start_i)->pos], ' ');
 			if (split && *split)
 				cmd->name = *split;
+			else
+			{
+				continue;
+				i++;
+			}
 			cmd->full_path_name = get_full_path(cmd->name);
 			cmd->is_builtin = is_builtins(cmd->name);
-			cmd->options = get_options(token, tk_pos);
-			cmd->cmd_seq_type = get_sequence_type(token, tk_pos);
-			cmd->args = get_arguments(token, tk_pos);
-			tk_pos = token->pos + 1;
+			cmd->options = get_options(get_token_at(start_i), i);
+			cmd->cmd_seq_type = get_sequence_type(token);
+			cmd->args = get_arguments(get_token_at(start_i), i);
+			start_i = i;
 		}
+		i++;
 		token = token->next;
 	}
 }

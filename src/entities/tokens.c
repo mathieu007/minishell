@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 06:53:37 by math             ###   ########.fr       */
+/*   Updated: 2023/05/04 16:37:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,15 @@ t_token	*new_token_after(t_token *curr)
 		return (NULL);
 	new->value = NULL;
 	new->next = NULL;
+	new->start_cmd = 0;
+	new->end_cmd_pos = 0;
 	if (curr != NULL)
 	{
 		if (curr->next)
+		{
 			new->next = curr->next;
+			new->start_cmd = curr
+		}
 		else
 			get_data()->last_token = new;
 		curr->next = new;
@@ -46,6 +51,21 @@ inline t_token	*get_first_token(void)
 	return (&token[0]);
 }
 
+inline t_token	*get_token_at(int32_t index)
+{
+	t_token	*token;
+	int32_t	i;
+
+	token = get_first_token();
+	i = 0;
+	while (token && i < index)
+	{
+		token = token->next;
+		i++;
+	}
+	return (token);
+}
+
 /// @brief TODO
 /// @param  
 /// @return 
@@ -62,7 +82,10 @@ static void	*_set_token(t_token *token, char *token_value, int32_t char_pos,
 	if (token == NULL)
 		return (NULL);
 	token->pos = char_pos;
-	token->len = ft_strlen(token_value);
+	if (((int32_t)type) < 255)
+		token->len = 1;
+	else
+		token->len = 2;
 	token->next = NULL;
 	token->type = type;
 	token->value = token_value;
@@ -76,6 +99,8 @@ t_token	*add_token(char *token_value, int32_t char_pos, t_token_type type)
 	last = get_data()->last_token;
 	if (last->prev != NULL)
 		last = new_token_after(last);
+	if (is_end_cmd_tk(last) && last->prev)		
+		last->start_cmd = &token_value[char_pos];
 	increment_counter(type);
 	_set_token(last, &token_value[char_pos], char_pos, type);
 	get_data()->token_count++;
