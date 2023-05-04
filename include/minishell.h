@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 20:50:51 by math             ###   ########.fr       */
+/*   Updated: 2023/05/04 12:21:09 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@
 # define BUILTINS_ECHO "echo"
 
 # ifndef PATH_MAX
-
 # define PATH_MAX 1024
-
 #endif
 
 
@@ -66,7 +64,6 @@
 typedef enum e_token_type
 {
 	TK_UNKNOWN = 0,
-	TK_CMD = -1,
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -74,7 +71,7 @@ typedef enum e_token_type
 	TK_GREATGREAT = TK_GREAT * TK_GREAT + TK_GREAT,
 	TK_LESSLESS = TK_LESS * TK_LESS + TK_LESS,
 	TK_OR = TK_PIPE * TK_PIPE + TK_PIPE,
-	TK_AND = '&' * '&' + '&',
+	TK_AND = TK_AMPERSAND * TK_AMPERSAND + TK_AMPERSAND,
 	TK_DOUBLEQUOTE = (int32_t)'"',
 	TK_DASH = (int32_t)'-',
 	TK_DASHDASH = TK_DASH * TK_DASH + TK_DASH,
@@ -143,14 +140,14 @@ typedef enum e_continuation_char
 /// CMD_GROUPING_CURLYBRACE = { command1; command2; }
 typedef enum e_cmd_seq
 {
-	CMD_NONE,
-	CMD_PIPE,
-	CMD_LOG_AND,
-	CMD_LOG_OR,
-	CMD_BACKGROUND_EXEC,
-	CMD_FILEOUT,
-	CMD_FILEIN,
-	CMD_SEQUENTIAL
+	CMD_NONE = 0,
+	CMD_PIPE = TK_PIPE,
+	CMD_LOG_AND = TK_AND,
+	CMD_LOG_OR = TK_OR,
+	CMD_BACKGROUND_EXEC = TK_AMPERSAND,
+	CMD_FILEOUT = TK_GREATGREAT,
+	CMD_FILEIN = TK_LESSLESS,
+	CMD_SEQUENTIAL = TK_SEMICOLON
 }			t_cmd_seq;
 
 typedef struct s_redirect
