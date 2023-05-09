@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 19:36:18 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/09 19:52:52 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,11 +203,12 @@ typedef struct s_token_group
 	int32_t					token_count;
 }							t_token_group;
 
-typedef struct s_env
+typedef struct s_env_cpy
 {
 	char					*variable;
 	char					*value;
 	struct s_env_cpy		*next;
+	struct s_env_cpy		*prev;
 
 }							t_env_cpy;
 
@@ -316,6 +317,6 @@ int32_t						echo_cmd(t_cmd *cmd);
 int32_t						env_cmd(t_data *data);
 int32_t						pwd_cmd(void);
 int32_t						export_cmd(t_data *data, t_cmd *cmd);
-int32_t						unset_cmd(t_data *data);
+int32_t	unset_cmd(t_data *data, t_cmd *cmd);
 
 #endif

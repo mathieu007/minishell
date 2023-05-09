@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 16:35:53 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/09 19:46:05 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ t_env_cpy	*create_list(t_data *data)
 		split_on_equal = ft_split(split_on_nl[i], '=');
 		current->next = create_command_node(split_on_equal[0],
 											split_on_equal[1]);
+	if(current->next)
+		current->next->prev = current;
 		current = current->next;
 	}
 	return (head);
