@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 06:34:01 by math             ###   ########.fr       */
+/*   Updated: 2023/05/09 08:45:08 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,27 +204,31 @@ typedef struct s_data
 	char			**argv;
 	char			**envp;
 	char			**paths;
-	int32_t			token_count;
+	int32_t			tokens_count;
+	int32_t			token_groups_count;
 	t_token			*tokens;
 	t_token_group	*token_groups;
 	t_token			*last_token;
 	t_token			*last_token_group;
 }				t_data;
 
-/// @brief all the data functions
+/// @brief Thehe entities functions
 t_data			*get_data(void);
 t_token			*get_first_token(void);
 t_token			*add_token(char *token_value, int32_t char_pos,
 					t_token_type type);
+t_token_group	*add_token_group(char *str);					
 t_token_type	get_token_type(char *str);
 int32_t			*get_token_counter(void);
 t_token			*remove_token(t_token *tokens);
 int32_t			get_token_type_count(t_token_type type);
-t_token			*new_token_after(t_token *curr);
+t_token			*new_token(t_token *curr);
 char			**get_builtins_cmd(void);
 
-/// @brief simple helpers methods.
-
+/// @brief Simples and short helpers methods.
+char			*get_end_of_cmd(char *str);
+int32_t			get_token_type_len(t_token_type type);
+bool			type_is_end_of_seq(t_token_type type);
 bool			is_escaped_single_quote(char *str, int32_t i);
 bool			is_escaped_double_quote(char *str, int32_t i);
 bool			is_opening_single_quote(char *str, int32_t i);
@@ -254,7 +258,7 @@ int32_t			decrement_counter(t_token_type type);
 char			**parse_env(char **envp, char *env_name);
 t_cmd			*parse_cmds(t_token *token);
 t_token			*get_token_at(int32_t index);
-bool			is_end_cmd_tk(t_token *token);
+bool			is_end_of_seq(t_token *token);
 
 void			close_pipe_fds(t_cmd *cmd);
 

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/08 21:04:28 by math             ###   ########.fr       */
+/*   Updated: 2023/05/09 08:47:12 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*new_token_after(t_token *curr)
+t_token	*new_token(t_token *curr)
 {
 	t_token	*new;
 
@@ -40,7 +40,7 @@ inline t_token	*get_first_token(void)
 
 	if (token == NULL)
 	{
-		token = new_token_after(NULL);
+		token = new_token(NULL);
 		return (token);
 	}		
 	return (&token[0]);
@@ -87,18 +87,18 @@ static void	*_set_token(t_token *token, char *token_value, int32_t char_pos,
 	return (token);
 }
 
-t_token	*add_token(char *token_value, int32_t char_pos, t_token_type type)
+t_token	*add_token(char *str, int32_t char_pos, t_token_type type, t_token_group *group)
 {
 	t_token		*last;
 
 	last = get_data()->last_token;
 	if (last->prev != NULL)
-		last = new_token_after(last);
-	if (is_end_cmd_tk(last) && last->prev)
+		last = new_token(last);
+	if (is_end_of_seq(last) && last->prev)
 		last->start = &token_value[char_pos];
 	increment_counter(type);
 	_set_token(last, &token_value[char_pos], char_pos, type);
-	get_data()->token_count++;
+	get_data()->tokens_count++;
 	get_data()->last_token = last;
 	return (last);
 }

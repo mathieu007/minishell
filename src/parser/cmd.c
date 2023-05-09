@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 06:38:31 by math             ###   ########.fr       */
+/*   Updated: 2023/05/09 08:21:35 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ bool	is_builtins(char *str)
 	return (false);
 }
 
-cahr	get_end_of_cmd(char *str)
+inline bool	is_end_of_seq(t_token *token)
 {
 	t_token_type	type;
 
@@ -57,18 +57,7 @@ cahr	get_end_of_cmd(char *str)
 	return (false);
 }
 
-bool	is_end_cmd_tk(t_token *token)
-{
-	t_token_type	type;
 
-	type = token->type;
-	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
-		|| type == TK_AMPERSAND || type == TK_GREATGREAT
-		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE
-		|| token->next == NULL)
-		return (true);
-	return (false);
-}
 
 int32_t	options_count(t_token *token, int32_t num_tk)
 {
@@ -158,7 +147,7 @@ t_cmd	*parse_cmds(t_token *token, char *str)
 	char_pos = 0;
 	while (token)
 	{
-		if (is_end_cmd_tk(token))
+		if (is_end_of_seq(token))
 		{
 			cmd->name = get_cmd_name(cmd, token, str);
 			if (cmd->name == NULL)

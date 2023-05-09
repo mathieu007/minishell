@@ -4,7 +4,6 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/include",
-				"${workspaceFolder}/src/**",
                 "${workspaceFolder}/libft/include"
             ],
             "defines": [],
@@ -12,7 +11,7 @@
                 "/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks"
             ],
             "compilerPath": "/usr/bin/clang",
-            "cStandard": "c89",
+            "cStandard": "c23",
             "cppStandard": "c++98",
             "intelliSenseMode": "macos-clang-x64"
         }
