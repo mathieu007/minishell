@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 08:21:35 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 10:44:55 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,47 +59,60 @@ inline bool	is_end_of_seq(t_token *token)
 
 
 
-int32_t	options_count(t_token *token, int32_t num_tk)
+int32_t	options_count(t_token_group *group)
 {
 	int32_t	count;
 	char	**options;
+	t_token	*token;
 
 	count = 0;
-	token = token->prev;
-	while (token && token->pos > num_tk)
+	token = group->first;
+	while (token)
 	{
 		if (token->type == TK_DASH || token->type == TK_DASHDASH)
 			count++;
-		if (token->prev == NULL)
-			break ;
-		token = token->prev;
+		token = token->next;
 	}
 	return (count);
 }
 
-char	**get_options(t_token *token, int32_t end)
+int32_t	get_option_len(char *option)
+{
+	int32_t	len;
+
+	len = 0;	
+	while (*option != ' ' || *option != '\t')
+	{
+		len++;
+		option++;
+	}
+	return (len);
+}
+
+char	**get_options(t_token_group *group)
 {
 	int32_t	count;
+	int32_t	i;
 	char	**options;
 	char	*value;
+	t_token *token;	
 
-	count = options_count(token, end);
+	count = options_count(group);
 	if (count == 0)
 		return (NULL);
 	options = malloc(sizeof(char *) * count);
-	count--;
-	while (token && end > 0)
+	if (options == NULL)	
+		return (NULL);
+	token = group->first;
+	i = 0;
+	while (token)
 	{
-		value = token->value;
 		if (token->type == TK_DASH || token->type == TK_DASHDASH)
-		{
-			while (*value != ' ' || *value != '\t')
-				value++;
-			options[count] = ft_strdupn(token->value, value - token->value);
-			count--;
-			end--;
+		{			
+			options[i] = ft_strdupn(token->start, get_option_len(token->start));
+			i++;
 		}			
-		token = token->prev;
+		token = token->next;
 	}
 	return (options);
 }
@@ -109,10 +122,10 @@ char	**get_arguments(t_token *token, int32_t tk_pos)
 	
 }
 
-t_cmd_seq	get_sequence_type(t_token *token)
+t_cmd_seq	get_sequence_type(t_token_group *group)
 {
 	t_token_type	type;
-
+	
 	type = token->type;
 	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
 		|| type == TK_AMPERSAND || type == TK_GREATGREAT
@@ -121,17 +134,32 @@ t_cmd_seq	get_sequence_type(t_token *token)
 	return (CMD_SEQUENTIAL);
 }
 
-static	char *get_cmd_name(t_cmd *cmd, t_token *token, char *str)
+static	char *get_cmd_name(t_cmd *cmd, t_token_group *group)
 {
 	char	*split;
 
-	split = ft_split(&str[get_token_at(start_i)->pos], ' ');
+	split = ft_split(group->first->start, ' ');
 	if (split && *split)
 		return (*split);
 	return (NULL);
 }
 
-t_cmd	*parse_cmds(t_token *token, char *str)
+t_cmd	*parse_cmd(t_token_group *group)
+{
+	t_cmd		*cmd;
+
+	cmd = add_cmd();
+	cmd->name = get_cmd_name(cmd, group);
+	if (cmd->name == NULL)
+		return (NULL);
+	cmd->full_path_name = get_full_path(cmd->name);
+	cmd->is_builtin = is_builtins(cmd->name);
+	cmd->options = get_options(group);
+	cmd->cmd_seq_type = get_sequence_type(group);
+	cmd->args = get_arguments(get_token_at(start_i), i);
+}
+
+t_cmd	*parse_cmds(t_token_group *groups, char *str)
 {
 	t_cmd		*cmd;
 	char		*split;
@@ -141,7 +169,7 @@ t_cmd	*parse_cmds(t_token *token, char *str)
 
 	if (!token)
 		return (NULL);
-	cmd = get_cmds();
+	cmd = get_first_cmd();	
 	start_i = 0;
 	i = 0;
 	char_pos = 0;
@@ -158,7 +186,7 @@ t_cmd	*parse_cmds(t_token *token, char *str)
 			cmd->full_path_name = get_full_path(cmd->name);
 			cmd->is_builtin = is_builtins(cmd->name);
 			cmd->options = get_options(get_token_at(start_i), i);
-			cmd->cmd_seq_type = get_sequence_type(token);
+			// cmd->cmd_seq_type = get_sequence_type(token);
 			cmd->args = get_arguments(get_token_at(start_i), i);
 			start_i = i;
 		}

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 08:44:51 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 10:48:44 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ t_token_group	*new_token_group()
 	new = malloc(sizeof(t_token_group));
 	if (new == NULL)
 		return (NULL);
-	new->start = NULL;
+	new->token_count = 0;
+	new->first = NULL;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
@@ -27,15 +28,15 @@ t_token_group	*new_token_group()
 
 inline t_token_group	*get_first_token_group(void)
 {
-	static t_token_group	*token;
+	static t_token_group	*group;
 
-	if (token == NULL)
+	if (group == NULL)
 	{
-		token = new_token_group();
-		get_data()->last_token_group;
-		return (token);
+		group = new_token_group();
+		get_data()->last_token_group = group;
+		return (group);
 	}		
-	return (&token[0]);
+	return (&group[0]);
 }
 
 inline t_token_group	*get_token_group_at(int32_t index)
@@ -53,7 +54,7 @@ inline t_token_group	*get_token_group_at(int32_t index)
 	return (token);
 }
 
-t_token_group	*add_token_group(char *str)
+t_token_group	*add_token_group(char *start)
 {
 	t_token_group	*last;
 	t_token_group	*new;
@@ -64,11 +65,12 @@ t_token_group	*add_token_group(char *str)
 	else
 	{
 		new = new_token_group();
+		if (new == NULL)
+			return (NULL);
 		last->next = new;
 		new->prev = last;
-	}		
-	new->start = str;
-	new->end = get_end_of_cmd(str);
+	}
+	new->start = start;
 	get_data()->token_groups_count++;
 	get_data()->last_token_group = new;
 	return (new);

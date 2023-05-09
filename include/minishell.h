@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 08:45:08 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 12:09:38 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@
 typedef enum e_token_type
 {
 	TK_UNKNOWN = 0,
+	TK_END = -1,
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -176,38 +177,44 @@ typedef struct s_cmd
 	pid_t			pid;
 }				t_cmd;
 
+/// token->value contains the value of the token but whithout the termination char.
+/// if cmd = echo -n "fewfew" and token is -, value == -n "fewfew"
 typedef struct s_token
 {
 	struct s_token	*next;
 	struct s_token	*prev;
 	char			*start;
-	char			*value;
 	int32_t			len;
 	int32_t			pos;
 	t_token_type	type;
 }				t_token;
 
+/// @brief A token group is just a group of tokens.
+/// each group of token end by one of the endings token type.
 typedef struct s_token_group
 {
 	struct s_token_group	*next;
 	struct s_token_group	*prev;
-	t_token					*token;
 	char					*start;
-	char					*end;
+	t_token					*first;
+	t_token					*last;
 	int32_t					token_count;
 }				t_token_group;
 
 typedef struct s_data
 {
 	int32_t			argc;
-	char			*cmds;
+	char			*str_cmds;
 	char			**argv;
 	char			**envp;
 	char			**paths;
+	int32_t			cmds_count;
 	int32_t			tokens_count;
-	int32_t			token_groups_count;
+	int32_t			token_groups_count;	
 	t_token			*tokens;
 	t_token_group	*token_groups;
+	t_cmd			*cmds;
+	t_cmd			*last_cmd;
 	t_token			*last_token;
 	t_token			*last_token_group;
 }				t_data;
@@ -215,26 +222,31 @@ typedef struct s_data
 /// @brief Thehe entities functions
 t_data			*get_data(void);
 t_token			*get_first_token(void);
-t_token			*add_token(char *token_value, int32_t char_pos,
-					t_token_type type);
-t_token_group	*add_token_group(char *str);					
+t_token			*add_token(char *str, int32_t char_pos, t_token_type type,
+					t_token_group *group);
+t_token_group	*add_token_group(char *start);
+t_cmd			*add_cmd(void);
 t_token_type	get_token_type(char *str);
 int32_t			*get_token_counter(void);
 t_token			*remove_token(t_token *tokens);
 int32_t			get_token_type_count(t_token_type type);
-t_token			*new_token(t_token *curr);
+t_token			*new_token();
+t_cmd			*new_cmd();
+t_cmd			*get_first_cmd(void);
+t_token_group	*get_first_token_group(void);
+t_token_group	*new_token_group();
 char			**get_builtins_cmd(void);
 
 /// @brief Simples and short helpers methods.
 char			*get_end_of_cmd(char *str);
 int32_t			get_token_type_len(t_token_type type);
 bool			type_is_end_of_seq(t_token_type type);
-bool			is_escaped_single_quote(char *str, int32_t i);
-bool			is_escaped_double_quote(char *str, int32_t i);
-bool			is_opening_single_quote(char *str, int32_t i);
-bool			is_closing_single_quote(char *str, int32_t i);
-bool			is_opening_double_quote(char *str, int32_t i);
-bool			is_closing_double_quote(char *str, int32_t i);
+bool			is_escaped_single_quote(char *str, int32_t i, t_token_group *group);
+bool			is_escaped_double_quote(char *str, int32_t i, t_token_group *group);
+bool			is_opening_single_quote(char *str, int32_t i, t_token_group *group);
+bool			is_closing_single_quote(char *str, int32_t i, t_token_group *group);
+bool			is_opening_double_quote(char *str, int32_t i, t_token_group *group);
+bool			is_closing_double_quote(char *str, int32_t i, t_token_group *group);
 bool			is_opening_parenthese(char *str, int32_t i);
 bool			is_closing_parenthese(char *str, int32_t i);
 bool			is_opening_curlybrace(char *str, int32_t i);
@@ -249,8 +261,8 @@ char			*get_full_path(char *cmd_name);
 
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);
-int32_t			tokenize_double_quote(char *str, int32_t i);
-int32_t			tokenize_single_quote(char *str, int32_t i);
+int32_t			tokenize_double_quote(char *str, int32_t i, t_token_group *group);
+int32_t			tokenize_single_quote(char *str, int32_t i, t_token_group *group);
 
 int32_t			increment_counter(t_token_type type);
 int32_t			decrement_counter(t_token_type type);
@@ -268,8 +280,7 @@ t_pipe			*new_pipe(t_cmd *cmd);
 void			*free_pipe(t_cmd *cmd);
 t_redirect		*new_redirect(t_cmd *cmd);
 void			*free_redirect(t_cmd *cmd);
-t_cmd			*new_cmd_after(t_cmd *curr);
-t_cmd			*get_cmds(void);
+
 void			*free_cmd(t_cmd *cmd);
 char			*ft_strdupn(const char *s1, size_t n);
 
