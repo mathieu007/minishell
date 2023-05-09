@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdupn.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 11:47:31 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/04 13:43:36 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 13:10:53 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static char	*ft_strcpy(char *dest, const char *src)
 char	*ft_strdupn(const char *s1, size_t n)
 {
 	char	*dest;
-	int		src_l;
+	size_t		src_l;
 
 	src_l = ft_strlen(s1);
 	if (n > src_l)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/04/29 09:38:49 by math             ###   ########.fr       */
+/*   Updated: 2023/05/09 13:19:24 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 int32_t	main(int32_t argc, char **argv, char **env)
 {
 	char	*input;
-	(void) (argc);
-	(void) (argv);
-	(void) (env);
+	t_cmd	*cmd;
+	t_data *data;
 
+	(void)(argc);
+	(void)(argv);
+	(void)(env);
 	while (1)
 	{
 		input = readline("MiniShell> ");
@@ -26,6 +28,17 @@ int32_t	main(int32_t argc, char **argv, char **env)
 			break ;
 		add_history(input);
 		system(input);
+		if (*input != '\0')
+		{
+			cmd = get_first_cmd();
+			data = (get_data);
+			//execute avec execve
+			if (!cmd->is_builtin)
+				printf("NEED TO EXCVE THIS INPUT\n");
+			//execute avec built in
+			else
+				execute_built_in(cmd , data);
+		}
+		//FREEEEE ALLL
 	}
-	return (0);
 }
