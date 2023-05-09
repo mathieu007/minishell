@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:47:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 16:55:16 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,21 @@
 
 char	*parse_env(t_token *token)
 {
-	t_env *env;
+	t_env_cpy	*env;
+	char		*env_name;
+	char		*env_value;
 
 	env = get_data()->env;
-	
+	while (token)
+	{		
+		if (token->type == TK_DOLLAR_SIGN)
+		{
+			env_name = ++(token->start);
+			env_value = get_env_value(env_name);
+			if (env_value == NULL)
+				
+		}
+	}	
 }
 
 char	**parse_env_path(char **env)

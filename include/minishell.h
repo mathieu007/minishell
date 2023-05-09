@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:48:43 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 16:56:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # define BUILTINS_PWD "pwd"
 # define BUILTINS_CD "cd"
 # define BUILTINS_ECHO "echo"
+
+# define SEPARATOR (char)29
 
 # ifndef PATH_MAX
 # define PATH_MAX 1024
@@ -197,11 +199,20 @@ typedef struct s_token_group
 	struct s_token_group	*prev;
 	char					*start;
 	char					*end;
+	char					*parsed_str;
 	int32_t					len;
 	t_token					*first;
 	t_token					*last;
 	int32_t					token_count;
 }				t_token_group;
+
+typedef struct s_env
+{
+	char					*variable;
+	char					*value;
+	struct s_env_cpy		*next;
+
+}							t_env_cpy;
 
 typedef struct s_data
 {
@@ -209,7 +220,7 @@ typedef struct s_data
 	char			*str_cmds;
 	char			**argv;
 	char			**env;
-	t_env			*env_cpy;
+	t_env_cpy		*env_cpy;
 	char			**paths;
 	int32_t			cmds_count;
 	int32_t			tokens_count;
