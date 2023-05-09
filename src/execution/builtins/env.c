@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:28:34 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:35:53 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_env_cpy	*create_list(t_data *data)
 	{
 		split_on_equal = ft_split(split_on_nl[i], '=');
 		current->next = create_command_node(split_on_equal[0],
-				split_on_equal[1]);
+											split_on_equal[1]);
 		current = current->next;
 	}
 	return (head);
@@ -51,12 +51,36 @@ t_env_cpy	*create_list(t_data *data)
 
 int32_t	env_cmd(t_data *data)
 {
-	t_env_cpy *current;
+	t_env_cpy	*current;
 
+	if (!data->env_cpy)
+		create_list(data);
 	current = data->env_cpy;
-	while(current)
+	while (current)
 	{
-		printf("%s=%s\n",data->env_cpy->variable,data->env_cpy->value);
+		printf("%s=%s\n", data->env_cpy->variable, data->env_cpy->value);
 		current = current->next;
 	}
+}
+
+//take a variable and return the value
+char *get_env_value(char *variable)
+{
+	t_env_cpy *head;
+	t_env_cpy *current;
+	size_t len;
+
+	len = ft_strlen(variable);
+
+	head = get_data()->env_cpy;
+	current = head;
+	while(current)
+	{
+		if (ft_strnstr(variable, current->value, len) != 0)
+			return(current->variable);
+		else
+		current = current->next;
+	}
+	return(NULL);
+	
 }

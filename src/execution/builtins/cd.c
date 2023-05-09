@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:31:04 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:43:14 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int32_t	cd_cmd(t_cmd *cmd)
 	{
 		if (cmd->options[0])
 			{
-				printf("Error option \"%s\" not handle \n", cmd->options);
+				printf("Cd option \"%s\" not handle \n", cmd->options);
 				return(0);
 			}
 		path_to_call = ft_strjoin(path, "/");
