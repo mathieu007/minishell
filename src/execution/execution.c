@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute.c                                          :+:      :+:    :+:   */
+/*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 18:29:56 by math             ###   ########.fr       */
+/*   Updated: 2023/05/09 14:04:26 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*get_full_path_cmd(t_cmd *cmd)
 
 	if (!cmd || !cmd->name)
 		return (NULL);
-	env_paths = parse_env(get_data()->envp, "PATH");
+	env_paths = parse_env_path(get_data()->env);
 	if (!env_paths)
 		return (perror("Environement path not set."), free_all_and_exit());
 	cmd_name = cmd->name;
@@ -36,5 +36,6 @@ char	*get_full_path_cmd(t_cmd *cmd)
 		}
 		env_paths++;
 	}
-	return (free_paths(env_paths));
+	// return (free_paths(env_paths));
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/09 08:26:53 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 14:07:06 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	*get_end_of_cmd(char *str)
 {
 	t_token_type	type;
 	int32_t 		i;
-	t_token_type	type;
 	
 	i = 0;
 	while (str[i])

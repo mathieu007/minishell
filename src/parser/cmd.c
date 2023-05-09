@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 12:14:35 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 15:40:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ inline bool	is_end_of_seq(t_token *token)
 int32_t	options_count(t_token_group *group)
 {
 	int32_t	count;
-	char	**options;
 	t_token	*token;
 
 	count = 0;
@@ -94,7 +93,6 @@ char	**get_options(t_token_group *group)
 	int32_t	count;
 	int32_t	i;
 	char	**options;
-	char	*value;
 	t_token *token;	
 
 	count = options_count(group);
@@ -117,31 +115,66 @@ char	**get_options(t_token_group *group)
 	return (options);
 }
 
-char	**get_arguments(t_token *token, int32_t tk_pos)
+char	**get_arguments(t_token_group *group)
 {
+	char		*str;
+	int32_t		cmd_len;
+	char 		*cmd_name;
+	t_token 	*token;
+	char		*str;
 	
+	cmd_name = get_cmd_name(group);
+	cmd_len = ft_strlen(cmd_name);
+	str = &(group->start)[cmd_len];	
+	while (str)
+	{
+		token = token->next;
+	}
+}
+
+char	**get_arguments(t_token_group *group)
+{
+	char		*str;
+	int32_t		cmd_len;
+	char 		*cmd_name;
+	t_token 	*token;
+	char		*str;
+	
+	cmd_name = get_cmd_name(group);
+	cmd_len = ft_strlen(cmd_name);
+	str = &(group->start)[cmd_len];	
+	while (str)
+	{
+		token = token->next;
+	}
 }
 
 t_cmd_seq	get_sequence_type(t_token_group *group)
 {
 	t_token_type	type;
 	
-	type = token->type;
+	type = group->last->type;
 	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
 		|| type == TK_AMPERSAND || type == TK_GREATGREAT
-		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE)
+		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE || type == TK_END)
 		return ((t_cmd_seq)type);
 	return (CMD_SEQUENTIAL);
 }
 
-static	char *get_cmd_name(t_cmd *cmd, t_token_group *group)
+static	char *get_cmd_name(t_token_group *group)
 {
 	char	*split;
-
+	int32_t	i;
+	
 	split = ft_split(group->first->start, ' ');
-	if (split && *split)
-		return (*split);
-	return (NULL);
+	if (!split)
+		return (NULL);
+	if (!*split)
+		return (free(split), NULL);
+	i = 1;
+	while (split[i])
+		free(split[i]);
+	return (*split);
 }
 
 t_cmd	*parse_cmd(t_token_group *group)
@@ -149,48 +182,29 @@ t_cmd	*parse_cmd(t_token_group *group)
 	t_cmd		*cmd;
 
 	cmd = add_cmd();
-	cmd->name = get_cmd_name(cmd, group);
+	cmd->name = get_cmd_name(group);
 	if (cmd->name == NULL)
 		return (NULL);
 	cmd->full_path_name = get_full_path(cmd->name);
 	cmd->is_builtin = is_builtins(cmd->name);
 	cmd->options = get_options(group);
 	cmd->cmd_seq_type = get_sequence_type(group);
-	cmd->args = get_arguments(get_token_at(start_i), i);
+	cmd->args = get_arguments(group);
 }
 
-t_cmd	*parse_cmds(t_token_group *groups, char *str)
+t_cmd	*parse_cmds(t_token_group *group, char *str)
 {
-	t_cmd		*cmd;
 	char		*split;
 	int32_t		i;
 	int32_t		start_i;
 	int32_t		char_pos;
 
-	if (!token)
+	if (!group)
 		return (NULL);
-	cmd = get_first_cmd();	
-	start_i = 0;
-	i = 0;
-	char_pos = 0;
-	while (token)
+	while (group)
 	{
-		if (is_end_of_seq(token))
-		{
-			cmd->name = get_cmd_name(cmd, token, str);
-			if (cmd->name == NULL)
-			{
-				continue ;
-				i++;
-			}
-			cmd->full_path_name = get_full_path(cmd->name);
-			cmd->is_builtin = is_builtins(cmd->name);
-			cmd->options = get_options(get_token_at(start_i), i);
-			// cmd->cmd_seq_type = get_sequence_type(token);
-			cmd->args = get_arguments(get_token_at(start_i), i);
-			start_i = i;
-		}
-		i++;
-		token = token->next;
+		parse_cmd(group);
+		group = group->next;
 	}
+	return (get_first_cmd());
 }
