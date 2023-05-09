@@ -6,34 +6,38 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 08:49:11 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 15:47:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/// @brief env_bane = ex: PATH
-/// @param envp 
-/// @param env_name 
-/// @return 
-char	**parse_env(char **envp, char *env_name)
+char	*parse_env(t_token *token)
+{
+	t_env *env;
+
+	env = get_data()->env;
+	
+}
+
+char	**parse_env_path(char **env)
 {
 	char	**env;
 	int32_t	len;
 	char	**split_env;
 
-	len = ft_strlen(env_name);
+	len = ft_strlen("PATH");
 	split_env = NULL;
-	if (!envp || !*envp)
+	if (!env || !*env)
 		return (NULL);
-	while (*envp)
+	while (*env)
 	{
-		if (ft_strnstr(*envp, env_name, len) != 0)
+		if (ft_strnstr(*env, "PATH", len) != 0)
 		{
-			split_env = ft_split(*envp + len + 1, ':');
+			split_env = ft_split(*env + len + 1, ':');
 			break ;
 		}
-		envp++;
+		env++;
 	}
 	return (split_env);
 }

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 12:09:38 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 15:48:43 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,11 @@ typedef struct s_cmd
 {
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
-	char			*name;
-	char			*full_path_name;
-	char			**args;
-	char			**options;
-	bool			is_builtin;
+	char			*name; /// the name of the command: cat, ls, echo ect...
+	char			*full_path_name; /// only for execve, the full path name to the command ex: /bin/ls or /bin/cat
+	char			**args; /// a terminating NULL list of string containing options and arguments
+	char			**options; /// a terminating NULL list of string containing only options
+	bool			is_builtin; /// is the command a builtins command?
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
 	t_redirect		*redirect;
@@ -196,6 +196,8 @@ typedef struct s_token_group
 	struct s_token_group	*next;
 	struct s_token_group	*prev;
 	char					*start;
+	char					*end;
+	int32_t					len;
 	t_token					*first;
 	t_token					*last;
 	int32_t					token_count;
@@ -206,7 +208,8 @@ typedef struct s_data
 	int32_t			argc;
 	char			*str_cmds;
 	char			**argv;
-	char			**envp;
+	char			**env;
+	t_env			*env_cpy;
 	char			**paths;
 	int32_t			cmds_count;
 	int32_t			tokens_count;
@@ -216,7 +219,7 @@ typedef struct s_data
 	t_cmd			*cmds;
 	t_cmd			*last_cmd;
 	t_token			*last_token;
-	t_token			*last_token_group;
+	t_token_group	*last_token_group;
 }				t_data;
 
 /// @brief Thehe entities functions
@@ -224,7 +227,7 @@ t_data			*get_data(void);
 t_token			*get_first_token(void);
 t_token			*add_token(char *str, int32_t char_pos, t_token_type type,
 					t_token_group *group);
-t_token_group	*add_token_group(char *start);
+t_token_group	*add_token_group(char *start, char *end);
 t_cmd			*add_cmd(void);
 t_token_type	get_token_type(char *str);
 int32_t			*get_token_counter(void);
@@ -241,12 +244,12 @@ char			**get_builtins_cmd(void);
 char			*get_end_of_cmd(char *str);
 int32_t			get_token_type_len(t_token_type type);
 bool			type_is_end_of_seq(t_token_type type);
-bool			is_escaped_single_quote(char *str, int32_t i, t_token_group *group);
-bool			is_escaped_double_quote(char *str, int32_t i, t_token_group *group);
-bool			is_opening_single_quote(char *str, int32_t i, t_token_group *group);
-bool			is_closing_single_quote(char *str, int32_t i, t_token_group *group);
-bool			is_opening_double_quote(char *str, int32_t i, t_token_group *group);
-bool			is_closing_double_quote(char *str, int32_t i, t_token_group *group);
+bool			is_escaped_single_quote(char *str, int32_t i);
+bool			is_escaped_double_quote(char *str, int32_t i);
+bool			is_opening_single_quote(char *str, int32_t i);
+bool			is_closing_single_quote(char *str, int32_t i);
+bool			is_opening_double_quote(char *str, int32_t i);
+bool			is_closing_double_quote(char *str, int32_t i);
 bool			is_opening_parenthese(char *str, int32_t i);
 bool			is_closing_parenthese(char *str, int32_t i);
 bool			is_opening_curlybrace(char *str, int32_t i);
@@ -259,6 +262,7 @@ bool			file_is_exec(char *absolute_path_to_file);
 /// get full path from relative path.
 char			*get_full_path(char *cmd_name);
 
+t_token			*tokenize(char *str);
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);
 int32_t			tokenize_double_quote(char *str, int32_t i, t_token_group *group);
@@ -267,7 +271,7 @@ int32_t			tokenize_single_quote(char *str, int32_t i, t_token_group *group);
 int32_t			increment_counter(t_token_type type);
 int32_t			decrement_counter(t_token_type type);
 
-char			**parse_env(char **envp, char *env_name);
+char			**parse_env_path(char **envp);
 t_cmd			*parse_cmds(t_token *token);
 t_token			*get_token_at(int32_t index);
 bool			is_end_of_seq(t_token *token);
@@ -283,5 +287,6 @@ void			*free_redirect(t_cmd *cmd);
 
 void			*free_cmd(t_cmd *cmd);
 char			*ft_strdupn(const char *s1, size_t n);
+void 			init_data(int32_t argc, char **argv, char **envp);
 
 #endif

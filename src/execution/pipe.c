@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/02 10:32:20 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 14:06:44 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 int32_t	pipe_first_child(t_cmd *cmd)
 {
-	dup2(cmd->redirect->file_out, STDOUT_FILENO);
+	dup2(cmd->redirect->fd_out, STDOUT_FILENO);
 	close_pipe_fds(cmd);
-	execute(cmd);
+	// execute(cmd);
+	return (1);
 }
 
-int32_t	pipe_first_child(t_cmd *cmd)
+int32_t	pipe_last_child(t_cmd *cmd)
 {
-	dup2(cmd->redirect->file_out, STDOUT_FILENO);
+	dup2(cmd->redirect->fd_out, STDOUT_FILENO);
 	close_pipe_fds(cmd);
-	execute(cmd);
+	// execute(cmd);
+	return (1);
 }

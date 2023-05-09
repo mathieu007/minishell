@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 11:24:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 15:31:58 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ inline t_token	*get_first_token(void)
 
 	if (token == NULL)
 	{
-		token = new_token(NULL);
+		token = new_token();
 		if (token == NULL)
 			return (NULL);
 		get_data()->last_token = token;
@@ -64,8 +64,6 @@ inline t_token	*get_token_at(int32_t index)
 /// @return 
 inline t_token	*get_last_token(void)
 {
-	t_token	*token;
-
 	return (get_data()->last_token);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 09:38:22 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 13:15:02 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ inline t_cmd	*get_first_cmd(void)
 
 	if (cmd == NULL)
 	{
-		cmd = new_cmd(NULL);
+		cmd = new_cmd();
 		return (cmd);
 	}		
 	return (&cmd[0]);
@@ -59,4 +59,5 @@ void	*free_cmd(t_cmd *cmd)
 {
 	free_pipe(cmd);
 	free_redirect(cmd);
+	return (NULL);
 }

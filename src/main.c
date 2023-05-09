@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/04/29 09:38:49 by math             ###   ########.fr       */
+/*   Updated: 2023/05/09 14:01:32 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,17 @@
 
 int32_t	main(int32_t argc, char **argv, char **env)
 {
-	char	*input;
-	(void) (argc);
-	(void) (argv);
-	(void) (env);
+	init_data(argc, argv, env);
+	char *input;
+	t_token *token;
 
 	while (1)
 	{
 		input = readline("MiniShell> ");
 		if (strcmp(input, "exit") == 0)
 			break ;
+		token = tokenize(input);
+		parse_cmds(token);
 		add_history(input);
 		system(input);
 	}

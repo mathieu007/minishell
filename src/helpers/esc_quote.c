@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   esc_quote.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 18:28:24 by math             ###   ########.fr       */
+/*   Updated: 2023/05/09 14:09:07 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 /// @brief check if str is an escaped single quote: \'
 /// @param tokens 
 /// @return 
-inline bool	is_escaped_single_quote(char *str, int32_t i)
-{
-	if (!str || !str[i] || !str[i + 1])
-		return (false);
-	return (str[i] == '\\' && str[i + 1] == '\'');
-}
+// inline bool	is_escaped_single_quote(char *str, int32_t i, t_token_group *group)
+// {
+// 	if (!str || !str[i] || !str[i + 1])
+// 		return (false);
+// 	return (str[i] == '\\' && str[i + 1] == '\'');
+// }
 
 /// @brief check if str is an escaped double quote: \"
 /// @param tokens 
 /// @return 
-inline bool	is_escaped_double_quote(char *str, int32_t i)
-{
-	if (!str || !str[i] || !str[i + 1])
-		return (false);
-	return (str[i] == '\\' && str[i + 1] == '\"');
-}
+// inline bool	is_escaped_double_quote(char *str, int32_t i, t_token_group *group)
+// {
+// 	if (!str || !str[i] || !str[i + 1])
+// 		return (false);
+// 	return (str[i] == '\\' && str[i + 1] == '\"');
+// }
