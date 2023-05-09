@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 16:42:33 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/09 19:36:18 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,7 +307,8 @@ char						*ft_strdupn(const char *s1, size_t n);
 t_env_cpy					*create_node(char *variable, char *value);
 t_env_cpy					*create_list(t_data *data);
 char						*get_env_value(char *variable);
-
+void						add_env_node(t_data *data, char *variable,
+								char *value);
 //built in section
 void						execute_built_in(t_cmd *cmd, t_data *data);
 int32_t						cd_cmd(t_cmd *cmd);
@@ -316,6 +317,5 @@ int32_t						env_cmd(t_data *data);
 int32_t						pwd_cmd(void);
 int32_t						export_cmd(t_data *data, t_cmd *cmd);
 int32_t						unset_cmd(t_data *data);
-
 
 #endif
