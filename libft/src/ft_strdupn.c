@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strdupn.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/18 11:47:31 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/09 16:04:51 by mroy             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "libft.h"
 
@@ -30,7 +19,15 @@ static char	*ft_strcpy(char *dest, const char *src)
 
 char	*ft_strdupn(const char *s1, size_t n)
 {
+<<<<<<< HEAD
 	char		*dest;
+=======
+<<<<<<< HEAD
+	char	*dest;
+=======
+	char		*dest;
+>>>>>>> origin/Math
+>>>>>>> origin/billy
 	size_t		src_l;
 
 	src_l = ft_strlen(s1);

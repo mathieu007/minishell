@@ -6,7 +6,11 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/05/09 16:56:57 by mroy             ###   ########.fr       */
+=======
+/*   Updated: 2023/05/09 16:42:33 by bmartin          ###   ########.fr       */
+>>>>>>> origin/billy
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,6 +290,7 @@ char			**parse_env_path(char **envp);
 t_cmd			*parse_cmds(t_token *token);
 t_token			*get_token_at(int32_t index);
 bool			is_end_of_seq(t_token *token);
+void			close_pipe_fds(t_cmd *cmd);
 
 void			close_pipe_fds(t_cmd *cmd);
 
@@ -299,5 +304,21 @@ void			*free_redirect(t_cmd *cmd);
 void			*free_cmd(t_cmd *cmd);
 char			*ft_strdupn(const char *s1, size_t n);
 void 			init_data(int32_t argc, char **argv, char **envp);
+
+#endif
+//link list section
+t_env_cpy					*create_node(char *variable, char *value);
+t_env_cpy					*create_list(t_data *data);
+char						*get_env_value(char *variable);
+
+//built in section
+void						execute_built_in(t_cmd *cmd, t_data *data);
+int32_t						cd_cmd(t_cmd *cmd);
+int32_t						echo_cmd(t_cmd *cmd);
+int32_t						env_cmd(t_data *data);
+int32_t						pwd_cmd(void);
+int32_t						export_cmd(t_data *data, t_cmd *cmd);
+int32_t						unset_cmd(t_data *data);
+
 
 #endif
