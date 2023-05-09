@@ -17,7 +17,7 @@ void	execute_built_in(t_cmd *cmd , t_data *data)
 	if (ft_strnstr(cmd->name, "export", len) != 0)
 		export(cmd);
 	if (ft_strnstr(cmd->name, "unset", len) != 0)
-		unset_cmd(cmd);
+		unset_cmd(data,cmd);
 	if (ft_strnstr(cmd->name, "exit", len) != 0)
 		exit_cmd (0);
 }
