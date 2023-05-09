@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 16:30:42 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 06:38:31 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,19 @@ bool	is_builtins(char *str)
 			return (true);
 		i++;
 	}
+	return (false);
+}
+
+cahr	get_end_of_cmd(char *str)
+{
+	t_token_type	type;
+
+	type = token->type;
+	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
+		|| type == TK_AMPERSAND || type == TK_GREATGREAT
+		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE
+		|| token->next == NULL)
+		return (true);
 	return (false);
 }
 
@@ -83,7 +96,7 @@ char	**get_options(t_token *token, int32_t end)
 
 	count = options_count(token, end);
 	if (count == 0)
-		return (NULL);	
+		return (NULL);
 	options = malloc(sizeof(char *) * count);
 	count--;
 	while (token && end > 0)
@@ -119,6 +132,16 @@ t_cmd_seq	get_sequence_type(t_token *token)
 	return (CMD_SEQUENTIAL);
 }
 
+static	char *get_cmd_name(t_cmd *cmd, t_token *token, char *str)
+{
+	char	*split;
+
+	split = ft_split(&str[get_token_at(start_i)->pos], ' ');
+	if (split && *split)
+		return (*split);
+	return (NULL);
+}
+
 t_cmd	*parse_cmds(t_token *token, char *str)
 {
 	t_cmd		*cmd;
@@ -137,12 +160,10 @@ t_cmd	*parse_cmds(t_token *token, char *str)
 	{
 		if (is_end_cmd_tk(token))
 		{
-			split = ft_split(&str[get_token_at(start_i)->pos], ' ');
-			if (split && *split)
-				cmd->name = *split;
-			else
+			cmd->name = get_cmd_name(cmd, token, str);
+			if (cmd->name == NULL)
 			{
-				continue;
+				continue ;
 				i++;
 			}
 			cmd->full_path_name = get_full_path(cmd->name);

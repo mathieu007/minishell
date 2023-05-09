@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 16:35:33 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 06:34:01 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,13 +180,22 @@ typedef struct s_token
 {
 	struct s_token	*next;
 	struct s_token	*prev;
-	char			*start_cmd;
-	char			*end_cmd;
+	char			*start;
 	char			*value;
 	int32_t			len;
 	int32_t			pos;
 	t_token_type	type;
 }				t_token;
+
+typedef struct s_token_group
+{
+	struct s_token_group	*next;
+	struct s_token_group	*prev;
+	t_token					*token;
+	char					*start;
+	char					*end;
+	int32_t					token_count;
+}				t_token_group;
 
 typedef struct s_data
 {
@@ -196,7 +205,10 @@ typedef struct s_data
 	char			**envp;
 	char			**paths;
 	int32_t			token_count;
+	t_token			*tokens;
+	t_token_group	*token_groups;
 	t_token			*last_token;
+	t_token			*last_token_group;
 }				t_data;
 
 /// @brief all the data functions
