@@ -6,7 +6,11 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/05/09 15:21:41 by bmartin          ###   ########.fr       */
+=======
+/*   Updated: 2023/05/09 15:48:43 by mroy             ###   ########.fr       */
+>>>>>>> origin/Math
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +168,7 @@ typedef struct s_pipe
 
 typedef struct s_cmd
 {
+<<<<<<< HEAD
 	struct s_cmd			*next;
 	struct s_cmd			*prev;
 	char					*name;
@@ -176,6 +181,20 @@ typedef struct s_cmd
 	t_redirect				*redirect;
 	pid_t					pid;
 }							t_cmd;
+=======
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
+	char			*name; /// the name of the command: cat, ls, echo ect...
+	char			*full_path_name; /// only for execve, the full path name to the command ex: /bin/ls or /bin/cat
+	char			**args; /// a terminating NULL list of string containing options and arguments
+	char			**options; /// a terminating NULL list of string containing only options
+	bool			is_builtin; /// is the command a builtins command?
+	t_cmd_seq		cmd_seq_type;
+	t_pipe			*pipe;
+	t_redirect		*redirect;
+	pid_t			pid;
+}				t_cmd;
+>>>>>>> origin/Math
 
 /// token->value contains the value of the token but whithout the termination char.
 /// if cmd = echo -n "fewfew" and token is -, value == -n "fewfew"
@@ -196,6 +215,8 @@ typedef struct s_token_group
 	struct s_token_group	*next;
 	struct s_token_group	*prev;
 	char					*start;
+	char					*end;
+	int32_t					len;
 	t_token					*first;
 	t_token					*last;
 	int32_t					token_count;
@@ -211,6 +232,7 @@ typedef struct s_env
 
 typedef struct s_data
 {
+<<<<<<< HEAD
 	int32_t					argc;
 	char					*str_cmds;
 	char					**argv;
@@ -271,6 +293,62 @@ char						*join_free1(char *path, const char *path2);
 char						*join(const char *path, const char *path2);
 char						*join_free(char *path, char *path2);
 bool						file_is_exec(char *absolute_path_to_file);
+=======
+	int32_t			argc;
+	char			*str_cmds;
+	char			**argv;
+	char			**env;
+	t_env			*env_cpy;
+	char			**paths;
+	int32_t			cmds_count;
+	int32_t			tokens_count;
+	int32_t			token_groups_count;	
+	t_token			*tokens;
+	t_token_group	*token_groups;
+	t_cmd			*cmds;
+	t_cmd			*last_cmd;
+	t_token			*last_token;
+	t_token_group	*last_token_group;
+}				t_data;
+
+/// @brief Thehe entities functions
+t_data			*get_data(void);
+t_token			*get_first_token(void);
+t_token			*add_token(char *str, int32_t char_pos, t_token_type type,
+					t_token_group *group);
+t_token_group	*add_token_group(char *start, char *end);
+t_cmd			*add_cmd(void);
+t_token_type	get_token_type(char *str);
+int32_t			*get_token_counter(void);
+t_token			*remove_token(t_token *tokens);
+int32_t			get_token_type_count(t_token_type type);
+t_token			*new_token();
+t_cmd			*new_cmd();
+t_cmd			*get_first_cmd(void);
+t_token_group	*get_first_token_group(void);
+t_token_group	*new_token_group();
+char			**get_builtins_cmd(void);
+
+/// @brief Simples and short helpers methods.
+char			*get_end_of_cmd(char *str);
+int32_t			get_token_type_len(t_token_type type);
+bool			type_is_end_of_seq(t_token_type type);
+bool			is_escaped_single_quote(char *str, int32_t i);
+bool			is_escaped_double_quote(char *str, int32_t i);
+bool			is_opening_single_quote(char *str, int32_t i);
+bool			is_closing_single_quote(char *str, int32_t i);
+bool			is_opening_double_quote(char *str, int32_t i);
+bool			is_closing_double_quote(char *str, int32_t i);
+bool			is_opening_parenthese(char *str, int32_t i);
+bool			is_closing_parenthese(char *str, int32_t i);
+bool			is_opening_curlybrace(char *str, int32_t i);
+bool			is_closing_curlybrace(char *str, int32_t i);
+char			*join_free2(const char *path, char *path2);
+char			*join_free1(char *path, const char *path2);
+char			*join(const char *path, const char *path2);
+char			*join_free(char *path, char *path2);
+bool			file_is_exec(char *absolute_path_to_file);
+>>>>>>> origin/Math
 /// get full path from relative path.
 char						*get_full_path(char *cmd_name);
 
@@ -281,15 +359,30 @@ int32_t						tokenize_double_quote(char *str, int32_t i,
 int32_t						tokenize_single_quote(char *str, int32_t i,
 								t_token_group *group);
 
+<<<<<<< HEAD
 int32_t						increment_counter(t_token_type type);
 int32_t						decrement_counter(t_token_type type);
+=======
+t_token			*tokenize(char *str);
+int32_t			tokenize_curlybrace(char *str, int32_t i);
+int32_t			tokenize_parenthese(char *str, int32_t i);
+int32_t			tokenize_double_quote(char *str, int32_t i, t_token_group *group);
+int32_t			tokenize_single_quote(char *str, int32_t i, t_token_group *group);
+>>>>>>> origin/Math
 
 char						**parse_env(char **envp, char *env_name);
 t_cmd						*parse_cmds(t_token *token);
 t_token						*get_token_at(int32_t index);
 bool						is_end_of_seq(t_token *token);
 
+<<<<<<< HEAD
 void						close_pipe_fds(t_cmd *cmd);
+=======
+char			**parse_env_path(char **envp);
+t_cmd			*parse_cmds(t_token *token);
+t_token			*get_token_at(int32_t index);
+bool			is_end_of_seq(t_token *token);
+>>>>>>> origin/Math
 
 void						*free_all(void);
 void						*free_all_and_exit(void);
@@ -301,7 +394,13 @@ void						*free_redirect(t_cmd *cmd);
 void						*free_cmd(t_cmd *cmd);
 char						*ft_strdupn(const char *s1, size_t n);
 
+<<<<<<< HEAD
 //built in section
+=======
+void			*free_cmd(t_cmd *cmd);
+char			*ft_strdupn(const char *s1, size_t n);
+void 			init_data(int32_t argc, char **argv, char **envp);
+>>>>>>> origin/Math
 
 void						execute_built_in(t_cmd *cmd, t_data *data);
 
