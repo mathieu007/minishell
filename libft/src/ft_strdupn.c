@@ -19,15 +19,7 @@ static char	*ft_strcpy(char *dest, const char *src)
 
 char	*ft_strdupn(const char *s1, size_t n)
 {
-<<<<<<< HEAD
 	char		*dest;
-=======
-<<<<<<< HEAD
-	char	*dest;
-=======
-	char		*dest;
->>>>>>> origin/Math
->>>>>>> origin/billy
 	size_t		src_l;
 
 	src_l = ft_strlen(s1);
