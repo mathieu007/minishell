@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:32:26 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/10 07:27:30 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,74 @@ static t_token_group	*tokenize_groups(char *str)
 	if (start != &str[i])
 		add_token_group(start, &str[i]);
 	return (get_first_token_group());
+}
+
+/// @brief single quote str is a string literal
+int32_t	cpy_single_quote_str(char *str, char *output, int32_t i)
+{
+	if (!str[i])
+		return (i);
+	if (is_opening_single_quote(str, i))
+	{
+		while (str[i])
+		{
+			output[i] = str[i];
+			if (is_closing_single_quote(str, i))
+			{
+				i++;
+				break ;
+			}
+			i++;
+		}
+	}
+	return (i);
+}
+
+void	replace_env_name(char *input, char *output)
+{
+	int32_t	i;
+	int32_t	out_i;
+	char	*var_name;
+
+	i = 0;
+	out_i = 0;
+	while (input[i])
+	{
+		i = cpy_single_quote_str(input, output, i);
+		if (is_escaped_env_variable(input, i))
+		{
+			output[i] = input[i++];
+			output[i] = input[i];
+		}
+		else if (is_env_variable(input, i))
+		{
+			var_name = get_env_variable(input, i);
+		}
+		i++;
+	}
+}
+
+int32_t	get_parsed_env_len(char *str)
+{
+	int32_t	i;
+	int32_t	env_len;
+	char	*var_name;
+
+	i = 0;
+	env_len = 0;
+	while (str[i])
+	{
+		if (str[i] == '\\')
+			i++;
+		else if (is_env_variable(str, i))
+		{
+			var_name = get_env_variable(str, i);
+			env_len += ft_strlen(get_env_value(var_name));
+			i++;
+		}
+		i++;
+	}
+	return (env_len + i);
 }
 
 t_token	*tokenize(char *str)

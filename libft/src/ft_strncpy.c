@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/20 12:57:53 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/09 20:18:55 by math             ###   ########.fr       */
+/*   Created: 2022/10/18 11:47:31 by mroy              #+#    #+#             */
+/*   Updated: 2023/05/09 20:07:55 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_isalnum(int c)
+char	*ft_strncpy(char *src, size_t len)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0'
-			&& c <= '9'))
+	size_t	i;
+	char	*new;
+
+	i = 0;
+	if (len <= 0)
+		return (NULL);
+	new = malloc(len + 1);
+	if (!new)
+		return (NULL);
+	while (src[i])
 	{
-		return (1);
+		new[i] = src[i];
+		i++;
 	}
-	return (0);
+	new[i] = '\0';
+	return (new);
 }
