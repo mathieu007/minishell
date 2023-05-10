@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 12:27:06 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/10 12:35:56 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int32_t	pwd_cmd()
+void	pwd_cmd()
 {
 	char	cwd[1024];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		printf("%s\n", cwd);
 	else
-		perror("getcwd() error");
+		perror("getcwd() error");		
 }
