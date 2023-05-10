@@ -222,32 +222,32 @@ typedef struct s_data
 	t_token_group	*last_token_group;
 }				t_data;
 
-/// @brief Thehe entities functions
+/// @brief The entities functions
 t_data			*get_data(void);
+t_token_group	*get_first_token_group(void);
 t_token			*get_first_token(void);
+t_cmd			*get_first_cmd(void);
+char			**get_builtins_cmd(void);
+t_token_type	get_token_type(char *str);
+int32_t			*get_token_counter(void);
+int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(char *str, int32_t char_pos, t_token_type type,
 					t_token_group *group);
 t_token_group	*add_token_group(char *start, char *end);
 t_cmd			*add_cmd(void);
-t_token_type	get_token_type(char *str);
-int32_t			*get_token_counter(void);
-t_token			*remove_token(t_token *tokens);
-int32_t			get_token_type_count(t_token_type type);
 t_token			*new_token();
 t_cmd			*new_cmd();
-t_cmd			*get_first_cmd(void);
-t_token_group	*get_first_token_group(void);
 t_token_group	*new_token_group();
-char			**get_builtins_cmd(void);
 
 /// @brief Simples and short helpers methods.
-int32_t			get_env_variable_len(char *str, int32_t i);
+
+int32_t			get_env_var_name_len(char *str, int32_t i);
 char			*get_env_variable(char *str, int32_t i);
 char			*get_end_of_cmd(char *str);
 int32_t			get_token_type_len(t_token_type type);
 bool			type_is_end_of_seq(t_token_type type);
 bool			is_env_variable(char *str, int32_t i);
-bool			is_escaped_env_variable(char *str, int32_t i);
+bool			is_esc_env_var(char *str, int32_t i);
 bool			is_escaped_single_quote(char *str, int32_t i);
 bool			is_escaped_double_quote(char *str, int32_t i);
 bool			is_opening_single_quote(char *str, int32_t i);
@@ -263,26 +263,32 @@ char			*join_free1(char *path, const char *path2);
 char			*join(const char *path, const char *path2);
 char			*join_free(char *path, char *path2);
 bool			file_is_exec(char *absolute_path_to_file);
+
 /// get full path from relative path.
 char			*get_full_path(char *cmd_name);
 
+/// tokenizer functions
 t_token			*tokenize(char *str);
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);
 int32_t			tokenize_double_quote(char *str, int32_t i, t_token_group *group);
 int32_t			tokenize_single_quote(char *str, int32_t i, t_token_group *group);
+char			*cpy_single_quote_str(char *str, char *output, int32_t *i);
+char			*cpy_esc_env_var(char *input, char *output, int32_t *i);
+char			*cpy_env_var_value(char *input, char *output, int32_t *i);
 
 int32_t			increment_counter(t_token_type type);
 int32_t			decrement_counter(t_token_type type);
 
+/// parsing
+char			*parse_env(char *str);
+void			replace_env_name(char *input, char *output);
 char			**parse_env_path(char **envp);
 t_cmd			*parse_cmds(t_token *token);
 t_token			*get_token_at(int32_t index);
 bool			is_end_of_seq(t_token *token);
-void			close_pipe_fds(t_cmd *cmd);
 
 void			close_pipe_fds(t_cmd *cmd);
-
 void			*free_all(void);
 void			*free_all_and_exit(void);
 t_pipe			*new_pipe(t_cmd *cmd);
