@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 21:41:11 by math             ###   ########.fr       */
+/*   Updated: 2023/05/10 07:02:22 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ inline char	*get_env_variable(char *str, int32_t i)
 	if (str[i] == '$' && ft_isalpha(str[start]) == 1)
 	{
 		var_name = ft_strncpy(&str[start], len);
-		return (var_name);
+		return (NULL);
 	}
 	return (NULL);
 }
