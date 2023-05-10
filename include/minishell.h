@@ -310,7 +310,7 @@ int32_t						cd_cmd(t_cmd *cmd);
 void						echo_cmd(t_cmd *cmd);
 void						env_cmd(t_data *data);
 void						pwd_cmd(void);
-int32_t						export_cmd(t_data *data, t_cmd *cmd);
-int32_t	unset_cmd(t_data *data, t_cmd *cmd);
+void						export_cmd(t_data *data, t_cmd *cmd);
+void						unset_cmd(t_data *data, t_cmd *cmd);
 
 #endif

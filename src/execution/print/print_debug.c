@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_debug.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 13:25:53 by bmartin           #+#    #+#             */
-/*   Updated: 2023/05/10 15:49:53 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/10 16:13:28 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ void	print_cmd(t_cmd *command)
 		printf("ARGS = \n");
 		while (cpy->args[i])
 		{
-			printf("[%s]  ", i, cpy->args[i]);
+			printf("[%s]  ", cpy->args[i]);
 			i++;
 		}
 		printf("\n");
 
 		printf(" cmd_seq_type = %i\n", (int)cpy->cmd_seq_type);
 
-		printf("full_path_name = %s\n", i, cpy->full_path_name);
+		printf("full_path_name = %s\n", cpy->full_path_name);
 
 		printf("is_builtin = %i\n", cpy->is_builtin);
 
@@ -84,8 +84,7 @@ void	print_token(t_token *token)
 void	print_token_group(t_token_group *token)
 {
 	t_token_group	*cpy;
-	int		i=0;
-	int j =0;
+	int j = 0;
 
 	cpy = token;
 	printf("[[TOKEN GROUP CHAINLIST]]\n\n");

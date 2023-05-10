@@ -4,6 +4,8 @@
 
 void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 {
+	(void)sig;
+	(void)context;
 	if (siginfo->si_signo == SIGINT)
 	{
 		printf("\nInterrupted with Ctrl + C\n");

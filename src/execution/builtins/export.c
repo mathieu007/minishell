@@ -22,7 +22,7 @@ void	swap_node_value(t_env_cpy *a, t_env_cpy *b)
 	b->variable = tmp;
 }
 
-void	export_no_variable(t_data *data, t_cmd *cmd)
+void	export_no_variable(t_data *data)
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
@@ -51,7 +51,7 @@ void	export_no_variable(t_data *data, t_cmd *cmd)
 	//////FREE chain list
 }
 
-int32_t	export_cmd(t_data *data, t_cmd *cmd)
+void	export_cmd(t_data *data, t_cmd *cmd)
 {
 	t_env_cpy	*current;
 	char		**split_on_equal;
@@ -61,16 +61,16 @@ int32_t	export_cmd(t_data *data, t_cmd *cmd)
 	i = 0;
 	current = data->env_cpy;
 	if (cmd->args[0] == NULL)
-		export_no_variable(data, cmd);
+		export_no_variable(data);
 	if (cmd->options[0] != NULL)
-		printf("Export option \"%s\" not handle \n", cmd->options);
+		printf("Export option \"%s\" not handle \n", cmd->options[0]);
 	while (cmd->args[i])
 	{
 		while (current)
 		{
-			split_on_equal = ft_split(cmd->args, '=');
+			split_on_equal = ft_split(cmd->args[i], '=');
 			if (!split_on_equal)
-				return (NULL);
+				return ;   ////// ad protection freeee
 			len = ft_strlen(split_on_equal[0]);
 			if (ft_strnstr(split_on_equal[i], current->variable, len) != 0)
 				current->value = cmd->args[i];

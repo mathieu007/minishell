@@ -2,10 +2,10 @@
 
 int32_t	main(int32_t argc, char **argv, char **env)
 {
-	char 	*input;
+	char 	*input;	
+	char 	*out;	
+	
 	init_data(argc, argv, env);
-	char 	*out;
-
 	while (1)
 	{
 		input = readline("MiniShell> ");

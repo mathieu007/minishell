@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int32_t	unset_cmd(t_data *data, t_cmd *cmd)
+void	unset_cmd(t_data *data, t_cmd *cmd)
 {
 	t_env_cpy	*current;
 	int			i;
@@ -9,7 +9,7 @@ int32_t	unset_cmd(t_data *data, t_cmd *cmd)
 	i = 0;
 	current = data->env_cpy;
 	if (cmd->options[0] != NULL)
-		printf("Unset option \"%s\" not handle \n", cmd->options);
+		printf("Unset option \"%s\" not handle \n", cmd->options[0]);
 	while (cmd->args[i])
 	{
 		while (current)

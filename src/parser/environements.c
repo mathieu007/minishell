@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 15:57:53 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/10 16:35:37 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int32_t	parse_env_var_name_len(char *env_start, int32_t i)
 	if (env_start[i] == '$' && ft_isalpha(env_start[start]) == 1)
 	{
 		i++;
-		while (ft_isalnum(env_start[i]) == 1)
+		while (env_start[i] && ft_isalnum(env_start[i]) == 1)
 			len++;
 	}
 	return (len);
@@ -66,7 +66,8 @@ char	*cpy_env_var_value(char *input, char *output, int32_t *i)
 	if (!input[*i])
 		return (output);
 	var_name_len = parse_env_var_name_len(input, *i);		
-	var_name = parse_env_var_name(input, *i);	
+	var_name = parse_env_var_name(input, *i);
+	printf("var_name: %s\n", var_name);
 	var_value = get_env_value(var_name);
 	var_value_len = ft_strlen(var_value);
 	while (var_value_len != 0)
@@ -91,6 +92,7 @@ void	replace_env_name(char *input, char *output)
 	i = 0;
 	while (input[i])
 	{
+		
 		if (is_opening_single_quote(input, i))
 			output = cpy_single_quote_str(input, output, &i);
 		else if (is_esc_env_var(input, i))
@@ -130,12 +132,13 @@ int32_t	get_new_env_len(char *str)
 char	*parse_env(char *str)
 {
 	int32_t	new_env_len;
-	char 	*dest;
-	printf("123\n");
+	char 	*dest;	
 	new_env_len = get_new_env_len(str);
 	if (new_env_len == 0)
 		return (NULL);
 	dest = malloc(new_env_len + 1);
+	if (!dest)
+		return (NULL);
 	replace_env_name(str, dest);
 	return (dest);
 }
