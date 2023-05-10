@@ -4,7 +4,9 @@ void	execute_built_in(t_cmd *cmd , t_data *data)
 {
 	size_t	len;
 
-	printf("you are using a built in command \n");
+	
+	//printf("you are using a built in command \n");
+	
 	len = ft_strlen(cmd->name);
 	if (ft_strnstr(cmd->name, "echo", len) != 0)
 		echo_cmd (cmd);
