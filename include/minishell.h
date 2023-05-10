@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 19:52:52 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/10 14:38:34 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,6 +317,10 @@ int32_t						echo_cmd(t_cmd *cmd);
 int32_t						env_cmd(t_data *data);
 int32_t						pwd_cmd(void);
 int32_t						export_cmd(t_data *data, t_cmd *cmd);
-int32_t	unset_cmd(t_data *data, t_cmd *cmd);
+int32_t						unset_cmd(t_data *data, t_cmd *cmd);
+
+//signal
+void						sig_handler(int sig, siginfo_t *siginfo,
+								void *context);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 10:25:07 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/10 14:40:40 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,21 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	t_cmd	*cmd;
 	t_data *data;
 
+	/////signal handle part /////
+	struct sigaction act;
+	
+    act.sa_sigaction = sig_handler;
+    act.sa_flags = SA_SIGINFO;
+    sigaction(SIGINT, &act, NULL);
+    sigaction(SIGQUIT, &act, NULL);
+		/////signal handle part /////
+
 	(void)(argc);
 	(void)(argv);
 	(void)(env);
 	while (1)
 	{
+		while( signal(SIGINT, sig_handler))
 		input = readline("MiniShell> ");
 		if (strcmp(input, "exit") == 0)
 			break ;
