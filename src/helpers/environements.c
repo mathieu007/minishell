@@ -1,24 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_variable.c                                     :+:      :+:    :+:   */
+/*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 07:02:22 by math             ###   ########.fr       */
+/*   Updated: 2023/05/10 09:58:43 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-inline bool	is_escaped_env_variable(char *str, int32_t i)
+inline bool	is_esc_env_var(char *str, int32_t i)
 {
 	if (!str || !str[i])
 		return (false);
 	return (str[i] == '\\' && str[i + 1] != '\0' && str[i + 1] == '$');
 }
 
+/// @brief this function assusme that preceding char is not an escaped char
+/// use is_escaped_env_variable(str ,i) before
+/// @param str 
+/// @param i 
+/// @return 
 inline bool	is_env_variable(char *str, int32_t i)
 {
 	if (!str || !str[i])
@@ -26,38 +31,3 @@ inline bool	is_env_variable(char *str, int32_t i)
 	return (str[i] == '$');
 }
 
-inline int32_t	get_env_variable_len(char *str, int32_t i)
-{
-	size_t	len;
-	int32_t	start;
-
-	len = 0;
-	if (!str || !str[i])
-		return (0);
-	start = i + 1;
-	if (str[i] == '$' && ft_isalpha(str[start]) == 1)
-	{
-		i++;
-		while (ft_isalnum(str[i]) == 1)
-			len++;
-	}
-	return (len);
-}
-
-inline char	*get_env_variable(char *str, int32_t i)
-{
-	size_t	len;
-	int32_t	start;
-	char	*var_name;
-
-	if (!str || !str[i])
-		return (0);
-	len = get_env_variable_len(str, i);
-	start = i + 1;
-	if (str[i] == '$' && ft_isalpha(str[start]) == 1)
-	{
-		var_name = ft_strncpy(&str[start], len);
-		return (NULL);
-	}
-	return (NULL);
-}
