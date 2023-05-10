@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:32:26 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/09 21:44:29 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,55 @@ static t_token_group	*tokenize_groups(char *str)
 	if (start != &str[i])
 		add_token_group(start, &str[i]);
 	return (get_first_token_group());
+}
+
+void	replace_env_name(char *str)
+{
+	int32_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (is_opening_single_quote(str, i))
+		{
+			while (str[i])
+			{
+				if (is_closing_single_quote(str, i))
+					break ;
+				i++;
+			}
+		}
+		else if (is_escaped_env_variable(str, i))
+			i++;
+		else if (is_env_variable(str, i))
+			
+		i++;
+	}
+}
+
+int32_t	get_parsed_len(char *str)
+{
+	int32_t	i;
+	int32_t	var_len;
+	int32_t	full_len;
+	char	*var_name;
+
+	i = 0;
+	var_len = 0;
+	full_len = 0;
+	while (str[i])
+	{
+		if (str[i] == '\\')
+			i++;
+		else if (is_env_variable(str, i))
+		{
+			var_name = get_env_variable(str, i);
+			full_len += ft_strlen(get_env_value(var_name));
+			i++;
+		}
+		i++;
+	}
+	return (full_len + i);
 }
 
 t_token	*tokenize(char *str)

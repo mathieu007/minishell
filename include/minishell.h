@@ -1,18 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:51 by math              #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/05/09 16:56:57 by mroy             ###   ########.fr       */
-=======
-/*   Updated: 2023/05/09 16:42:33 by bmartin          ###   ########.fr       */
->>>>>>> origin/billy
-/*                                                                            */
-/* ************************************************************************** */
+
+# ifndef PATH_MAX
+# define PATH_MAX 1024
+#endif
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -37,10 +26,6 @@
 # define BUILTINS_ECHO "echo"
 
 # define SEPARATOR (char)29
-
-# ifndef PATH_MAX
-# define PATH_MAX 1024
-#endif
 
 /// @brief 
 /// TK_CMD ls, cd, grep...,
@@ -256,9 +241,13 @@ t_token_group	*new_token_group();
 char			**get_builtins_cmd(void);
 
 /// @brief Simples and short helpers methods.
+int32_t			get_env_variable_len(char *str, int32_t i);
+char			*get_env_variable(char *str, int32_t i);
 char			*get_end_of_cmd(char *str);
 int32_t			get_token_type_len(t_token_type type);
 bool			type_is_end_of_seq(t_token_type type);
+bool			is_env_variable(char *str, int32_t i);
+bool			is_escaped_env_variable(char *str, int32_t i);
 bool			is_escaped_single_quote(char *str, int32_t i);
 bool			is_escaped_double_quote(char *str, int32_t i);
 bool			is_opening_single_quote(char *str, int32_t i);

@@ -1,21 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 16:29:19 by mroy             ###   ########.fr       */
-=======
-/*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 16:35:53 by bmartin          ###   ########.fr       */
->>>>>>> origin/billy
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -26,6 +8,8 @@ t_env_cpy	*create_node(char *variable, char *value)
 	node = malloc(sizeof(t_env_cpy));
 	if (node == NULL)
 		return (NULL);
+	node->value = value;
+	node->variable = variable;
 	return (node);
 }
 
@@ -58,16 +42,6 @@ t_env_cpy	*create_list(t_data *data)
 
 int32_t	env_cmd(t_data *data)
 {
-<<<<<<< HEAD
-	t_env_cpy *current;
-
-	current = data->env_cpy;
-	while(current)
-	{
-		printf("%s=%s\n",data->env_cpy->variable,data->env_cpy->value);
-		current = current->next;
-	}
-=======
 	t_env_cpy	*current;
 
 	if (!data->env_cpy)
@@ -88,17 +62,14 @@ char *get_env_value(char *variable)
 	size_t len;
 
 	len = ft_strlen(variable);
-
 	head = get_data()->env_cpy;
 	current = head;
-	while(current)
+	while (current)
 	{
 		if (ft_strnstr(variable, current->value, len) != 0)
-			return(current->variable);
+			return (current->variable);
 		else
 		current = current->next;
 	}
-	return(NULL);
-	
->>>>>>> origin/billy
+	return (NULL);
 }
