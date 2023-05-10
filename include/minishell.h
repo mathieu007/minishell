@@ -1,8 +1,3 @@
-
-# ifndef PATH_MAX
-# define PATH_MAX 1024
-#endif
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -26,6 +21,8 @@
 # define BUILTINS_ECHO "echo"
 
 # define SEPARATOR (char)29
+
+
 
 /// @brief 
 /// TK_CMD ls, cd, grep...,
@@ -195,11 +192,12 @@ typedef struct s_token_group
 	int32_t					token_count;
 }				t_token_group;
 
-typedef struct s_env
+typedef struct s_env_cpy
 {
 	char					*variable;
 	char					*value;
 	struct s_env_cpy		*next;
+	struct s_env_cpy		*prev;
 
 }							t_env_cpy;
 
@@ -300,20 +298,19 @@ void			*free_cmd(t_cmd *cmd);
 char			*ft_strdupn(const char *s1, size_t n);
 void 			init_data(int32_t argc, char **argv, char **envp);
 
-#endif
 //link list section
 t_env_cpy					*create_node(char *variable, char *value);
 t_env_cpy					*create_list(t_data *data);
 char						*get_env_value(char *variable);
-
+void						add_env_node(t_data *data, char *variable,
+								char *value);
 //built in section
 void						execute_built_in(t_cmd *cmd, t_data *data);
 int32_t						cd_cmd(t_cmd *cmd);
-int32_t						echo_cmd(t_cmd *cmd);
-int32_t						env_cmd(t_data *data);
-int32_t						pwd_cmd(void);
+void						echo_cmd(t_cmd *cmd);
+void						env_cmd(t_data *data);
+void						pwd_cmd(void);
 int32_t						export_cmd(t_data *data, t_cmd *cmd);
-int32_t						unset_cmd(t_data *data);
-
+int32_t	unset_cmd(t_data *data, t_cmd *cmd);
 
 #endif

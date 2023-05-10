@@ -1,10 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-
-
 #include "minishell.h"
 
 int32_t	main(int32_t argc, char **argv, char **env)
@@ -14,6 +7,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	t_cmd	*cmd;
 	t_data 	*data;
 	init_data(argc, argv, env);
+	char 	*out;
 
 	while (1)
 	{
@@ -21,7 +15,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		if (strcmp(input, "exit") == 0)
 			break ;
 		add_history(input);
-		replace_env_name(input, );
+		out = parse_env(input);
 		system(input);
 	}
 	return (0);
