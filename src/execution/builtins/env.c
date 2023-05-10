@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 19:46:05 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/10 12:33:30 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ t_env_cpy	*create_list(t_data *data)
 	int			i;
 
 	i = 0;
-	split_on_nl = ft_split(data->env, '\n');
-	if (!split_on_nl)
-		return (NULL);
+	while(data->env[i])
 	split_on_equal = ft_split(split_on_nl[i], '=');
 	head = create_node(split_on_equal[0], split_on_equal[1]);
 	if (!head)
@@ -42,7 +40,7 @@ t_env_cpy	*create_list(t_data *data)
 	while (split_on_nl[++i])
 	{
 		split_on_equal = ft_split(split_on_nl[i], '=');
-		current->next = create_command_node(split_on_equal[0],
+		current->next = create_node(split_on_equal[0],
 											split_on_equal[1]);
 	if(current->next)
 		current->next->prev = current;
