@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 09:16:59 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/10 15:16:44 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int32_t	count_prev_dir(char *relative_path)
 
 	count = 0;
 	if (!relative_path)
-		return (NULL);
+		return (0);
 	while (*relative_path)
 	{
 		if (*relative_path++ == '.'
@@ -96,9 +96,8 @@ static char	*try_get_relative_dir2(char *cmd_name)
 /// @return 
 char	*get_full_path(char *cmd_name)
 {
-	static char	buffer[PATH_MAX + 1];
+	//static char	buffer[PATH_MAX + 1];
 	char		*path;
-	int32_t		count;
 
 	path = try_get_relative_dir(cmd_name);
 	if (path)

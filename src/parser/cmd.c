@@ -6,23 +6,41 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:40:49 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/10 15:11:10 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	void	*free_slpit(char **split)
-{
-	if (split != NULL)
-	{
-		split++;
-		while (*split)
-			free(*split);
-		free(split);
-	}
-	return (NULL);
-}
+// static	char *get_cmd_name(t_token_group *group)
+// {
+// 	char	**split;
+// 	int32_t	i;
+// 	char	*name;
+	
+// 	split = ft_split(group->first->start, ' ');
+// 	if (!split)
+// 		return (NULL);
+// 	if (!*split)
+// 		return (free(split), NULL);
+// 	i = 1;
+// 	while (split[i])
+// 		free(split[i]);
+// 	name = *split;
+// 	return (free(split), name);
+// }
+
+// static	void	*free_slpit(char **split)
+// {
+// 	if (split != NULL)
+// 	{
+// 		split++;
+// 		while (*split)
+// 			free(*split);
+// 		free(split);
+// 	}
+// 	return (NULL);
+// }
 
 bool	is_builtins(char *str)
 {
@@ -115,38 +133,87 @@ char	**get_options(t_token_group *group)
 	return (options);
 }
 
-char	**get_arguments(t_token_group *group)
+int32_t	get_args_split_len(char *str)
 {
-	char		*str;
-	int32_t		cmd_len;
-	char 		*cmd_name;
-	t_token 	*token;
-	char		*str;
+	int32_t	i;
+	int32_t	len;
 	
-	cmd_name = get_cmd_name(group);
-	cmd_len = ft_strlen(cmd_name);
-	str = &(group->start)[cmd_len];	
-	while (str)
+	i = 0;
+	len = 0;
+	while (str[i])
 	{
-		token = token->next;
+		if (is_escaped_double_quote(str,i)
+			|| is_escaped_single_quote(str, i))
+			i++;
+		else if (is_opening_double_quote(str, i)
+			|| is_opening_single_quote(str, i))
+		{
+			len++;
+			i++;
+		}
+		if (str[i++] == ' ')
+			len++;
+		while (str[i] == ' ')
+			i++;
+	}
+	return (len);
+}
+
+void	add_args(char *str, char **split)
+{
+	int32_t	i;
+	int32_t	start;
+	int32_t	split_i;
+	
+	i = 0;
+	start = 0;
+	split_i = 0;
+	while (str[i])
+	{
+		if (is_escaped_double_quote(str,i)
+			|| is_escaped_single_quote(str, i))
+			i++;
+		else if (is_opening_double_quote(str, i)
+			|| is_opening_single_quote(str, i))
+		{			
+			start = i;
+			i++;
+			while (!is_closing_double_quote(str, i)
+				&& !is_closing_single_quote(str, i))
+			{
+				split[split_i] =  ft_substr(str, start, i - start);
+				split_i++;
+			}			
+		}
+		if (str[i++] == ' ')
+		{			
+			while (str[i] == ' ')
+				i++;
+			start = i;
+			while (str[i] && str[i] != ' ')
+				i++;
+			split[split_i] =  ft_substr(str, start, i - start);
+			split_i++;
+		}			
 	}
 }
 
-char	**get_arguments(t_token_group *group)
-{
-	char		*str;
-	int32_t		cmd_len;
-	char 		*cmd_name;
-	t_token 	*token;
-	char		*str;
-	
-	cmd_name = get_cmd_name(group);
-	cmd_len = ft_strlen(cmd_name);
-	str = &(group->start)[cmd_len];	
-	while (str)
-	{
-		token = token->next;
-	}
+
+char	**split_args(char *str)
+{	
+	char	*start;
+	int32_t	i;
+	int32_t	args_len;
+	char	**split;
+		
+	start = str;
+	i = 0;
+	args_len = get_args_split_len(str);
+	split = malloc(args_len * sizeof(char *));
+	if (!split)
+		return (NULL);
+	add_args(str, split);
+	return (split);
 }
 
 t_cmd_seq	get_sequence_type(t_token_group *group)
@@ -161,44 +228,26 @@ t_cmd_seq	get_sequence_type(t_token_group *group)
 	return (CMD_SEQUENTIAL);
 }
 
-static	char *get_cmd_name(t_token_group *group)
-{
-	char	*split;
-	int32_t	i;
-	
-	split = ft_split(group->first->start, ' ');
-	if (!split)
-		return (NULL);
-	if (!*split)
-		return (free(split), NULL);
-	i = 1;
-	while (split[i])
-		free(split[i]);
-	return (*split);
-}
-
 t_cmd	*parse_cmd(t_token_group *group)
 {
 	t_cmd		*cmd;
+	char		**args;
 
 	cmd = add_cmd();
-	cmd->name = get_cmd_name(group);
+	args = split_args(group->start);
+	cmd->name = args[0];
 	if (cmd->name == NULL)
-		return (NULL);
+		return (NULL);	
 	cmd->full_path_name = get_full_path(cmd->name);
 	cmd->is_builtin = is_builtins(cmd->name);
 	cmd->options = get_options(group);
 	cmd->cmd_seq_type = get_sequence_type(group);
-	cmd->args = get_arguments(group);
+	cmd->args = &args[0];
+	return (cmd);
 }
 
-t_cmd	*parse_cmds(t_token_group *group, char *str)
+t_cmd	*parse_cmds(t_token_group *group)
 {
-	char		*split;
-	int32_t		i;
-	int32_t		start_i;
-	int32_t		char_pos;
-
 	if (!group)
 		return (NULL);
 	while (group)

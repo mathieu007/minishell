@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 11:37:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/10 15:57:53 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ char	*cpy_env_var_value(char *input, char *output, int32_t *i)
 	
 	if (!input[*i])
 		return (output);
-	var_name_len = parse_env_var_name_len(input, i);		
-	var_name = parse_env_var_name(input, i);	
+	var_name_len = parse_env_var_name_len(input, *i);		
+	var_name = parse_env_var_name(input, *i);	
 	var_value = get_env_value(var_name);
 	var_value_len = ft_strlen(var_value);
 	while (var_value_len != 0)
@@ -74,7 +74,7 @@ char	*cpy_env_var_value(char *input, char *output, int32_t *i)
 		*output++ = input[(*i)++];
 		var_value_len--;
 	}
-	*i = i + var_name_len + 1;
+	*i = *i + var_name_len + 1;
 	return (output);
 }
 
@@ -129,10 +129,9 @@ int32_t	get_new_env_len(char *str)
 
 char	*parse_env(char *str)
 {
-	int32_t	i;
 	int32_t	new_env_len;
 	char 	*dest;
-
+	printf("123\n");
 	new_env_len = get_new_env_len(str);
 	if (new_env_len == 0)
 		return (NULL);
@@ -143,7 +142,6 @@ char	*parse_env(char *str)
 
 char	**parse_env_path(char **env)
 {
-	char			**env;
 	const int32_t	var_name_len = 4;
 	char			**split_env;
 	

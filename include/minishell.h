@@ -6,8 +6,8 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <libft.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+# include "readline.h"
+# include "history.h"
 # include <sys/wait.h>
 # include <unistd.h>
 # include <limits.h>
@@ -282,7 +282,7 @@ int32_t			decrement_counter(t_token_type type);
 char			*parse_env(char *str);
 void			replace_env_name(char *input, char *output);
 char			**parse_env_path(char **envp);
-t_cmd			*parse_cmds(t_token *token);
+t_cmd  			*parse_cmds(t_token_group *group);
 t_token			*get_token_at(int32_t index);
 bool			is_end_of_seq(t_token *token);
 
