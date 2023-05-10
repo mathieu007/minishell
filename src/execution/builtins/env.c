@@ -58,16 +58,6 @@ t_env_cpy	*create_list(t_data *data)
 
 int32_t	env_cmd(t_data *data)
 {
-<<<<<<< HEAD
-	t_env_cpy *current;
-
-	current = data->env_cpy;
-	while(current)
-	{
-		printf("%s=%s\n",data->env_cpy->variable,data->env_cpy->value);
-		current = current->next;
-	}
-=======
 	t_env_cpy	*current;
 
 	if (!data->env_cpy)
@@ -100,5 +90,4 @@ char *get_env_value(char *variable)
 	}
 	return(NULL);
 	
->>>>>>> origin/billy
 }
