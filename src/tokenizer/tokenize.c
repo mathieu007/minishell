@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/11 11:13:40 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 12:52:02 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_token	*tokenize(char *str)
 		while (str[i])
 		{			
 			type = get_token_type(&str[i]);
+			printf("tk_type:%i\n", type);			
 			if (is_opening_single_quote(str, i))
 				i += tokenize_single_quote(str, i, group);
 			else if (is_opening_double_quote(str, i))
