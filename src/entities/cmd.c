@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 13:15:02 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 11:37:10 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,17 @@ inline t_cmd	*get_first_cmd(void)
 	if (cmd == NULL)
 	{
 		cmd = new_cmd();
+		get_data()->last_cmd = cmd;
 		return (cmd);
 	}		
 	return (&cmd[0]);
+}
+
+inline t_cmd	*get_last_cmd(void)
+{
+	if (!get_data()->last_cmd)
+		return (get_first_cmd());
+	return (get_data()->last_cmd);
 }
 
 inline t_cmd	*add_cmd(void)
@@ -39,8 +47,8 @@ inline t_cmd	*add_cmd(void)
 	t_cmd		*last;
 	t_cmd		*new;
 
-	last = get_data()->last_cmd;
-	if (last->prev == NULL)
+	last = get_last_cmd();
+	if (!last->prev)
 		new = last;
 	else
 	{

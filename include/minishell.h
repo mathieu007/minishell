@@ -49,8 +49,8 @@
 ///	TK_BACKSLASH \,
 typedef enum e_token_type
 {
-	TK_UNKNOWN = 0,
-	TK_END = -1,
+	TK_UNKNOWN = 255 * 255,
+	TK_END = (int32_t)'\0',
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -224,8 +224,11 @@ typedef struct s_data
 t_redirect		*new_redirect(t_cmd *cmd);
 t_data			*get_data(void);
 t_token_group	*get_first_token_group(void);
+t_token_group	*get_last_token_group(void);
 t_token			*get_first_token(void);
+t_token			*get_last_token(void);
 t_cmd			*get_first_cmd(void);
+t_cmd			*get_last_cmd(void);
 char			**get_builtins_cmd(void);
 t_token_type	get_token_type(char *str);
 int32_t			*get_token_counter(void);
@@ -285,6 +288,7 @@ void			replace_env_name(char *input, char *output);
 char			**parse_env_path(char **envp);
 t_cmd  			*parse_cmds(t_token_group *group);
 t_token			*get_token_at(int32_t index);
+
 bool			is_end_of_seq(t_token *token);
 
 void			close_pipe_fds(t_cmd *cmd);

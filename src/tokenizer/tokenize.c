@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 19:41:59 by math             ###   ########.fr       */
+/*   Updated: 2023/05/11 11:13:40 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,12 @@ t_token	*tokenize(char *str)
 	int32_t			i;
 	t_token_type	type;
 	t_token_group	*group;
-	// t_token			*token;
 
 	group = tokenize_groups(str);
 	while (group)
 	{
 		i = 0;
 		str = group->start;
-		// token = NULL;
 		while (str[i])
 		{			
 			type = get_token_type(&str[i]);
