@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 16:35:37 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 07:08:36 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int32_t	parse_env_var_name_len(char *env_start, int32_t i)
 	if (env_start[i] == '$' && ft_isalpha(env_start[start]) == 1)
 	{
 		i++;
-		while (env_start[i] && ft_isalnum(env_start[i]) == 1)
+		while (env_start[i] && ft_isalnum(env_start[i++]) == 1)
 			len++;
 	}
 	return (len);
@@ -62,12 +62,13 @@ char	*cpy_env_var_value(char *input, char *output, int32_t *i)
 	char	*var_value;
 	int32_t	var_name_len;
 	int32_t	var_value_len;
-	
+
 	if (!input[*i])
 		return (output);
-	var_name_len = parse_env_var_name_len(input, *i);		
+	printf("cpy_env_var_value:\n");
+	var_name_len = parse_env_var_name_len(input, *i);
 	var_name = parse_env_var_name(input, *i);
-	printf("var_name: %s\n", var_name);
+
 	var_value = get_env_value(var_name);
 	var_value_len = ft_strlen(var_value);
 	while (var_value_len != 0)
@@ -92,7 +93,6 @@ void	replace_env_name(char *input, char *output)
 	i = 0;
 	while (input[i])
 	{
-		
 		if (is_opening_single_quote(input, i))
 			output = cpy_single_quote_str(input, output, &i);
 		else if (is_esc_env_var(input, i))
@@ -109,6 +109,7 @@ int32_t	get_new_env_len(char *str)
 	int32_t	i;
 	int32_t	env_len;
 	char	*var_name;
+	char	*var_value;
 
 	i = 0;
 	env_len = 0;
@@ -121,7 +122,8 @@ int32_t	get_new_env_len(char *str)
 		else if (is_env_variable(str, i))
 		{
 			var_name = parse_env_var_name(str, i);
-			env_len += ft_strlen(get_env_value(var_name));
+			var_value = get_env_value(var_name);
+			env_len += ft_strlen(var_value);
 			i++;
 		}
 		i++;
@@ -132,7 +134,8 @@ int32_t	get_new_env_len(char *str)
 char	*parse_env(char *str)
 {
 	int32_t	new_env_len;
-	char 	*dest;	
+	char	*dest;
+
 	new_env_len = get_new_env_len(str);
 	if (new_env_len == 0)
 		return (NULL);
@@ -140,6 +143,7 @@ char	*parse_env(char *str)
 	if (!dest)
 		return (NULL);
 	replace_env_name(str, dest);
+	printf("replace_env_name-Value:%s\n", dest);
 	return (dest);
 }
 
@@ -147,7 +151,7 @@ char	**parse_env_path(char **env)
 {
 	const int32_t	var_name_len = 4;
 	char			**split_env;
-	
+
 	split_env = NULL;
 	if (!env || !*env)
 		return (NULL);

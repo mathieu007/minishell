@@ -21,8 +21,7 @@
 # define BUILTINS_ECHO "echo"
 
 # define SEPARATOR (char)29
-
-
+# define _DEBUG
 
 /// @brief 
 /// TK_CMD ls, cd, grep...,

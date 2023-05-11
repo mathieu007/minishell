@@ -53,20 +53,25 @@ void	env_cmd(t_data *data)
 }
 
 //take a variable and return the value
-char *get_env_value(char *variable)
+char	*get_env_value(char *variable)
 {
-	t_env_cpy *head;
-	t_env_cpy *current;
-	size_t len;
+	#ifdef _DEBUG
+		printf("get_env_value\n");
+	#endif
+	t_env_cpy	*head;
+	t_env_cpy	*current;
+	size_t		len;
 
 	len = ft_strlen(variable);
 	head = get_data()->env_cpy;
 	current = head;
-	while (current)
+	while (current && current->value)
 	{
-		if (ft_strnstr(variable, current->value, len) != 0)
-			return (current->variable);
-		else
+		#ifdef _DEBUG
+			printf("	var:%s; value:%s;\n", current->variable, current->value);
+		#endif
+		if (ft_strnstr(variable, current->variable, len) != 0)
+			return (current->value);
 		current = current->next;
 	}
 	return (NULL);

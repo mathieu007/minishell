@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 15:11:10 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/10 19:41:23 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,9 @@ bool	is_builtins(char *str)
 	int32_t	i;
 	char	**builtins;
 	int32_t	len;
-	int32_t	str_len;
 
 	builtins = get_builtins_cmd();
-	str_len = ft_strlen(str) - 1;
+	// str_len = ft_strlen(str) - 1;
 	i = 0;
 	while (builtins[i])
 	{
@@ -201,13 +200,11 @@ void	add_args(char *str, char **split)
 
 char	**split_args(char *str)
 {	
-	char	*start;
-	int32_t	i;
+	// char	*start;
 	int32_t	args_len;
 	char	**split;
-		
-	start = str;
-	i = 0;
+
+	// start = str;
 	args_len = get_args_split_len(str);
 	split = malloc(args_len * sizeof(char *));
 	if (!split)

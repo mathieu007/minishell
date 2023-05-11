@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 11:47:31 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/09 20:07:55 by math             ###   ########.fr       */
+/*   Updated: 2023/05/11 07:06:19 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*ft_strncpy(char *src, size_t len)
 	new = malloc(len + 1);
 	if (!new)
 		return (NULL);
-	while (src[i])
+	while (src[i] && i < len)
 	{
 		new[i] = src[i];
 		i++;
