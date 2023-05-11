@@ -4,7 +4,7 @@
 int32_t	cd_cmd(t_cmd *cmd)
 {
 	int		result;
-	char	path[1024];
+	char	path[PATH_MAX];
 	char	*path_to_call;
 
 	result = 0;

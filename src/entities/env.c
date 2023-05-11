@@ -12,8 +12,11 @@ t_env_cpy	*new_env(char *variable, char *value)
 	return (node);
 }
 
-t_env_cpy	*create_list(t_data *data)
+t_env_cpy	*init_env(t_data *data)
 {
+	#ifdef _DEBUG
+		printf("init_env:\n");
+	#endif
 	char		**split_on_equal;
 	t_env_cpy	*head;
 	t_env_cpy	*current;
@@ -27,8 +30,11 @@ t_env_cpy	*create_list(t_data *data)
 	i++;
 	head = current;
 	while (data->env[i])
-	{
+	{		
 		split_on_equal = ft_split(data->env[i], '=');
+		#ifdef _DEBUG
+			printf("	var:%s value:%s\n", split_on_equal[0], split_on_equal[1]);
+		#endif
 		current->next = new_env(split_on_equal[0], split_on_equal[1]);
 		if (current->next)
 			current->next->prev = current;
@@ -36,20 +42,6 @@ t_env_cpy	*create_list(t_data *data)
 		i++;
 	}
 	return (head);
-}
-
-void	env_cmd(t_data *data)
-{
-	t_env_cpy	*current;
-
-	if (!data->env_cpy)
-		data->env_cpy = create_list(data);
-	current = data->env_cpy;
-	while (current)
-	{
-		printf("%s=%s\n", data->env_cpy->variable, data->env_cpy->value);
-		current = current->next;
-	}
 }
 
 //take a variable and return the value
@@ -70,7 +62,7 @@ char	*get_env_value(char *variable)
 		#ifdef _DEBUG
 			printf("	var:%s; value:%s;\n", current->variable, current->value);
 		#endif
-		if (ft_strnstr(variable, current->variable, len) != 0)
+		if (ft_strnstr(current->variable, variable, len) == current->variable)
 			return (current->value);
 		current = current->next;
 	}

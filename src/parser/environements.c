@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/11 07:08:36 by math             ###   ########.fr       */
+/*   Updated: 2023/05/11 10:20:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,18 +65,19 @@ char	*cpy_env_var_value(char *input, char *output, int32_t *i)
 
 	if (!input[*i])
 		return (output);
-	printf("cpy_env_var_value:\n");
 	var_name_len = parse_env_var_name_len(input, *i);
 	var_name = parse_env_var_name(input, *i);
-
 	var_value = get_env_value(var_name);
+	*i = *i + var_name_len + 1;
+	if (!var_value)
+		return (output);
 	var_value_len = ft_strlen(var_value);
 	while (var_value_len != 0)
 	{
-		*output++ = input[(*i)++];
+		*output++ = *var_value++;
 		var_value_len--;
 	}
-	*i = *i + var_name_len + 1;
+	
 	return (output);
 }
 
@@ -143,7 +144,7 @@ char	*parse_env(char *str)
 	if (!dest)
 		return (NULL);
 	replace_env_name(str, dest);
-	printf("replace_env_name-Value:%s\n", dest);
+	printf("after replace env_name:%s\n", dest);
 	return (dest);
 }
 

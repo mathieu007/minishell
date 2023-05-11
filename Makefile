@@ -12,7 +12,7 @@ TARGETDIR		= bin
 SRCEXT			= c
 OBJEXT			= o
 
-CFLAGS				= -Wall -Wextra -g 
+CFLAGS				= -Wall -Wextra -Werror -g 
 INCDEP				= -I$(INCDIR)
 LIBFT_DIR			= libft
 LIBFT_FILE			= libft.a

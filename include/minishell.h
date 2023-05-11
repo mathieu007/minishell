@@ -176,6 +176,15 @@ typedef struct s_token
 	t_token_type	type;
 }				t_token;
 
+typedef struct s_env_cpy
+{
+	char					*variable;
+	char					*value;
+	struct s_env_cpy		*next;
+	struct s_env_cpy		*prev;
+
+}							t_env_cpy;
+
 /// @brief A token group is just a group of tokens.
 /// each group of token end by one of the endings token type.
 typedef struct s_token_group
@@ -191,15 +200,6 @@ typedef struct s_token_group
 	t_token					*last;
 	int32_t					token_count;
 }				t_token_group;
-
-typedef struct s_env_cpy
-{
-	char					*variable;
-	char					*value;
-	struct s_env_cpy		*next;
-	struct s_env_cpy		*prev;
-
-}							t_env_cpy;
 
 typedef struct s_data
 {
@@ -221,6 +221,7 @@ typedef struct s_data
 }				t_data;
 
 /// @brief The entities functions
+t_redirect		*new_redirect(t_cmd *cmd);
 t_data			*get_data(void);
 t_token_group	*get_first_token_group(void);
 t_token			*get_first_token(void);
@@ -288,29 +289,27 @@ bool			is_end_of_seq(t_token *token);
 
 void			close_pipe_fds(t_cmd *cmd);
 void			*free_all(void);
-void			*free_all_and_exit(void);
+void			free_all_and_exit(int32_t status);
 t_pipe			*new_pipe(t_cmd *cmd);
 void			*free_pipe(t_cmd *cmd);
-t_redirect		*new_redirect(t_cmd *cmd);
 void			*free_redirect(t_cmd *cmd);
-
 void			*free_cmd(t_cmd *cmd);
 char			*ft_strdupn(const char *s1, size_t n);
 void 			init_data(int32_t argc, char **argv, char **envp);
 
 //link list section
-t_env_cpy					*new_env(char *variable, char *value);
-t_env_cpy					*create_list(t_data *data);
-char						*get_env_value(char *variable);
-void						add_env_node(t_data *data, char *variable,
-								char *value);
+t_env_cpy		*new_env(char *variable, char *value);
+t_env_cpy		*init_env(t_data *data);
+char			*get_env_value(char *variable);
+void			add_env_node(t_data *data, char *variable,
+					char *value);
 //built in section
-void						execute_built_in(t_cmd *cmd, t_data *data);
-int32_t						cd_cmd(t_cmd *cmd);
-void						echo_cmd(t_cmd *cmd);
-void						env_cmd(t_data *data);
-void						pwd_cmd(void);
-void						export_cmd(t_data *data, t_cmd *cmd);
-void						unset_cmd(t_data *data, t_cmd *cmd);
+void			execute_built_in(t_cmd *cmd, t_data *data);
+int32_t			cd_cmd(t_cmd *cmd);
+void			echo_cmd(t_cmd *cmd);
+void			env_cmd(t_data *data);
+void			pwd_cmd(void);
+void			export_cmd(t_data *data, t_cmd *cmd);
+void			unset_cmd(t_data *data, t_cmd *cmd);
 
 #endif

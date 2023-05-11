@@ -28,7 +28,7 @@ void	export_no_variable(t_data *data)
 	t_env_cpy	*current;
 	bool		swap;
 
-	head = create_list(data);
+	head = init_env(data);
 	current = head;
 	while (current)
 	{

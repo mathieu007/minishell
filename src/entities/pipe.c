@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 13:15:33 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 08:53:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_pipe	*new_pipe(t_cmd *cmd)
 	if (pipe(fds) == -1)
 	{
 		perror("An error occur while pipping");
-		free_all_and_exit();
+		free_all_and_exit(EXIT_FAILURE);
 	}
 	p->fd_in = fds[0];
 	p->fd_out = fds[1];
