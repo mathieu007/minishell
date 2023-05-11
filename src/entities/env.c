@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_env_cpy	*create_node(char *variable, char *value)
+t_env_cpy	*new_env(char *variable, char *value)
 {
 	t_env_cpy	*node;
 
@@ -23,13 +23,13 @@ t_env_cpy	*create_list(t_data *data)
 		return (NULL);
 	i = 0;
 	split_on_equal = ft_split(data->env[i], '=');
-	current = create_node(split_on_equal[0], split_on_equal[1]);
+	current = new_env(split_on_equal[0], split_on_equal[1]);
 	i++;
 	head = current;
 	while (data->env[i])
 	{
 		split_on_equal = ft_split(data->env[i], '=');
-		current->next = create_node(split_on_equal[0], split_on_equal[1]);
+		current->next = new_env(split_on_equal[0], split_on_equal[1]);
 		if (current->next)
 			current->next->prev = current;
 		current = current->next;

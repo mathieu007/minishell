@@ -7,7 +7,7 @@ void	add_env_node(t_data *data, char *variable, char *value)
 	current = data->env_cpy;
 	while (current->next != NULL)
 		current = current->next;
-	current->next = create_node(variable, value);
+	current->next = new_env(variable, value);
 }
 
 void	swap_node_value(t_env_cpy *a, t_env_cpy *b)

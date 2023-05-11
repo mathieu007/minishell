@@ -185,6 +185,7 @@ typedef struct s_token_group
 	char					*start;
 	char					*end;
 	char					*parsed_str;
+	t_env_cpy				*env_cpy;
 	int32_t					len;
 	t_token					*first;
 	t_token					*last;
@@ -298,7 +299,7 @@ char			*ft_strdupn(const char *s1, size_t n);
 void 			init_data(int32_t argc, char **argv, char **envp);
 
 //link list section
-t_env_cpy					*create_node(char *variable, char *value);
+t_env_cpy					*new_env(char *variable, char *value);
 t_env_cpy					*create_list(t_data *data);
 char						*get_env_value(char *variable);
 void						add_env_node(t_data *data, char *variable,

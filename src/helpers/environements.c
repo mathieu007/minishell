@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 09:58:43 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 08:21:58 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,3 @@ inline bool	is_env_variable(char *str, int32_t i)
 		return (false);
 	return (str[i] == '$');
 }
-
