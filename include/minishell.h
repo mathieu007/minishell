@@ -151,6 +151,7 @@ typedef struct s_pipe
 
 typedef struct s_cmd
 {
+	void			(*func)(struct s_cmd *);
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 	char			*name; /// the name of the command: cat, ls, echo ect...
@@ -250,8 +251,8 @@ int32_t			get_token_type_len(t_token_type type);
 bool			type_is_end_of_seq(t_token_type type);
 bool			is_env_variable(char *str, int32_t i);
 bool			is_esc_env_var(char *str, int32_t i);
-bool			is_escaped_single_quote(char *str, int32_t i);
-bool			is_escaped_double_quote(char *str, int32_t i);
+bool			is_escaped_single_quote(char *str, int32_t i, int32_t len);
+bool			is_escaped_double_quote(char *str, int32_t i, int32_t len);
 bool			is_opening_single_quote(char *str, int32_t i);
 bool			is_closing_single_quote(char *str, int32_t i);
 bool			is_opening_double_quote(char *str, int32_t i);
@@ -270,7 +271,7 @@ bool			file_is_exec(char *absolute_path_to_file);
 char			*get_full_path(char *cmd_name);
 
 /// tokenizer functions
-t_token			*tokenize(char *str);
+t_token_group	*tokenize(char *str);
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);
 int32_t			tokenize_double_quote(char *str, int32_t i, t_token_group *group);
