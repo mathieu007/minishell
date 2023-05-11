@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/18 20:16:34 by mathieu           #+#    #+#             */
-/*   Updated: 2022/10/19 16:00:43 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 09:51:12 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ size_t	ft_strlen(const char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] != '\0')
-	{
+	if (!str)
+		return (0);
+	while (str[i])
 		i++;
-	}
 	return (i);
 }

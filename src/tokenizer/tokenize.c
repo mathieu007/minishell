@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/09 15:32:26 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 12:52:02 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_token_group	*tokenize_groups(char *str)
 			if (get_token_type_len(type) == 2)
 				i++;
 			add_token_group(start, &str[i + 1]);	
-			start = &str[i + 1];			
+			start = &str[i + 1];
 		}
 		i++;
 	}
@@ -42,23 +42,22 @@ t_token	*tokenize(char *str)
 	int32_t			i;
 	t_token_type	type;
 	t_token_group	*group;
-	t_token			*token;
 
 	group = tokenize_groups(str);
 	while (group)
 	{
 		i = 0;
 		str = group->start;
-		token = NULL;
 		while (str[i])
 		{			
 			type = get_token_type(&str[i]);
+			printf("tk_type:%i\n", type);			
 			if (is_opening_single_quote(str, i))
 				i += tokenize_single_quote(str, i, group);
 			else if (is_opening_double_quote(str, i))
 				i += tokenize_double_quote(str, i, group);
 			else if (type != TK_UNKNOWN)
-				token = add_token(str, i, type, group);
+				add_token(str, i, type, group);
 			if (get_token_type_len(type) == 2)
 				i++;
 			i++;
