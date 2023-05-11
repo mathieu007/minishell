@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -9,6 +10,8 @@
 /*   Updated: 2023/05/10 11:57:14 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+=======
+>>>>>>> Math
 
 #include "minishell.h"
 
@@ -23,7 +26,11 @@ int32_t	cd_cmd(t_cmd *cmd)
 	{
 		if (cmd->options[0])
 			{
+<<<<<<< HEAD
 				printf("Cd option \"%s\" not handle \n", cmd->options[0]);
+=======
+				printf("Error option \"%s\" not handle \n", cmd->options[0]);
+>>>>>>> Math
 				return(0);
 			}
 		path_to_call = ft_strjoin(path, "/");

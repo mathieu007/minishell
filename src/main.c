@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -10,14 +11,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+=======
+>>>>>>> Math
 #include "minishell.h"
 
 int32_t	main(int32_t argc, char **argv, char **env)
 {
-	char	*input;
+	char 	*input;
+	t_token *token;
 	t_cmd	*cmd;
-	t_data *data;
+	t_data 	*data;
+	init_data(argc, argv, env);
+	char 	*out;
 
+<<<<<<< HEAD
 	/////signal handle part /////
 	struct sigaction act;
 	
@@ -30,6 +37,8 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	(void)(argc);
 	(void)(argv);
 	(void)(env);
+=======
+>>>>>>> Math
 	while (1)
 	{
 		while( signal(SIGINT, sig_handler))
@@ -37,18 +46,8 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		if (strcmp(input, "exit") == 0)
 			break ;
 		add_history(input);
-		if (*input != '\0')
-		{
-		// token = tokenize(input);
-		// parse_cmds(token);
-			cmd = get_first_cmd();
-			data = (get_data);
-			//execute avec execve
-			if (!cmd->is_builtin)
-				printf("NEED TO EXCVE THIS INPUT\n");
-			else
-				execute_built_in(cmd , data);
-		}
-		//FREEEEE ALLL
+		out = parse_env(input);
+		system(input);
 	}
+	return (0);
 }

@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   ft_strlen_cmp.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/20 12:57:53 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/09 20:18:55 by math             ###   ########.fr       */
+/*   Created: 2022/10/18 11:47:31 by mroy              #+#    #+#             */
+/*   Updated: 2023/05/09 20:14:40 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_isalnum(int c)
+size_t	*ft_strlen_cmp(char *src, bool (*comparer)(char c))
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0'
-			&& c <= '9'))
+	size_t	i;
+
+	i = 0;
+	while (src[i])
 	{
-		return (1);
+		if (comparer(src[i]))
+			i++;
+		else
+			break ;
 	}
-	return (0);
+	return (i);
 }

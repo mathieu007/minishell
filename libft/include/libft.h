@@ -141,5 +141,7 @@ char				*ft_strdup_temp(const char *s1);
 char				*ft_replace_char_temp(char *str, char to_replace,
 						char *replace_by);
 bool				ft_strn_right_cmp(const char *s1, const char *s2, size_t n);
+size_t				*ft_strlen_cmp(char *src, bool (*comparer)(char c));
+char				*ft_strncpy(char *src, size_t len);
 
 #endif

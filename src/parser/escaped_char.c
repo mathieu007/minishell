@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   escaped_char.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 12:35:56 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/10 09:39:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pwd_cmd()
-{
-	char	cwd[1024];
-
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("getcwd() error");		
+/// @brief copy escaped environement variable as str literal.
+char	*cpy_esc_env_var(char *input, char *output, int32_t *i)
+{	
+	if (!input[*i])
+		return (output);
+	*output++ = input[(*i)++];
+	*output++ = input[(*i)++];
+	return (output);
 }
