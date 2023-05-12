@@ -1,9 +1,5 @@
 #include "minishell.h"
 
-int	env_cmd(t_cmd *cmd)
-
-#include "minishell.h"
-
 t_env_cpy	*create_node(char *variable, char *value)
 {
 	t_env_cpy	*node;
