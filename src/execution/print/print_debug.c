@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_debug.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 13:25:53 by bmartin           #+#    #+#             */
-/*   Updated: 2023/05/10 16:13:28 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 19:50:12 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	print_2darray(char **array)
 	i = 0;
 	while (array[i] != NULL)
 	{
-		printf("%s\n", array[i]);
+		printf("[%s]\n", array[i]);
 		i++;
 	}
 }

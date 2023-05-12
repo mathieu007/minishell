@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 12:00:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/11 14:13:42 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	echo_cmd(t_cmd *cmd)
+int	echo_cmd(t_cmd *cmd)
 {
 	int i;
 	
@@ -26,4 +26,5 @@ void	echo_cmd(t_cmd *cmd)
 	}
 	if ((!ft_strnstr(cmd->options[0], "-n", ft_strlen(cmd->options[0]))) != 0)
 	printf("\n");
+	return(0);
 }
