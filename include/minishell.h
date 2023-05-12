@@ -330,6 +330,6 @@ void					free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_data *data);
 void					free_2d_Array(void **tab);
 void	*free_all(t_token_group *token_group, t_cmd *cmd, t_data *data);
-void	free_all_and_exit(t_token_group *token_group, t_cmd *cmd, t_data *data, int32_t status)
+void	free_all_and_exit(t_token_group *token_group, t_cmd *cmd, t_data *data, int32_t status);
 
 #endif
