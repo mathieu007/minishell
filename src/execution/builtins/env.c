@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_env_cpy	*create_node(char *variable, char *value)
+t_env_cpy	*new_env(char *variable, char *value)
 {
 	t_env_cpy	*node;
 
@@ -12,38 +12,30 @@ t_env_cpy	*create_node(char *variable, char *value)
 	return (node);
 }
 
-t_env_cpy	*create_list(t_data *data)
+t_env_cpy	*init_env(t_data *data)
 {
+	#ifdef _DEBUG
+		printf("init_env:\n");
+	#endif
 	char		**split_on_equal;
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 	int			i;
 
-	i = 0;
-	while(data->env[i])
-	split_on_equal = ft_split(split_on_nl[i], '=');
-	head = create_node(split_on_equal[0], split_on_equal[1]);
-	if (!head)
-		return (NULL);
-	current = head;
-	while (split_on_nl[++i])
-	{
-		split_on_equal = ft_split(split_on_nl[i], '=');
-		current->next = create_node(split_on_equal[0],
-											split_on_equal[1]);
-	if(current->next)
-		current->next->prev = current;
 	if (!data->env)
 		return (NULL);
 	i = 0;
 	split_on_equal = ft_split(data->env[i], '=');
-	current = create_node(split_on_equal[0], split_on_equal[1]);
+	current = new_env(split_on_equal[0], split_on_equal[1]);
 	i++;
 	head = current;
 	while (data->env[i])
-	{
+	{		
 		split_on_equal = ft_split(data->env[i], '=');
-		current->next = create_node(split_on_equal[0], split_on_equal[1]);
+		#ifdef _DEBUG
+			printf("	var:%s value:%s\n", split_on_equal[0], split_on_equal[1]);
+		#endif
+		current->next = new_env(split_on_equal[0], split_on_equal[1]);
 		if (current->next)
 			current->next->prev = current;
 		current = current->next;
@@ -52,20 +44,27 @@ t_env_cpy	*create_list(t_data *data)
 	return (head);
 }
 
-void	env_cmd(t_data *data)
+//take a variable and return the value
+char	*get_env_value(char *variable)
 {
+	#ifdef _DEBUG
+		printf("get_env_value\n");
+	#endif
+	t_env_cpy	*head;
 	t_env_cpy	*current;
-	t_data		*data;
+	size_t		len;
 
-	(void)cmd;
-	data = get_data();
-	if (!data->env_cpy)
-		data->env_cpy = init_env(data);
-	current = data->env_cpy;
-	while (current)
+	len = ft_strlen(variable);
+	head = get_data()->env_cpy;
+	current = head;
+	while (current && current->value)
 	{
-		printf("%s=%s\n", data->env_cpy->variable, data->env_cpy->value);
+		#ifdef _DEBUG
+			printf("	var:%s; value:%s;\n", current->variable, current->value);
+		#endif
+		if (ft_strnstr(current->variable, variable, len) == current->variable)
+			return (current->value);
 		current = current->next;
 	}
-	return(0);
+	return (NULL);
 }
