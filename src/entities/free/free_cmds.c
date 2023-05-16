@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 13:39:54 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 19:18:23 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,12 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 
 void	free_t_token_group(t_token_group *token_group)
 {
-	t_token_group *next;
+	t_token_group	*next;
 
 	while (token_group)
 	{
 		next = token_group->next;
-		free_ptr(&(token_group->str));	
+		free_ptr((void **)&(token_group->str));
 		if (token_group->env_cpy)
 			free_t_env_cpy(token_group->env_cpy);
 		if (token_group->first_token)
