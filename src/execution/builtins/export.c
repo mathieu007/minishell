@@ -43,34 +43,39 @@ void	export_no_variable(t_data *data)
 			current = current->next;
 	}
 	current = head;
-	while(current)
+	while (current)
 	{
-		printf("declare -x %s=\"%s\"\n",current->variable,current->value);
-		current= current->next;
+		printf("declare -x %s=\"%s\"\n", current->variable, current->value);
+		current = current->next;
 	}
 	//////FREE chain list
 }
 
-void	export_cmd(t_data *data, t_cmd *cmd)
+int	export_cmd(t_cmd *cmd)
 {
 	t_env_cpy	*current;
 	char		**split_on_equal;
 	int			i;
 	size_t		len;
+	t_data		*data;
 
+	data = get_data();
 	i = 0;
 	current = data->env_cpy;
 	if (cmd->args[0] == NULL)
 		export_no_variable(data);
 	if (cmd->options[0] != NULL)
+	{
 		printf("Export option \"%s\" not handle \n", cmd->options[0]);
+		return(1);
+	}
 	while (cmd->args[i])
 	{
 		while (current)
 		{
 			split_on_equal = ft_split(cmd->args[i], '=');
 			if (!split_on_equal)
-				return ;   ////// ad protection freeee
+				return(1) ; ////// ad protection freeee
 			len = ft_strlen(split_on_equal[0]);
 			if (ft_strnstr(split_on_equal[i], current->variable, len) != 0)
 				current->value = cmd->args[i];
@@ -79,4 +84,5 @@ void	export_cmd(t_data *data, t_cmd *cmd)
 		}
 		i++;
 	}
+	return(0);
 }

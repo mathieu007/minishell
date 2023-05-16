@@ -1,16 +1,16 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdlib.h>
-# include <stdint.h>
-# include <stdbool.h>
 # include <stdio.h>
-# include <libft.h>
-# include "readline.h"
 # include "history.h"
+# include "readline.h"
+# include <libft.h>
+# include <limits.h>
+# include <stdbool.h>
+# include <stdint.h>
+# include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include <limits.h>
 
 # define BUILTINS_EXPORT "export"
 # define BUILTINS_UNSET "unset"
@@ -80,9 +80,9 @@ typedef enum e_token_type
 	TK_BACKSLASHDOUBLEQUOTE = TK_BACKSLASH * TK_DOUBLEQUOTE + TK_DOUBLEQUOTE + 1,
 	TK_VAR_ASSIGN = (int32_t)'=',
 	TK_WILDCARD = (int32_t)'*'
-}				t_token_type;
+}							t_token_type;
 
-/// @brief 
+/// @brief
 ///	ESC_DOUBLEQUOTE ",
 ///	ESC_BACKSLASH \,
 ///	ESC_DOLLARSIGN $,
@@ -110,7 +110,7 @@ typedef enum e_escaped_char
 	ESC_EXCLAMATION_MARK = '!',
 	ESC_QUESTION_MARK = '?',
 	ESC_PERCENT = '%'
-}				t_escaped_char;
+}							t_escaped_char;
 typedef enum e_continuation_char
 {
 	CONTC_BACKSLASH = '\\',
@@ -118,9 +118,9 @@ typedef enum e_continuation_char
 	CONTC_AMPERSAND = '&',
 	CONTC_SEMICOLON = ';',
 	CONTC_DOUBLE_AMPERSAND = CONTC_AMPERSAND * CONTC_AMPERSAND +
-	CONTC_AMPERSAND,
+		CONTC_AMPERSAND,
 	CONTC_DOUBLE_PIPE = CONTC_PIPE * CONTC_PIPE + CONTC_PIPE
-}			t_continuation_char;
+}							t_continuation_char;
 
 /// @brief the type of "command sequences"
 /// CMD_PIPE = echo "|" | command2\n
@@ -146,21 +146,21 @@ typedef enum e_cmd_seq
 	CMD_FILEOUT = TK_GREAT,
 	CMD_FILEIN = TK_LESS,
 	CMD_SEQUENTIAL = TK_SEMICOLON
-}			t_cmd_seq;
+}							t_cmd_seq;
 
 typedef struct s_redirect
 {
-	int32_t		fd_in;
-	int32_t		fd_out;
-	char		*file_in;
-	char		*file_out;
-}				t_redirect;
+	int32_t					fd_in;
+	int32_t					fd_out;
+	char					*file_in;
+	char					*file_out;
+}							t_redirect;
 
 typedef struct s_pipe
 {
-	int32_t		fd_in;
-	int32_t		fd_out;
-}				t_pipe;
+	int32_t					fd_in;
+	int32_t					fd_out;
+}							t_pipe;
 
 typedef struct s_env_cpy
 {
@@ -195,7 +195,7 @@ typedef struct s_token_group
 	t_token					*first_token;
 	t_token					*last_token;
 	int32_t					token_count;
-}				t_token_group;
+}							t_token_group;
 
 typedef struct s_cmd
 {
@@ -216,22 +216,22 @@ typedef struct s_cmd
 
 typedef struct s_data
 {
-	int32_t			argc;
-	char			*str_cmds;
-	char			**argv;
-	char			**env;
-	t_env_cpy		*env_cpy;
-	char			**paths;
-	int32_t			cmds_count;
-	int32_t			tokens_count;
-	int32_t			token_groups_count;	
-	t_token			*tokens;
-	t_token_group	*token_groups;
-	t_cmd			*cmds;
-	t_cmd			*last_cmd;
-	t_token			*last_token;
-	t_token_group	*last_token_group;
-}				t_data;
+	int32_t					argc;
+	char					*str_cmds;
+	char					**argv;
+	char					**env;
+	t_env_cpy				*env_cpy;
+	char					**paths;
+	int32_t					cmds_count;
+	int32_t					tokens_count;
+	int32_t					token_groups_count;
+	t_token					*tokens;
+	t_token_group			*token_groups;
+	t_cmd					*cmds;
+	t_cmd					*last_cmd;
+	t_token					*last_token;
+	t_token_group			*last_token_group;
+}							t_data;
 
 /// @brief The entities functions
 t_redirect		*new_redirect(t_cmd *cmd);
@@ -286,7 +286,7 @@ char			*join_free(char *path, char *path2);
 bool			file_is_exec(char *absolute_path_to_file);
 
 /// get full path from relative path.
-char			*get_full_path(char *cmd_name);
+char						*get_full_path(char *cmd_name);
 
 /// tokenizer functions
 t_token_group	*tokenize(char *str);
@@ -298,8 +298,8 @@ char			*cpy_single_quote_str(char *str, char *output, int32_t *i);
 char			*cpy_esc_env_var(char *input, char *output, int32_t *i);
 char			*cpy_env_var_value(char *input, char *output, int32_t *i);
 
-int32_t			increment_counter(t_token_type type);
-int32_t			decrement_counter(t_token_type type);
+int32_t						increment_counter(t_token_type type);
+int32_t						decrement_counter(t_token_type type);
 
 /// parsing
 char			**get_options(t_token_group *group);
@@ -317,31 +317,41 @@ t_token			*get_closing_double_quote_token(t_token *token);
 t_token			*get_closing_single_quote_token(t_token *token);
 t_cmd_seq		get_sequence_type(t_token_group *group);
 
-bool			is_end_of_seq(t_token *token);
+bool						is_end_of_seq(t_token *token);
 
-void			close_pipe_fds(t_cmd *cmd);
-void			*free_all(void);
-void			free_all_and_exit(int32_t status);
-t_pipe			*new_pipe(t_cmd *cmd);
-void			*free_pipe(t_cmd *cmd);
-void			*free_redirect(t_cmd *cmd);
-void			*free_cmd(t_cmd *cmd);
-char			*ft_strdupn(const char *s1, size_t n);
-void 			init_data(int32_t argc, char **argv, char **envp);
+void						close_pipe_fds(t_cmd *cmd);
+t_pipe						*new_pipe(t_cmd *cmd);
+void						*free_pipe(t_cmd *cmd);
+void						*free_redirect(t_cmd *cmd);
+void						*free_cmd(t_cmd *cmd);
+char						*ft_strdupn(const char *s1, size_t n);
+void						init_data(int32_t argc, char **argv, char **envp);
 
 //link list section
-t_env_cpy		*new_env(char *variable, char *value);
-t_env_cpy		*init_env(t_data *data);
-char			*get_env_value(char *variable);
-void			add_env_node(t_data *data, char *variable,
-					char *value);
+t_env_cpy					*new_env(char *variable, char *value);
+t_env_cpy					*init_env(t_data *data);
+char						*get_env_value(char *variable);
+void						add_env_node(t_data *data, char *variable,
+								char *value);
 //built in section
-void			execute_built_in(t_cmd *cmd, t_data *data);
-int32_t			cd_cmd(t_cmd *cmd);
-void			echo_cmd(t_cmd *cmd);
-void			env_cmd(t_data *data);
-void			pwd_cmd(void);
-void			export_cmd(t_data *data, t_cmd *cmd);
-void			unset_cmd(t_data *data, t_cmd *cmd);
+int						execute_built_in(t_cmd *cmd);
+int						cd_cmd(t_cmd *cmd);
+int						echo_cmd(t_cmd *cmd);
+int						env_cmd(t_cmd *cmd);
+int						pwd_cmd(t_cmd *cmd);
+int						export_cmd(t_cmd *cmd);
+int						unset_cmd(t_cmd *cmd);
+int						exit_cmd(t_cmd *cmd);
+
+//free section
+void					free_t_cmd(t_cmd *cmd);
+void					free_t_token(t_token *token);
+void					free_t_env_cpy(t_env_cpy *env_cpy);
+void					free_t_token_group(t_token_group *token_group);
+void					free_t_redirect(t_redirect *redirect);
+void					free_t_data(t_data *data);
+void					free_2d_Array(void **tab);
+void	*free_all(t_token_group *token_group, t_cmd *cmd, t_data *data);
+void	free_all_and_exit(t_token_group *token_group, t_cmd *cmd, t_data *data, int32_t status);
 
 #endif
