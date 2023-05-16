@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/11 15:55:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/15 15:59:15 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,35 @@ char	*get_end_of_cmd(char *str)
 		i++;
 	}
 	return (&str[i]);
+}
+
+bool	is_builtins(char *str)
+{
+	int32_t	i;
+	char	**builtins;
+	int32_t	len;
+
+	builtins = get_builtins_cmd();
+	i = 0;
+	while (builtins[i])
+	{
+		len = ft_strlen(builtins[i]);
+		if (ft_strn_right_cmp(str, builtins[i], len))
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+inline bool	is_end_of_seq(t_token *token)
+{
+	t_token_type	type;
+
+	type = token->type;
+	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
+		|| type == TK_AMPERSAND || type == TK_GREATGREAT
+		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE
+		|| type == TK_CMD_SEQ_END)
+		return (true);
+	return (false);
 }

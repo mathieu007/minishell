@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_debug.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 13:25:53 by bmartin           #+#    #+#             */
-/*   Updated: 2023/05/10 16:13:28 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/14 11:08:41 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_cmd(t_cmd *command)
 {
 	t_cmd	*cpy;
 	int		i;
-	int j;
+	int 	j;
 
 	i = 0;
 	j=0;
@@ -72,7 +72,7 @@ void	print_token(t_token *token)
 		printf("[[NODE # %i]]\n",j);
 		printf("---------------------------------------------------------");
 		printf(" start = %s\n", cpy->start);
-		printf(" len = %i\n", cpy->len);
+		printf(" len = %i\n", cpy->token_len);
 		printf(" pos = %i\n", cpy->pos);
 		printf(" type = %i\n", (int)cpy->type);
 		printf("---------------------------------------------------------");
@@ -93,7 +93,6 @@ void	print_token_group(t_token_group *token)
 		printf("[[NODE # %i]]\n",j);
 		printf("---------------------------------------------------------");
 		printf(" start = %s\n", cpy->start);
-		printf(" end = %s\n", cpy->end);
 		printf(" len = %i\n", cpy->len);
 		printf(" token_count = %i\n", cpy->token_count);
 		printf("---------------------------------------------------------");

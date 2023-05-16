@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/11 11:37:01 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 07:10:32 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_token	*new_token()
 	new->start = NULL;
 	new->next = NULL;
 	new->prev = NULL;
-	new->len = 0;
+	new->token_len = 0;
 	new->start = NULL;
 	return (new);
 }
@@ -65,30 +65,29 @@ inline t_token	*get_token_at(int32_t index)
 inline t_token	*get_last_token(void)
 {
 	if (!get_data()->last_token)
-		return (get_first_token());
+		return (NULL);
 	return (get_data()->last_token);
 }
 
-t_token	*add_token(char *str, int32_t char_pos, t_token_type type, t_token_group *group)
+t_token	*add_token(int32_t pos, t_token_type type, t_token_group *group)
 {
 	t_token		*last;
 	t_token		*new;
 
-	last = get_last_token();
-	if (!last->prev)
-		new = last;
+	last = get_data()->last_token;
+	if (!last)
+		new = get_first_token();
 	else
 	{
 		new = new_token();
-		if (new == NULL)
+		if (!new)
 			return (NULL);
 		last->next = new;
 		new->prev = last;
 	}
 	increment_counter(type);
-	new->len = get_token_type_len(type);
-	new->start = &str[char_pos];
-	new->pos = char_pos;
+	new->pos = pos;
+	new->type = type;
 	if (!group->first)
 		group->first = new;
 	group->last = new;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/11 10:20:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/14 09:59:09 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,135 +17,80 @@
 /// @param str 
 /// @param i 
 /// @return 
-int32_t	parse_env_var_name_len(char *env_start, int32_t i)
+int32_t	parse_env_var_name_len(char *env_start)
 {
 	size_t	len;
-	int32_t	start;
+	int32_t	i;
 
 	len = 0;
-	if (!env_start || !env_start[i])
+	i = 1;
+	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
 		return (0);
-	start = i + 1;
-	if (env_start[i] == '$' && ft_isalpha(env_start[start]) == 1)
-	{
-		i++;
-		while (env_start[i] && ft_isalnum(env_start[i++]) == 1)
-			len++;
-	}
+	while (env_start[i] && ft_isalnum(env_start[i++]) == 1)
+		len++;
 	return (len);
 }
 
-char	*parse_env_var_name(char *env_start, int32_t i)
+char	*parse_env_var_name(t_token *token)
 {
 	size_t	len;
-	int32_t	start;
 	char	*var_name;
+	char	*env_start;
 
-	if (!env_start || !env_start[i])
+	env_start = token->start;
+	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
 		return (NULL);
-	len = parse_env_var_name_len(env_start, i);
-	if (len == 0)
-		return (NULL);
-	start = i + 1;
-	if (env_start[i] == '$' && ft_isalpha(env_start[start]) == 1)
-	{
-		var_name = ft_strncpy(&env_start[start], len);
-		return (var_name);
-	}
-	return (NULL);
+	len = parse_env_var_name_len(env_start);
+	var_name = ft_strncpy(&env_start[1], len);
+	return (var_name);
 }
 
 /// @brief this function assume that the input is a var_name
-char	*cpy_env_var_value(char *input, char *output, int32_t *i)
+char	*parse_env_var_value(t_token *token)
 {
 	char	*var_name;
 	char	*var_value;
-	int32_t	var_name_len;
-	int32_t	var_value_len;
+	char	*env_start;
 
-	if (!input[*i])
-		return (output);
-	var_name_len = parse_env_var_name_len(input, *i);
-	var_name = parse_env_var_name(input, *i);
+	env_start = token->start;
+	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
+		return (NULL);
+	var_name = parse_env_var_name(token);
 	var_value = get_env_value(var_name);
-	*i = *i + var_name_len + 1;
 	if (!var_value)
-		return (output);
-	var_value_len = ft_strlen(var_value);
-	while (var_value_len != 0)
 	{
-		*output++ = *var_value++;
-		var_value_len--;
+		var_value = malloc(1);
+		var_value[0] = '\0';
 	}
-	
-	return (output);
+	free(var_name);
+	return (var_value);
 }
 
-/// @brief The input parameter is the original input string,
-/// the output parameter is the new dst string.
-/// This function replace all environements variables name with their
-/// values, excluding var inside single quote string. 
-/// @param input 
-/// @param output 
-void	replace_env_name(char *input, char *output)
+/// @brief We parse environement variable from these token group
+/// @param group 
+/// @return 
+t_token_group	*parse_env(t_token_group *group)
 {
-	int32_t	i;
+	t_token	*token;
+	char	*temp;
+	char	*env_value;
 
-	i = 0;
-	while (input[i])
+	token = group->first;
+	while (token)
 	{
-		if (is_opening_single_quote(input, i))
-			output = cpy_single_quote_str(input, output, &i);
-		else if (is_esc_env_var(input, i))
-			output = cpy_esc_env_var(input, output, &i);
-		else if (is_env_variable(input, i))
-			output = cpy_env_var_value(input, output, &i);
-		else
-			*output++ = input[i++];
-	}
-}
-
-int32_t	get_new_env_len(char *str)
-{
-	int32_t	i;
-	int32_t	env_len;
-	char	*var_name;
-	char	*var_value;
-
-	i = 0;
-	env_len = 0;
-	if (!*str || !str[i])
-		return (0);
-	while (str[i])
-	{
-		if (str[i] == '\\')
-			i++;
-		else if (is_env_variable(str, i))
+		if (token->type == TK_DOLLAR_SIGN && ft_isalpha(token->start[1]) == 1)
 		{
-			var_name = parse_env_var_name(str, i);
-			var_value = get_env_value(var_name);
-			env_len += ft_strlen(var_value);
-			i++;
+			temp = token->start;
+			env_value = parse_env_var_value(token);
+			if (env_value)
+			{
+				token->start = env_value;
+				free(temp);
+			}
 		}
-		i++;
+		token = token->next;
 	}
-	return (env_len + i);
-}
-
-char	*parse_env(char *str)
-{
-	int32_t	new_env_len;
-	char	*dest;
-
-	new_env_len = get_new_env_len(str);
-	if (new_env_len == 0)
-		return (NULL);
-	dest = malloc(new_env_len + 1);
-	if (!dest)
-		return (NULL);
-	replace_env_name(str, dest);
-	printf("after replace env_name:%s\n", dest);
-	return (dest);
+	return (group);
 }
 
 char	**parse_env_path(char **env)
