@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 09:36:22 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 13:22:24 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,29 @@ t_token_group	*new_token_group()
 {
 	t_token_group	*new;
 
-	new = malloc(sizeof(t_token_group));
+	new = ft_calloc(1 ,sizeof(t_token_group));
 	if (new == NULL)
 		return (NULL);
 	new->token_count = 0;
 	new->first_token = NULL;
 	new->next = NULL;
 	new->prev = NULL;
+	
 	return (new);
 }
 
 inline t_token_group	*get_first_token_group(void)
 {
-	static t_token_group	*group;
+	t_token_group	*group;
+	t_data			*data;
 
+	data = get_data();
+	group = data->token_groups;
 	if (group == NULL)
 	{
 		group = new_token_group();
-		get_data()->last_token_group = group;
+		data->token_groups = group;
+		data->last_token_group = group;
 		return (group);
 	}		
 	return (&group[0]);

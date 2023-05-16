@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 09:36:22 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 13:39:54 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,17 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 
 void	free_t_token_group(t_token_group *token_group)
 {
-	t_token_group *current;
 	t_token_group *next;
 
-	current = token_group;
-	while (current != NULL)
+	while (token_group)
 	{
-		next = current->next;
-		if (current->str)
-			free(current->str);
-		if (current->env_cpy)
-			free_t_env_cpy(current->env_cpy);
-		if (current->first_token)
-			free_t_token(current->first_token);
-		if (current->last_token)
-			free_t_token(current->last_token);
-		free(current);
-		current = next;
+		next = token_group->next;
+		free_ptr(&(token_group->str));	
+		if (token_group->env_cpy)
+			free_t_env_cpy(token_group->env_cpy);
+		if (token_group->first_token)
+			free_t_token(token_group->first_token);
+		free(token_group);
+		token_group = next;
 	}
 }

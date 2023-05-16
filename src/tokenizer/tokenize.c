@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 08:51:20 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 13:09:17 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ static t_token_group	*tokenize_groups(char *str)
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
-		t_len = get_token_type_len(type);
+		t_len = get_token_type_len(type);		
 		if (type_is_end_of_seq(type))
 		{
 			add_token_group(start, &str[i + t_len] - start);
-			start = &str[i + t_len];
+			start = &str[i + t_len];			
 		}
+		if (t_len == 0)
+			t_len = 1;
 		i += t_len;
 	}
 	if (start != &str[i])
@@ -42,17 +44,20 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 	t_token			*token;
 	t_token_type	type;
 	int32_t			repeat;
+	int32_t			start;
 
 	type = TK_SPACE;
-	repeat = 0;
+	repeat = 1;
+	start = pos;
+	pos++;
+	type = get_token_type(&str[pos]);
 	while (type == TK_SPACE)
-	{	
-		type = get_token_type(&str[pos]);
-		pos++;
+	{		
+		pos++;		
 		repeat++;
+		type = get_token_type(&str[pos]);
 	}
-	pos--;
-	token = add_token(pos, TK_SPACE, group);
+	token = add_token(start, TK_SPACE, group);
 	token->repeat = repeat;
 	return (pos);
 }
@@ -94,15 +99,17 @@ void	split_groups_tokens(t_token_group *group, char *str)
 {
 	t_token	*token;
 	t_token *prev;
+	int32_t	start;
 
 	while (group)
 	{
 		token = group->first_token;
 		prev = token;
-		token = token->next;
 		while (token)
 		{
-			token->str = ft_substr(str, prev->pos, token->pos - prev->pos);
+			start = prev->pos + (prev->token_len * prev->repeat);
+			token->str = ft_substr(str, start, token->pos - prev->pos);
+			prev = token;
 			token = token->next;
 		}
 		group = group->next;
@@ -115,9 +122,11 @@ t_token_group	*tokenize(char *str)
 	t_token_type	type;
 	int32_t			t_len;
 	t_token_group	*group;
-
-	str = ft_strtrim(str, " ");
-	if (!str || *str)
+	int32_t			len; 
+	
+	len = ft_strlen(str);
+	str = ft_strtrim(str, " ");	
+	if (!str && *str)
 		return (NULL);
 	i = 0;
 	group = tokenize_groups(str);
@@ -126,10 +135,12 @@ t_token_group	*tokenize(char *str)
 		while (str[i] && str[i] == ' ')
 			i++;
 		add_token(i, TK_CMD_SEQ_START, group);
-		while (str[i])
+		while (i < len)
 		{
 			type = get_token_type(&str[i]);
 			t_len = get_token_type_len(type);
+			if (t_len == 0)
+				t_len = 1;
 			if (type == TK_SINGLEQUOTE)
 				i = tokenize_single_quote(str, i, group);
 			else if (type == TK_DOUBLEQUOTE)
@@ -148,6 +159,7 @@ t_token_group	*tokenize(char *str)
 		add_token(i, TK_CMD_SEQ_END, group);
 		group = group->next;
 	}
-	split_groups_tokens(group, str);
+	split_groups_tokens(get_first_token_group(), str);
+	
 	return (get_first_token_group());
 }

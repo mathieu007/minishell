@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 08:36:50 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 13:21:28 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,27 @@ t_token	*new_token()
 {
 	t_token	*new;
 
-	new = malloc(sizeof(t_token));
+	new = ft_calloc(1, sizeof(t_token));
 	if (new == NULL)
 		return (NULL);
-	new->str = NULL;
-	new->next = NULL;
-	new->prev = NULL;
 	new->token_len = 0;
-	new->str = NULL;
 	return (new);
 }
 
 inline t_token	*get_first_token(void)
 {
-	static t_token	*token;
+	t_data	*data;
+	t_token	*token;
 
+	data = get_data();
+	token = data->tokens;
 	if (token == NULL)
 	{
 		token = new_token();
 		if (token == NULL)
 			return (NULL);
-		get_data()->last_token = token;
+		data->tokens = token;
+		data->last_token = token;
 		return (token);
 	}		
 	return (&token[0]);
@@ -88,6 +88,8 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token_group *group)
 	increment_counter(type);
 	new->pos = pos;
 	new->type = type;
+	new->token_len = get_token_type_len(type);
+	new->repeat = 0;
 	if (!group->first_token)
 		group->first_token = new;
 	group->last_token = new;

@@ -6,11 +6,20 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 09:25:08 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 13:38:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	*free_ptr(void **ref_ptr)
+{
+	if (*ref_ptr)
+	{
+		free(*ref_ptr);
+		*ref_ptr = NULL;
+	}
+}
 
 void	free_all()
 {
@@ -25,8 +34,6 @@ void	free_all()
 		free_t_token_group(token_group);
 	if (cmd != NULL)
 		free_t_cmd(cmd);
-	if (data != NULL)
-		free_t_data(data);
 }
 
 void	free_all_and_exit(int32_t status)

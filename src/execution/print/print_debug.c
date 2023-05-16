@@ -58,12 +58,13 @@ void	print_token(t_token *token)
 	while (cpy)
 	{
 		printf("[[NODE # %i]]\n",j);
-		printf("---------------------------------------------------------");
-		printf(" start = %s\n", cpy->str);
-		printf(" len = %i\n", cpy->token_len);
+		printf("---------------------------------------------------------\n");
+		printf(" str = %s\n", cpy->str);
+		printf(" token len = %i\n", cpy->token_len);
 		printf(" pos = %i\n", cpy->pos);
 		printf(" type = %i\n", (int)cpy->type);
-		printf("---------------------------------------------------------");
+		printf(" token repeat = %i\n", cpy->repeat);
+		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;
 	}
@@ -79,11 +80,11 @@ void	print_token_group(t_token_group *token)
 	while (cpy)
 	{
 		printf("[[NODE # %i]]\n",j);
-		printf("---------------------------------------------------------");
-		printf(" start = %s\n", cpy->str);
+		printf("---------------------------------------------------------\n");
+		printf(" str = %s\n", cpy->str);
 		printf(" len = %i\n", cpy->len);
 		printf(" token_count = %i\n", cpy->token_count);
-		printf("---------------------------------------------------------");
+		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;
 	}

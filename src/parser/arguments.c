@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 08:36:41 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 09:39:20 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	get_args(t_token_group *group, char **split)
 
 	token = group->first_token;
 	split_i = 0;
-	str = group->start;
+	str = group->str;
 	arg = NULL;
 	while (token)
 	{

@@ -55,7 +55,7 @@ typedef enum e_token_type
 {
 	TK_UNKNOWN = 255 * 255 + 257,
 	TK_CMD_SEQ_START = 255 * 255 + 258,
-	TK_CMD_SEQ_END = 255 * 255 + 258,
+	TK_CMD_SEQ_END = 255 * 255 + 259,
 	TK_CLOSINGDOUBLEQUOTE = 255 * 255 + 260,
 	TK_CLOSINGSINGLEQUOTE = 255 * 255 + 261,
 	TK_ENVIRONEMENT_VAR = 255 * 255 + 262,
@@ -353,5 +353,9 @@ void					free_t_data(t_data *data);
 void					free_2d_Array(void **tab);
 void					free_all();
 void					free_all_and_exit(int32_t status);
+void					*free_ptr(void **ref_ptr);
+
+void					print_token_group(t_token_group *token);
+void					print_token(t_token *token);
 
 #endif

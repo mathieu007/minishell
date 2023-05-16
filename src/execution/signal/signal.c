@@ -16,6 +16,6 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	else if (siginfo->si_signo == SIGQUIT)
 	{
 		printf("\nInterrupted with \"Ctrl+backsalsh\"\n");
-		signal(SIGQUIT,SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 	}
 }
