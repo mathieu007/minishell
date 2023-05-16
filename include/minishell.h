@@ -189,7 +189,7 @@ typedef struct s_token_group
 {
 	struct s_token_group	*next;
 	struct s_token_group	*prev;
-	char					*start;
+	char					*str;
 	t_env_cpy				*env_cpy;
 	int32_t					len;
 	t_token					*first_token;

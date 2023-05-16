@@ -80,7 +80,7 @@ void	print_token_group(t_token_group *token)
 	{
 		printf("[[NODE # %i]]\n",j);
 		printf("---------------------------------------------------------");
-		printf(" start = %s\n", cpy->start);
+		printf(" start = %s\n", cpy->str);
 		printf(" len = %i\n", cpy->len);
 		printf(" token_count = %i\n", cpy->token_count);
 		printf("---------------------------------------------------------");

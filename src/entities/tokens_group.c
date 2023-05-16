@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 08:36:41 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 09:36:22 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_token_group	*add_token_group(char *start, int32_t len)
 		last->next = new;
 		new->prev = last;
 	}
-	new->start = ft_strncpy(start, len);
+	new->str = ft_strncpy(start, len);
 	new->len = len;
 	get_data()->token_groups_count++;
 	get_data()->last_token_group = new;

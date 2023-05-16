@@ -62,7 +62,7 @@ t_token_group	*parse_env(t_token_group *group)
 	char	*env_value;
 	char	*str;
 	
-	str = group->start;
+	str = group->str;
 	token = group->first_token;
 	while (token)
 	{
