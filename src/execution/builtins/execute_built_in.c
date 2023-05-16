@@ -10,25 +10,13 @@ int	execute_built_in(t_cmd *cmd)
 #endif
 	len = ft_strlen(cmd->name);
 	if (ft_strnstr(cmd->name, "echo", len) != 0)
-	{
 		cmd->func = &echo_cmd;
-		return (0);
-	}
-	if (ft_strnstr(cmd->name, "env", len) != 0)
-	{
+	else if (ft_strnstr(cmd->name, "env", len) != 0)
 		cmd->func = &env_cmd;
-		return (0);
-	}
-	if (ft_strnstr(cmd->name, "pwd", len) != 0)
-	{
+	else if (ft_strnstr(cmd->name, "pwd", len) != 0)
 		cmd->func = &pwd_cmd;
-		return (0);
-	}
-	if (ft_strnstr(cmd->name, "cd", len) != 0)
-	{
+	else if (ft_strnstr(cmd->name, "cd", len) != 0)
 		cmd->func = &cd_cmd;
-		return (0);
-	}
 	if (ft_strnstr(cmd->name, "export", len) != 0)
 	{
 		cmd->func = &export_cmd;

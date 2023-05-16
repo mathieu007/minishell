@@ -25,7 +25,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		if (!group)
 			group = NULL;
 		// input = parse_env(input);
-		input = parse_env(input);
+		// input = parse_env(input);
 		if (strcmp(input, "exit") == 0)
 			break ;
 		add_history(input);

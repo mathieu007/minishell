@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/12 15:33:48 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/05/16 09:21:58 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ void	free_t_cmd(t_cmd *cmd)
 		if (cmd->full_path_name)
 			free(cmd->full_path_name);
 		if (cmd->args)
-			free_2d_Array(cmd->args);
+			free_2d_Array((void **)cmd->args);
 		if (cmd->options)
-			free_2d_Array(cmd->options);
+			free_2d_Array((void **)cmd->options);
 		if (cmd->pipe)
 			free(cmd->pipe);
 		if (cmd->redirect)
@@ -49,8 +49,8 @@ void	free_t_token(t_token *token)
 	while (current != NULL)
 	{
 		next = current->next;
-		if (current->start)
-			free(current->start);
+		if (current->str)
+			free(current->str);
 		free(current);
 		current = next;
 	}
@@ -85,16 +85,12 @@ void	free_t_token_group(t_token_group *token_group)
 		next = current->next;
 		if (current->start)
 			free(current->start);
-		if (current->end)
-			free(current->end);
-		if (current->parsed_str)
-			free(current->parsed_str);
 		if (current->env_cpy)
 			free_t_env_cpy(current->env_cpy);
-		if (current->first)
-			free_t_token(current->first);
-		if (current->last)
-			free_t_token(current->last);
+		if (current->first_token)
+			free_t_token(current->first_token);
+		if (current->last_token)
+			free_t_token(current->last_token);
 		free(current);
 		current = next;
 	}

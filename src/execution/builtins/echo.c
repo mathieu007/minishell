@@ -3,7 +3,6 @@
 int	echo_cmd(t_cmd *cmd)
 {
 	int	i;
-	int	i;
 
 	i = 0;
 	if ((ft_strnstr(cmd->options[i], "-n", ft_strlen(cmd->options[i]))) != 0)

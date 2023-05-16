@@ -199,7 +199,7 @@ typedef struct s_token_group
 
 typedef struct s_cmd
 {
-	void			(*func)(struct s_cmd *);
+	int32_t			(*func)(struct s_cmd *);
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 	char			*name; /// the name of the command: cat, ls, echo ect...
@@ -351,7 +351,7 @@ void					free_t_token_group(t_token_group *token_group);
 void					free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_data *data);
 void					free_2d_Array(void **tab);
-void	*free_all(t_token_group *token_group, t_cmd *cmd, t_data *data);
-void	free_all_and_exit(t_token_group *token_group, t_cmd *cmd, t_data *data, int32_t status);
+void					free_all();
+void					free_all_and_exit(int32_t status);
 
 #endif
