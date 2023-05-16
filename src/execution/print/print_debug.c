@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_debug.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 13:25:53 by bmartin           #+#    #+#             */
-/*   Updated: 2023/05/14 11:08:41 by math             ###   ########.fr       */
+/*   Updated: 2023/05/16 08:33:12 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	print_token(t_token *token)
 	{
 		printf("[[NODE # %i]]\n",j);
 		printf("---------------------------------------------------------");
-		printf(" start = %s\n", cpy->start);
+		printf(" start = %s\n", cpy->str);
 		printf(" len = %i\n", cpy->token_len);
 		printf(" pos = %i\n", cpy->pos);
 		printf(" type = %i\n", (int)cpy->type);

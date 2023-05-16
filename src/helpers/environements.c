@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/14 08:17:56 by math             ###   ########.fr       */
+/*   Updated: 2023/05/16 08:33:12 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ inline bool	is_esc_env_var(char *str, int32_t i)
 /// @return 
 inline bool	is_env_variable(t_token *token)
 {
-	if (!token || !token->start)
+	if (!token || !token->str)
 		return (false);
-	return (token->start[0] == '$' && ft_isalpha(token->start[1]) == 1);
+	return (token->str[0] == '$' && ft_isalpha(token->str[1]) == 1);
 }
 
 /// @brief this function assusme that preceding char is not an escaped char

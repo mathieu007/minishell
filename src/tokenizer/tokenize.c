@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 07:12:32 by math             ###   ########.fr       */
+/*   Updated: 2023/05/16 08:51:20 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,9 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 {
 	t_token			*token;
 	t_token_type	type;
-	int32_t			start;
 	int32_t			repeat;
 
 	type = TK_SPACE;
-	start = pos;
 	repeat = 0;
 	while (type == TK_SPACE)
 	{	
@@ -54,7 +52,7 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 		repeat++;
 	}
 	pos--;
-	token = add_token(ft_strncpy(&str[start], pos - start), TK_SPACE, group);
+	token = add_token(pos, TK_SPACE, group);
 	token->repeat = repeat;
 	return (pos);
 }
@@ -62,14 +60,13 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
 {
 	t_token			*token;
-	t_token_type	type;
 	int32_t			start_pos;
 
 	start_pos = pos;
 	token = add_token(pos, TK_DASH, group);
 	while (str[pos] && str[pos] != ' ')
 		pos++;
-	token->start = ft_strncpy(&str[start_pos], pos - start_pos);
+	token->str = ft_strncpy(&str[start_pos], pos - start_pos);
 	return (pos);
 }
 
@@ -92,6 +89,25 @@ int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
 // 		group = group->next;
 // 	}
 // }
+
+void	split_groups_tokens(t_token_group *group, char *str)
+{
+	t_token	*token;
+	t_token *prev;
+
+	while (group)
+	{
+		token = group->first_token;
+		prev = token;
+		token = token->next;
+		while (token)
+		{
+			token->str = ft_substr(str, prev->pos, token->pos - prev->pos);
+			token = token->next;
+		}
+		group = group->next;
+	}	
+}
 
 t_token_group	*tokenize(char *str)
 {
@@ -129,9 +145,9 @@ t_token_group	*tokenize(char *str)
 			else
 				i += t_len;
 		}
-		add_token(str, i, TK_CMD_SEQ_END, group);
+		add_token(i, TK_CMD_SEQ_END, group);
 		group = group->next;
 	}
-	// set_tokens_str(get_first_token_group(), str);
+	split_groups_tokens(group, str);
 	return (get_first_token_group());
 }

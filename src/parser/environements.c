@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/14 09:59:09 by math             ###   ########.fr       */
+/*   Updated: 2023/05/16 08:52:55 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*parse_env_var_name(t_token *token)
 	char	*var_name;
 	char	*env_start;
 
-	env_start = token->start;
+	env_start = token->str;
 	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
 		return (NULL);
 	len = parse_env_var_name_len(env_start);
@@ -46,13 +46,11 @@ char	*parse_env_var_name(t_token *token)
 }
 
 /// @brief this function assume that the input is a var_name
-char	*parse_env_var_value(t_token *token)
+char	*parse_env_var_value(t_token *token, char *env_start)
 {
 	char	*var_name;
 	char	*var_value;
-	char	*env_start;
 
-	env_start = token->start;
 	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
 		return (NULL);
 	var_name = parse_env_var_name(token);
@@ -74,19 +72,18 @@ t_token_group	*parse_env(t_token_group *group)
 	t_token	*token;
 	char	*temp;
 	char	*env_value;
-
-	token = group->first;
+	char	*str;
+	
+	str = group->start;
+	token = group->first_token;
 	while (token)
 	{
-		if (token->type == TK_DOLLAR_SIGN && ft_isalpha(token->start[1]) == 1)
+		if (token->type == TK_DOLLAR_SIGN && ft_isalpha(str[token->pos + 1]) == 1)
 		{
-			temp = token->start;
-			env_value = parse_env_var_value(token);
+			temp = token->str;
+			env_value = parse_env_var_value(token, str);
 			if (env_value)
-			{
-				token->start = env_value;
-				free(temp);
-			}
+				token->str = env_value;
 		}
 		token = token->next;
 	}

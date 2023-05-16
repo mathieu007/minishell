@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   options.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/15 16:46:23 by math             ###   ########.fr       */
+/*   Updated: 2023/05/16 08:36:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ static int32_t	options_count(t_token_group *group)
 	bool		table[256];
 
 	count = 0;
-	token = group->first;
+	token = group->first_token;
 	ft_memset(table, 0, 256);
 	while (token)
 	{
 		if (token->type == TK_DASH)
 		{
-			str = &(token->start)[1];
+			str = &(token->str)[1];
 			while (*str && *str != ' ' && !table[(int32_t)(*str)])
 			{
 				table[(int32_t)(*str)] = true;
@@ -66,14 +66,14 @@ char	**get_options(t_token_group *group)
 	options = malloc(sizeof(char *) * count);
 	if (options == NULL)
 		return (NULL);
-	tk = group->first;
+	tk = group->first_token;
 	i = 0;
 	while (tk)
 	{
 		if (tk->type == TK_DASH)
-			options[i++] = ft_strdupn(tk->start, get_option_len(tk->start));
+			options[i++] = ft_strdupn(tk->str, get_option_len(tk->str));
 		else if (tk->type == TK_DASHDASH)
-			options[i++] = ft_strdupn(tk->start, get_option_len(tk->start));
+			options[i++] = ft_strdupn(tk->str, get_option_len(tk->str));
 		tk = tk->next;
 	}
 	return (options);

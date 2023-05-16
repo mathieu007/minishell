@@ -176,7 +176,7 @@ typedef struct s_token
 {
 	struct s_token	*next;
 	struct s_token	*prev;
-	char			*start;
+	char			*str;
 	int32_t			token_len;
 	int32_t			pos;
 	int32_t			repeat;
@@ -190,11 +190,10 @@ typedef struct s_token_group
 	struct s_token_group	*next;
 	struct s_token_group	*prev;
 	char					*start;
-	char					*parsed_str;
 	t_env_cpy				*env_cpy;
 	int32_t					len;
-	t_token					*first;
-	t_token					*last;
+	t_token					*first_token;
+	t_token					*last_token;
 	int32_t					token_count;
 }				t_token_group;
 
@@ -255,7 +254,6 @@ t_cmd			*new_cmd();
 t_token_group	*new_token_group();
 
 /// @brief Simples and short helpers methods.
-
 int32_t			get_env_var_name_len(char *str, int32_t i);
 char			*get_env_variable(char *str, int32_t i);
 char			*get_end_of_cmd(char *str);
@@ -271,6 +269,7 @@ int32_t			skip_esc_double_quote(char *str, int32_t i);
 int32_t			skip_escaped_char(char *str, int32_t i);
 char			*skip_escaped_char2(char *str);
 t_token			*advance_to(t_token *token, t_token_type type);
+bool			is_builtins(char *str);
 bool			is_sibling_quote(t_token *token);
 bool			is_opening_single_quote(char *str, int32_t i);
 bool			is_closing_single_quote(char *str, int32_t i);
@@ -303,6 +302,8 @@ int32_t			increment_counter(t_token_type type);
 int32_t			decrement_counter(t_token_type type);
 
 /// parsing
+char			**get_options(t_token_group *group);
+int32_t			get_args_len(t_token_group *group);
 void			get_args(t_token_group *group, char **split);
  t_token		*get_quotes_str(t_token *token, char *str, char **ouput);
 char			*get_single_quote_str(t_token *token, char *str);

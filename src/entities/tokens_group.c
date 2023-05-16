@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_group.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/13 14:37:50 by math             ###   ########.fr       */
+/*   Updated: 2023/05/16 08:36:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_token_group	*new_token_group()
 	if (new == NULL)
 		return (NULL);
 	new->token_count = 0;
-	new->first = NULL;
+	new->first_token = NULL;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);

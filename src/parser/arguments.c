@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/15 16:01:27 by math             ###   ########.fr       */
+/*   Updated: 2023/05/16 08:36:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int32_t	get_args_len(t_token_group *group)
 	t_token	*prev_token;
 
 	args_len = 0;
-	token = group->first;
+	token = group->first_token;
 	if (!token)
 		return (0);
 	prev_token = token;
@@ -80,7 +80,7 @@ int32_t	get_args_len(t_token_group *group)
 	return (args_len);
 }
 
-t_token	*get_space_str(t_token *token, char str, char **arg)
+t_token	*get_space_str(t_token *token, char *str, char **arg)
 {
 	t_token	*start_token;
 	int32_t	arg_len;
@@ -113,7 +113,7 @@ void	get_args(t_token_group *group, char **split)
 	char	*arg;
 	char	*str;
 
-	token = group->first;
+	token = group->first_token;
 	split_i = 0;
 	str = group->start;
 	arg = NULL;
