@@ -196,6 +196,7 @@ typedef struct s_token_group
 	t_token					*first_token;
 	t_token					*last_token;
 	int32_t					token_count;
+	t_cmd_seq				cmd_seq_type;
 }							t_token_group;
 
 typedef struct s_cmd
@@ -229,7 +230,6 @@ typedef struct s_data
 	t_token_group			*token_groups;
 	t_cmd					*cmds;
 	t_cmd					*last_cmd;
-	t_token					*last_token;
 	t_token_group			*last_token_group;
 }							t_data;
 
@@ -247,7 +247,7 @@ t_token_type	get_token_type(char *str);
 int32_t			*get_token_counter(void);
 int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token_group *group);
-t_token_group	*add_token_group(char *start, int32_t len);
+t_token_group	*add_token_group(char *start, t_token_type type, int32_t len);
 t_cmd			*add_cmd(void);
 t_token			*new_token();
 t_cmd			*new_cmd();
@@ -315,7 +315,7 @@ t_cmd  			*parse_cmds(t_token_group *group);
 t_token			*get_token_at(int32_t index);
 t_token			*get_closing_double_quote_token(t_token *token);
 t_token			*get_closing_single_quote_token(t_token *token);
-t_cmd_seq		get_sequence_type(t_token_group *group);
+t_cmd_seq		get_sequence_type(t_token_type type);
 
 bool						is_end_of_seq(t_token *token);
 
@@ -357,5 +357,6 @@ void					*free_ptr(void *ptr);
 
 void					print_token_group(t_token_group *token);
 void					print_token(t_token *token);
+void					print_groups_and_tokens();
 
 #endif

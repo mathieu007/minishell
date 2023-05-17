@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 13:22:24 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 16:23:14 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,50 +41,32 @@ inline t_token_group	*get_first_token_group(void)
 		data->last_token_group = group;
 		return (group);
 	}		
-	return (&group[0]);
+	return (group);
 }
 
-inline t_token_group	*get_last_token_group(void)
-{
-	if (!get_data()->token_groups)
-		return (get_first_token_group());	
-	return (get_data()->token_groups);
-}
-
-inline t_token_group	*get_token_group_at(int32_t index)
-{
-	t_token_group	*token;
-	int32_t			i;
-
-	token = get_first_token_group();
-	i = 0;
-	while (token && i < index)
-	{
-		token = token->next;
-		i++;
-	}
-	return (token);
-}
-
-t_token_group	*add_token_group(char *start, int32_t len)
+t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
 {
 	t_token_group	*last;
 	t_token_group	*new;
+	t_data			*data;
 
-	last = get_data()->last_token_group;
-	if (!last)
-		new = get_first_token_group();
-	else
+	data = get_data();
+	last = data->last_token_group;
+	new = new_token_group();
+	if (last)
 	{
 		new = new_token_group();
 		if (new == NULL)
 			return (NULL);
 		last->next = new;
-		new->prev = last;
+		new->prev = last;		
 	}
+	else
+		data->token_groups = new;
 	new->str = ft_strncpy(start, len);
 	new->len = len;
-	get_data()->token_groups_count++;
-	get_data()->last_token_group = new;
+	new->cmd_seq_type = get_sequence_type(type);
+	data->token_groups_count++;
+	data->last_token_group = new;
 	return (new);
 }

@@ -5,13 +5,11 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	char 		*input;
 	char		**args;
 	char		**envp;
-	t_data		*data;
-	// char 			*out;
+	t_data			*data;
 
-	data = get_data();
+	data = get_data();	
 	args = malloc(4 * sizeof(char *));
 	envp = parse_env_path(env);
-
 	args[0] = "echo";
 	args[1] = "123";
 	args[2] = "123";
@@ -24,10 +22,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		input = readline("MiniShell> ");
 		data->token_groups = tokenize(input);
 		data->tokens = data->token_groups->first_token;
-		print_token_group(data->token_groups);
-		print_token(data->token_groups->first_token);
-		// input = parse_env(input);
-		// input = parse_env(input);
+		print_groups_and_tokens();
 		if (strcmp(input, "exit") == 0)
 			break ;
 		add_history(input);

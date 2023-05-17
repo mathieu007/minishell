@@ -1,6 +1,24 @@
 #include "minishell.h"
 ////////////delete me after /////////
 
+void	print_groups_and_tokens()
+{
+	t_data			*data;
+	t_token_group	*group;
+	t_token			*token;
+
+	data = get_data();
+	group = data->token_groups;
+	print_token_group(group);
+	while (group)
+	{		
+		token = group->first_token;
+		print_token(token);
+		token = token->next;	
+		group = group->next;
+	}	
+}
+
 static char	*get_print_token_type(t_token_type type)
 {
 	static char	*token_types[255 * 255 + (255 * 2)];
@@ -8,6 +26,7 @@ static char	*get_print_token_type(t_token_type type)
 
 	if (!token_types[0])
 	{
+		tk_type[TK_PRE_ENVIRONEMENT_VAR] = "TK_PRE_ENVIRONEMENT_VAR";
 		tk_type[TK_ENVIRONEMENT_VAR] = "TK_ENVIRONEMENT_VAR";
 		tk_type[TK_UNKNOWN] = "TK_UNKNOWN";
 		tk_type[TK_CMD_SEQ_START] = "TK_CMD_SEQ_START";
@@ -121,6 +140,7 @@ void	print_token_group(t_token_group *token)
 		printf("---------------------------------------------------------\n");
 		printf(" str = %s\n", cpy->str);
 		printf(" len = %i\n", cpy->len);
+		printf(" cmd sequence type = %i\n", cpy->cmd_seq_type);
 		printf(" token_count = %i\n", cpy->token_count);
 		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;

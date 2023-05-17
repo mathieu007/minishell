@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/17 10:56:37 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 12:20:06 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ inline bool	type_is_end_of_seq(t_token_type type)
 
 inline int32_t	get_token_type_len(t_token_type type)
 {
-	if (type == TK_UNKNOWN || type == TK_CMD_SEQ_END || type == TK_CMD_SEQ_START)
+	
+	if (type == TK_UNKNOWN || type == TK_CMD_SEQ_END 
+		|| type == TK_CMD_SEQ_START || type == TK_PRE_ENVIRONEMENT_VAR)
 		return (0);
 	if ((int32_t)type > 255)
 		return (2);

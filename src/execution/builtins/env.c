@@ -14,9 +14,6 @@ t_env_cpy	*new_env(char *variable, char *value)
 
 t_env_cpy	*init_env(t_data *data)
 {
-	#ifdef _DEBUG
-		printf("init_env:\n");
-	#endif
 	char		**split_on_equal;
 	t_env_cpy	*head;
 	t_env_cpy	*current;
@@ -32,9 +29,6 @@ t_env_cpy	*init_env(t_data *data)
 	while (data->env[i])
 	{		
 		split_on_equal = ft_split(data->env[i], '=');
-		#ifdef _DEBUG
-			printf("	var:%s value:%s\n", split_on_equal[0], split_on_equal[1]);
-		#endif
 		current->next = new_env(split_on_equal[0], split_on_equal[1]);
 		if (current->next)
 			current->next->prev = current;
@@ -47,9 +41,6 @@ t_env_cpy	*init_env(t_data *data)
 //take a variable and return the value
 char	*get_env_value(char *variable)
 {
-	#ifdef _DEBUG
-		printf("get_env_value\n");
-	#endif
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 	size_t		len;
@@ -59,9 +50,6 @@ char	*get_env_value(char *variable)
 	current = head;
 	while (current && current->value)
 	{
-		#ifdef _DEBUG
-			printf("	var:%s; value:%s;\n", current->variable, current->value);
-		#endif
 		if (ft_strnstr(current->variable, variable, len) == current->variable)
 			return (current->value);
 		current = current->next;

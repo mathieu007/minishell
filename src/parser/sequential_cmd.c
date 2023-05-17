@@ -9,7 +9,7 @@ t_cmd	*sequential_cmd(t_token_group *group)
 	if (cmd->name == NULL)
 		return (NULL);
 	cmd->token_group = group;
-	cmd->cmd_seq_type = get_sequence_type(group);
+	cmd->cmd_seq_type = get_sequence_type(TK_CMD_SEQ_END);
 	return (cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 11:19:59 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 12:54:43 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@ int32_t	tokenize_double_quote(char *str, int32_t i, t_token_group *group)
 		if (t_len == 0)
 			t_len = 1;
 		if (type == TK_DOUBLEQUOTE)
-		{
+		{			
 			add_token(i, TK_CLOSINGDOUBLEQUOTE, group)->token_len = 1;
 			return (i + 1);
 		}
 		else if (str_is_env_variable(&str[i]))
 		{
+			add_token(i, TK_PRE_ENVIRONEMENT_VAR, group);
 			add_token(i, TK_ENVIRONEMENT_VAR, group)->tolal_len = get_env_var_name_len(&str[i]);
 			i++;
 		}
