@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 11:47:55 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 12:08:58 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ t_token_group	*tokenize(char *str)
 			else if (type == TK_DASH)
 				i = add_token_dash(str, i, group);
 			else if (str_is_env_variable(&str[i]))
-			{
+			{			
 				token = add_token(i, TK_ENVIRONEMENT_VAR, group);
 				token->tolal_len = get_env_var_name_len(&str[i]);
 				i++;
