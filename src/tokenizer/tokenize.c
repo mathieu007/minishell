@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 16:26:20 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 17:07:50 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ static t_token_group	*tokenize_groups(char *str)
 	{
 		type = get_token_type(&str[i]);
 		t_len = get_token_type_len(type);
+		if (TK_GREATGREAT == type)
+			printf("TK_GREATGREAT\n");
 		if (t_len == 0)
 			t_len = 1;
 		if (type_is_end_of_seq(type))
-		{
+		{			
 			add_token_group(&str[0], type, i);
 			i += t_len;
 			while (str[i] && str[i] == ' ')
