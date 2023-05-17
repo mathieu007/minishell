@@ -6,12 +6,11 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/17 16:22:42 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 17:31:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 t_cmd_seq	get_sequence_type(t_token_type type)
 {
