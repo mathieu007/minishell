@@ -53,12 +53,13 @@
 ///	TK_BACKSLASH \,
 typedef enum e_token_type
 {
-	TK_UNKNOWN = 255 * 255 + 257,
-	TK_CMD_SEQ_START = 255 * 255 + 258,
-	TK_CMD_SEQ_END = 255 * 255 + 259,
-	TK_CLOSINGDOUBLEQUOTE = 255 * 255 + 260,
-	TK_CLOSINGSINGLEQUOTE = 255 * 255 + 261,
-	TK_ENVIRONEMENT_VAR = 255 * 255 + 262,
+	TK_UNKNOWN = -1,
+	TK_CMD_SEQ_START = -2,
+	TK_CMD_SEQ_END = 3,
+	TK_CLOSINGDOUBLEQUOTE = -4,
+	TK_CLOSINGSINGLEQUOTE = -5,
+	TK_ENVIRONEMENT_VAR = -6,
+	TK_PRE_ENVIRONEMENT_VAR = -7,
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -179,7 +180,7 @@ typedef struct s_token
 	char			*str;
 	int32_t			token_len;
 	int32_t			pos;
-	int32_t			repeat;
+	int32_t			tolal_len;
 	t_token_type	type;
 }				t_token;
 
@@ -217,7 +218,6 @@ typedef struct s_cmd
 typedef struct s_data
 {
 	int32_t					argc;
-	char					*str_cmds;
 	char					**argv;
 	char					**env;
 	t_env_cpy				*env_cpy;
@@ -254,7 +254,7 @@ t_cmd			*new_cmd();
 t_token_group	*new_token_group();
 
 /// @brief Simples and short helpers methods.
-int32_t			get_env_var_name_len(char *str, int32_t i);
+int32_t			get_env_var_name_len(char *str);
 char			*get_env_variable(char *str, int32_t i);
 char			*get_end_of_cmd(char *str);
 int32_t			get_token_type_len(t_token_type type);
@@ -353,7 +353,7 @@ void					free_t_data(t_data *data);
 void					free_2d_Array(void **tab);
 void					free_all();
 void					free_all_and_exit(int32_t status);
-void					*free_ptr(void **ref_ptr);
+void					*free_ptr(void *ptr);
 
 void					print_token_group(t_token_group *token);
 void					print_token(t_token *token);

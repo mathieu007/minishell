@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 13:09:17 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 11:47:55 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 		type = get_token_type(&str[pos]);
 	}
 	token = add_token(start, TK_SPACE, group);
-	token->repeat = repeat;
+	token->tolal_len = repeat;
 	return (pos);
 }
 
@@ -106,9 +106,14 @@ void	split_groups_tokens(t_token_group *group, char *str)
 		token = group->first_token;
 		prev = token;
 		while (token)
-		{
-			start = prev->pos + (prev->token_len * prev->repeat);
-			token->str = ft_substr(str, start, token->pos - prev->pos);
+		{			
+			start = prev->pos + prev->tolal_len;
+			if (prev->type == TK_ENVIRONEMENT_VAR)
+				start += 1;
+			if (token->type == TK_ENVIRONEMENT_VAR)
+				token->str = ft_substr(str, token->pos + 1, token->tolal_len);
+			else	
+				token->str = ft_substr(str, start, token->pos - start);
 			prev = token;
 			token = token->next;
 		}
@@ -123,6 +128,7 @@ t_token_group	*tokenize(char *str)
 	int32_t			t_len;
 	t_token_group	*group;
 	int32_t			len; 
+	t_token			*token;
 	
 	len = ft_strlen(str);
 	str = ft_strtrim(str, " ");	
@@ -134,7 +140,7 @@ t_token_group	*tokenize(char *str)
 	{
 		while (str[i] && str[i] == ' ')
 			i++;
-		add_token(i, TK_CMD_SEQ_START, group);
+		add_token(i, TK_CMD_SEQ_START, group)->tolal_len = 0;
 		while (i < len)
 		{
 			type = get_token_type(&str[i]);
@@ -150,16 +156,19 @@ t_token_group	*tokenize(char *str)
 			else if (type == TK_DASH)
 				i = add_token_dash(str, i, group);
 			else if (str_is_env_variable(&str[i]))
-				add_token(i++, TK_ENVIRONEMENT_VAR, group);
+			{
+				token = add_token(i, TK_ENVIRONEMENT_VAR, group);
+				token->tolal_len = get_env_var_name_len(&str[i]);
+				i++;
+			}				
 			else if (type != TK_UNKNOWN)
 				add_token(i += t_len, type, group);
 			else
 				i += t_len;
 		}
-		add_token(i, TK_CMD_SEQ_END, group);
+		add_token(i, TK_CMD_SEQ_END, group)->tolal_len = 0;
 		group = group->next;
 	}
-	split_groups_tokens(get_first_token_group(), str);
-	
+	split_groups_tokens(get_first_token_group(), str);	
 	return (get_first_token_group());
 }

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 11:41:40 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 11:52:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,42 @@
 
 static t_token_type	*get_tokens_lookup_table(void)
 {
-	static t_token_type	token_types[(255 * 255) + 255 + 255];
+	static t_token_type	token_types[(255 * 255) + (255 * 2)];
 	static int32_t		i;
+	t_token_type 		*tk_type = &token_types[8];
 
 	if (i == 0)
 	{
-		while (i < (255 * 255) + 255 + 255)
+		while (i < (255 * 255) + (255 * 2))
 		{
 			token_types[i] = TK_UNKNOWN;
 			i++;
 		}
-		token_types[TK_CMD_SEQ_START] = TK_CMD_SEQ_START;
-		token_types[TK_SPACE] = TK_SPACE;
-		token_types[TK_AMPERSAND] = TK_AMPERSAND;
-		token_types[TK_AND] = TK_AND;
-		token_types[TK_BACKSLASH] = TK_BACKSLASH;
-		token_types[TK_OR] = TK_OR;
-		token_types[TK_DASH] = TK_DASH;
-		token_types[TK_DASHDASH] = TK_DASHDASH;
-		token_types[TK_DOLLAR_SIGN] = TK_DOLLAR_SIGN;
-		token_types[TK_DOUBLEQUOTE] = TK_DOUBLEQUOTE;
-		token_types[TK_CMD_SEQ_END] = TK_CMD_SEQ_END;
-		token_types[TK_GREAT] = TK_GREAT;
-		token_types[TK_GREATGREAT] = TK_GREATGREAT;
-		token_types[TK_LESS] = TK_LESS;
-		token_types[TK_LESSLESS] = TK_LESSLESS;
-		token_types[TK_LAST_PIPE_EXIT] = TK_LAST_PIPE_EXIT;
-		token_types[TK_PIPE] = TK_PIPE;
-		token_types[TK_SINGLEQUOTE] = TK_SINGLEQUOTE;
-		token_types[TK_VAR_ASSIGN] = TK_VAR_ASSIGN;
-		token_types[TK_WILDCARD] = TK_WILDCARD;
-		token_types[TK_SEMICOLON] = TK_SEMICOLON;
-		token_types[TK_BACKSLASHDOUBLEQUOTE] = TK_BACKSLASHDOUBLEQUOTE;
-		token_types[TK_BACKSLASHSINGLEQUOTE] = TK_BACKSLASHSINGLEQUOTE;
+		tk_type[TK_CMD_SEQ_START] = TK_CMD_SEQ_START;
+		tk_type[TK_CMD_SEQ_END] = TK_CMD_SEQ_END;
+		tk_type[TK_SPACE] = TK_SPACE;
+		tk_type[TK_AMPERSAND] = TK_AMPERSAND;
+		tk_type[TK_AND] = TK_AND;
+		tk_type[TK_BACKSLASH] = TK_BACKSLASH;
+		tk_type[TK_OR] = TK_OR;
+		tk_type[TK_DASH] = TK_DASH;
+		tk_type[TK_DASHDASH] = TK_DASHDASH;
+		tk_type[TK_DOLLAR_SIGN] = TK_DOLLAR_SIGN;
+		tk_type[TK_DOUBLEQUOTE] = TK_DOUBLEQUOTE;		
+		tk_type[TK_GREAT] = TK_GREAT;
+		tk_type[TK_GREATGREAT] = TK_GREATGREAT;
+		tk_type[TK_LESS] = TK_LESS;
+		tk_type[TK_LESSLESS] = TK_LESSLESS;
+		tk_type[TK_LAST_PIPE_EXIT] = TK_LAST_PIPE_EXIT;
+		tk_type[TK_PIPE] = TK_PIPE;
+		tk_type[TK_SINGLEQUOTE] = TK_SINGLEQUOTE;
+		tk_type[TK_VAR_ASSIGN] = TK_VAR_ASSIGN;
+		tk_type[TK_WILDCARD] = TK_WILDCARD;
+		tk_type[TK_SEMICOLON] = TK_SEMICOLON;
+		tk_type[TK_BACKSLASHDOUBLEQUOTE] = TK_BACKSLASHDOUBLEQUOTE;
+		tk_type[TK_BACKSLASHSINGLEQUOTE] = TK_BACKSLASHSINGLEQUOTE;		
 	}
-	return (&token_types[0]);
+	return (tk_type);
 }
 
 t_token_type	get_token_type(char *str)

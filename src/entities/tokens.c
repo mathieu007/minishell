@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 13:21:28 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 10:52:38 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token_group *group)
 	new->pos = pos;
 	new->type = type;
 	new->token_len = get_token_type_len(type);
-	new->repeat = 0;
+	new->tolal_len = 1;
 	if (!group->first_token)
 		group->first_token = new;
 	group->last_token = new;

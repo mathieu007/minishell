@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 13:39:54 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 08:54:06 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,18 @@ void	free_t_cmd(t_cmd *cmd)
 {
 	t_cmd	*current;
 	t_cmd	*next;
+	t_data	*data;
 
+	data = get_data();
 	if (cmd == NULL)
 		return ;
 	current = cmd;
+	
 	while (current != NULL)
 	{
 		next = current->next;
-		if (cmd->name)
-			free(cmd->name);
-		if (cmd->full_path_name)
-			free(cmd->full_path_name);
+		cmd->name = free_ptr(cmd->name);
+		cmd->full_path_name = free_ptr(cmd->full_path_name);		
 		if (cmd->args)
 			free_2d_Array((void **)cmd->args);
 		if (cmd->options)
@@ -38,6 +39,7 @@ void	free_t_cmd(t_cmd *cmd)
 		free(current);
 		current = next;
 	}
+	data->cmds = NULL;
 }
 
 void	free_t_token(t_token *token)
@@ -49,8 +51,7 @@ void	free_t_token(t_token *token)
 	while (current != NULL)
 	{
 		next = current->next;
-		if (current->str)
-			free(current->str);
+		current->str = free_ptr(current->str);
 		free(current);
 		current = next;
 	}
@@ -60,15 +61,15 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 {
 	t_env_cpy	*current;
 	t_env_cpy	*next;
+	t_data		*data;
 
 	current = env_cpy;
+	data = get_data();
 	while (current != NULL)
 	{
 		next = current->next;
-		if (current->variable)
-			free(current->variable);
-		if (current->value)
-			free(current->value);
+		current->variable = free_ptr(current->variable);
+		current->value = free_ptr(current->value);
 		free(current);
 		current = next;
 	}
@@ -76,12 +77,14 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 
 void	free_t_token_group(t_token_group *token_group)
 {
-	t_token_group *next;
+	t_token_group	*next;
+	t_data 			*data;
 
+	data = get_data();
 	while (token_group)
 	{
 		next = token_group->next;
-		free_ptr(&(token_group->str));	
+		token_group->str = free_ptr(token_group->str);
 		if (token_group->env_cpy)
 			free_t_env_cpy(token_group->env_cpy);
 		if (token_group->first_token)
@@ -89,4 +92,6 @@ void	free_t_token_group(t_token_group *token_group)
 		free(token_group);
 		token_group = next;
 	}
+	data->token_groups = NULL;
+	data->last_token_group = NULL;	
 }
