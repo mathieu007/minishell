@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/16 19:24:38 by math             ###   ########.fr       */
+/*   Updated: 2023/05/18 14:40:53 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,3 +24,10 @@ int	exit_cmd(t_cmd *cmd)
 		return(1);
 	}
 }
+
+
+//////// signal =  128 +signnal_number
+
+///convertir le status de waitpid en error
+
+//(convertir le exit stauts en error)

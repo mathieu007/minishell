@@ -5,27 +5,48 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	char 		*input;
 	char		**args;
 	char		**envp;
-	t_data			*data;
+	t_data		*data;
+	int i;
+	// char 			*out;
 
-	data = get_data();	
+
+
+
+
+
+	data = get_data();
 	args = malloc(4 * sizeof(char *));
 	envp = parse_env_path(env);
-	args[0] = "echo";
-	args[1] = "123";
-	args[2] = "123";
-	args[3] = NULL;
+
+	// args[0] = "echo";
+	// args[1] = "123";
+	// args[2] = "123";
+	// args[3] = NULL;
 	init_data(argc, argv, env);
 	// if (execve("/bin/echo", args, envp) == -1)
 	// 	perror("Could not execve");
-	while (1)
-	{
-		input = readline("MiniShell> ");
+
+
+	 i = 1;
+	//	input = readline("MiniShell> ");
+
+	printf("toto\n"); 
+	return(0);
+
+		while(i < argc-1)
+{
+		input = ft_strjoin(input, argv[i]) ;
+		i++;
+}
 		data->token_groups = tokenize(input);
 		data->tokens = data->token_groups->first_token;
-		print_groups_and_tokens();
-		if (strcmp(input, "exit") == 0)
-			break ;
-		add_history(input);
+		print_token_group(data->token_groups);
+		print_token(data->token_groups->first_token);
+		// input = parse_env(input);
+		// input = parse_env(input);
+		// if (strcmp(input, "exit") == 0)
+		// 	break ;
+		//add_history(input);
 		free_all();
-	}
+	
 }
