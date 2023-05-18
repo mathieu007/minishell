@@ -138,14 +138,14 @@ typedef enum e_cmd_seq
 {
 	CMD_NONE = 0,
 	CMD_PIPE = TK_PIPE,
-	CMD_LOG_AND = TK_AND,
-	CMD_LOG_OR = TK_OR,
-	CMD_BACKGROUND_EXEC = TK_AMPERSAND,
+	CMD_LOG_AND = TK_AND, // &&
+	CMD_LOG_OR = TK_OR, // ||
+	CMD_BACKGROUND_EXEC = TK_AMPERSAND, // &
 	CMD_FILEOUT_APPPEND = TK_GREATGREAT,
 	CMD_FILEIN_APPPEND = TK_LESSLESS,
 	CMD_FILEOUT = TK_GREAT,
 	CMD_FILEIN = TK_LESS,
-	CMD_SEQUENTIAL = TK_SEMICOLON
+	CMD_SEQUENTIAL = TK_SEMICOLON // ;
 }							t_cmd_seq;
 
 typedef struct s_redirect
@@ -181,6 +181,7 @@ typedef struct s_token
 	int32_t			pos;
 	int32_t			offset;
 	int32_t			tolal_len;
+	bool			inside_dbl_quotes;
 	t_token_type	type;
 }				t_token;
 
@@ -199,6 +200,8 @@ typedef struct s_token_group
 	t_cmd_seq				cmd_seq_type;
 }							t_token_group;
 
+/// echo -naaaaznnnnzzzz 123 "123   test"
+//name echo , option: -n, -a, -z; args: [echo, -naaaaznnnnzzzz, 123, "123    test"]
 typedef struct s_cmd
 {
 	int32_t			(*func)(struct s_cmd *);
@@ -289,7 +292,7 @@ bool			file_is_exec(char *absolute_path_to_file);
 char						*get_full_path(char *cmd_name);
 
 /// tokenizer functions
-int32_t			add_token_env(char *str, int32_t pos, t_token_group *group);
+int32_t			add_token_env(char *str, int32_t pos, t_token_group *group, bool inside_dbl_quotes);
 t_token_group	*tokenize(char *str);
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);
@@ -303,6 +306,8 @@ int32_t						increment_counter(t_token_type type);
 int32_t						decrement_counter(t_token_type type);
 
 /// parsing
+t_cmd			*get_seq_cmds(t_token_group *group);
+char			**parse_args(t_token_group *group);
 char			**get_options(t_token_group *group);
 int32_t			get_args_len(t_token_group *group);
 void			get_args(t_token_group *group, char **split);

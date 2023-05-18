@@ -12,8 +12,8 @@ int32_t	parse_env_var_name_len(char *env_start)
 
 	len = 0;
 	i = 1;
-	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
-		return (0);
+	// if (!env_start && ft_isalpha(env_start[1]) == 0)
+	// 	return (0);
 	while (env_start[i] && ft_isalnum(env_start[i++]) == 1)
 		len++;
 	return (len);
@@ -26,21 +26,17 @@ char	*parse_env_var_name(t_token *token)
 	char	*env_start;
 
 	env_start = token->str;
-	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
-		return (NULL);
 	len = parse_env_var_name_len(env_start);
 	var_name = ft_strncpy(&env_start[1], len);
 	return (var_name);
 }
 
 /// @brief this function assume that the input is a var_name
-char	*parse_env_var_value(t_token *token, char *env_start)
+char	*parse_env_var_value(t_token *token)
 {
 	char	*var_name;
 	char	*var_value;
 
-	if (!env_start || env_start[0] != '$' || ft_isalpha(env_start[1]) == 0)
-		return (NULL);
 	var_name = parse_env_var_name(token);
 	var_value = get_env_value(var_name);
 	if (!var_value)
@@ -59,17 +55,21 @@ t_token_group	*parse_env(t_token_group *group)
 {
 	t_token	*token;
 	char	*env_value;
+	int32_t	name_len;
 	char	*str;
 
-	str = group->str;
 	token = group->first_token;
 	while (token)
 	{
-		if (token->type == TK_DOLLAR_SIGN && ft_isalpha(str[token->pos + 1]) == 1)
+		str = token->str;
+		if (token->type == TK_ENVIRONEMENT_VAR)
 		{
-			env_value = parse_env_var_value(token, str);
-			if (env_value)
-				token->str = env_value;
+			name_len = parse_env_var_name_len(str);
+			env_value = parse_env_var_value(token);
+			token->str = env_value;
+			token->tolal_len = ft_strlen(env_value);
+			free(env_value);
+			free(str);
 		}
 		token = token->next;
 	}

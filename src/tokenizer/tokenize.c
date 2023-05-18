@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 07:08:28 by math             ###   ########.fr       */
+/*   Updated: 2023/05/18 15:51:43 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,11 @@ int32_t	add_token_dashdash(char *str, int32_t pos, t_token_group *group)
 	return (pos);
 }
 
-int32_t	add_token_env(char *str, int32_t pos, t_token_group *group)
+int32_t	add_token_env(char *str, int32_t pos, t_token_group *group, bool inside_dbl_quotes)
 {
-	add_token(pos, TK_ENVIRONEMENT_VAR, group);
-	return (pos + get_env_var_name_len(&str[pos]));
+	add_token(pos, TK_ENVIRONEMENT_VAR, group)
+		->inside_dbl_quotes = inside_dbl_quotes;
+	return (pos + get_env_var_name_len(&str[pos]) + 1);
 }
 
 void	split_groups_tokens(t_token_group *group)
@@ -128,6 +129,7 @@ t_token_group	*tokenize(char *str)
 		{
 			type = get_token_type(&str[i]);
 			t_len = get_token_type_len(type);
+			
 			if (t_len == 0)
 				t_len = 1;
 			if (type == TK_SINGLEQUOTE)
@@ -141,9 +143,12 @@ t_token_group	*tokenize(char *str)
 			else if (type == TK_DASH)
 				i = add_token_dash(str, i, group);
 			else if (str_is_env_variable(&str[i]))
-				i = add_token_env(str, i, group);
+				i = add_token_env(str, i, group, false);
 			else if (type != TK_UNKNOWN)
-				add_token(i += t_len, type, group);
+			{
+				add_token(i, type, group);
+				i += t_len;
+			}						
 			else
 				i += t_len;
 		}

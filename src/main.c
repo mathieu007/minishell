@@ -8,7 +8,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	t_data			*data;
 
 	data = get_data();
-	args = malloc(4 * sizeof(char *));
+	args = malloc(4 * sizeof(char *));	
 	// envp = parse_env_path(env);
 	args[0] = "echo";
 	args[1] = "-n";
@@ -21,7 +21,8 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	{
 		input = readline("MiniShell> ");
 		data->token_groups = tokenize(input);
-		data->tokens = data->token_groups->first_token;
+		data->tokens = data->token_groups->first_token;	
+		parse_env(data->token_groups);
 		print_groups_and_tokens();
 		if (strcmp(input, "exit") == 0)
 			break ;
