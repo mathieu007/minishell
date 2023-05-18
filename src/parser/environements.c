@@ -58,17 +58,15 @@ char	*parse_env_var_value(t_token *token, char *env_start)
 t_token_group	*parse_env(t_token_group *group)
 {
 	t_token	*token;
-	char	*temp;
 	char	*env_value;
 	char	*str;
-	
+
 	str = group->str;
 	token = group->first_token;
 	while (token)
 	{
 		if (token->type == TK_DOLLAR_SIGN && ft_isalpha(str[token->pos + 1]) == 1)
 		{
-			temp = token->str;
 			env_value = parse_env_var_value(token, str);
 			if (env_value)
 				token->str = env_value;

@@ -10,7 +10,7 @@ void	free_t_cmd(t_cmd *cmd)
 	if (cmd == NULL)
 		return ;
 	current = cmd;
-	
+
 	while (current != NULL)
 	{
 		next = current->next;
@@ -49,10 +49,8 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 {
 	t_env_cpy	*current;
 	t_env_cpy	*next;
-	t_data		*data;
 
 	current = env_cpy;
-	data = get_data();
 	while (current != NULL)
 	{
 		next = current->next;

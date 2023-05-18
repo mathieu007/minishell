@@ -4,19 +4,19 @@ int32_t	main(int32_t argc, char **argv, char **env)
 {
 	char 		*input;
 	char		**args;
-	char		**envp;
+	// char		**envp;
 	t_data			*data;
 
-	data = get_data();	
+	data = get_data();
 	args = malloc(4 * sizeof(char *));
-	envp = parse_env_path(env);
+	// envp = parse_env_path(env);
 	args[0] = "echo";
 	args[1] = "-n";
 	args[2] = "123";
 	args[3] = NULL;
 	init_data(argc, argv, env);
-	if (execve("/bin/echo", args, envp) == -1)
-		perror("Could not execve");
+	// if (execve("/bin/echo", args, envp) == -1)
+	// 	perror("Could not execve");
 	while (1)
 	{
 		input = readline("MiniShell> ");

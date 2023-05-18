@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 11:21:48 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 19:52:46 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ inline int32_t	get_env_var_name_len(char *str)
 
 	start = str;
 	if (!str || !str[0])
-		return (0);		
+		return (0);
 	if ((*str++ == '$' && ft_isalpha(*str++) == 1))
 		while (*str && ft_isalnum(*str))
 			str++;

@@ -59,7 +59,6 @@ typedef enum e_token_type
 	TK_CLOSINGDOUBLEQUOTE = -4,
 	TK_CLOSINGSINGLEQUOTE = -5,
 	TK_ENVIRONEMENT_VAR = -6,
-	TK_PRE_ENVIRONEMENT_VAR = -7,
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -180,6 +179,7 @@ typedef struct s_token
 	char			*str;
 	int32_t			token_len;
 	int32_t			pos;
+	int32_t			offset;
 	int32_t			tolal_len;
 	t_token_type	type;
 }				t_token;
@@ -289,6 +289,7 @@ bool			file_is_exec(char *absolute_path_to_file);
 char						*get_full_path(char *cmd_name);
 
 /// tokenizer functions
+int32_t			add_token_env(char *str, int32_t pos, t_token_group *group);
 t_token_group	*tokenize(char *str);
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);

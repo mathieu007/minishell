@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 14:17:55 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/17 21:15:44 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*new_token()
+t_token	*new_token(void)
 {
 	t_token	*new;
 
@@ -23,11 +23,10 @@ t_token	*new_token()
 	return (new);
 }
 
-
 t_token	*add_token(int32_t pos, t_token_type type, t_token_group *group)
 {
-	t_token		*last;
-	t_token		*new;
+	t_token	*last;
+	t_token	*new;
 
 	last = group->last_token;
 	new = new_token();
@@ -36,6 +35,7 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token_group *group)
 		if (!new)
 			return (NULL);
 		last->next = new;
+		last->tolal_len = pos - last->pos;
 		new->prev = last;
 	}
 	increment_counter(type);

@@ -26,7 +26,6 @@ static char	*get_print_token_type(t_token_type type)
 
 	if (!token_types[0])
 	{
-		tk_type[TK_PRE_ENVIRONEMENT_VAR] = "TK_PRE_ENVIRONEMENT_VAR";
 		tk_type[TK_ENVIRONEMENT_VAR] = "TK_ENVIRONEMENT_VAR";
 		tk_type[TK_UNKNOWN] = "TK_UNKNOWN";
 		tk_type[TK_CMD_SEQ_START] = "TK_CMD_SEQ_START";
@@ -41,7 +40,7 @@ static char	*get_print_token_type(t_token_type type)
 		tk_type[TK_DASH] = "TK_DASH";
 		tk_type[TK_DASHDASH] = "TK_DASHDASH";
 		tk_type[TK_DOLLAR_SIGN] = "TK_DOLLAR_SIGN";
-		tk_type[TK_DOUBLEQUOTE] = "TK_DOUBLEQUOTE";		
+		tk_type[TK_DOUBLEQUOTE] = "TK_DOUBLEQUOTE";
 		tk_type[TK_GREAT] = "TK_GREAT";
 		tk_type[TK_GREATGREAT] = "TK_GREATGREAT";
 		tk_type[TK_LESS] = "TK_LESS";
