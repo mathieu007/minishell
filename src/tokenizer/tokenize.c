@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 21:29:35 by math             ###   ########.fr       */
+/*   Updated: 2023/05/18 07:08:28 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
 {
 	add_token(pos, TK_DASH, group);
+	pos++;
 	while (str[pos] && ft_isalnum(str[pos]) == 1)
 		pos++;
 	return (pos);
@@ -73,6 +74,7 @@ int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
 int32_t	add_token_dashdash(char *str, int32_t pos, t_token_group *group)
 {
 	add_token(pos, TK_DASHDASH, group);
+	pos++;
 	while (str[pos] && ft_isalnum(str[pos]) == 1)
 		pos++;
 	return (pos);
@@ -83,26 +85,6 @@ int32_t	add_token_env(char *str, int32_t pos, t_token_group *group)
 	add_token(pos, TK_ENVIRONEMENT_VAR, group);
 	return (pos + get_env_var_name_len(&str[pos]));
 }
-
-// void	set_tokens_str(t_token_group *group, char *str)
-// {
-// 	t_token	*token;
-// 	t_token	*next_token;
-
-// 	while (group)
-// 	{
-// 		token = group->first;
-// 		next_token = token;
-// 		while (token)
-// 		{
-// 			while (next_token && next_token->pos == token->pos)
-// 				next_token = token->next;
-// 			token->start = ft_substr(str, token->pos, next_token->pos - token->pos);
-// 			token = token->next;
-// 		}
-// 		group = group->next;
-// 	}
-// }
 
 void	split_groups_tokens(t_token_group *group)
 {
