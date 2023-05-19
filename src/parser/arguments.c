@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 20:16:22 by math             ###   ########.fr       */
+/*   Updated: 2023/05/19 06:51:44 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void	get_args(t_token_group *group, char **split)
 	token = group->first_token;
 	while (token)
 	{
+
 		if (token->type == TK_SPACE)
 		{
 			split++;
@@ -165,6 +166,7 @@ void	get_args(t_token_group *group, char **split)
 		else
 			*split = ft_strjoin(*split, token->str);
 		token = token->next;
+		printf("split%s\n", *split);
 	}
 }
 

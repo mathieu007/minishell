@@ -306,6 +306,7 @@ int32_t						increment_counter(t_token_type type);
 int32_t						decrement_counter(t_token_type type);
 
 /// parsing
+int32_t			count_env_words(char *str);
 t_cmd			*get_seq_cmds(t_token_group *group);
 char			**parse_args(t_token_group *group);
 char			**get_options(t_token_group *group);
@@ -324,7 +325,6 @@ t_token			*get_closing_single_quote_token(t_token *token);
 t_cmd_seq		get_sequence_type(t_token_type type);
 
 bool						is_end_of_seq(t_token *token);
-
 void						close_pipe_fds(t_cmd *cmd);
 t_pipe						*new_pipe(t_cmd *cmd);
 void						*free_pipe(t_cmd *cmd);

@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 21:38:25 by math             ###   ########.fr       */
+/*   Updated: 2023/05/19 06:53:21 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ int32_t	tokenize_double_quote(char *str, int32_t i, t_token_group *group)
 			break ;
 		}
 		else if (str_is_env_variable(&str[i]))
-		{
 			i = add_token_env(str, i, group, true);
-		}			
 		else if (type != TK_UNKNOWN && type != TK_SPACE
 			&& type != TK_SINGLEQUOTE)
 			add_token(i, type, group);
