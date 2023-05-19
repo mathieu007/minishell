@@ -38,7 +38,7 @@ char	*parse_env_var_value(t_token *token)
 	char	*var_value;
 
 	var_name = parse_env_var_name(token);
-	var_value = get_env_value(var_name);	
+	var_value = get_env_value(var_name);
 	if (!var_value)
 	{
 		var_value = malloc(1);
@@ -48,10 +48,11 @@ char	*parse_env_var_value(t_token *token)
 	return (var_value);
 }
 
-int32_t	count_strip_consecutive_white_sapce(char *str)
+char	*strip_consecutive_white_space_dst(char *str)
 {
 	int32_t	strip_len;
 	int32_t	i;
+	char 	*data;
 
 	strip_len = 0;
 	i = 0;
@@ -62,21 +63,25 @@ int32_t	count_strip_consecutive_white_sapce(char *str)
 		strip_len++;
 		i++;
 	}
-	return (strip_len);
+	data = malloc(strip_len + 1);
+	if (!data)
+		return (NULL);
+	data[strip_len] = '\0';
+	return (data);
 }
 
-char	*strip_consecutive_white_sapce(char *str)
+char	*strip_consecutive_white_space(char *str)
 {
-	int32_t	strip_len;
 	int32_t	i;
 	int32_t	insert_i;
 	char	*strip;
 
-	strip_len = count_strip_consecutive_white_sapce(str);
+
 	i = 0;
 	insert_i = 0;
-	strip = malloc(strip_len + 1);
-	strip[strip_len] = '\0';
+	strip = strip_consecutive_white_space_dst(str);
+	if (!strip)
+		return (NULL);
 	while (str[i] && str[i + 1])
 	{
 		if ((str[i] == ' ' && str[i + 1] != ' ') || str[i] != ' ')
@@ -88,6 +93,58 @@ char	*strip_consecutive_white_sapce(char *str)
 		}
 		i++;
 	}
+	return (strip);
+}
+
+/// @brief We parse environement variable from these token group
+/// @param group 
+/// @return 
+char	*get_env_parsed_str(t_token_group *group)
+{
+	t_token	*token;
+	char	*dest;
+	char	*cpy;
+
+	token = group->first_token;
+	if (!token)
+		return (NULL);
+	dest = NULL;
+	print_token(token);
+	while (token)
+	{	
+		if (token->type == TK_SPACE)
+		{
+			cpy = dest;
+			dest = ft_strjoin(dest, " ");
+			free(cpy);
+		}
+		else if (token->type == TK_DOUBLEQUOTE || token->type == TK_CLOSINGDOUBLEQUOTE)
+		{
+			cpy = dest;
+			dest = ft_strjoin(dest, "\"");
+			free(cpy);
+			cpy = dest;
+			dest = ft_strjoin(dest, token->str);
+			free(cpy);
+		}
+		else if (token->type == TK_SINGLEQUOTE || token->type == TK_CLOSINGSINGLEQUOTE)
+		{
+			cpy = dest;
+			dest = ft_strjoin(dest, "'");	
+			free(cpy);
+			cpy = dest;
+			dest = ft_strjoin(dest, token->str);
+			free(cpy);
+		}
+		else
+		{
+			cpy = dest;	
+			dest = ft_strjoin(dest, token->str);
+			free(cpy);
+		}		
+		token = token->next;
+	}
+	return (dest);
 }
 
 /// @brief We parse environement variable from these token group
@@ -98,7 +155,6 @@ t_token_group	*parse_env(t_token_group *group)
 	t_token	*token;
 	char	*env_value;
 	char	*str;
-	int32_t	count;
 
 	token = group->first_token;
 	while (token)
@@ -116,10 +172,20 @@ t_token_group	*parse_env(t_token_group *group)
 			else
 			{
 				env_value = parse_env_var_value(token);
-				token->str = strip_consecutive_white_sapce(env_value);
-				token->tolal_len = count_strip_consecutive_white_sapce(env_value);
+				token->str = strip_consecutive_white_space(env_value);
+				token->tolal_len = ft_strlen(token->str);
 				free(env_value);
 				free(str);
+				if (token->prev && token->prev->type == TK_SPACE && token->str[0] == ' ')
+				{
+					token->str = ft_substr(token->str, 1, token->tolal_len - 1);
+					token->tolal_len = token->tolal_len - 1;
+				}
+				if (token->next && token->next->type == TK_SPACE && token->str[token->tolal_len - 1] == ' ')
+				{
+					token->str = ft_substr(token->str, 0, token->tolal_len - 1);
+					token->tolal_len = token->tolal_len - 1;
+				}
 			}
 		}
 		token = token->next;

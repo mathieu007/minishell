@@ -306,6 +306,7 @@ int32_t						increment_counter(t_token_type type);
 int32_t						decrement_counter(t_token_type type);
 
 /// parsing
+char			*get_env_parsed_str(t_token_group *group);
 int32_t			count_env_words(char *str);
 t_cmd			*get_seq_cmds(t_token_group *group);
 char			**parse_args(t_token_group *group);
@@ -350,13 +351,14 @@ int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd *cmd);
 
 //free section
+void					free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
 void					free_t_token(t_token *token);
 void					free_t_env_cpy(t_env_cpy *env_cpy);
 void					free_t_token_group(t_token_group *token_group);
 void					free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_data *data);
-void					free_2d_Array(void **tab);
+void					free_2d_array(void **tab);
 void					free_all();
 void					free_all_and_exit(int32_t status);
 void					*free_ptr(void *ptr);

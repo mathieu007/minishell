@@ -14,12 +14,13 @@ void	free_t_cmd(t_cmd *cmd)
 	while (current != NULL)
 	{
 		next = current->next;
-		cmd->name = free_ptr(cmd->name);
+		/// do not free cmd->name is freed inside cmd->args
+		// cmd->name = free_ptr(cmd->name);
 		cmd->full_path_name = free_ptr(cmd->full_path_name);		
 		if (cmd->args)
-			free_2d_Array((void **)cmd->args);
+			free_2d_char_array(cmd->args);
 		if (cmd->options)
-			free_2d_Array((void **)cmd->options);
+			free_2d_array((void **)cmd->options);
 		if (cmd->pipe)
 			free(cmd->pipe);
 		if (cmd->redirect)
@@ -27,6 +28,8 @@ void	free_t_cmd(t_cmd *cmd)
 		free(current);
 		current = next;
 	}
+	data->last_cmd = NULL;
+	data->cmds_count = 0;
 	data->cmds = NULL;
 }
 
@@ -71,13 +74,17 @@ void	free_t_token_group(t_token_group *token_group)
 	{
 		next = token_group->next;
 		token_group->str = free_ptr(token_group->str);
-		if (token_group->env_cpy)
-			free_t_env_cpy(token_group->env_cpy);
+		// if (token_group->env_cpy)
+		// 	free_t_env_cpy(token_group->env_cpy);
 		if (token_group->first_token)
 			free_t_token(token_group->first_token);
+		token_group->first_token = NULL;
+		token_group->last_token = NULL;
 		free(token_group);
 		token_group = next;
 	}
 	data->token_groups = NULL;
-	data->last_token_group = NULL;	
+	data->last_token_group = NULL;
+	data->token_groups_count = 0;
+	data->tokens_count = 0;
 }

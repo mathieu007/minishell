@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/19 06:51:44 by math             ###   ########.fr       */
+/*   Updated: 2023/05/19 15:44:18 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 		}
 		else
 			token = token->next;
+		
 	}
 	return (token);
 }
@@ -151,22 +152,22 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 void	get_args(t_token_group *group, char **split)
 {
 	t_token	*token;
+	char 	*cpy;
+	int32_t	i;
 
+	i = 0;
 	token = group->first_token;
 	while (token)
 	{
-
-		if (token->type == TK_SPACE)
-		{
-			split++;
-			*split = ft_strncpy(token->str, token->tolal_len);
-		}
-		else if (token->type == TK_ENVIRONEMENT_VAR)
-			split = add_env_words(token->str, split);
+		if (token->type == TK_SPACE || token->type == TK_ENVIRONEMENT_VAR)
+			split[++i] = ft_strncpy(token->str, token->tolal_len);	
 		else
-			*split = ft_strjoin(*split, token->str);
+		{
+			cpy = split[i];
+			split[i] = ft_strjoin(split[i], token->str);
+			free(cpy);
+		}			
 		token = token->next;
-		printf("split%s\n", *split);
 	}
 }
 

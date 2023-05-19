@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_counter.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/12 10:05:43 by math             ###   ########.fr       */
+/*   Updated: 2023/05/19 11:52:33 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 inline int32_t	*get_token_counter(void)
 {
-	static int32_t	counter[255 * 255];
+	static int32_t	counter[(255 * 255) + (255 * 2)];
 
-	return (&counter[0]);
+	return (&counter[8]);
 }
 
 int32_t	*reset_token_counter(void)
@@ -27,7 +27,7 @@ int32_t	*reset_token_counter(void)
 	int32_t	len;
 
 	i = 0;
-	len = 255 * 255;
+	len = (255 * 255) + (255 * 2);
 	counter = get_token_counter();
 	while (i < len)
 	{

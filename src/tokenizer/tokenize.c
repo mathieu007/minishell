@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 21:39:54 by math             ###   ########.fr       */
+/*   Updated: 2023/05/19 15:54:13 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static t_token_group	*tokenize_groups(char *str)
 	int32_t			i;
 	t_token_type	type;
 	int32_t			t_len;
+	t_data			*data;
 
 	i = 0;
 	while (str[i])
@@ -43,7 +44,8 @@ static t_token_group	*tokenize_groups(char *str)
 		while (str[i] && str[i] == ' ')
 			i++;
 	}
-	return (get_first_token_group());
+	data = get_data();
+	return (data->token_groups);
 }
 
 int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
@@ -64,7 +66,9 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 
 int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
 {
-	add_token(pos, TK_DASH, group);
+	t_token	*token;
+
+	token = add_token(pos, TK_DASH, group);
 	pos++;
 	while (str[pos] && ft_isalnum(str[pos]) == 1)
 		pos++;
@@ -82,8 +86,10 @@ int32_t	add_token_dashdash(char *str, int32_t pos, t_token_group *group)
 
 int32_t	add_token_env(char *str, int32_t pos, t_token_group *group, bool inside_dbl_quotes)
 {
-	add_token(pos, TK_ENVIRONEMENT_VAR, group)
-		->inside_dbl_quotes = inside_dbl_quotes;
+	t_token	*token;
+
+	token = add_token(pos, TK_ENVIRONEMENT_VAR, group);
+	token->inside_dbl_quotes = inside_dbl_quotes;
 	return (pos + get_env_var_name_len(&str[pos]));
 }
 
@@ -100,7 +106,11 @@ void	split_groups_tokens(t_token_group *group)
 		while (token)
 		{
 			start = token->pos + token->token_len;
-			token->str = ft_substr(str, start, token->tolal_len - token->token_len);
+			if (token->type == TK_DASH)
+				start--;
+			else if (token->type == TK_DASHDASH)
+				start -= 2;
+			token->str = ft_substr(str, start, token->tolal_len - token->token_len);				
 			token = token->next;
 		}
 		group = group->next;
@@ -113,11 +123,14 @@ t_token_group	*tokenize(char *str)
 	t_token_type	type;
 	int32_t			t_len;
 	t_token_group	*group;
+	t_data			*data;
 
+	data = get_data();
 	str = ft_strtrim(str, " ");
 	if (!str && *str)
 		return (NULL);
-	group = tokenize_groups(str);
+	tokenize_groups(str);
+	group = data->token_groups;
 	while (group && group->str)
 	{
 		i = 0;
@@ -154,7 +167,7 @@ t_token_group	*tokenize(char *str)
 		}
 		add_token(i, TK_CMD_SEQ_END, group)->tolal_len = 0;
 		group = group->next;
-	}
-	split_groups_tokens(get_first_token_group());
-	return (get_first_token_group());
+	}	
+	split_groups_tokens(data->token_groups);
+	return (data->token_groups);
 }
