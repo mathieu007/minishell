@@ -13,8 +13,11 @@ void	print_groups_and_tokens()
 	while (group)
 	{		
 		token = group->first_token;
-		print_token(token);
-		token = token->next;	
+		if (token)
+		{
+			print_token(token);
+			token = token->next;
+		}
 		group = group->next;
 	}	
 }
@@ -74,30 +77,21 @@ void	print_cmd(t_cmd *command)
 		printf("ARGS = \n");
 		while (cpy->args[i])
 		{
-			printf("[%s]  ", cpy->args[i]);
+			printf("[%s] ", cpy->args[i]);
 			i++;
 		}
 		printf("\n");
-
 		printf(" cmd_seq_type = %i\n", (int)cpy->cmd_seq_type);
-
 		printf("full_path_name = %s\n", cpy->full_path_name);
-
 		printf("is_builtin = %i\n", cpy->is_builtin);
-
 		printf("name = %s\n", cpy->name);
-		
 		i = 0;
-		while (cpy->options[i])
+		while (cpy->options && cpy->options[i])
 		{
 			printf("name = %s\n", cpy->options[i]);
 			i++;
 		}
 		printf("\n");
-
-		printf("pid = %i\n", cpy->pid);
-		printf("pid = %p\n", cpy->next);
-		printf("pid = %p\n", cpy->prev);
 		printf("---------------------------------------------------------");
 		cpy = cpy->next;
 		j++;
@@ -120,6 +114,24 @@ void	print_token(t_token *token)
 		printf(" pos = %i\n", cpy->pos);
 		printf(" token type = %s\n", get_print_token_type(cpy->type));
 		printf(" total len = %i\n", cpy->tolal_len);
+		printf("---------------------------------------------------------\n");
+		cpy = cpy->next;
+		j++;
+	}
+}
+
+void	print_env(t_env_cpy *env)
+{
+	t_env_cpy	*cpy;
+	int j = 0;
+
+	cpy = env;
+	printf("[[ENVIRONEMENTS CHAINLIST]]\n\n");
+	while (cpy)
+	{
+		printf("[[NODE # %i]]\n",j);
+		printf("---------------------------------------------------------\n");
+		printf(" var = %s value = %s\n", cpy->variable, cpy->value);
 		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;

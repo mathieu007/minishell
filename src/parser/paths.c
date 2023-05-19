@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 15:16:44 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/18 19:19:38 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*try_get_relative_dir(char *cmd_name)
 	path = getcwd(&buffer[0], PATH_MAX + 1);
 	if (path == NULL)
 		perror("An error occur while triying to get the current working dir.");
-	path = join(path, &cmd_name[1]);
+	path = ft_strjoin(path, &cmd_name[1]);
 	if (*cmd_name && *cmd_name == '.' && cmd_name[1] && cmd_name[1] == '/'
 		&& access(path, F_OK | X_OK) == 0)
 		return (path);

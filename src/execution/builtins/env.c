@@ -48,8 +48,9 @@ char	*get_env_value(char *variable)
 	len = ft_strlen(variable);
 	head = get_data()->env_cpy;
 	current = head;
-	while (current && current->value)
+	while (current)
 	{
+			printf("current->variable %s\n", current->variable);
 		if (ft_strnstr(current->variable, variable, len) == current->variable)
 			return (current->value);
 		current = current->next;

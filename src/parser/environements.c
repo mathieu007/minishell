@@ -11,7 +11,7 @@ int32_t	parse_env_var_name_len(char *env_start)
 	int32_t	i;
 
 	len = 0;
-	i = 1;
+	i = 0;
 	// if (!env_start && ft_isalpha(env_start[1]) == 0)
 	// 	return (0);
 	while (env_start[i] && ft_isalnum(env_start[i++]) == 1)
@@ -27,7 +27,7 @@ char	*parse_env_var_name(t_token *token)
 
 	env_start = token->str;
 	len = parse_env_var_name_len(env_start);
-	var_name = ft_strncpy(&env_start[1], len);
+	var_name = ft_strncpy(env_start, len);
 	return (var_name);
 }
 
@@ -38,7 +38,7 @@ char	*parse_env_var_value(t_token *token)
 	char	*var_value;
 
 	var_name = parse_env_var_name(token);
-	var_value = get_env_value(var_name);
+	var_value = get_env_value(var_name);	
 	if (!var_value)
 	{
 		var_value = malloc(1);
@@ -55,7 +55,6 @@ t_token_group	*parse_env(t_token_group *group)
 {
 	t_token	*token;
 	char	*env_value;
-	int32_t	name_len;
 	char	*str;
 
 	token = group->first_token;
@@ -64,11 +63,9 @@ t_token_group	*parse_env(t_token_group *group)
 		str = token->str;
 		if (token->type == TK_ENVIRONEMENT_VAR)
 		{
-			name_len = parse_env_var_name_len(str);
 			env_value = parse_env_var_value(token);
 			token->str = env_value;
 			token->tolal_len = ft_strlen(env_value);
-			free(env_value);
 			free(str);
 		}
 		token = token->next;

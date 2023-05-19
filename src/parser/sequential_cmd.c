@@ -10,8 +10,8 @@
 t_cmd	*get_seq_cmds(t_token_group *group)
 {
 	t_cmd		*cmd;
-	char		**args;	
-	
+	char		**args;
+
 	cmd = add_cmd();
 	parse_env(group);
 	args = parse_args(group);
@@ -22,6 +22,6 @@ t_cmd	*get_seq_cmds(t_token_group *group)
 	cmd->is_builtin = is_builtins(cmd->name);
 	cmd->options = get_options(group);
 	cmd->cmd_seq_type = group->cmd_seq_type;
-	cmd->args = &args[0];
+	cmd->args = args;
 	return (cmd);
 }

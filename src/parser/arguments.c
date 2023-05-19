@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 15:41:40 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/18 20:16:22 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,11 @@ char **add_env_words(char *str, char **split)
 {
 	int32_t i;
 	int32_t start;
-	char	**start_ptr;
 
 	if (*str)
 		return (0);
 	i = 0;
 	start = 0;
-	start_ptr = split;
 	while (str[i])
 	{
 		if (str[i] == ' ')
@@ -72,10 +70,10 @@ char **add_env_words(char *str, char **split)
 			*split++ = ft_strncpy(&str[start], i - start);
 			while (str[i] == ' ')
 				i++;
-			start = i;				
+			start = i;
 		}
 		else
-			i++;;
+			i++;
 	}
 	return (split);
 }
@@ -106,19 +104,19 @@ int32_t	get_args_len(t_token_group *group)
 {
 	int32_t	args_len;
 	t_token	*token;
-	t_token	*prev_token;
 
 	args_len = 0;
 	token = group->first_token;
 	if (!token)
 		return (0);
-	prev_token = token;
 	while (token)
 	{
 		if (token->type == TK_SPACE)
 			args_len++;
 		else if (token->type == TK_ENVIRONEMENT_VAR)
 			args_len += count_env_words(token->str);
+		else if (token->type == TK_CMD_SEQ_END)
+			args_len++;
 		token = token->next;
 	}
 	return (args_len);
@@ -152,22 +150,20 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 
 void	get_args(t_token_group *group, char **split)
 {
-	int32_t	split_i;
 	t_token	*token;
-	char	*arg;
-	char	*str;
 
 	token = group->first_token;
-	split_i = 0;
-	str = group->str;
-	arg = NULL;
 	while (token)
 	{
-		arg = NULL;
 		if (token->type == TK_SPACE)
-			split[split_i++] = ft_strncpy(token->str, token->tolal_len);
+		{
+			split++;
+			*split = ft_strncpy(token->str, token->tolal_len);
+		}
 		else if (token->type == TK_ENVIRONEMENT_VAR)
 			split = add_env_words(token->str, split);
+		else
+			*split = ft_strjoin(*split, token->str);
 		token = token->next;
 	}
 }
@@ -176,9 +172,16 @@ char	**parse_args(t_token_group *group)
 {
 	int32_t	args_len;
 	char	**split;
+	int32_t	i;
 
+	i = 0;
 	args_len = get_args_len(group);
 	split = malloc((args_len + 1) * sizeof(char *));
+	while (i < args_len)
+	{
+		split[i] = NULL;
+		i++;
+	}
 	if (!split)
 		return (NULL);
 	split[args_len] = NULL;

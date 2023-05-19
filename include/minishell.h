@@ -364,5 +364,7 @@ void					*free_ptr(void *ptr);
 void					print_token_group(t_token_group *token);
 void					print_token(t_token *token);
 void					print_groups_and_tokens();
+void					print_env(t_env_cpy *env);
+void					print_cmd(t_cmd *command);
 
 #endif
