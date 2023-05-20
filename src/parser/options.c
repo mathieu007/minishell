@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/20 08:46:51 by math             ###   ########.fr       */
+/*   Updated: 2023/05/20 12:14:19 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,14 @@ static int32_t	options_count(t_token_group *group, bool *table)
 		if (token->type == TK_DASH)
 		{
 			str = &(token->str[1]);
-			while (*str && !table[(int32_t)(*str)])
+			while (*str)
 			{
-				table[(int32_t)(*str)] = true;
-				count++;
+				if (!table[(int32_t)(*str)])
+				{
+					table[(int32_t)(*str)] = true;
+					count++;
+				}
+				str++;
 			}
 		}
 		else if (token->type == TK_DASHDASH)
