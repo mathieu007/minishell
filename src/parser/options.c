@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/20 12:22:07 by math             ###   ########.fr       */
+/*   Updated: 2023/05/20 12:23:09 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int32_t	add_single_dash_option(char	**options, bool *table)
 		{
 			c[0] = (char)i;
 			options[opt_i++] = ft_strjoin("-", &c[0]);
-			printf("option:%s\n", options[opt_i - 1]);
 		}
 		i++;
 	}
