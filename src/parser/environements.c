@@ -138,7 +138,7 @@ char	*get_env_parsed_str(t_token_group *group)
 		}
 		else
 		{
-			cpy = dest;	
+			cpy = dest;
 			dest = ft_strjoin(dest, token->str);
 			free(cpy);
 		}		
@@ -174,7 +174,6 @@ t_token_group	*parse_env(t_token_group *group)
 				env_value = parse_env_var_value(token);
 				token->str = strip_consecutive_white_space(env_value);
 				token->tolal_len = ft_strlen(token->str);
-				free(env_value);
 				free(str);
 				if (token->prev && token->prev->type == TK_SPACE && token->str[0] == ' ')
 				{
@@ -193,22 +192,15 @@ t_token_group	*parse_env(t_token_group *group)
 	return (group);
 }
 
-char	**parse_env_path(char **env)
+char	**parse_env_path(void)
 {
-	const int32_t	var_name_len = 4;
 	char			**split_env;
+	char			*env_value;
 
 	split_env = NULL;
-	if (!env || !*env)
+	env_value = get_env_value("PATH");
+	if (!env_value)
 		return (NULL);
-	while (*env)
-	{
-		if (ft_strnstr(*env, "PATH", var_name_len) != 0)
-		{
-			split_env = ft_split(*env + var_name_len + 1, ':');
-			break ;
-		}
-		env++;
-	}
+	split_env = ft_split(env_value, ':');
 	return (split_env);
 }

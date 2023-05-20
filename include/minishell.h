@@ -318,7 +318,7 @@ char			*get_single_quote_str(t_token *token, char *str);
 char			*get_double_quote_str(t_token *token, char *str);
 t_token_group	*parse_env(t_token_group *group);
 void			replace_env_name(char *input, char *output);
-char			**parse_env_path(char **envp);
+char			**parse_env_path();
 t_cmd  			*parse_cmds(t_token_group *group);
 t_token			*get_token_at(int32_t index);
 t_token			*get_closing_double_quote_token(t_token *token);

@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 19:19:38 by math             ###   ########.fr       */
+/*   Updated: 2023/05/20 12:56:19 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,11 @@ static char	*try_get_relative_dir(char *cmd_name)
 	char		*path;
 
 	path = getcwd(&buffer[0], PATH_MAX + 1);
+	printf("getcwd:%s", path);
 	if (path == NULL)
 		perror("An error occur while triying to get the current working dir.");
 	path = ft_strjoin(path, &cmd_name[1]);
+	printf("getcwd2:%s", path);
 	if (*cmd_name && *cmd_name == '.' && cmd_name[1] && cmd_name[1] == '/'
 		&& access(path, F_OK | X_OK) == 0)
 		return (path);
@@ -91,6 +93,41 @@ static char	*try_get_relative_dir2(char *cmd_name)
 	return (NULL);
 }
 
+void	*free_split(char **split)
+{
+	char	**dup;
+
+	if (!split)
+		return (NULL);
+	dup = split;
+	while (*split)
+	{
+		free(*split);
+		split++;
+	}
+	return (free(dup), NULL);
+}
+
+char	*try_get_ful_path_from_env_path(char *cmd_name)
+{
+	char		*path;
+	char		*path2;
+	char		**paths;
+
+	paths = parse_env_path(get_data);
+	path2 = NULL;
+	while (*paths)
+	{
+		path = ft_strjoin(*paths, "/");
+		path2 = ft_strjoin(path, cmd_name);
+		free(path);
+		if (access(path2, F_OK | X_OK) == 0)
+			return (free_split(paths), path2);
+		paths++;
+	}
+	return (free_split(paths), NULL);
+}
+
 /// @brief handling ./path/to/file and ../../path/to/file
 /// @param cmd_name 
 /// @return 
@@ -105,6 +142,9 @@ char	*get_full_path(char *cmd_name)
 	path = try_get_relative_dir2(cmd_name);
 	if (path)
 		return (path);
-	perror("Error while trying to get absolute path to command.");
+	path = try_get_ful_path_from_env_path(cmd_name);
+	if (path)
+		return (path);
+	perror("Error while trying to get the path of the command.");
 	return (free(path), NULL);
 }

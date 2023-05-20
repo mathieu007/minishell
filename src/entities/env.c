@@ -50,7 +50,6 @@ char	*get_env_value(char *variable)
 	current = head;
 	while (current)
 	{
-		printf("current->variable %s\n", current->variable);
 		if (ft_strnstr(current->variable, variable, len) == current->variable)
 			return (current->value);
 		current = current->next;

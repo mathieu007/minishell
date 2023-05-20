@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/20 11:49:50 by math             ###   ########.fr       */
+/*   Updated: 2023/05/20 12:25:10 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ t_token_group	*tokenize(char *str)
 		{
 			type = get_token_type(&str[i]);
 			t_len = get_token_type_len(type);
-			
 			if (t_len == 0)
 				t_len = 1;
 			if (type == TK_SINGLEQUOTE)
