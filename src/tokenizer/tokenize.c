@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/20 09:03:12 by math             ###   ########.fr       */
+/*   Updated: 2023/05/20 11:49:50 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	split_groups_tokens(t_token_group *group)
 				start -= 2;
 				len += 2;
 			}
-			token->str = ft_substr(str, start, token->tolal_len - token->token_len);
+			token->str = ft_substr(str, start, len);
 			token = token->next;
 		}
 		group = group->next;
