@@ -11,10 +11,10 @@ t_cmd	*get_seq_cmds(t_token_group *group)
 {
 	t_cmd		*cmd;
 	char		*str;
-	
+
 	parse_env(group);
 	str = get_env_parsed_str(group);
-	free_t_token_group(group);	
+	free_t_token_group(group);
 	tokenize(str);
 	group = get_data()->token_groups;
 	cmd = add_cmd();

@@ -16,7 +16,7 @@ void	free_t_cmd(t_cmd *cmd)
 		next = current->next;
 		/// do not free cmd->name is freed inside cmd->args
 		// cmd->name = free_ptr(cmd->name);
-		cmd->full_path_name = free_ptr(cmd->full_path_name);		
+		cmd->full_path_name = free_ptr(cmd->full_path_name);
 		if (cmd->args)
 			free_2d_char_array(cmd->args);
 		if (cmd->options)

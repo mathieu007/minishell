@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subshell_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 14:16:13 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/19 19:16:20 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ t_cmd	*parse_cmd(t_token_group *group)
 {
 	t_cmd		*cmd;
 	char		**args;
-	
-	
+
 	cmd = add_cmd();
 	args = parse_args(group);
 	cmd->name = args[0];

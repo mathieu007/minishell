@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/19 15:54:13 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/20 09:03:12 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 
 int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
 {
-	t_token	*token;
 
-	token = add_token(pos, TK_DASH, group);
+	add_token(pos, TK_DASH, group);
 	pos++;
 	while (str[pos] && ft_isalnum(str[pos]) == 1)
 		pos++;
@@ -78,7 +77,7 @@ int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
 int32_t	add_token_dashdash(char *str, int32_t pos, t_token_group *group)
 {
 	add_token(pos, TK_DASHDASH, group);
-	pos++;
+	pos += 2;
 	while (str[pos] && ft_isalnum(str[pos]) == 1)
 		pos++;
 	return (pos);
@@ -98,6 +97,7 @@ void	split_groups_tokens(t_token_group *group)
 	t_token	*token;
 	char	*str;
 	int32_t	start;
+	int32_t	len;
 
 	while (group)
 	{
@@ -105,12 +105,19 @@ void	split_groups_tokens(t_token_group *group)
 		token = group->first_token;
 		while (token)
 		{
+			len = token->tolal_len - token->token_len;
 			start = token->pos + token->token_len;
 			if (token->type == TK_DASH)
+			{
 				start--;
+				len++;
+			}
 			else if (token->type == TK_DASHDASH)
+			{
 				start -= 2;
-			token->str = ft_substr(str, start, token->tolal_len - token->token_len);				
+				len += 2;
+			}
+			token->str = ft_substr(str, start, token->tolal_len - token->token_len);
 			token = token->next;
 		}
 		group = group->next;

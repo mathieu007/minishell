@@ -23,7 +23,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	{
 		input = readline("MiniShell> ");
 		system(input);
-		tokenize(input);		
+		tokenize(input);
 		get_seq_cmds(data->token_groups);
 		print_groups_and_tokens();
 		print_cmd(data->cmds);
