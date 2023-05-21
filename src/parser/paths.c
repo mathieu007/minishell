@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/10 15:16:44 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/21 12:43:50 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*try_get_relative_dir(char *cmd_name)
 	path = getcwd(&buffer[0], PATH_MAX + 1);
 	if (path == NULL)
 		perror("An error occur while triying to get the current working dir.");
-	path = join(path, &cmd_name[1]);
+	path = ft_strjoin(path, &cmd_name[1]);
 	if (*cmd_name && *cmd_name == '.' && cmd_name[1] && cmd_name[1] == '/'
 		&& access(path, F_OK | X_OK) == 0)
 		return (path);
@@ -91,20 +91,62 @@ static char	*try_get_relative_dir2(char *cmd_name)
 	return (NULL);
 }
 
+void	*free_split(char **split)
+{
+	char	**dup;
+
+	if (!split)
+		return (NULL);
+	dup = split;
+	while (*split)
+	{
+		free(*split);
+		split++;
+	}
+	return (free(dup), NULL);
+}
+
+char	*try_get_ful_path_from_env_path(t_cmd *cmd)
+{
+	char		*path;
+	char		*path2;
+	char		**paths;
+	char		**dup_paths;
+
+	paths = parse_env_path(cmd->env_cpy);
+	dup_paths = paths;
+	path2 = NULL;
+	while (*paths)
+	{
+		path = ft_strjoin(*paths, "/");
+		path2 = ft_strjoin(path, cmd->name);
+		free(path);
+		if (access(path2, F_OK | X_OK) == 0)
+			return (free_split(dup_paths), path2);
+		paths++;
+	}
+	return (free_split(dup_paths), NULL);
+}
+
 /// @brief handling ./path/to/file and ../../path/to/file
 /// @param cmd_name 
 /// @return 
-char	*get_full_path(char *cmd_name)
+char	*get_full_path(t_cmd *cmd)
 {
 	//static char	buffer[PATH_MAX + 1];
 	char		*path;
+	char		*cmd_name;
 
+	cmd_name = cmd->name;
 	path = try_get_relative_dir(cmd_name);
 	if (path)
 		return (path);
 	path = try_get_relative_dir2(cmd_name);
 	if (path)
 		return (path);
-	perror("Error while trying to get absolute path to command.");
+	path = try_get_ful_path_from_env_path(cmd);
+	if (path)
+		return (path);
+	perror("Error while trying to get the path of the command.");
 	return (free(path), NULL);
 }

@@ -1,5 +1,5 @@
 #Compiler and Linker
-CC          	= gcc
+CC          	= cc
 
 #The Target Binary Program
 NAME			= minishell

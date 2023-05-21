@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_group.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 16:23:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/21 10:13:54 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,10 @@ t_token_group	*new_token_group()
 {
 	t_token_group	*new;
 
-	new = ft_calloc(1 ,sizeof(t_token_group));
-	if (new == NULL)
-		return (NULL);
-	new->token_count = 0;
-	new->first_token = NULL;
-	new->next = NULL;
-	new->prev = NULL;
-	
+	new = ft_calloc(1, sizeof(t_token_group));
+	if (!new)
+		return (NULL);	
 	return (new);
-}
-
-inline t_token_group	*get_first_token_group(void)
-{
-	t_token_group	*group;
-	t_data			*data;
-
-	data = get_data();
-	group = data->token_groups;
-	if (group == NULL)
-	{
-		group = new_token_group();
-		data->token_groups = group;
-		data->last_token_group = group;
-		return (group);
-	}		
-	return (group);
 }
 
 t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
@@ -53,13 +31,12 @@ t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
 	data = get_data();
 	last = data->last_token_group;
 	new = new_token_group();
+	if (!new)
+		return (NULL);
 	if (last)
 	{
-		new = new_token_group();
-		if (new == NULL)
-			return (NULL);
 		last->next = new;
-		new->prev = last;		
+		new->prev = last;
 	}
 	else
 		data->token_groups = new;
@@ -69,4 +46,15 @@ t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
 	data->token_groups_count++;
 	data->last_token_group = new;
 	return (new);
+}
+
+void	reset_token_group(t_token_group *group)
+{
+	if (!group)
+		return ;
+	free_t_tokens(group->first_token);
+	group->first_token = NULL;
+	group->last_token = NULL;
+	group->token_count = 0;
+	free(group->str);
 }
