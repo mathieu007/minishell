@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/21 08:33:26 by math             ###   ########.fr       */
+/*   Updated: 2023/05/21 10:13:54 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@ void	reset_token_group(t_token_group *group)
 	free_t_tokens(group->first_token);
 	group->first_token = NULL;
 	group->last_token = NULL;
+	group->token_count = 0;
 	free(group->str);
 }

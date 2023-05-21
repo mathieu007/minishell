@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/20 12:23:09 by math             ###   ########.fr       */
+/*   Updated: 2023/05/21 12:43:41 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ char	**get_options(t_token_group *group)
 		if (tk->type == TK_DASHDASH)
 		{
 			options[opt_i++] = ft_strdup(tk->str);
-			printf("option:%s\n", options[opt_i - 1]);
 		}
 		tk = tk->next;
 	}

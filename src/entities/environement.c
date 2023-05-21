@@ -40,34 +40,16 @@ t_env_cpy	*init_env(t_data *data)
 	return (head);
 }
 
+
 //take a variable and return the value
-char	*get_cmd_env_value(char *variable, t_cmd *cmd)
+char	*get_env_value(char *variable, t_env_cpy *environements)
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 	size_t		len;
 
 	len = ft_strlen(variable);
-	head = cmd->env_cpy;
-	current = head;
-	while (current)
-	{
-		if (ft_strnstr(current->variable, variable, len) == current->variable)
-			return (current->value);
-		current = current->next;
-	}
-	return (NULL);
-}
-
-//take a variable and return the value
-char	*get_env_value(char *variable)
-{
-	t_env_cpy	*head;
-	t_env_cpy	*current;
-	size_t		len;
-
-	len = ft_strlen(variable);
-	head = get_data()->env_cpy;
+	head = environements;
 	current = head;
 	while (current)
 	{

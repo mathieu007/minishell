@@ -291,8 +291,8 @@ char			*join(const char *path, const char *path2);
 char			*join_free(char *path, char *path2);
 bool			file_is_exec(char *absolute_path_to_file);
 
-/// get full path from relative path.
-char						*get_full_path(char *cmd_name);
+/// get full path from relative path, absolute or env path.
+char			*get_full_path(t_cmd *cmd);
 
 /// tokenizer functions
 void			reset_token_group(t_token_group *group);
@@ -307,10 +307,11 @@ char			*cpy_single_quote_str(char *str, char *output, int32_t *i);
 char			*cpy_esc_env_var(char *input, char *output, int32_t *i);
 char			*cpy_env_var_value(char *input, char *output, int32_t *i);
 
-int32_t						increment_counter(t_token_type type);
-int32_t						decrement_counter(t_token_type type);
+int32_t			increment_counter(t_token_type type);
+int32_t			decrement_counter(t_token_type type);
 
 /// parsing
+t_cmd			*parse_cmd(t_token_group *token_group);
 char			*group_to_str(t_token_group *group);
 int32_t			count_env_words(char *str);
 t_cmd			*get_seq_cmds(t_token_group *group);
@@ -323,8 +324,7 @@ char			*get_single_quote_str(t_token *token, char *str);
 char			*get_double_quote_str(t_token *token, char *str);
 t_token_group	*parse_env(t_token_group *group);
 void			replace_env_name(char *input, char *output);
-char			**parse_env_path();
-t_cmd  			*parse_cmds(t_token_group *group);
+char			**parse_env_path(t_env_cpy *env);
 t_token			*get_token_at(int32_t index);
 t_token			*get_closing_double_quote_token(t_token *token);
 t_token			*get_closing_single_quote_token(t_token *token);
@@ -342,11 +342,16 @@ void						init_data(int32_t argc, char **argv, char **envp);
 //link list section
 t_env_cpy					*new_env(char *variable, char *value);
 t_env_cpy					*init_env(t_data *data);
-char						*get_env_value(char *variable);
+char						*get_env_value(char *variable, t_env_cpy *environements);
 void						add_env_node(t_data *data, char *variable,
 								char *value);
+
+/// execution
+int32_t					add_execve_func(t_cmd *cmd);
+int32_t					exec_cmds(char *str);
+
 //built in section
-int						execute_built_in(t_cmd *cmd);
+int						add_built_in_func(t_cmd *cmd);
 int						cd_cmd(t_cmd *cmd);
 int						echo_cmd(t_cmd *cmd);
 int						env_cmd(t_cmd *cmd);

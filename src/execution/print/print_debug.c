@@ -73,6 +73,11 @@ void	print_cmd(t_cmd *command)
 	while (cpy)
 	{
 		printf("[[NODE # %i]]\n",j);
+		printf("\n");
+		printf("cmd name = %s\n", cpy->name);
+		printf("cmd_seq_type = %i\n", (int)cpy->cmd_seq_type);
+		printf("full_path_name = %s\n", cpy->full_path_name);
+		printf("is_builtin = %i\n", cpy->is_builtin);
 		printf("---------------------------------------------------------");
 		printf("ARGS = \n");
 		while (cpy->args[i])
@@ -81,21 +86,22 @@ void	print_cmd(t_cmd *command)
 			i++;
 		}
 		printf("\n");
-		printf(" cmd_seq_type = %i\n", (int)cpy->cmd_seq_type);
-		printf("full_path_name = %s\n", cpy->full_path_name);
-		printf("is_builtin = %i\n", cpy->is_builtin);
-		printf("name = %s\n", cpy->name);
+		printf("---------------------------------------------------------");
+		printf("OPTIONS = \n");
 		i = 0;
 		while (cpy->options && cpy->options[i])
 		{
-			printf("name = %s\n", cpy->options[i]);
+			printf("[%s] ", cpy->options[i]);
 			i++;
 		}
 		printf("\n");
 		printf("---------------------------------------------------------");
+		printf("\n");
+		printf("[[END NODE # %i]]\n", j);
 		cpy = cpy->next;
 		j++;
 	}
+	printf("Command output:");
 }
 
 void	print_token(t_token *token)
