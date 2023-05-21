@@ -207,6 +207,7 @@ typedef struct s_cmd
 	int32_t			(*func)(struct s_cmd *);
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
+	t_env_cpy		*env_cpy;
 	char			*name; /// the name of the command: cat, ls, echo ect...
 	char			*full_path_name; /// only for execve, the full path name to the command ex: /bin/ls or /bin/cat
 	char			**args; /// a terminating NULL list of string containing options and arguments
@@ -237,6 +238,7 @@ typedef struct s_data
 }							t_data;
 
 /// @brief The entities functions
+char			*get_cmd_env_value(char *variable, t_cmd *cmd);
 t_redirect		*new_redirect(t_cmd *cmd);
 t_data			*get_data(void);
 t_token_group	*get_first_token_group(void);
@@ -252,6 +254,7 @@ int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token_group *group);
 t_token_group	*add_token_group(char *start, t_token_type type, int32_t len);
 t_cmd			*add_cmd(void);
+t_env_cpy		*copy_env(void);
 t_token			*new_token();
 t_cmd			*new_cmd();
 t_token_group	*new_token_group();
@@ -292,8 +295,10 @@ bool			file_is_exec(char *absolute_path_to_file);
 char						*get_full_path(char *cmd_name);
 
 /// tokenizer functions
+void			reset_token_group(t_token_group *group);
 int32_t			add_token_env(char *str, int32_t pos, t_token_group *group, bool inside_dbl_quotes);
-t_token_group	*tokenize(char *str);
+t_token_group	*tokenize_groups(char *str);
+t_token			*tokenize(t_token_group *group);
 int32_t			tokenize_curlybrace(char *str, int32_t i);
 int32_t			tokenize_parenthese(char *str, int32_t i);
 int32_t			tokenize_double_quote(char *str, int32_t i, t_token_group *group);
@@ -306,7 +311,7 @@ int32_t						increment_counter(t_token_type type);
 int32_t						decrement_counter(t_token_type type);
 
 /// parsing
-char			*get_env_parsed_str(t_token_group *group);
+char			*group_to_str(t_token_group *group);
 int32_t			count_env_words(char *str);
 t_cmd			*get_seq_cmds(t_token_group *group);
 char			**parse_args(t_token_group *group);
@@ -353,9 +358,9 @@ int						exit_cmd(t_cmd *cmd);
 //free section
 void					free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
-void					free_t_token(t_token *token);
+void					free_t_tokens(t_token *token);
 void					free_t_env_cpy(t_env_cpy *env_cpy);
-void					free_t_token_group(t_token_group *token_group);
+void					free_t_token_groups(t_token_group *token_group);
 void					free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_data *data);
 void					free_2d_array(void **tab);

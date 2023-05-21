@@ -33,7 +33,7 @@ void	free_t_cmd(t_cmd *cmd)
 	data->cmds = NULL;
 }
 
-void	free_t_token(t_token *token)
+void	free_t_tokens(t_token *token)
 {
 	t_token	*current;
 	t_token	*next;
@@ -66,6 +66,21 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 
 void	free_t_token_group(t_token_group *token_group)
 {
+	if (token_group)
+	{
+		token_group->str = free_ptr(token_group->str);
+		// if (token_group->env_cpy)
+		// 	free_t_env_cpy(token_group->env_cpy);
+		if (token_group->first_token)
+			free_t_tokens(token_group->first_token);
+		token_group->first_token = NULL;
+		token_group->last_token = NULL;
+		free(token_group);
+	}
+}
+
+void	free_t_token_groups(t_token_group *token_group)
+{
 	t_token_group	*next;
 	t_data 			*data;
 
@@ -77,7 +92,7 @@ void	free_t_token_group(t_token_group *token_group)
 		// if (token_group->env_cpy)
 		// 	free_t_env_cpy(token_group->env_cpy);
 		if (token_group->first_token)
-			free_t_token(token_group->first_token);
+			free_t_tokens(token_group->first_token);
 		token_group->first_token = NULL;
 		token_group->last_token = NULL;
 		free(token_group);

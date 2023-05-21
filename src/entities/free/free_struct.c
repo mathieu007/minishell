@@ -18,8 +18,8 @@ void	free_t_data(t_data *data)
 	if (data->paths)
 		free_2d_array((void **)data->paths);
 	if (data->tokens)
-		free_t_token(data->tokens);
+		free_t_tokens(data->tokens);
 	if (data->token_groups)
-		free_t_token_group(data->token_groups);
+		free_t_token_groups(data->token_groups);
 	free(data);
 }

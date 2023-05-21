@@ -99,7 +99,7 @@ char	*strip_consecutive_white_space(char *str)
 /// @brief We parse environement variable from these token group
 /// @param group 
 /// @return 
-char	*get_env_parsed_str(t_token_group *group)
+char	*group_to_str(t_token_group *group)
 {
 	t_token	*token;
 	char	*dest;
