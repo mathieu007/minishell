@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 18:29:51 by math             ###   ########.fr       */
+/*   Updated: 2023/05/11 08:54:00 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*fork_exec(t_cmd *cmd, void *(*child)(t_cmd *cmd),
 	if (pid == -1)
 	{
 		perror("Fork error:");
-		return (free_all_and_exit());
+		return (free_all_and_exit(EXIT_FAILURE), NULL);
 	}
 	if (pid == 0)
 		child(cmd);

@@ -12,18 +12,18 @@ TARGETDIR		= bin
 SRCEXT			= c
 OBJEXT			= o
 
-CFLAGS			= -Wall -Wextra -Werror -g
-POST_CFLAGS		= 
-INCDEP			= -I$(INCDIR)
-LIBFT_DIR		= libft
-LIBFT_FILE		= libft.a
-LIBFT			= $(LIBFT_DIR)/$(LIBFT_FILE)
-INCLIBFTDEP 	= -I$(LIBFT_DIR)/$(INCDIR)
-OS := $(shell uname -s)
+CFLAGS				= -Wall -Wextra -Werror -g 
+INCDEP				= -I$(INCDIR)
+LIBFT_DIR			= libft
+LIBFT_FILE			= libft.a
+LIBREADLINE			= libreadline.a
+LIBREADLINEHISTORY	= libhistory.a
+LIBFT				= $(LIBFT_DIR)/$(LIBFT_FILE)
+READLINE			= $(INCDIR)/$(LIBREADLINE)
+READLINEHISTORY		= $(INCDIR)/$(LIBREADLINEHISTORY)
+INCLIBFTDEP 		= -I$(LIBFT_DIR)/$(INCDIR)
 
-ifeq ($(OS), Linux)
-    POST_CFLAGS := -lreadline
-endif
+POST_CFLAGS := -lreadline -lncurses $(READLINE) $(READLINEHISTORY)
 
 SOURCES     = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 
@@ -51,6 +51,6 @@ $(TARGETDIR)/$(NAME): $(OBJECTS)
 
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $(POST_CFLAGS) $<
+	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
 
 .PHONY: all clean fclean re

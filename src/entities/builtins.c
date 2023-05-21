@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/04 06:54:08 by math             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -16,7 +5,7 @@ char	**get_builtins_cmd(void)
 {
 	static char	*builtins[8];
 
-	if (builtins == NULL)
+	if (*builtins == NULL)
 	{
 		builtins[0] = BUILTINS_EXPORT;
 		builtins[1] = BUILTINS_UNSET;

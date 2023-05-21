@@ -1,18 +1,26 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/04/28 13:14:57 by math             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-int32_t	echo_cmd()
+int	echo_cmd(t_cmd *cmd)
 {
-	
+	int	i;
+
+	i = 0;
+	if ((ft_strnstr(cmd->options[i], "-n", ft_strlen(cmd->options[i]))) != 0)
+	{
+		while ((ft_strnstr(cmd->options[i], "-n",
+					ft_strlen(cmd->options[i]))) != 0)
+			i++;
+	}
+	i = 0;
+	if (cmd->options[0])
+		i++;
+	while (cmd->args[i])
+	{
+		printf("%s", cmd->args[i]);
+		i++;
+	}
+	if ((!ft_strnstr(cmd->options[0], "-n", ft_strlen(cmd->options[0]))) != 0)
+		printf("\n");
+	return (0);
+	printf("\n");
 }

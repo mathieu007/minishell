@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/01 16:38:10 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/16 12:59:32 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,19 @@
 
 inline t_data	*get_data(void)
 {
-	static t_data	data;
-
+	static t_data	data;	
+	
 	return (&data);
+}
+
+void init_data(int32_t argc, char **argv, char **env)
+{
+	t_data *data;
+
+	data = get_data();
+	data->argc = argc;
+	data->argv = argv;
+	data->env = env;
+	data->env_cpy = init_env(data);
 }
 
