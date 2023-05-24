@@ -3,7 +3,8 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {
-	(void)cmd;
+	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
+		perror("Could not execve");
 	return (1);
 }
 
@@ -42,18 +43,19 @@ t_token_group	*exec_sequential(t_token_group *token_group)
 	char	*str;
 	t_cmd	*cmd;
 
+	printf("tokenize-.\n");
 	tokenize(token_group);
+	printf("parse_env\n");
 	parse_env(token_group);	
 	str = group_to_str(token_group);
-	printf("group_to_str:%s\n", str);
 	reset_token_group(token_group);
 	token_group->str = str;
 	tokenize(token_group);
 	cmd = parse_cmd(token_group);
 	if (add_built_in_func(cmd) == 0)
 		add_execve_func(cmd);
-	print_cmd(cmd);
-	cmd->func(cmd);
+	print_cmd(cmd);	
+	cmd->func(cmd);	
 	return (token_group->next);
 }
 
@@ -67,8 +69,10 @@ int32_t	exec_cmds(char *str)
 		if (token_group->cmd_seq_type == CMD_PIPE)
 			token_group = exec_pipes(token_group);
 		else if (token_group->cmd_seq_type == CMD_NONE
-			|| token_group->cmd_seq_type == CMD_SEQUENTIAL)
-			token_group = exec_sequential(token_group);
+			|| token_group->cmd_seq_type == CMD_SEQUENTIAL
+			|| token_group->cmd_seq_type == CMD_LOG_AND
+			|| token_group->cmd_seq_type == CMD_LOG_OR)
+				token_group = exec_sequential(token_group);	
 		else
 			return (free_all_and_exit(EXIT_FAILURE), printf("CMD_SEQUENCE_TYPE_UNKNOWN\n"));
 	}
