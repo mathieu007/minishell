@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 09:28:35 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/24 14:24:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	split_group_tokens(t_token_group *group)
 	str = group->str;
 	token = group->first_token;
 	while (token)
-	{
+	{		
 		len = token->tolal_len - token->token_len;
 		start = token->pos + token->token_len;
 		if (token->type == TK_DASH)
@@ -114,7 +114,16 @@ void	split_group_tokens(t_token_group *group)
 			start -= 2;
 			len += 2;
 		}
+		else if (token->type == TK_SPACE)
+		{
+			while (str[start] == ' ')
+			{
+				start++;
+				len--;
+			}
+		}
 		token->str = ft_substr(str, start, len);
+		token->token_str = ft_substr(str, start - token->token_len, token->token_len);
 		token = token->next;
 	}
 }
@@ -133,10 +142,10 @@ t_token	*tokenize(t_token_group *group)
 	add_token(0, TK_CMD_SEQ_START, group)->tolal_len = 0;
 	while (str[i])
 	{
-		type = get_token_type(&str[i]);
+		type = get_token_type(&str[i]);		
 		t_len = get_token_type_len(type);
 		if (t_len == 0)
-			t_len = 1;
+			t_len = 1;	
 		if (type == TK_SINGLEQUOTE)
 			i = tokenize_single_quote(str, i, group);
 		else if (type == TK_DOUBLEQUOTE)
@@ -155,7 +164,7 @@ t_token	*tokenize(t_token_group *group)
 			i += t_len;
 		}
 		else
-			i += t_len;
+			i += t_len;			
 	}
 	add_token(i, TK_CMD_SEQ_END, group)->tolal_len = 0;
 	split_group_tokens(group);

@@ -16,7 +16,9 @@ int	echo_cmd(t_cmd *cmd)
 		i = 0;
 		if (cmd->options[0])
 			i++;
-	}	
+	}
+	else
+		i = 1;
 	while (cmd->args[i])
 	{
 		printf("%s", cmd->args[i]);

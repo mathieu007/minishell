@@ -43,7 +43,7 @@ t_token_group	*exec_sequential(t_token_group *token_group)
 	t_cmd	*cmd;
 
 	tokenize(token_group);
-	parse_env(token_group);
+	parse_env(token_group);	
 	str = group_to_str(token_group);
 	reset_token_group(token_group);
 	token_group->str = str;
@@ -69,7 +69,7 @@ int32_t	exec_cmds(char *str)
 			|| token_group->cmd_seq_type == CMD_SEQUENTIAL)
 			token_group = exec_sequential(token_group);
 		else
-			printf("CMD_SEQUENCE_TYPE_UNKNOWN\n");
+			return (free_all_and_exit(EXIT_FAILURE), printf("CMD_SEQUENCE_TYPE_UNKNOWN\n"));
 	}
 	return (1);
 }

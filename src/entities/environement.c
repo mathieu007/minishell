@@ -51,6 +51,8 @@ char	*get_env_value(char *variable)
 	return (free(var), NULL);
 }
 
+
+
 // //make a copy of the environement variable
 // t_env_cpy	*copy_env(void)
 // {

@@ -51,7 +51,6 @@ static char	*get_print_token_type(t_token_type type)
 		tk_type[TK_LAST_PIPE_EXIT] = "TK_LAST_PIPE_EXIT";
 		tk_type[TK_PIPE] = "TK_PIPE";
 		tk_type[TK_SINGLEQUOTE] = "TK_SINGLEQUOTE";
-		tk_type[TK_VAR_ASSIGN] = "TK_VAR_ASSIGN";
 		tk_type[TK_WILDCARD] = "TK_WILDCARD";
 		tk_type[TK_SEMICOLON] = "TK_SEMICOLON";
 		tk_type[TK_BACKSLASHDOUBLEQUOTE] = "TK_BACKSLASHDOUBLEQUOTE";

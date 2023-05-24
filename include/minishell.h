@@ -54,13 +54,12 @@ extern char	**environ;
 ///	TK_PARENTHESES_CLOSE ),
 ///	TK_COND_AND &&,
 ///	TK_COND_OR ||,
-///	TK_VAR_ASSIGN =,
 ///	TK_BACKSLASH \,
 typedef enum e_token_type
 {
 	TK_UNKNOWN = -1,
 	TK_CMD_SEQ_START = -2,
-	TK_CMD_SEQ_END = 3,
+	TK_CMD_SEQ_END = -3,
 	TK_CLOSINGDOUBLEQUOTE = -4,
 	TK_CLOSINGSINGLEQUOTE = -5,
 	TK_ENVIRONEMENT_VAR = -6,
@@ -83,7 +82,6 @@ typedef enum e_token_type
 	TK_BACKSLASH = (int32_t)'\\',
 	TK_BACKSLASHSINGLEQUOTE = TK_BACKSLASH * TK_SINGLEQUOTE + TK_SINGLEQUOTE + 1,
 	TK_BACKSLASHDOUBLEQUOTE = TK_BACKSLASH * TK_DOUBLEQUOTE + TK_DOUBLEQUOTE + 1,
-	TK_VAR_ASSIGN = (int32_t)'=',
 	TK_WILDCARD = (int32_t)'*'
 }							t_token_type;
 
@@ -182,7 +180,9 @@ typedef struct s_token
 	struct s_token	*next;
 	struct s_token	*prev;
 	char			*str;
+	char			*token_str;
 	int32_t			token_len;
+	int32_t			token_repeat_len;
 	int32_t			pos;
 	int32_t			offset;
 	int32_t			tolal_len;
@@ -244,6 +244,8 @@ typedef struct s_process
 }					t_process;
 
 /// @brief The entities functions
+
+char			*replace_env_value(char *variable, char *value);
 char			*get_cmd_env_value(char *variable, t_cmd *cmd);
 t_redirect		*new_redirect(t_cmd *cmd);
 t_process			*get_process(void);
@@ -266,6 +268,7 @@ t_cmd			*new_cmd();
 t_token_group	*new_token_group();
 
 /// @brief Simples and short helpers methods.
+
 int32_t			get_env_var_name_len(char *str);
 char			*get_env_variable(char *str, int32_t i);
 char			*get_end_of_cmd(char *str);

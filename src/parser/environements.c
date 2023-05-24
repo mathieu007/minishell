@@ -77,7 +77,6 @@ char	*strip_consecutive_white_space(char *str)
 	int32_t	insert_i;
 	char	*strip;
 
-
 	i = 0;
 	insert_i = 0;
 	strip = strip_consecutive_white_space_dst(str);
@@ -147,6 +146,10 @@ char	*group_to_str(t_token_group *group)
 		}
 		else
 		{
+			cpy = dest;
+			dest = ft_strjoin(dest, token->token_str);
+			if (cpy)
+				free(cpy);
 			cpy = dest;
 			dest = ft_strjoin(dest, token->str);
 			if (cpy)

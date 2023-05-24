@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/17 11:52:49 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/24 13:36:29 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_LAST_PIPE_EXIT] = TK_LAST_PIPE_EXIT;
 		tk_type[TK_PIPE] = TK_PIPE;
 		tk_type[TK_SINGLEQUOTE] = TK_SINGLEQUOTE;
-		tk_type[TK_VAR_ASSIGN] = TK_VAR_ASSIGN;
 		tk_type[TK_WILDCARD] = TK_WILDCARD;
 		tk_type[TK_SEMICOLON] = TK_SEMICOLON;
 		tk_type[TK_BACKSLASHDOUBLEQUOTE] = TK_BACKSLASHDOUBLEQUOTE;
