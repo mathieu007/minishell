@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/21 12:43:50 by math             ###   ########.fr       */
+/*   Updated: 2023/05/24 06:55:10 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,15 @@ static char	*remove_dir(char *path, int32_t dir_count)
 /// @brief try get the relative dir ex: ./mydir/mycmd
 /// @param cmd_name 
 /// @return 
-static char	*try_get_relative_dir(char *cmd_name)
+static char	*try_get_relative_dir(t_cmd *cmd)
 {
-	static char	buffer[PATH_MAX + 1];
 	char		*path;
 
-	path = getcwd(&buffer[0], PATH_MAX + 1);
+	path = get_cwd(cmd);
 	if (path == NULL)
 		perror("An error occur while triying to get the current working dir.");
-	path = ft_strjoin(path, &cmd_name[1]);
-	if (*cmd_name && *cmd_name == '.' && cmd_name[1] && cmd_name[1] == '/'
+	path = ft_strjoin(path, cmd->name);
+	if (cmd->name && cmd->name[0] == '.' && cmd->name[1] == '/'
 		&& access(path, F_OK | X_OK) == 0)
 		return (path);
 	free(path);
@@ -74,17 +73,16 @@ static char	*try_get_relative_dir(char *cmd_name)
 /// @brief try get the relative dir ex: ../../mydir/mycmd
 /// @param cmd_name 
 /// @return 
-static char	*try_get_relative_dir2(char *cmd_name)
+static char	*try_get_relative_dir2(t_cmd *cmd)
 {
-	static char	buffer[PATH_MAX + 1];
 	char		*path;
 	int32_t		count;
 
-	count = count_prev_dir(cmd_name);
+	count = count_prev_dir(cmd->name);
 	if (count == 0)
 		return (NULL);
-	path = getcwd(&buffer[0], PATH_MAX + 1);
-	path = join(path, cmd_name);
+	path = get_cwd(cmd);
+	path = join(path, cmd->name);
 	path = remove_dir(path, count);
 	if (access(path, F_OK | X_OK) == 0)
 		return (path);
@@ -113,7 +111,7 @@ char	*try_get_ful_path_from_env_path(t_cmd *cmd)
 	char		**paths;
 	char		**dup_paths;
 
-	paths = parse_env_path(cmd->env_cpy);
+	paths = get_env_path();
 	dup_paths = paths;
 	path2 = NULL;
 	while (*paths)
@@ -133,15 +131,12 @@ char	*try_get_ful_path_from_env_path(t_cmd *cmd)
 /// @return 
 char	*get_full_path(t_cmd *cmd)
 {
-	//static char	buffer[PATH_MAX + 1];
 	char		*path;
-	char		*cmd_name;
 
-	cmd_name = cmd->name;
-	path = try_get_relative_dir(cmd_name);
+	path = try_get_relative_dir(cmd);
 	if (path)
 		return (path);
-	path = try_get_relative_dir2(cmd_name);
+	path = try_get_relative_dir2(cmd);
 	if (path)
 		return (path);
 	path = try_get_ful_path_from_env_path(cmd);

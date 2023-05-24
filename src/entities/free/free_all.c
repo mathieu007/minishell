@@ -23,8 +23,9 @@ void	free_all(void)
 		free_t_cmd(cmd);
 }
 
-void	free_all_and_exit(int32_t status)
+void	*free_all_and_exit(int32_t status)
 {
 	free_all();
 	exit(status);
+	return (NULL);
 }

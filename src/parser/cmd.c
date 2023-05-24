@@ -16,10 +16,13 @@ t_cmd	*parse_cmd(t_token_group *token_group)
 	cmd->name = cmd->args[0];
 	if (cmd->name == NULL)
 		return (NULL);
-	cmd->env_cpy = token_group->env_cpy;
 	cmd->full_path_name = get_full_path(cmd);
 	cmd->is_builtin = is_builtins(cmd->name);
 	cmd->options = get_options(token_group);
 	cmd->cmd_seq_type = token_group->cmd_seq_type;
+	if (cmd->cmd_seq_type == CMD_PIPE)
+	{
+		
+	}
 	return (cmd);
 }

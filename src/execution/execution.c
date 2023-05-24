@@ -13,7 +13,6 @@ int32_t	add_execve_func(t_cmd *cmd)
 	return (1);
 }
 
-
 /// @brief fork all piped command and execute then waitpid for all command to complete
 /// @param token_group 
 /// @return we return the last pipe command
@@ -21,7 +20,6 @@ t_token_group	*exec_pipes(t_token_group *token_group)
 {
 	t_cmd	*cmd;
 
-	token_group->env_cpy = copy_env(); //needed each piped command have their own copy of the environements variables
 	tokenize(token_group);
 	parse_env(token_group);
 	cmd = parse_cmd(token_group);
@@ -41,13 +39,13 @@ t_token_group	*exec_sequential(t_token_group *token_group)
 	t_cmd	*cmd;
 
 	tokenize(token_group);
-	token_group->env_cpy = get_data()->env_cpy; // no copy here the original environement var
 	parse_env(token_group);
 	str = group_to_str(token_group);
 	reset_token_group(token_group);
 	token_group->str = str;
 	tokenize(token_group);
 	cmd = parse_cmd(token_group);
+	cmd->shell = get_subshell();
 	if (add_built_in_func(cmd) == 0)
 		add_execve_func(cmd);
 	print_cmd(cmd);

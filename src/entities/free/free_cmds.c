@@ -29,7 +29,6 @@ void	free_t_cmd(t_cmd *cmd)
 		current = next;
 	}
 	data->last_cmd = NULL;
-	data->cmds_count = 0;
 	data->cmds = NULL;
 }
 
@@ -48,21 +47,21 @@ void	free_t_tokens(t_token *token)
 	}
 }
 
-void	free_t_env_cpy(t_env_cpy *env_cpy)
-{
-	t_env_cpy	*current;
-	t_env_cpy	*next;
+// void	free_t_env_cpy(t_env_cpy *env_cpy)
+// {
+// 	t_env_cpy	*current;
+// 	t_env_cpy	*next;
 
-	current = env_cpy;
-	while (current != NULL)
-	{
-		next = current->next;
-		current->variable = free_ptr(current->variable);
-		current->value = free_ptr(current->value);
-		free(current);
-		current = next;
-	}
-}
+// 	current = env_cpy;
+// 	while (current != NULL)
+// 	{
+// 		next = current->next;
+// 		current->variable = free_ptr(current->variable);
+// 		current->value = free_ptr(current->value);
+// 		free(current);
+// 		current = next;
+// 	}
+// }
 
 void	free_t_token_group(t_token_group *token_group)
 {

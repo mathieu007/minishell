@@ -32,13 +32,14 @@ char	*parse_env_var_name(t_token *token)
 }
 
 /// @brief this function assume that the input is a var_name
-char	*parse_env_var_value(t_token *token, t_env_cpy *environements)
+/// the return value need to be freed.
+char	*parse_env_var_value(t_token *token)
 {
 	char	*var_name;
 	char	*var_value;
 
 	var_name = parse_env_var_name(token);
-	var_value = get_env_value(var_name, environements);
+	var_value = get_env_value(var_name);
 	if (!var_value)
 	{
 		var_value = malloc(1);
@@ -173,14 +174,14 @@ t_token_group	*parse_env(t_token_group *group)
 		{
 			if (token->inside_dbl_quotes)
 			{
-				env_value = parse_env_var_value(token, group->env_cpy);
+				env_value = parse_env_var_value(token);
 				token->str = env_value;
 				token->tolal_len = ft_strlen(env_value);
 				free(str);
 			}
 			else
 			{
-				env_value = parse_env_var_value(token, group->env_cpy);
+				env_value = parse_env_var_value(token);
 				token->str = strip_consecutive_white_space(env_value);
 				token->tolal_len = ft_strlen(token->str);
 				free(str);
@@ -201,13 +202,13 @@ t_token_group	*parse_env(t_token_group *group)
 	return (group);
 }
 
-char	**parse_env_path(t_env_cpy *env)
+char	**get_env_path()
 {
 	char			**split_env;
 	char			*env_value;
 
 	split_env = NULL;
-	env_value = get_env_value("PATH", env);
+	env_value = get_env_value("PATH");
 	if (!env_value)
 		return (NULL);
 	split_env = ft_split(env_value, ':');

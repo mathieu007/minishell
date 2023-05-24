@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/19 10:57:46 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/24 07:05:36 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,16 @@
 inline t_data	*get_data(void)
 {
 	static t_data	data[1];
-	
+
 	return (&data[0]);
 }
 
-void init_data(int32_t argc, char **argv, char **env)
+void	init_data(int32_t argc, char **argv)
 {
-	t_data *data;
+	t_data		*data;
 
 	data = get_data();
 	data->argc = argc;
 	data->argv = argv;
-	data->env = env;
-	data->env_cpy = init_env(data);
 }
 

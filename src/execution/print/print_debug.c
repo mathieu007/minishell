@@ -127,23 +127,23 @@ void	print_token(t_token *token)
 	}
 }
 
-void	print_env(t_env_cpy *env)
-{
-	t_env_cpy	*cpy;
-	int j = 0;
+// void	print_env(t_env_cpy *env)
+// {
+// 	t_env_cpy	*cpy;
+// 	int j = 0;
 
-	cpy = env;
-	printf("[[ENVIRONEMENTS CHAINLIST]]\n\n");
-	while (cpy)
-	{
-		printf("[[NODE # %i]]\n",j);
-		printf("---------------------------------------------------------\n");
-		printf(" var = %s value = %s\n", cpy->variable, cpy->value);
-		printf("---------------------------------------------------------\n");
-		cpy = cpy->next;
-		j++;
-	}
-}
+// 	cpy = env;
+// 	printf("[[ENVIRONEMENTS CHAINLIST]]\n\n");
+// 	while (cpy)
+// 	{
+// 		printf("[[NODE # %i]]\n",j);
+// 		printf("---------------------------------------------------------\n");
+// 		printf(" var = %s value = %s\n", cpy->variable, cpy->value);
+// 		printf("---------------------------------------------------------\n");
+// 		cpy = cpy->next;
+// 		j++;
+// 	}
+// }
 
 void	print_token_group(t_token_group *token)
 {

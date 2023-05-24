@@ -10,7 +10,10 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <unistd.h>
+# include <dirent.h>
 
 # define BUILTINS_EXPORT "export"
 # define BUILTINS_UNSET "unset"
@@ -26,6 +29,8 @@
 #ifndef PATH_MAX
 # define PATH_MAX 1024
 #endif
+
+extern char	**environ;
 
 /// @brief 
 /// TK_CMD ls, cd, grep...,
@@ -192,7 +197,6 @@ typedef struct s_token_group
 	struct s_token_group	*next;
 	struct s_token_group	*prev;
 	char					*str;
-	t_env_cpy				*env_cpy;
 	int32_t					len;
 	t_token					*first_token;
 	t_token					*last_token;
@@ -200,20 +204,26 @@ typedef struct s_token_group
 	t_cmd_seq				cmd_seq_type;
 }							t_token_group;
 
-/// echo -naaaaznnnnzzzz 123 "123   test"
-//name echo , option: -n, -a, -z; args: [echo, -naaaaznnnnzzzz, 123, "123    test"]
+typedef struct s_subshell
+{
+	char		**eviron_ptr;
+	ino_t		dir_id;
+	char		*cwd;
+}				t_subshell;
+
+/// "ec"$VAR -naaaaznnnnzzzz 123$VAR2"123   test" $VAR=ho $VAR2=" 6    6 "
+//name echo , option: -n, -a, -z; args: [echo, -naaaaznnnnzzzz, 123, "6    6" "123    test"]
 typedef struct s_cmd
 {
 	int32_t			(*func)(struct s_cmd *);
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
-	t_env_cpy		*env_cpy;
+	t_subshell		*shell;
 	char			*name; /// the name of the command: cat, ls, echo ect...
 	char			*full_path_name; /// only for execve, the full path name to the command ex: /bin/ls or /bin/cat
 	char			**args; /// a terminating NULL list of string containing options and arguments
 	char			**options; /// a terminating NULL list of string containing only options
 	bool			is_builtin; /// is the command a builtins command?
-	t_token_group	*token_group;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
 	t_redirect		*redirect;
@@ -225,9 +235,8 @@ typedef struct s_data
 	int32_t					argc;
 	char					**argv;
 	char					**env;
-	t_env_cpy				*env_cpy;
 	char					**paths;
-	int32_t					cmds_count;
+	int32_t					cwd_fd;
 	int32_t					tokens_count;
 	int32_t					token_groups_count;
 	t_token					*tokens;
@@ -254,7 +263,7 @@ int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token_group *group);
 t_token_group	*add_token_group(char *start, t_token_type type, int32_t len);
 t_cmd			*add_cmd(void);
-t_env_cpy		*copy_env(void);
+void			dup_env(void);
 t_token			*new_token();
 t_cmd			*new_cmd();
 t_token_group	*new_token_group();
@@ -293,6 +302,7 @@ bool			file_is_exec(char *absolute_path_to_file);
 
 /// get full path from relative path, absolute or env path.
 char			*get_full_path(t_cmd *cmd);
+char			*get_cwd(t_cmd *cmd);
 
 /// tokenizer functions
 void			reset_token_group(t_token_group *group);
@@ -324,7 +334,7 @@ char			*get_single_quote_str(t_token *token, char *str);
 char			*get_double_quote_str(t_token *token, char *str);
 t_token_group	*parse_env(t_token_group *group);
 void			replace_env_name(char *input, char *output);
-char			**parse_env_path(t_env_cpy *env);
+char			**get_env_path();
 t_token			*get_token_at(int32_t index);
 t_token			*get_closing_double_quote_token(t_token *token);
 t_token			*get_closing_single_quote_token(t_token *token);
@@ -336,15 +346,12 @@ t_pipe						*new_pipe(t_cmd *cmd);
 void						*free_pipe(t_cmd *cmd);
 void						*free_redirect(t_cmd *cmd);
 void						*free_cmd(t_cmd *cmd);
-char						*ft_strdupn(const char *s1, size_t n);
-void						init_data(int32_t argc, char **argv, char **envp);
+void						init_data(int32_t argc, char **argv);
+int32_t						init_cwd_fd(char *cwd);
 
 //link list section
-t_env_cpy					*new_env(char *variable, char *value);
-t_env_cpy					*init_env(t_data *data);
-char						*get_env_value(char *variable, t_env_cpy *environements);
-void						add_env_node(t_data *data, char *variable,
-								char *value);
+char						*get_env_value(char *variable);
+void						add_env_node(t_data *data, char *variable, char *value);
 
 /// execution
 int32_t					add_execve_func(t_cmd *cmd);
@@ -364,19 +371,17 @@ int						exit_cmd(t_cmd *cmd);
 void					free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
 void					free_t_tokens(t_token *token);
-void					free_t_env_cpy(t_env_cpy *env_cpy);
 void					free_t_token_groups(t_token_group *token_group);
 void					free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_data *data);
 void					free_2d_array(void **tab);
 void					free_all();
-void					free_all_and_exit(int32_t status);
+void					*free_all_and_exit(int32_t status);
 void					*free_ptr(void *ptr);
 
 void					print_token_group(t_token_group *token);
 void					print_token(t_token *token);
 void					print_groups_and_tokens();
-void					print_env(t_env_cpy *env);
 void					print_cmd(t_cmd *command);
 
 #endif

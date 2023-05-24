@@ -1,14 +1,17 @@
 #include "minishell.h"
 
+extern char	**environ;
+
 int32_t	main(int32_t argc, char **argv, char **env)
 {
+	(void)env;
 	char 		*input;
 	// char		**args;
 	// char		**envp;
 	// t_data			*data;
 
 	// data = get_data();
-	init_data(argc, argv, env);
+	init_data(argc, argv);
 	// args = malloc(4 * sizeof(char *));	
 	// envp = parse_env_path(get_data()->env_cpy);
 	// args[0] = "echo";

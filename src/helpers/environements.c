@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/18 13:19:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/22 14:17:29 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,20 @@ inline bool	is_esc_env_var(char *str, int32_t i)
 /// @return 
 inline bool	is_env_variable(t_token *token)
 {
-	if (!token || !token->str)
+	char	*str;
+
+	str = token->str;
+	if (!str || !*str)
 		return (false);
-	return (token->str[0] == '$' && ft_isalpha(token->str[1]) == 1);
+	if (*str == '$')
+	{
+		str++;
+		if (ft_isalpha(*str) == 1)
+			return (true);
+		else if (*str++ == '{' && ft_isalpha(*str) == 1)
+			return (true);
+	}
+	return (false);
 }
 
 /// @brief this function assusme that preceding char is not an escaped char
@@ -38,9 +49,17 @@ inline bool	is_env_variable(t_token *token)
 /// @return 
 inline bool	str_is_env_variable(char *str)
 {
-	if (!str || !str[0])
+	if (!str || !*str)
 		return (false);
-	return (str[0] == '$' && ft_isalpha(str[1]) == 1);
+	if (*str == '$')
+	{
+		str++;
+		if (ft_isalpha(*str) == 1)
+			return (true);
+		else if (*str++ == '{' && ft_isalpha(*str) == 1)
+			return (true);
+	}
+	return (false);
 }
 
 /// @brief this function assusme that preceding char is not an escaped char
@@ -50,13 +69,28 @@ inline bool	str_is_env_variable(char *str)
 /// @return 
 inline int32_t	get_env_var_name_len(char *str)
 {
-	char *start;
+	char	*start;
 
 	start = str;
-	if (!str || !str[0])
+	if (!str || !*str)
 		return (0);
-	if ((*str++ == '$' && ft_isalpha(*str++) == 1))
-		while (*str && ft_isalnum(*str))
+	if (*str == '$')
+	{	
+		str++;
+		if (ft_isalpha(*str) == 1)
+		{
 			str++;
-	return (str - start - 1);
+			while (*str && ft_isalnum(*str))
+				str++;
+			return (str - start - 1);
+		}
+		else if (*str == '{')
+		{
+			str++;
+			while (*str && ft_isalnum(*str))
+				str++;
+			return (str - start - 2);
+		}
+	}
+	return (0);
 }
