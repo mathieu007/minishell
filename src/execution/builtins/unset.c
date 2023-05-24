@@ -9,13 +9,13 @@ int	unset_cmd(t_cmd *cmd)
 	t_env_cpy	*temp;
 
 	data = get_process();
-	i = 0;
-	current = data->env_cpy;
 	if (cmd->options != NULL)
 	{
 		printf("Error: Unset option not handled.\n");
 		return (1);
 	}
+	i = 1;
+	current = data->env_cpy;
 	while (cmd->args[i])
 	{
 		current = data->env_cpy;
@@ -41,5 +41,6 @@ int	unset_cmd(t_cmd *cmd)
 		}
 		i++;
 	}
+	printf("\n");
 	return (0);
 }

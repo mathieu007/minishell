@@ -7,7 +7,7 @@ void	add_env_node(t_process *data, char *variable, char *value)
 	current = data->env_cpy;
 	while (current->next != NULL)
 		current = current->next;
-	current->next = new_env(variable, value);
+	current->next = new_env(ft_strdup(variable), ft_strdup(value));
 }
 
 void	swap_node_value(t_env_cpy *a, t_env_cpy *b)
@@ -22,14 +22,14 @@ void	swap_node_value(t_env_cpy *a, t_env_cpy *b)
 	b->variable = tmp;
 }
 
-void	export_no_variable(t_process *data)
+void	export_no_variable()
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 	bool		swap;
 
 	printf("CALLED NO VAR\n");
-	head = init_env(data);
+	head = copy_env();
 	current = head;
 	swap = false;
 	while (current && current->next)
@@ -70,7 +70,7 @@ int	export_cmd(t_cmd *cmd)
 	current = data->env_cpy;
 	if (cmd->args[1] == NULL)
 	{
-		export_no_variable(data);
+		export_no_variable();
 		return (0);
 	}
 	if (cmd->options != NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 10:46:39 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/24 17:58:41 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ char	*try_get_ful_path_from_env_path(t_cmd *cmd)
 	paths = get_env_path();
 	dup_paths = paths;
 	path2 = NULL;
+	if(paths)
 	while (*paths)
 	{
 		path = ft_strjoin(*paths, "/");
