@@ -4,21 +4,19 @@ int	echo_cmd(t_cmd *cmd)
 {
 	int i;
 	int j;
-	bool nl;
 
-	i = 0;
 	i = 1;
 	while (cmd->args && cmd->args[1] && cmd->args[1][i])
 	{
-		if (cmd->args[1][i] != 'n')
+		if (cmd->options)
 		{
-			j = 1;
-			break ;
-		}
-		else
-		{
-			j = 2;
-			nl = true;
+			if (cmd->args[1][i] != 'n')
+			{
+				j = 1;
+				break ;
+			}
+			else
+				j = 2;
 		}
 		i++;
 	}
@@ -32,7 +30,7 @@ int	echo_cmd(t_cmd *cmd)
 		if ((ft_strnstr(cmd->options[0], "-n",
 					ft_strlen(cmd->options[0]))) != 0)
 			return (0);
-	if (nl == true)
-		printf("\n");
+
+	printf("\n");
 	return (0);
 }
