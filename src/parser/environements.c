@@ -38,8 +38,7 @@ char	*parse_env_var_value(t_token *token)
 	char	*var_name;
 	char	*var_value;
 
-	var_name = parse_env_var_name(token);
-	
+	var_name = parse_env_var_name(token);	
 	var_value = get_env_value(var_name);
 	if (!var_value)
 	{

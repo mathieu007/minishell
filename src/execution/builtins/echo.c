@@ -8,7 +8,7 @@ int	echo_cmd(t_cmd *cmd)
 
 	i = 0;
 	i = 1;
-	while (cmd->args && cmd->args[1][i])
+	while (cmd->args && cmd->args[1] && cmd->args[1][i])
 	{
 		if (cmd->args[1][i] != 'n')
 		{
