@@ -39,6 +39,7 @@ char	*parse_env_var_value(t_token *token)
 	char	*var_value;
 
 	var_name = parse_env_var_name(token);
+	
 	var_value = get_env_value(var_name);
 	if (!var_value)
 	{
@@ -57,6 +58,8 @@ char	*strip_consecutive_white_space_dst(char *str)
 
 	strip_len = 0;
 	i = 0;
+	if (str[i] != ' ')
+		return (NULL);
 	while (str[i] && str[i + 1])
 	{
 		if (str[i] == ' ' && str[i + 1] == ' ')
@@ -74,26 +77,11 @@ char	*strip_consecutive_white_space_dst(char *str)
 char	*strip_consecutive_white_space(char *str)
 {
 	int32_t	i;
-	int32_t	insert_i;
-	char	*strip;
 
 	i = 0;
-	insert_i = 0;
-	strip = strip_consecutive_white_space_dst(str);
-	if (!strip)
-		return (NULL);
-	while (str[i] && str[i + 1])
-	{
-		if ((str[i] == ' ' && str[i + 1] != ' ') || str[i] != ' ')
-			strip[insert_i++] = str[i];
-		else if (str[i] == ' ' && str[i + 1] == ' ')
-		{
-			i++;
-			continue ;
-		}
+	while (str[i] == ' ' && str[i + 1] == ' ')
 		i++;
-	}
-	return (strip);
+	return (&str[i]);
 }
 
 /// @brief We parse environement variable from these token group
@@ -144,6 +132,14 @@ char	*group_to_str(t_token_group *group)
 			if (cpy)
 				free(cpy);
 		}
+		else if (token->type == TK_DOLLAR_SIGN)
+		{
+			cpy = dest;
+			printf("printgroupstr:%s\n", token->str);
+			dest = ft_strjoin(dest, token->str);
+			if (cpy)
+				free(cpy);
+		}
 		else
 		{
 			cpy = dest;
@@ -185,19 +181,17 @@ t_token_group	*parse_env(t_token_group *group)
 			else
 			{
 				env_value = parse_env_var_value(token);
+				printf("parse_env_var_value:%s\n", env_value);
+				printf("token->str:%s\n", token->str);
 				token->str = strip_consecutive_white_space(env_value);
+				printf("token->str:%s\n", token->str);				
 				token->tolal_len = ft_strlen(token->str);
+				printf("token->pos:%i\n", token->pos);
 				free(str);
-				if (token->prev && token->prev->type == TK_SPACE && token->str[0] == ' ')
-				{
-					token->str = ft_substr(token->str, 1, token->tolal_len - 1);
-					token->tolal_len = token->tolal_len - 1;
-				}
-				if (token->next && token->next->type == TK_SPACE && token->str[token->tolal_len - 1] == ' ')
-				{
-					token->str = ft_substr(token->str, 0, token->tolal_len - 1);
-					token->tolal_len = token->tolal_len - 1;
-				}
+				// if (token->prev && token->prev->type == TK_SPACE && token->str[0] == ' ')
+				// 	token->str = ft_substr(token->str, 1, token->tolal_len);
+				// if (token->next && token->next->type == TK_SPACE && token->str[token->tolal_len - 1] == ' ')
+				// 	token->str = ft_substr(token->str, 0, token->tolal_len);
 			}
 		}
 		token = token->next;
