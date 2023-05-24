@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/22 12:12:49 by math             ###   ########.fr       */
+/*   Updated: 2023/05/11 14:20:00 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ int	pwd_cmd(t_cmd *cmd)
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
 		printf("%s\n", cwd);
-		return (0);
+		return(0);
 	}
 	else
 	{
-		printf("No such file or directory");
-		return (1);
+		printf("No such file or directory");		
+		return(1);
 	}
 }

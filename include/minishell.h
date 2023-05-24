@@ -234,6 +234,7 @@ typedef struct s_process
 	ino_t			dir_id;
 	char			*cwd;
 	t_cmd			*cmd;
+	t_env_cpy		*env_cpy;
 	int32_t			tokens_count;
 	int32_t			token_groups_count;
 	t_token			*tokens;
@@ -245,10 +246,11 @@ typedef struct s_process
 
 /// @brief The entities functions
 
+t_env_cpy		*new_env(char *variable, char *value);
 char			*replace_env_value(char *variable, char *value);
 char			*get_cmd_env_value(char *variable, t_cmd *cmd);
 t_redirect		*new_redirect(t_cmd *cmd);
-t_process			*get_process(void);
+t_process		*get_process(void);
 t_token_group	*get_first_token_group(void);
 t_token_group	*get_last_token_group(void);
 t_token			*get_first_token(void);
@@ -340,14 +342,16 @@ t_token			*get_closing_double_quote_token(t_token *token);
 t_token			*get_closing_single_quote_token(t_token *token);
 t_cmd_seq		get_sequence_type(t_token_type type);
 
+t_env_cpy					*init_env(t_process *data);
 bool						is_end_of_seq(t_token *token);
 void						close_pipe_fds(t_cmd *cmd);
 t_pipe						*new_pipe(t_cmd *cmd);
 void						*free_pipe(t_cmd *cmd);
 void						*free_redirect(t_cmd *cmd);
 void						*free_cmd(t_cmd *cmd);
-void						init_data(int32_t argc, char **argv);
+void						init_data(int32_t argc, char **argv, char **env);
 int32_t						init_cwd_fd(char *cwd);
+void						free_t_env_cpy(t_env_cpy *env_cpy);
 
 //link list section
 char						*get_env_value(char *variable);
@@ -383,5 +387,6 @@ void					print_token_group(t_token_group *token);
 void					print_token(t_token *token);
 void					print_groups_and_tokens();
 void					print_cmd(t_cmd *command);
+void					print_env(t_env_cpy *env);
 
 #endif

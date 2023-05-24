@@ -1,29 +1,55 @@
 #include "minishell.h"
+#include <stddef.h>
+
+char *ft_strcat(char *dest, const char *src)
+{
+    size_t dest_len = 0;
+    while (dest[dest_len] != '\0')
+        dest_len++;
+
+    size_t i = 0;
+    while (src[i] != '\0')
+    {
+        dest[dest_len + i] = src[i];
+        i++;
+    }
+    dest[dest_len + i] = '\0';
+
+    return dest;
+}
 
 int	cd_cmd(t_cmd *cmd)
 {
-	int		result;
-	char	path[PATH_MAX];
-	char	*path_to_call;
+	char path[PATH_MAX];
+	char *path_to_change;
 
-	result = 0;
-	if (getcwd(path, sizeof(path)) != NULL)
+	path_to_change = cmd->args[1];
+	if (cmd->options != NULL)
 	{
-		if (cmd->options[0] != NULL)
-		{
-			printf("Error option \"%s\" not handle \n", cmd->options[0]);
-			return (1);
-			printf("Error option \"%s\" not handle \n", cmd->options[0]);
-			return (0);
-		}
-		path_to_call = ft_strjoin(path, "/");
-		path_to_call = ft_strjoin(path_to_call, cmd->args[0]);
-#ifdef _DEBUG
-		printf("cd function path =%s \n", path_to_call);
-#endif
-		result = chdir(path_to_call);
+		printf("Error: Option \"%s\" not supported.\n", cmd->options[0]);
+		return (1);
 	}
+	if (cmd->args[1] == NULL)
+	{
+		printf("Error: No directory specified.\n");
+		return (1);
+	}
+	if (path_to_change[0] != '/')
+	{
+		if (getcwd(path, sizeof(path)) == NULL)
+		{
+			perror("cd_cmd failed");
+			return (1);
+		}
+		ft_strcat(path, "/");
+		ft_strcat(path, path_to_change);
+		path_to_change = path;
+	}
+	int result = chdir(path_to_change);
 	if (result != 0)
-		perror("cd_cmd FAilED");
-	return (result);
+	{
+		perror("cd_cmd failed");
+		return (1);
+	}
+	return (0);
 }

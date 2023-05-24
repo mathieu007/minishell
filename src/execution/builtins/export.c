@@ -1,119 +1,104 @@
 #include "minishell.h"
 
-void	export_no_variable(void)
+void	add_env_node(t_process *data, char *variable, char *value)
 {
-	
-	// t_env_cpy	*head;
-	// t_env_cpy	*current;
-	// bool		swap;
+	t_env_cpy	*current;
 
-	// head = init_env(data);
-	// current = head;
-	// while (current)
-	// {
-	// 	if (strcmp(current->variable, current->next->variable) > 0)
-	// 	{
-	// 		swap_node_value(current, current->next);
-	// 		swap = 1;
-	// 	}
-	// 	if (swap == true)
-	// 		current = head;
-	// 	else
-	// 		current = current->next;
-	// }
-	// current = head;
-	// while (current)
-	// {
-	// 	printf("declare -x %s=\"%s\"\n", current->variable, current->value);
-	// 	current = current->next;
-	// }
-	// //////FREE chain list
+	current = data->env_cpy;
+	while (current->next != NULL)
+		current = current->next;
+	current->next = new_env(variable, value);
 }
 
-int		count_env_vars()
+void	swap_node_value(t_env_cpy *a, t_env_cpy *b)
 {
-	int			count;
-	char		**env;
+	char	*tmp;
 
-	env = environ;
-	count = 0;
-	while (*env)
-	{
-		count++;
-		env++;
-	}
-	return (count);
+	tmp = a->value;
+	a->value = b->value;
+	b->value = tmp;
+	tmp = a->variable;
+	a->variable = b->variable;
+	b->variable = tmp;
 }
 
-char	*add_env_value(char *variable, char *value)
+void	export_no_variable(t_process *data)
 {
-	char		*var;
-	char		**env;
-	int			i;
-	char		**new_env;
-	int			count;
+	t_env_cpy	*head;
+	t_env_cpy	*current;
+	bool		swap;
 
-	env = environ;
-	count = count_env_vars() + 1;
-	new_env = malloc(sizeof(char **) * count);
-	var = ft_strjoin(variable, "=");
-	if (!var)
-		return (NULL);
-	i = 0;		
-	while (*env)
+	printf("CALLED NO VAR\n");
+	head = init_env(data);
+	current = head;
+	swap = false;
+	while (current && current->next)
 	{
-		new_env[i] = *env;
-		env++;
-		i++;
+		if (strcmp(current->variable, current->next->variable) > 0)
+		{
+			swap_node_value(current, current->next);
+			swap = true;
+			current = head;
+		}
+		else
+		{
+			current = current->next;
+		}
 	}
-	new_env[i] = ft_strjoin(var, value);
-	return (free(var), new_env[i]);
-}
-
-char	*replace_env_value(char *variable, char *value)
-{
-	size_t		len;
-	char		*var;
-	char		**env;
-
-	env = environ;
-	len = ft_strlen(variable) + 1;
-	var = ft_strjoin(variable, "=");
-	while (*env)
+	current = head;
+	while (current)
 	{
-		if (ft_strnstr(*env, var, len) == *env)
-			return (*env = ft_strjoin(var, value), free(var), *env);
-		env++;
+		printf("declare -x %s=\"%s\"\n", current->variable, current->value);
+		current = current->next;
 	}
-	return (free(var), NULL);
+	// Free the chain list
+	current = head;
+	free_t_env_cpy(current);
 }
 
 int	export_cmd(t_cmd *cmd)
 {
-	(void)cmd;
-	char			**split_on_equal;
-	int			i;
-	size_t		len;
-	t_process	*data;
+	t_env_cpy *current;
+	char **split_on_equal;
+	int i;
+	size_t len;
+	t_process *data;
+	bool swap = false;
 
-	data = get_process();	
-	if (cmd->args[0] == NULL)
-		export_no_variable();
-	if (cmd->options && cmd->options[0] != NULL)
+	data = get_process();
+	i = 1;
+	current = data->env_cpy;
+	if (cmd->args[1] == NULL)
 	{
-		printf("Export option \"%s\" not handle \n", cmd->options[0]);
+		export_no_variable(data);
+		return (0);
+	}
+	if (cmd->options != NULL)
+	{
+		printf("Export option \"%s\" not handled\n", cmd->options[0]);
 		return (1);
 	}
-	i = 1;
 	while (cmd->args[i])
 	{
+		current = data->env_cpy;
 		split_on_equal = ft_split(cmd->args[i], '=');
 		if (!split_on_equal)
-			return(1) ; ////// ad protection freeee
-		len = ft_strlen(split_on_equal[0]);	
-		if (!replace_env_value(split_on_equal[0], cmd->args[i]))
-			add_env_value(split_on_equal[0], cmd->args[i]);
+			return (1); // Add protection for memory allocation failure
+		len = ft_strlen(split_on_equal[0]);
+		while (current)
+		{			
+			if (ft_strncmp(split_on_equal[0], current->variable, len) == 0)
+			{
+				current->value = ft_strdup(split_on_equal[1]);
+				swap = true;
+				break ; // Exit the loop if the variable is found
+			}
+			current = current->next;
+		}
+		if (!swap)
+			add_env_node(data, split_on_equal[0], split_on_equal[1]);
 		i++;
 	}
-	return(0);
+	free_2d_array((void **)split_on_equal);
+	return (0);
 }

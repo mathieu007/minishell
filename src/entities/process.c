@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 09:25:51 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/24 14:53:17 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ inline t_process	*get_process(void)
 	return (&proc[0]);
 }
 
-void	init_data(int32_t argc, char **argv)
+void	init_data(int32_t argc, char **argv, char **env)
 {
 	t_process		*proc;
 
 	proc = get_process();
 	proc->argc = argc;
 	proc->argv = argv;
+	proc->env = env;
+	proc->env_cpy = init_env(proc);
 }
 
