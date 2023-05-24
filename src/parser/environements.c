@@ -132,10 +132,9 @@ char	*group_to_str(t_token_group *group)
 			if (cpy)
 				free(cpy);
 		}
-		else if (token->type == TK_DOLLAR_SIGN)
+		else if (token->type == TK_ENVIRONEMENT_VAR)
 		{
 			cpy = dest;
-			printf("printgroupstr:%s\n", token->str);
 			dest = ft_strjoin(dest, token->str);
 			if (cpy)
 				free(cpy);
