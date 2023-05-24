@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_group.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/21 10:13:54 by math             ###   ########.fr       */
+/*   Updated: 2023/05/24 09:25:28 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
 {
 	t_token_group	*last;
 	t_token_group	*new;
-	t_data			*data;
+	t_process			*data;
 
-	data = get_data();
+	data = get_process();
 	last = data->last_token_group;
 	new = new_token_group();
 	if (!new)

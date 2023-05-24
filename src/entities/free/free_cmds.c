@@ -4,9 +4,9 @@ void	free_t_cmd(t_cmd *cmd)
 {
 	t_cmd	*current;
 	t_cmd	*next;
-	t_data	*data;
+	t_process	*data;
 
-	data = get_data();
+	data = get_process();
 	if (cmd == NULL)
 		return ;
 	current = cmd;
@@ -81,9 +81,9 @@ void	free_t_token_group(t_token_group *token_group)
 void	free_t_token_groups(t_token_group *token_group)
 {
 	t_token_group	*next;
-	t_data 			*data;
+	t_process 			*data;
 
-	data = get_data();
+	data = get_process();
 	while (token_group)
 	{
 		next = token_group->next;

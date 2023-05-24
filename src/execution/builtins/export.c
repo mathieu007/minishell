@@ -1,7 +1,10 @@
 #include "minishell.h"
 
-// void	add_env_node(t_data *data, char *variable, char *value)
-// {
+void	add_env_node(t_process *proc, char *variable, char *value)
+{
+	(void)proc;
+	(void)variable;
+	(void)value;
 // 	t_env_cpy	*current;
 
 // 	current = data->env_cpy;
@@ -20,10 +23,11 @@
 // 	tmp = a->variable;
 // 	a->variable = b->variable;
 // 	b->variable = tmp;
-// }
+}
 
 void	export_no_variable(void)
 {
+	
 	// t_env_cpy	*head;
 	// t_env_cpy	*current;
 	// bool		swap;
@@ -53,34 +57,35 @@ void	export_no_variable(void)
 
 int	export_cmd(t_cmd *cmd)
 {
-	char		**split_on_equal;
-	int			i;
-	size_t		len;
-	t_data		*data;
+	(void)cmd;
+	// char		**split_on_equal;
+	// int			i;
+	// size_t		len;
+	// t_process	*data;
 
-	data = get_data();
-	i = 0;
-	if (cmd->args[0] == NULL)
-		export_no_variable();
-	if (cmd->options[0] != NULL)
-	{
-		printf("Export option \"%s\" not handle \n", cmd->options[0]);
-		return (1);
-	}
-	while (cmd->args[i])
-	{
-		split_on_equal = ft_split(cmd->args[i], '=');
-		if (!split_on_equal)
-			return(1) ; ////// ad protection freeee
-		len = ft_strlen(split_on_equal[0]);	
-		while (*environ)
-		{			
-			if (ft_strnstr(*environ, split_on_equal[0], len) == *environ)
-				*environ = cmd->args[i];
-			else
-				add_env_node(data, split_on_equal[0], split_on_equal[1]);
-		}
-		i++;
-	}
+	// data = get_process();
+	// i = 0;
+	// if (cmd->args[0] == NULL)
+	// 	export_no_variable();
+	// if (cmd->options[0] != NULL)
+	// {
+	// 	printf("Export option \"%s\" not handle \n", cmd->options[0]);
+	// 	return (1);
+	// }
+	// while (cmd->args[i])
+	// {
+	// 	split_on_equal = ft_split(cmd->args[i], '=');
+	// 	if (!split_on_equal)
+	// 		return(1) ; ////// ad protection freeee
+	// 	len = ft_strlen(split_on_equal[0]);	
+	// 	while (*environ)
+	// 	{			
+	// 		if (ft_strnstr(*environ, split_on_equal[0], len) == *environ)
+	// 			*environ = cmd->args[i];
+	// 		else
+	// 			add_env_node(data, split_on_equal[0], split_on_equal[1]);
+	// 	}
+	// 	i++;
+	// }
 	return(0);
 }

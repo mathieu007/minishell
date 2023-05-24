@@ -9,9 +9,8 @@ void	free_t_redirect(t_redirect *redirect)
 	free(redirect);
 }
 
-void	free_t_data(t_data *data)
+void	free_t_data(t_process *data)
 {
-	data->cwd = free_ptr(data->cwd);
 	if (data->tokens)
 		free_t_tokens(data->tokens);
 	if (data->token_groups)

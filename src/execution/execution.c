@@ -33,6 +33,10 @@ t_token_group	*exec_pipes(t_token_group *token_group)
 }
 
 // exec the function right away because it is a sequential cmd.
+// No need to fork.
+// Because t_process is stored inside static variable no need 
+// to initilized a new one, each forked process will received it's
+// own t_process struct
 t_token_group	*exec_sequential(t_token_group *token_group)
 {
 	char	*str;
@@ -45,7 +49,6 @@ t_token_group	*exec_sequential(t_token_group *token_group)
 	token_group->str = str;
 	tokenize(token_group);
 	cmd = parse_cmd(token_group);
-	cmd->shell = get_subshell();
 	if (add_built_in_func(cmd) == 0)
 		add_execve_func(cmd);
 	print_cmd(cmd);

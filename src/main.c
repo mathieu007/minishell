@@ -9,7 +9,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	// char		**args;
 	// char		**envp;
 	// t_data			*data;
-
+	system("export VAR=123");
 	// data = get_data();
 	init_data(argc, argv);
 	// args = malloc(4 * sizeof(char *));	
@@ -20,12 +20,13 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	// args[3] = NULL;
 	
 	// print_env(data->env_cpy);
-	system("export VAR=123");
+	
 	// if (execve("/usr/bin/echo", args, envp) == -1)
 	// 	perror("Could not execve");
 	while (1)
 	{
 		input = readline("MiniShell> ");
+		//system(input);
 		exec_cmds(input);
 		if (strcmp(input, "exit") == 0)
 			break ;

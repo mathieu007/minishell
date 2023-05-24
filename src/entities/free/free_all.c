@@ -11,10 +11,10 @@ void	*free_ptr(void *ptr)
 void	free_all(void)
 {
 	t_token_group	*token_group;
-	t_data 			*data;
+	t_process 			*data;
 	t_cmd 			*cmd;
 
-	data = get_data();
+	data = get_process();
 	token_group = data->token_groups;
 	cmd = data->cmds;
 	if (token_group != NULL)

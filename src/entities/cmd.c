@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/19 10:09:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/24 09:25:28 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ inline t_cmd	*add_cmd(void)
 {
 	t_cmd		*last;
 	t_cmd		*new;
-	t_data		*data;
+	t_process		*data;
 
-	data = get_data();
+	data = get_process();
 	last = data->last_cmd;
 	new = new_cmd();
 	if (new == NULL)

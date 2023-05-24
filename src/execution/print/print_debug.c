@@ -3,11 +3,11 @@
 
 void	print_groups_and_tokens()
 {
-	t_data			*data;
+	t_process			*data;
 	t_token_group	*group;
 	t_token			*token;
 
-	data = get_data();
+	data = get_process();
 	group = data->token_groups;
 	print_token_group(group);
 	while (group)

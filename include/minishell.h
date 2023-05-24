@@ -204,13 +204,6 @@ typedef struct s_token_group
 	t_cmd_seq				cmd_seq_type;
 }							t_token_group;
 
-typedef struct s_subshell
-{
-	char		**eviron_ptr;
-	ino_t		dir_id;
-	char		*cwd;
-}				t_subshell;
-
 /// "ec"$VAR -naaaaznnnnzzzz 123$VAR2"123   test" $VAR=ho $VAR2=" 6    6 "
 //name echo , option: -n, -a, -z; args: [echo, -naaaaznnnnzzzz, 123, "6    6" "123    test"]
 typedef struct s_cmd
@@ -218,7 +211,6 @@ typedef struct s_cmd
 	int32_t			(*func)(struct s_cmd *);
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
-	t_subshell		*shell;
 	char			*name; /// the name of the command: cat, ls, echo ect...
 	char			*full_path_name; /// only for execve, the full path name to the command ex: /bin/ls or /bin/cat
 	char			**args; /// a terminating NULL list of string containing options and arguments
@@ -230,26 +222,31 @@ typedef struct s_cmd
 	pid_t			pid;
 }				t_cmd;
 
-typedef struct s_data
+
+/// @brief is the current processes data in which the cmd will
+/// be executed, we keep the ino_t and current working dir, also
+/// to keep track of the cwd if the cwd is moved, renamed or deleted..
+typedef struct s_process
 {
-	int32_t					argc;
-	char					**argv;
-	char					**env;
-	char					**paths;
-	int32_t					cwd_fd;
-	int32_t					tokens_count;
-	int32_t					token_groups_count;
-	t_token					*tokens;
-	t_token_group			*token_groups;
-	t_cmd					*cmds;
-	t_cmd					*last_cmd;
-	t_token_group			*last_token_group;
-}							t_data;
+	int32_t			argc;
+	char			**argv;
+	char			**env;
+	ino_t			dir_id;
+	char			*cwd;
+	t_cmd			*cmd;
+	int32_t			tokens_count;
+	int32_t			token_groups_count;
+	t_token			*tokens;
+	t_token_group	*token_groups;
+	t_cmd			*cmds;
+	t_cmd			*last_cmd;
+	t_token_group	*last_token_group;
+}					t_process;
 
 /// @brief The entities functions
 char			*get_cmd_env_value(char *variable, t_cmd *cmd);
 t_redirect		*new_redirect(t_cmd *cmd);
-t_data			*get_data(void);
+t_process			*get_process(void);
 t_token_group	*get_first_token_group(void);
 t_token_group	*get_last_token_group(void);
 t_token			*get_first_token(void);
@@ -351,7 +348,7 @@ int32_t						init_cwd_fd(char *cwd);
 
 //link list section
 char						*get_env_value(char *variable);
-void						add_env_node(t_data *data, char *variable, char *value);
+void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
 int32_t					add_execve_func(t_cmd *cmd);
@@ -373,7 +370,7 @@ void					free_t_cmd(t_cmd *cmd);
 void					free_t_tokens(t_token *token);
 void					free_t_token_groups(t_token_group *token_group);
 void					free_t_redirect(t_redirect *redirect);
-void					free_t_data(t_data *data);
+void					free_t_data(t_process *data);
 void					free_2d_array(void **tab);
 void					free_all();
 void					*free_all_and_exit(int32_t status);

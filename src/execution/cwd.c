@@ -44,23 +44,25 @@ char	*recursive_search_dir(t_cmd *cmd, char *path, ino_t ino)
 	DIR				*dir;
 	struct dirent	*entry;
 	char			*new_path;
+	t_process		*proc;
 
 	if (path == NULL)
 		return (NULL);
 	dir = opendir(path);
 	entry = readdir(dir);
 	new_path = NULL;
+	proc = get_process();	
 	while (entry)
 	{
 		new_path = join_path(path, entry->d_name);
 		if (entry->d_ino == ino)
 		{
-			free(cmd->shell->cwd);
-			cmd->shell->cwd = new_path;
-			return (free(path), cmd->shell->cwd);
+			free(proc->cwd);
+			proc->cwd = new_path;
+			return (free(path), proc->cwd);
 		}
 		if (recursive_search_dir(cmd, new_path, ino))
-			return (free(path), cmd->shell->cwd);
+			return (free(path), proc->cwd);
 	}
 	if (new_path)
 		free(new_path);
@@ -84,24 +86,28 @@ char	*get_cwd(t_cmd *cmd)
 	static char		buffer[PATH_MAX + 1];
 	struct stat		file_stat;
 	char			*home;
+	t_process		*proc;
 
-	if (cmd == NULL || cmd->shell->cwd == NULL)
+	proc = get_process();
+	if (cmd == NULL || proc->cwd == NULL)
 	{
-		cmd->shell->cwd = getcwd(&buffer[0], PATH_MAX + 1);
-		return (cmd->shell->cwd);
+		proc->cwd = getcwd(&buffer[0], PATH_MAX + 1);
+		return (proc->cwd);
 	}
-	if (stat(cmd->shell->cwd, &file_stat) != 0)
+	if (stat(proc->cwd, &file_stat) != 0)
 	{
 		perror("fstat() error");
 		return (free_all_and_exit(EXIT_FAILURE));
 	}
-	if (file_stat.st_ino == cmd->shell->dir_id)
-		return (cmd->shell->cwd);
+	if (proc->dir_id == 0)
+		proc->dir_id = file_stat.st_ino;
+	if (file_stat.st_ino == proc->dir_id)
+		return (proc->cwd);
 	home = get_home();
 	if (home)
-		cmd->shell->cwd = recursive_search_dir(cmd, ft_strdup(home), file_stat.st_ino);
+		proc->cwd = recursive_search_dir(cmd, ft_strdup(home), file_stat.st_ino);
 	//TODO if (!cwd) search trash bin or return an error msg do the same but for trash bin.
-	if (!cmd->shell->cwd)
-		cmd->shell->cwd = getcwd(&buffer[0], PATH_MAX + 1);
-	return (cmd->shell->cwd);
+	if (!proc->cwd)
+		proc->cwd = getcwd(&buffer[0], PATH_MAX + 1);
+	return (proc->cwd);
 }

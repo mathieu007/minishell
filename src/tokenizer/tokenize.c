@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/21 08:39:23 by math             ###   ########.fr       */
+/*   Updated: 2023/05/24 09:28:35 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_token_group	*tokenize_groups(char *str)
 		while (str[i] && str[i] == ' ')
 			i++;
 	}
-	return (get_data()->token_groups);
+	return (get_process()->token_groups);
 }
 
 int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
@@ -124,10 +124,10 @@ t_token	*tokenize(t_token_group *group)
 	int32_t			i;
 	t_token_type	type;
 	int32_t			t_len;
-	t_data			*data;
+	t_process		*data;
 	char			*str;
 
-	data = get_data();
+	data = get_process();
 	i = 0;
 	str = group->str;
 	add_token(0, TK_CMD_SEQ_START, group)->tolal_len = 0;

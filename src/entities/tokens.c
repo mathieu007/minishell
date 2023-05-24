@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/19 19:17:10 by math             ###   ########.fr       */
+/*   Updated: 2023/05/24 09:25:28 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,6 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token_group *group)
 	if (!group->first_token)
 		group->first_token = new;
 	group->last_token = new;
-	get_data()->tokens_count++;
+	get_process()->tokens_count++;
 	return (new);
 }

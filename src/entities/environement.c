@@ -19,12 +19,15 @@
 /// @return 
 void	dup_env(void)
 {
-	while (*environ)
+	char	**env;
+
+	env = environ;
+	while (*env)
 	{		
-		*environ = ft_strdup(*environ);
-		environ++;
+		*env = ft_strdup(*env);
+		env++;
 	}
-	*environ = NULL;
+	*env = NULL;
 }
 
 //take a variable and return the value
@@ -32,17 +35,20 @@ char	*get_env_value(char *variable)
 {
 	size_t		len;
 	char		*var;
+	char		*env_var;
+	char		**env;
 
-	len = ft_strlen(variable);
-	while (*environ)
+	env = environ;
+	len = ft_strlen(variable) + 1;
+	var = ft_strjoin(variable, "=");
+	while (*env)
 	{
-		var = ft_strjoin(variable, "=");
-		if (ft_strnstr(*environ, var, len) == *environ)
-			return (free(var), &(*environ)[len + 1]);
-		free(var);
-		environ++;
+		env_var = *env;		
+		if (ft_strnstr(env_var, var, len) == env_var)
+			return (free(var), &(env_var)[len]);	
+		env++;
 	}
-	return (NULL);
+	return (free(var), NULL);
 }
 
 // //make a copy of the environement variable
