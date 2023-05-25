@@ -352,6 +352,7 @@ void						init_data(int32_t argc, char **argv, char **env);
 int32_t						init_cwd_fd(char *cwd);
 void						free_t_env_cpy(t_env_cpy *env_cpy);
 
+t_env_cpy	*copy_env(void);
 //link list section
 char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);

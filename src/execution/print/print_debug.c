@@ -138,7 +138,7 @@ void	print_env(t_env_cpy *env)
 	{
 		printf("[[NODE # %i]]\n",j);
 		printf("---------------------------------------------------------\n");
-		printf(" var = %s value = %s\n", cpy->variable, cpy->value);
+		printf("  %s = %s\n", cpy->variable, cpy->value);
 		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;

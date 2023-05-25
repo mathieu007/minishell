@@ -22,13 +22,13 @@ void	swap_node_value(t_env_cpy *a, t_env_cpy *b)
 	b->variable = tmp;
 }
 
-void	export_no_variable(t_process *data)
+void	export_no_variable()
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 
 	printf("CALLED NO VAR\n");
-	head = init_env(data);
+	head = copy_env();
 	current = head;
 	while (current && current->next)
 	{
@@ -65,7 +65,7 @@ int	export_cmd(t_cmd *cmd)
 	current = data->env_cpy;
 	if (cmd->args[1] == NULL)
 	{
-		export_no_variable(data);
+		export_no_variable();
 		return (0);
 	}
 	if (cmd->options != NULL)
