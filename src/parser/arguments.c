@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/19 15:44:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/25 07:55:34 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int32_t	count_env_words(char *str)
 		{
 			while (*str == ' ')
 				str++;
-			if (*str)	
+			if (*str)
 				count++;
 		}
 		else
@@ -160,7 +160,7 @@ void	get_args(t_token_group *group, char **split)
 	while (token)
 	{
 		if (token->type == TK_SPACE || token->type == TK_ENVIRONEMENT_VAR)
-			split[++i] = ft_strncpy(token->str, token->tolal_len);	
+			split[++i] = ft_strncpy(token->str, token->tolal_len);
 		else
 		{
 			cpy = split[i];

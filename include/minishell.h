@@ -371,13 +371,13 @@ int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd *cmd);
 
 //free section
-void					free_2d_char_array(char **tab);
+void					*free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
 void					free_t_tokens(t_token *token);
 void					free_t_token_groups(t_token_group *token_group);
-void					free_t_redirect(t_redirect *redirect);
+void					*free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_process *data);
-void					free_2d_array(void **tab);
+void					*free_2d_array(void **tab);
 void					free_all();
 void					*free_all_and_exit(int32_t status);
 void					*free_ptr(void *ptr);

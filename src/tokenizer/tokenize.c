@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/25 07:21:43 by math             ###   ########.fr       */
+/*   Updated: 2023/05/25 07:52:28 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_token_group	*tokenize_groups(char *str)
 			if (type == TK_CMD_SEQ_END)
 			{
 				i++;
-				add_token_group(&str[0], type, i);
+				add_token_group(str, type, i);
 				break ;
 			}
 			add_token_group(&str[0], type, i);
