@@ -59,7 +59,7 @@ typedef enum e_token_type
 {
 	TK_UNKNOWN = -1,
 	TK_CMD_SEQ_START = -2,
-	TK_CMD_SEQ_END = -3,
+	TK_CMD_SEQ_END = 0,
 	TK_CLOSINGDOUBLEQUOTE = -4,
 	TK_CLOSINGSINGLEQUOTE = -5,
 	TK_ENVIRONEMENT_VAR = -6,
@@ -233,7 +233,6 @@ typedef struct s_process
 	char			**env;
 	ino_t			dir_id;
 	char			*cwd;
-	t_cmd			*cmd;
 	t_env_cpy		*env_cpy;
 	int32_t			tokens_count;
 	int32_t			token_groups_count;

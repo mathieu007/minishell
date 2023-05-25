@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 18:11:28 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/25 07:06:14 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_DASH] = TK_DASH;
 		tk_type[TK_DASHDASH] = TK_DASHDASH;
 		tk_type[TK_DOLLAR_SIGN] = TK_DOLLAR_SIGN;
-		tk_type[TK_DOUBLEQUOTE] = TK_DOUBLEQUOTE;		
+		tk_type[TK_DOUBLEQUOTE] = TK_DOUBLEQUOTE;
 		tk_type[TK_GREAT] = TK_GREAT;
 		tk_type[TK_GREATGREAT] = TK_GREATGREAT;
 		tk_type[TK_LESS] = TK_LESS;
@@ -46,7 +46,7 @@ static t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_WILDCARD] = TK_WILDCARD;
 		tk_type[TK_SEMICOLON] = TK_SEMICOLON;
 		tk_type[TK_BACKSLASHDOUBLEQUOTE] = TK_BACKSLASHDOUBLEQUOTE;
-		tk_type[TK_BACKSLASHSINGLEQUOTE] = TK_BACKSLASHSINGLEQUOTE;		
+		tk_type[TK_BACKSLASHSINGLEQUOTE] = TK_BACKSLASHSINGLEQUOTE;
 	}
 	return (tk_type);
 }
@@ -58,6 +58,8 @@ t_token_type	get_token_type(char *str)
 
 	if (!str)
 		return (TK_UNKNOWN);
+	if (str[1] == '\0')
+		return (TK_CMD_SEQ_END);
 	lookup_table = get_tokens_lookup_table();
 	tk_type = lookup_table[(int32_t)(str[0] * 255 + str[1])];
 	if (tk_type != TK_UNKNOWN)

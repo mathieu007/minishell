@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 15:23:44 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/25 07:21:43 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,13 @@ t_token_group	*tokenize_groups(char *str)
 		if (t_len == 0)
 			t_len = 1;
 		if (type_is_end_of_seq(type))
-		{			
+		{
+			if (type == TK_CMD_SEQ_END)
+			{
+				i++;
+				add_token_group(&str[0], type, i);
+				break ;
+			}
 			add_token_group(&str[0], type, i);
 			i += t_len;
 			while (str[i] && str[i] == ' ')
@@ -38,12 +44,12 @@ t_token_group	*tokenize_groups(char *str)
 		}
 		i += t_len;
 	}
-	if (i != 0)
-	{
-		add_token_group(&str[0], TK_CMD_SEQ_END, i);
-		while (str[i] && str[i] == ' ')
-			i++;
-	}
+	// if (i != 0)
+	// {
+	// 	add_token_group(&str[0], TK_CMD_SEQ_END, i);
+	// 	while (str[i] && str[i] == ' ')
+	// 		i++;
+	// }
 	return (get_process()->token_groups);
 }
 
@@ -142,10 +148,10 @@ t_token	*tokenize(t_token_group *group)
 	add_token(0, TK_CMD_SEQ_START, group)->tolal_len = 0;
 	while (str[i])
 	{
-		type = get_token_type(&str[i]);		
+		type = get_token_type(&str[i]);
 		t_len = get_token_type_len(type);
 		if (t_len == 0)
-			t_len = 1;	
+			t_len = 1;
 		if (type == TK_SINGLEQUOTE)
 			i = tokenize_single_quote(str, i, group);
 		else if (type == TK_DOUBLEQUOTE)
@@ -158,13 +164,15 @@ t_token	*tokenize(t_token_group *group)
 			i = add_token_dash(str, i, group);
 		else if (str_is_env_variable(&str[i]))
 			i = add_token_env(str, i, group, false);
+		else if (type == TK_CMD_SEQ_END)
+			i++;
 		else if (type != TK_UNKNOWN)
 		{
 			add_token(i, type, group);
 			i += t_len;
 		}
 		else
-			i += t_len;			
+			i += t_len;
 	}
 	add_token(i, TK_CMD_SEQ_END, group)->tolal_len = 0;
 	split_group_tokens(group);

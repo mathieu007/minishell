@@ -26,24 +26,19 @@ void	export_no_variable(t_process *data)
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
-	bool		swap;
 
 	printf("CALLED NO VAR\n");
 	head = init_env(data);
 	current = head;
-	swap = false;
 	while (current && current->next)
 	{
 		if (strcmp(current->variable, current->next->variable) > 0)
 		{
 			swap_node_value(current, current->next);
-			swap = true;
 			current = head;
 		}
 		else
-		{
 			current = current->next;
-		}
 	}
 	current = head;
 	while (current)

@@ -68,6 +68,7 @@ void	print_cmd(t_cmd *command)
 	i = 0;
 	j = 0;
 	cpy = command;
+
 	printf("[[CMD CHAINLIST]]\n\n");
 	while (cpy)
 	{
