@@ -6,7 +6,7 @@ void	add_env_node(t_process *data, char *variable, char *value)
 
 	current = data->env_cpy;
 	while (current->next != NULL)
-		current = current->next;	
+		current = current->next;
 	current->next = new_env(ft_strdup(variable), ft_strdup(value));
 }
 
