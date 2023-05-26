@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <string.h>
 
 char* replaceString(const char* input, const char* search, const char* replace) {
@@ -105,7 +106,7 @@ int compare_files(const char *file1, const char *file2)
 void run_test(const char *command)
 {
 
-        char bash_command[MAX_COMMAND_LENGTH];
+        char bash_cmd[MAX_COMMAND_LENGTH];
 		char minishell_command[MAX_COMMAND_LENGTH];
 		char *bash_output = NULL;
 		char *minishell_output = NULL;
@@ -113,31 +114,32 @@ void run_test(const char *command)
 		size_t bash_output_len = 0;
 		size_t minishell_output_len = 0;
 		FILE *bash_pipe;
-		FILE *minishell_pipe;
+		FILE *minishell_fd;
+		char *command_cpy;
 
+		command_cpy = strdup(command);
 		// Construct the command to run in Bash
-		command = replaceString(command, "\"", "\\\"");
-		
-		snprintf(bash_command, MAX_COMMAND_LENGTH, "bash -c \"%s\" 2>&1", command);
+		command = replaceString(command, "\"", "\\\"");	
+		snprintf(bash_cmd, MAX_COMMAND_LENGTH, "bash -c '%s' 2>&1", command_cpy);
 		// Construct the command to run in Minishell
-		snprintf(minishell_command, MAX_COMMAND_LENGTH, "\"%s\" 2>&1\n", command);
+		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s'", command_cpy);
 		// Open a pipe to capture the output of the Bash command
-		bash_pipe = popen(bash_command, "r");
+		bash_pipe = popen(bash_cmd, "r");
+		printf("bash_cmd:%s\n", bash_cmd);
+		printf("minishell_command:%s\n", minishell_command);
 		if (bash_pipe == NULL)
 		{
 			perror("popen bash_command");
 			exit(EXIT_FAILURE);
 		}
-		minishell_pipe = popen("./minishell", "w");
-		if (minishell_pipe == NULL)
+		minishell_fd = popen(minishell_command, "r");
+		if (minishell_fd == NULL)
 		{
 			perror("popen minishell_command");
 			exit(EXIT_FAILURE);
-		}
-		fprintf(minishell_pipe, "%s\n", command);
-		
+		}	
 		// Read the output of the Minishell command
-		while (fgets(line, sizeof(line), minishell_pipe) != NULL)
+		while (fgets(line, sizeof(line), minishell_fd) != NULL)
 		{
 			minishell_output = realloc(minishell_output, minishell_output_len + strlen(line) + 1);
 			if (minishell_output == NULL)
@@ -147,8 +149,7 @@ void run_test(const char *command)
 			}
 			strcpy(minishell_output + minishell_output_len, line);
 			minishell_output_len += strlen(line);
-		}
-		
+		}		
 		// Read the output of the Bash command   
 		while (fgets(line, sizeof(line), bash_pipe) != NULL)
 		{
@@ -163,8 +164,7 @@ void run_test(const char *command)
 		}
 		// Close the pipes
 		int bash_status = pclose(bash_pipe);
-		int minishell_status = pclose(minishell_pipe);
-		
+		int minishell_status = pclose(minishell_fd);
 		
 		// Compare the outputs
 		int output_equal = 0;
@@ -181,12 +181,12 @@ void run_test(const char *command)
 		else
 		{
 			printf(RED "TEST FAILED!\n\n" RESET);
-			printf("Bash output:\n%s\n", bash_output);
+			printf("Bash output:\n[%s]\n", bash_output);
 			printf("Bash exit status: %d\n\n", WEXITSTATUS(bash_status));
 			if (minishell_output)
-				printf("Minishell output:\n%s\n", minishell_output);
+				printf("Minishell output:\n[%s]\n", minishell_output);
 			else
-				printf("Minishell output:\n%s\n", "NULL");
+				printf("Minishell output:\n[%s]\n", "NULL");
 		}
 		// Free allocated memory
 		free(bash_output);

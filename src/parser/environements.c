@@ -83,6 +83,41 @@ char	*strip_consecutive_white_space(char *str)
 	return (&str[i]);
 }
 
+char	*join_env_to_str(t_token_group *group)
+{
+	t_token	*token;
+	char	*dest;
+	char	*cpy;
+
+	token = group->first_token;
+	if (!token)
+		return (NULL);
+	dest = NULL;
+	while (token)
+	{
+		if (token->type == TK_ENVIRONEMENT_VAR)
+		{
+			cpy = dest;
+			dest = ft_strjoin(dest, get_env_value(token->str));
+			if (cpy)
+				free(cpy);
+		}
+		else
+		{
+			cpy = dest;
+			dest = ft_strjoin(dest, token->token_str);
+			if (cpy)
+				free(cpy);
+			cpy = dest;
+			dest = ft_strjoin(dest, token->str);
+			if (cpy)
+				free(cpy);
+		}
+		token = token->next;
+	}
+	return (dest);
+}
+
 /// @brief We parse environement variable from these token group
 /// @param group 
 /// @return 
@@ -157,40 +192,38 @@ char	*group_to_str(t_token_group *group)
 /// @brief We parse environement variable from these token group
 /// @param group 
 /// @return 
-t_token_group	*parse_env(t_token_group *group)
+char	*parse_env(t_token_group *group)
 {
 	t_token	*token;
-	char	*env_value;
 	char	*str;
+	char	*dest;
+	char	*cpy;
 
+	dest = NULL;
 	token = group->first_token;
 	while (token)
 	{
-		str = token->str;
+		str = token->str;		
 		if (token->type == TK_ENVIRONEMENT_VAR)
 		{
-			if (token->inside_dbl_quotes)
-			{
-				env_value = parse_env_var_value(token);
-				token->str = env_value;
-				token->tolal_len = ft_strlen(env_value);
-				free(str);
-			}
-			else
-			{
-				env_value = parse_env_var_value(token);
-				token->str = strip_consecutive_white_space(env_value);
-				token->tolal_len = ft_strlen(token->str);
-				free(str);
-				// if (token->prev && token->prev->type == TK_SPACE && token->str[0] == ' ')
-				// 	token->str = ft_substr(token->str, 1, token->tolal_len);
-				// if (token->next && token->next->type == TK_SPACE && token->str[token->tolal_len - 1] == ' ')
-				// 	token->str = ft_substr(token->str, 0, token->tolal_len);
-			}
+			str = parse_env_var_value(token);
+			if (!token->inside_dbl_quotes)
+				str = strip_consecutive_white_space(str);
 		}
+		else
+		{
+			cpy = dest;
+			dest = ft_strjoin(dest, token->token_str);
+			if (cpy)
+				free(cpy);
+		}
+		cpy = dest;
+			dest = ft_strjoin(dest, str);
+		if (cpy)
+			free(cpy);
 		token = token->next;
 	}
-	return (group);
+	return (dest);
 }
 
 char	**get_env_path()

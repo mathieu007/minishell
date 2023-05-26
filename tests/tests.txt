@@ -6,12 +6,12 @@ echo "'""totot""'"
 echo '''ta'''
 "echo" tata
 echo " tata "
-export VAR=ho
-ec$VAR "123"
-ec"$VAR" "123"
-ec'$VAR' "123"
 ec'ho' "123"
 ec"ho" "123"
+export VAR="ho" && "ec$VAR" "123"
+export VAR="ho" && ec$VAR "123"
+export VAR="ho" && ec"$VAR" "123"
+export VAR="ho" && ec'$VAR' "123"
 export VAR=" 111   222 " && echo "123"$VAR
 export VAR=" 111   222 " && echo "123 "$VAR
 export VAR=" 111   222 " && echo "123"'$VAR'

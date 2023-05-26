@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/22 14:17:29 by math             ###   ########.fr       */
+/*   Updated: 2023/05/26 15:16:48 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ inline int32_t	get_env_var_name_len(char *str)
 			str++;
 			while (*str && ft_isalnum(*str))
 				str++;
-			return (str - start - 2);
+			return (str - start - 3);
 		}
 	}
 	return (0);

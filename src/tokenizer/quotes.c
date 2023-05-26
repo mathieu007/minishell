@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/25 19:47:06 by math             ###   ########.fr       */
+/*   Updated: 2023/05/26 15:18:00 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ int32_t	tokenize_double_quote(char *str, int32_t i, t_token_group *group)
 		}
 		else if (str_is_env_variable(&str[i]))
 			i = add_token_env(str, i, group, true);
-		else if (type != TK_UNKNOWN && type != TK_SPACE
+		else if (type != TK_UNKNOWN && type != TK_SPACE 
+			&& type != TK_DASH && type != TK_DASHDASH
 			&& type != TK_SINGLEQUOTE)
 			add_token(i, type, group);
 		i += t_len;

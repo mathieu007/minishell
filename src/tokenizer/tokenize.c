@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/25 20:44:03 by math             ###   ########.fr       */
+/*   Updated: 2023/05/26 16:42:27 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,16 @@ int32_t	add_token_dashdash(char *str, int32_t pos, t_token_group *group)
 int32_t	add_token_env(char *str, int32_t pos, t_token_group *group, bool inside_dbl_quotes)
 {
 	t_token	*token;
+	bool	withcurly_brace;
 
+	withcurly_brace = false;
 	token = add_token(pos, TK_ENVIRONEMENT_VAR, group);
-	token->inside_dbl_quotes = inside_dbl_quotes;
-	return (pos + get_env_var_name_len(&str[pos]));
+	if (str[pos + 1] == '{')
+		withcurly_brace = true;
+	token->inside_dbl_quotes = inside_dbl_quotes;	
+	if (withcurly_brace)
+		pos += 2;
+	return (pos);
 }
 
 void	split_group_tokens(t_token_group *group)
@@ -115,6 +121,10 @@ void	split_group_tokens(t_token_group *group)
 				start++;
 				len--;
 			}
+		}
+		else if (token->type == TK_ENVIRONEMENT_VAR)
+		{
+			get_env_value(get_env_variable(token->str));
 		}
 		token->str = ft_substr(str, start, len);
 		token->token_str = ft_substr(str, start - token->token_len, token->token_len);
@@ -147,7 +157,7 @@ t_token	*tokenize(t_token_group *group)
 		else if (type == TK_SPACE)
 			i = add_token_space(str, i, group);
 		else if (type == TK_DASHDASH)
-				i = add_token_dashdash(str, i, group);
+			i = add_token_dashdash(str, i, group);
 		else if (type == TK_DASH)
 			i = add_token_dash(str, i, group);
 		else if (str_is_env_variable(&str[i]))

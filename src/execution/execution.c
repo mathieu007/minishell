@@ -44,8 +44,7 @@ t_token_group	*exec_sequential(t_token_group *token_group)
 	t_cmd	*cmd;
 
 	tokenize(token_group);
-	parse_env(token_group);
-	str = group_to_str(token_group);
+	str = parse_env(token_group);
 	reset_token_group(token_group);
 	token_group->str = str;
 	tokenize(token_group);

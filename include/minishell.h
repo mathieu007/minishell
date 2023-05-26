@@ -304,6 +304,7 @@ char			*get_full_path(t_cmd *cmd);
 char			*get_cwd(t_cmd *cmd);
 
 /// tokenizer functions
+char			*join_env_to_str(t_token_group *group);
 void			reset_token_group(t_token_group *group);
 int32_t			add_token_env(char *str, int32_t pos, t_token_group *group, bool inside_dbl_quotes);
 t_token_group	*tokenize_groups(char *str);
@@ -331,7 +332,7 @@ void			get_args(t_token_group *group, char **split);
  t_token		*get_quotes_str(t_token *token, char *str, char **ouput);
 char			*get_single_quote_str(t_token *token, char *str);
 char			*get_double_quote_str(t_token *token, char *str);
-t_token_group	*parse_env(t_token_group *group);
+char			*parse_env(t_token_group *group);
 void			replace_env_name(char *input, char *output);
 char			**get_env_path();
 t_token			*get_token_at(int32_t index);
