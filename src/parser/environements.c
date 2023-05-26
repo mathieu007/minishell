@@ -179,12 +179,8 @@ t_token_group	*parse_env(t_token_group *group)
 			else
 			{
 				env_value = parse_env_var_value(token);
-				printf("parse_env_var_value:%s\n", env_value);
-				printf("token->str:%s\n", token->str);
 				token->str = strip_consecutive_white_space(env_value);
-				printf("token->str:%s\n", token->str);				
 				token->tolal_len = ft_strlen(token->str);
-				printf("token->pos:%i\n", token->pos);
 				free(str);
 				// if (token->prev && token->prev->type == TK_SPACE && token->str[0] == ' ')
 				// 	token->str = ft_substr(token->str, 1, token->tolal_len);

@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/25 07:06:14 by math             ###   ########.fr       */
+/*   Updated: 2023/05/25 20:40:05 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ t_token_type	get_token_type(char *str)
 
 	if (!str)
 		return (TK_UNKNOWN);
-	if (str[1] == '\0')
-		return (TK_CMD_SEQ_END);
 	lookup_table = get_tokens_lookup_table();
 	tk_type = lookup_table[(int32_t)(str[0] * 255 + str[1])];
 	if (tk_type != TK_UNKNOWN)

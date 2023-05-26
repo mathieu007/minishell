@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 20:01:52 by math             ###   ########.fr       */
+/*   Updated: 2023/05/25 19:47:06 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int32_t	tokenize_double_quote(char *str, int32_t i, t_token_group *group)
 		if (t_len == 0)
 			t_len = 1;
 		if (type == TK_DOUBLEQUOTE)
-		{			
+		{	
 			add_token(i++, TK_CLOSINGDOUBLEQUOTE, group)->token_len = 1;
 			break ;
 		}

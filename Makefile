@@ -3,9 +3,11 @@ CC          	= cc
 
 #The Target Binary Program
 NAME			= minishell
+NAME_TESTS		= tests
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR			= src
+TESTSDIR		= tests
 INCDIR			= include
 BUILDDIR		= obj
 TARGETDIR		= bin
@@ -26,10 +28,12 @@ INCLIBFTDEP 		= -I$(LIBFT_DIR)/$(INCDIR)
 POST_CFLAGS := -lreadline -lncurses $(READLINE) $(READLINEHISTORY)
 
 SOURCES     = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+TESTS       = $(shell find $(TESTSDIR) -type f -name *.$(SRCEXT))
 
-OBJECTS		= $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+OBJECTS		 = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+OBJECT_TESTS = $(patsubst $(TESTSDIR)/%,$(BUILDDIR)/%,$(TESTS:.$(SRCEXT)=.$(OBJEXT)))
 
-all: directories $(TARGETDIR)/$(NAME)
+all: directories $(TARGETDIR)/$(NAME) $(TARGETDIR)/$(NAME_TESTS)
 
 directories:
 	@mkdir -p $(TARGETDIR)
@@ -52,5 +56,13 @@ $(TARGETDIR)/$(NAME): $(OBJECTS)
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
+
+$(TARGETDIR)/$(NAME_TESTS): $(OBJECT_TESTS)
+	cp $(TESTSDIR)/tests.txt $(TARGETDIR)/
+	$(CC) $(CFLAGS) -o $(TARGETDIR)/$(NAME_TESTS) $^
+	
+$(BUILDDIR)/%.$(OBJEXT): $(TESTSDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<	
 
 .PHONY: all clean fclean re

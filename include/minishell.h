@@ -30,8 +30,6 @@
 # define PATH_MAX 1024
 #endif
 
-extern char	**environ;
-
 /// @brief 
 /// TK_CMD ls, cd, grep...,
 /// TK_GREAT >,

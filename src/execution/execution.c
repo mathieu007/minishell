@@ -73,6 +73,6 @@ int32_t	exec_cmds(char *str)
 		else
 			return (free_all_and_exit(EXIT_FAILURE), printf("CMD_SEQUENCE_TYPE_UNKNOWN\n"));
 	}
-	print_cmd(get_process()->cmds);
+	//print_cmd(get_process()->cmds);
 	return (1);
 }

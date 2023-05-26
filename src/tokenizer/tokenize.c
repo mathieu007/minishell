@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/25 07:52:28 by math             ###   ########.fr       */
+/*   Updated: 2023/05/25 20:44:03 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,10 @@ t_token_group	*tokenize_groups(char *str)
 		}
 		i += t_len;
 	}
-	// if (i != 0)
-	// {
-	// 	add_token_group(&str[0], TK_CMD_SEQ_END, i);
-	// 	while (str[i] && str[i] == ' ')
-	// 		i++;
-	// }
+	if (str[i] == '\0')
+	{
+		add_token_group(&str[0], TK_CMD_SEQ_END, i);
+	}	
 	return (get_process()->token_groups);
 }
 
@@ -106,21 +104,11 @@ void	split_group_tokens(t_token_group *group)
 
 	str = group->str;
 	token = group->first_token;
-	while (token)
-	{		
-		len = token->tolal_len - token->token_len;
+	while (token && token->next)
+	{	
+		len = token->tolal_len - token->token_len - token->next->token_len;
 		start = token->pos + token->token_len;
-		if (token->type == TK_DASH)
-		{
-			start--;
-			len++;
-		}
-		else if (token->type == TK_DASHDASH)
-		{
-			start -= 2;
-			len += 2;
-		}
-		else if (token->type == TK_SPACE)
+		if (token->type == TK_SPACE)
 		{
 			while (str[start] == ' ')
 			{
