@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/30 16:16:09 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/30 16:42:24 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,9 +187,7 @@ t_token	*tokenize(t_token_group *group)
 		if (type == TK_SINGLEQUOTE)
 			i = tokenize_single_quote(str, i, group);
 		else if (type == TK_DOUBLEQUOTE)
-			i = tokenize_double_quote(str, i, group);
-		// else if (type == TK)
-		// 	i = tokeniu(str, i, group);			
+			i = tokenize_double_quote(str, i, group);	
 		else if (type == TK_SPACE)
 			i = add_token_space(str, i, group);
 		else if (type == TK_DASHDASH)
@@ -198,8 +196,6 @@ t_token	*tokenize(t_token_group *group)
 			i = add_token_dash(str, i, group);
 		else if (str_is_env_variable(&str[i]))
 			i = add_token_env(str, i, group, false);
-		// else if (type == TK_CMD_SEQ_END)
-		// 	i = add_other_token(ft_substr(&str[i], 0, t_len), type, i, group);
 		else if (type != TK_UNKNOWN)
 			i = add_other_token(ft_substr(&str[i], 0, t_len), type, i, group);
 		else

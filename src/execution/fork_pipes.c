@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 t_pipe	*init_pipes(int32_t *fds, t_cmd *cmd)
 {
 	cmd->pipe = malloc(sizeof(t_cmd));

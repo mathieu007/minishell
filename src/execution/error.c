@@ -1,10 +1,15 @@
 #include "minishell.h"
 
+/// @param stderror
+/// @param msg 
+/// @param msg2 
 void	write_err2(int32_t stderror, char *msg, char *msg2)
 {	
 	char	*err_msg;
 
 	err_msg = ft_strjoin(msg, msg2);
+	if (err_msg)
+		return (NULL);
 	write(2, err_msg, ft_strlen(err_msg));
 	free(msg);
 	free(msg2);
