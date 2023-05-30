@@ -2,6 +2,8 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include "errno.h"
+# include "minishell.h"
 # include "history.h"
 # include "readline.h"
 # include <libft.h>
@@ -31,8 +33,6 @@
 # define PATH_MAX 1024
 #endif
 
-extern char	**environ;
-
 /// @brief 
 /// TK_CMD ls, cd, grep...,
 /// TK_GREAT >,
@@ -60,10 +60,11 @@ typedef enum e_token_type
 {
 	TK_UNKNOWN = -1,
 	TK_CMD_SEQ_START = -2,
-	TK_CMD_SEQ_END = -3,
+	TK_CMD_SEQ_END = 0,
 	TK_CLOSINGDOUBLEQUOTE = -4,
 	TK_CLOSINGSINGLEQUOTE = -5,
 	TK_ENVIRONEMENT_VAR = -6,
+	TK_COMMANDSUBSTITUTION_CLOSE = -7,
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -81,7 +82,14 @@ typedef enum e_token_type
 	TK_LAST_PIPE_EXIT = TK_DOLLAR_SIGN * 255 + '?',
 	TK_SEMICOLON = (int32_t)';',
 	TK_BACKSLASH = (int32_t)'\\',
-	TK_BACKSLASHSINGLEQUOTE = (TK_BACKSLASH * 255) + TK_SINGLEQUOTE,
+	TK_BACKSLASHBACKSLASH = TK_BACKSLASH * 255 + TK_BACKSLASH,
+	TK_PARENTHESE_OPEN = (int32_t)'(',
+	TK_PARENTHESE_CLOSE = (int32_t)')',
+	// TK_BACKSLASHSINGLEQUOTE = (TK_BACKSLASH * 255) + TK_SINGLEQUOTE,
+	TK_BACKSLASHLINEFEED = (TK_BACKSLASH * 255) + (int32_t)'n',
+	TK_BACKSLASHTAB = (TK_BACKSLASH * 255) + (int32_t)'t',
+	TK_BACKSLASHDOLLARSIGN = (TK_BACKSLASH * 255) + TK_DOLLAR_SIGN,
+	TK_COMMANDSUBSTITUTION_OPEN = (TK_DOLLAR_SIGN * 255) + (int32_t)'(',
 	TK_BACKSLASHDOUBLEQUOTE = (TK_BACKSLASH * 255) + TK_DOUBLEQUOTE,
 	TK_WILDCARD = (int32_t)'*'
 }							t_token_type;
@@ -183,10 +191,9 @@ typedef struct s_token
 	char			*str;
 	char			*token_str;
 	int32_t			token_len;
-	int32_t			token_repeat_len;
-	int32_t			pos;
-	int32_t			offset;
-	int32_t			tolal_len;
+	int32_t			start;
+	int32_t			end;
+	int32_t			str_len;
 	bool			inside_dbl_quotes;
 	t_token_type	type;
 }				t_token;
@@ -234,7 +241,6 @@ typedef struct s_process
 	char			**env;
 	ino_t			dir_id;
 	char			*cwd;
-	t_cmd			*cmd;
 	t_env_cpy		*env_cpy;
 	int32_t			tokens_count;
 	int32_t			token_groups_count;
@@ -246,7 +252,10 @@ typedef struct s_process
 }					t_process;
 
 /// @brief The entities functions
-
+t_env_cpy		*copy_env_from(t_process *proc);
+void			exec_pipes(t_cmd *cmd);
+void			pipe_cmd(t_cmd *proc);
+void			close_pipe_fds(t_cmd *cmd);
 t_env_cpy		*new_env(char *variable, char *value);
 char			*replace_env_value(char *variable, char *value);
 char			*get_cmd_env_value(char *variable, t_cmd *cmd);
@@ -271,11 +280,18 @@ t_cmd			*new_cmd();
 t_token_group	*new_token_group();
 
 /// @brief Simples and short helpers methods.
+int32_t		get_token_dashdash_len(char *str);
+int32_t		get_token_dash_len(char *str);
+int32_t		get_token_env_len(char *str);
+int32_t		get_token_space_len(char *str);
+int32_t		get_token_single_quote_len(char *str);
+int32_t		get_token_len(char *str, t_token_type type, bool in_quotes);
 
 int32_t			get_env_var_name_len(char *str);
-char			*get_env_variable(char *str, int32_t i);
+char			*get_env_variable(char *str);
 char			*get_end_of_cmd(char *str);
-int32_t			get_token_type_len(t_token_type type);
+int32_t			get_token_type_len2(t_token_type type);
+
 bool			type_is_end_of_seq(t_token_type type);
 bool			is_env_variable(t_token *token);
 bool			str_is_env_variable(char *str);
@@ -308,6 +324,7 @@ char			*get_full_path(t_cmd *cmd);
 char			*get_cwd(t_cmd *cmd);
 
 /// tokenizer functions
+char			*join_env_to_str(t_token_group *group);
 void			reset_token_group(t_token_group *group);
 int32_t			add_token_env(char *str, int32_t pos, t_token_group *group, bool inside_dbl_quotes);
 t_token_group	*tokenize_groups(char *str);
@@ -335,7 +352,7 @@ void			get_args(t_token_group *group, char **split);
  t_token		*get_quotes_str(t_token *token, char *str, char **ouput);
 char			*get_single_quote_str(t_token *token, char *str);
 char			*get_double_quote_str(t_token *token, char *str);
-t_token_group	*parse_env(t_token_group *group);
+char			*parse_env(t_token_group *group);
 void			replace_env_name(char *input, char *output);
 char			**get_env_path();
 t_token			*get_token_at(int32_t index);
@@ -345,7 +362,6 @@ t_cmd_seq		get_sequence_type(t_token_type type);
 
 t_env_cpy					*init_env(t_process *data);
 bool						is_end_of_seq(t_token *token);
-void						close_pipe_fds(t_cmd *cmd);
 t_pipe						*new_pipe(t_cmd *cmd);
 void						*free_pipe(t_cmd *cmd);
 void						*free_redirect(t_cmd *cmd);
@@ -374,13 +390,13 @@ int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd *cmd);
 
 //free section
-void					free_2d_char_array(char **tab);
+void					*free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
 void					free_t_tokens(t_token *token);
 void					free_t_token_groups(t_token_group *token_group);
-void					free_t_redirect(t_redirect *redirect);
+void					*free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_process *data);
-void					free_2d_array(void **tab);
+void					*free_2d_array(void **tab);
 void					free_all();
 void					*free_all_and_exit(int32_t status);
 void					*free_ptr(void *ptr);

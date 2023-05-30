@@ -54,7 +54,6 @@ static char	*get_print_token_type(t_token_type type)
 		tk_type[TK_WILDCARD] = "TK_WILDCARD";
 		tk_type[TK_SEMICOLON] = "TK_SEMICOLON";
 		tk_type[TK_BACKSLASHDOUBLEQUOTE] = "TK_BACKSLASHDOUBLEQUOTE";
-		tk_type[TK_BACKSLASHSINGLEQUOTE] = "TK_BACKSLASHSINGLEQUOTE";
 	}
 	return (tk_type[type]);
 }
@@ -68,6 +67,7 @@ void	print_cmd(t_cmd *command)
 	i = 0;
 	j = 0;
 	cpy = command;
+
 	printf("[[CMD CHAINLIST]]\n\n");
 	while (cpy)
 	{
@@ -117,9 +117,9 @@ void	print_token(t_token *token)
 		printf(" str = %s\n", cpy->str);
 		printf(" token len = %i\n", cpy->token_len);
 		printf(" token in dbl quotes = %i\n", (int)cpy->inside_dbl_quotes);
-		printf(" pos = %i\n", cpy->pos);
+		printf(" pos = %i\n", cpy->start);
 		printf(" token type = %s\n", get_print_token_type(cpy->type));
-		printf(" total len = %i\n", cpy->tolal_len);
+		printf(" total len = %i\n", cpy->str_len);
 		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;

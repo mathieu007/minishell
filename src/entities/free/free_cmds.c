@@ -17,14 +17,10 @@ void	free_t_cmd(t_cmd *cmd)
 		/// do not free cmd->name is freed inside cmd->args
 		// cmd->name = free_ptr(cmd->name);
 		cmd->full_path_name = free_ptr(cmd->full_path_name);
-		if (cmd->args)
-			free_2d_char_array(cmd->args);
-		if (cmd->options)
-			free_2d_array((void **)cmd->options);
-		if (cmd->pipe)
-			free(cmd->pipe);
-		if (cmd->redirect)
-			free_t_redirect(cmd->redirect);
+		cmd->args = free_2d_char_array(cmd->args);
+		cmd->options = free_2d_array((void **)cmd->options);
+		cmd->pipe = free_ptr(cmd->pipe);
+		cmd->redirect = free_t_redirect(cmd->redirect);
 		free(current);
 		current = next;
 	}

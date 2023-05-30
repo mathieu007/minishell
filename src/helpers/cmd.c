@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/21 12:10:12 by math             ###   ########.fr       */
+/*   Updated: 2023/05/29 21:45:15 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,6 @@ t_cmd_seq	get_sequence_type(t_token_type type)
 	return (CMD_SEQUENTIAL);
 }
 
-/// @brief simply get the end of a cmd sequence.
-/// @param str 
-/// @return 
-char	*get_end_of_cmd(char *str)
-{
-	t_token_type	type;
-	int32_t 		i;
-	
-	i = 0;
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		if (type_is_end_of_seq(type))
-			return (&str[i + get_token_type_len(type)]);
-		i++;
-	}
-	return (&str[i]);
-}
-
 bool	is_builtins(char *str)
 {
 	int32_t	i;
@@ -51,13 +32,16 @@ bool	is_builtins(char *str)
 	while (builtins[i])
 	{
 		len = ft_strlen(builtins[i]);
-		if (ft_strn_right_cmp(str, builtins[i], len))
+		if (ft_strncmp(str, builtins[i], len) == 0)
 			return (true);
 		i++;
 	}
 	return (false);
 }
 
+/// @brief determine the end of a sequence...
+/// @param token 
+/// @return 
 inline bool	is_end_of_seq(t_token *token)
 {
 	t_token_type	type;

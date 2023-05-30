@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_group.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 09:25:28 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/25 07:29:16 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_token_group	*new_token_group()
 
 	new = ft_calloc(1, sizeof(t_token_group));
 	if (!new)
-		return (NULL);	
+		return (NULL);
 	return (new);
 }
 
@@ -26,7 +26,7 @@ t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
 {
 	t_token_group	*last;
 	t_token_group	*new;
-	t_process			*data;
+	t_process		*data;
 
 	data = get_process();
 	last = data->last_token_group;
@@ -40,7 +40,7 @@ t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
 	}
 	else
 		data->token_groups = new;
-	new->str = ft_strncpy(start, len);
+	new->str = ft_strtrim(ft_strncpy(start, len), " ");
 	new->len = len;
 	new->cmd_seq_type = get_sequence_type(type);
 	data->token_groups_count++;

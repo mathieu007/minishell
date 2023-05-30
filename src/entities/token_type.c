@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 18:11:28 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/28 14:43:31 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ static t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_AMPERSAND] = TK_AMPERSAND;
 		tk_type[TK_AND] = TK_AND;
 		tk_type[TK_BACKSLASH] = TK_BACKSLASH;
+		tk_type[TK_BACKSLASHBACKSLASH] = TK_BACKSLASHBACKSLASH;
 		tk_type[TK_OR] = TK_OR;
 		tk_type[TK_DASH] = TK_DASH;
 		tk_type[TK_DASHDASH] = TK_DASHDASH;
 		tk_type[TK_DOLLAR_SIGN] = TK_DOLLAR_SIGN;
-		tk_type[TK_DOUBLEQUOTE] = TK_DOUBLEQUOTE;		
+		tk_type[TK_DOUBLEQUOTE] = TK_DOUBLEQUOTE;
 		tk_type[TK_GREAT] = TK_GREAT;
 		tk_type[TK_GREATGREAT] = TK_GREATGREAT;
 		tk_type[TK_LESS] = TK_LESS;
@@ -46,7 +47,13 @@ static t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_WILDCARD] = TK_WILDCARD;
 		tk_type[TK_SEMICOLON] = TK_SEMICOLON;
 		tk_type[TK_BACKSLASHDOUBLEQUOTE] = TK_BACKSLASHDOUBLEQUOTE;
-		tk_type[TK_BACKSLASHSINGLEQUOTE] = TK_BACKSLASHSINGLEQUOTE;		
+		tk_type[TK_BACKSLASHDOLLARSIGN] = TK_BACKSLASHDOLLARSIGN;
+		tk_type[TK_BACKSLASHLINEFEED] = TK_BACKSLASHLINEFEED;
+		tk_type[TK_BACKSLASHTAB] = TK_BACKSLASHTAB;
+		tk_type[TK_COMMANDSUBSTITUTION_OPEN] = TK_COMMANDSUBSTITUTION_OPEN;
+		tk_type[TK_COMMANDSUBSTITUTION_CLOSE] = TK_COMMANDSUBSTITUTION_CLOSE;
+		tk_type[TK_PARENTHESE_OPEN] = TK_PARENTHESE_OPEN;
+		tk_type[TK_PARENTHESE_CLOSE] = TK_PARENTHESE_CLOSE;
 	}
 	return (tk_type);
 }

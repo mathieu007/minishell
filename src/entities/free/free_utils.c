@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-void	free_2d_array(void **tab)
+void	*free_2d_array(void **tab)
 {
 	int	i;
 
 	if (!tab)
-		return ;
+		return (NULL);
 	i = 0;
 	while (tab[i])
 	{
@@ -13,15 +13,16 @@ void	free_2d_array(void **tab)
 		i++;
 	}
 	free(tab);
+	return (NULL);
 }
 
 
-void	free_2d_char_array(char **tab)
+void	*free_2d_char_array(char **tab)
 {
 	int	i;
 
 	if (!tab)
-		return ;
+		return (NULL);
 	i = 0;
 	while (tab && tab[i])
 	{
@@ -29,4 +30,5 @@ void	free_2d_char_array(char **tab)
 		i++;
 	}
 	free(tab);
+	return (NULL);
 }
