@@ -14,6 +14,7 @@
 # include <sys/stat.h>
 # include <unistd.h>
 # include <dirent.h>
+#include  <signal.h>
 
 # define BUILTINS_EXPORT "export"
 # define BUILTINS_UNSET "unset"
