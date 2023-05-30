@@ -7,14 +7,14 @@ void disable_ctrl_c_output()
 {
     struct termios term;
     if (tcgetattr(STDIN_FILENO, &term) != 0) {
-        perror("Error getting terminal attributes");
+        perror("Error termios getting terminal attributes");
         exit(1);
     }
 
     term.c_lflag &= ~ECHOCTL; // Disable echoing of control characters
 
     if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0) {
-        perror("Error setting terminal attributes");
+        perror("Error termios setting terminal attributes");
         exit(1);
     }
 }
