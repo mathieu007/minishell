@@ -54,10 +54,14 @@ void	fork_first_child(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
+		close(cmd->pipe->fd_in);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
-		close_pipe_fds(cmd);
+		//close_pipe_fds(cmd);
+		close(cmd->pipe->fd_out);
 		cmd->func(cmd);
 	}
+	close(cmd->pipe->fd_in);
+	close(cmd->pipe->fd_out);
 	cmd->pipe->pid = pid;
 }
 
@@ -74,7 +78,9 @@ void	fork_last_child(t_cmd *cmd)
 	else if (pid == 0)
 	{
 		dup2(cmd->pipe->fd_in, STDIN_FILENO);
-		close_pipe_fds(cmd);
+		close(cmd->pipe->fd_out);
+		close(cmd->pipe->fd_in);
+		//close_pipe_fds(cmd);
 		cmd->func(cmd);
 	}
 	close(cmd->prev->pipe->fd_in);
@@ -113,8 +119,8 @@ void	exec_pipes(t_cmd *cmd)
 	t_cmd	*start;
 
 	i = 0;
-	dup2(1, STDOUT_FILENO);
-	dup2(0, STDIN_FILENO);
+	// dup2(1, STDOUT_FILENO);
+	// dup2(0, STDIN_FILENO);
 	start = cmd;
 	while (cmd && cmd->pipe)
 	{

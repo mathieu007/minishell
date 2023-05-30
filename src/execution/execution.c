@@ -53,7 +53,7 @@ t_token_group	*pipes_exec_cmds(t_token_group *token_group)
 			pipe_cmd(cmd);
 		}
 	}
-	return (exec_pipes(start), token_group);
+	return (exec_pipes(start), token_group->next);
 }
 
 // exec the function right away because it is a sequential cmd.
@@ -72,7 +72,9 @@ t_token_group	*exec_sequential(t_token_group *token_group)
 	token_group->str = str;
 	tokenize(token_group);
 	cmd = parse_cmd(token_group);
-	if (add_built_in_func(cmd) == 0)
+	if (cmd->is_builtin)
+		add_built_in_func(cmd);
+	else
 		add_execve_func(cmd);
 	cmd->func(cmd);
 	return (token_group->next);
