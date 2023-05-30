@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/25 20:19:10 by math             ###   ########.fr       */
+/*   Updated: 2023/05/28 13:37:58 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,16 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token_group *group)
 	new = new_token();
 	if (!new)
 		return (NULL);
-	new->token_len = get_token_type_len(type);
 	if (last)
 	{		
 		last->next = new;
-		last->tolal_len = pos + new->token_len - last->pos;
+		// last->tolal_len = pos + new->token_len - last->start;
 		new->prev = last;
 	}
 	increment_counter(type);
-	new->pos = pos;
+	new->start = pos;
 	new->type = type;
-	new->tolal_len = 1;
+	new->str_len = 1;
 	if (!group->first_token)
 		group->first_token = new;
 	group->last_token = new;

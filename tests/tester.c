@@ -110,23 +110,24 @@ void run_test(const char *command)
 		char minishell_command[MAX_COMMAND_LENGTH];
 		char *bash_output = NULL;
 		char *minishell_output = NULL;
+		char *bash_output2 = NULL;
+		char *minishell_output2 = NULL;
 		char line[MAX_COMMAND_LENGTH];
 		size_t bash_output_len = 0;
 		size_t minishell_output_len = 0;
 		FILE *bash_pipe;
 		FILE *minishell_fd;
-		char *command_cpy;
+		// char *command_cpy;
 
-		command_cpy = strdup(command);
+		// command_cpy = strdup(command);
 		// Construct the command to run in Bash
-		command = replaceString(command, "\"", "\\\"");	
-		snprintf(bash_cmd, MAX_COMMAND_LENGTH, "bash -c '%s' 2>&1", command_cpy);
+		command = replaceString(command, "'", "'\\''");
+		snprintf(bash_cmd, MAX_COMMAND_LENGTH, "bash -c '%s' 2>&1", command);
 		// Construct the command to run in Minishell
-		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s'", command_cpy);
+		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s'", command);
 		// Open a pipe to capture the output of the Bash command
 		bash_pipe = popen(bash_cmd, "r");
-		printf("bash_cmd:%s\n", bash_cmd);
-		printf("minishell_command:%s\n", minishell_command);
+	
 		if (bash_pipe == NULL)
 		{
 			perror("popen bash_command");
@@ -169,10 +170,15 @@ void run_test(const char *command)
 		// Compare the outputs
 		int output_equal = 0;
 		if (minishell_output && bash_output)
+		{
+			minishell_output2 = replaceString(minishell_output, "\n", "\\n");
+			bash_output2 = replaceString(bash_output, "\n", "\\n");
 			output_equal = (strcmp(bash_output, minishell_output) == 0);
+		}
+			
 
 		// Print the test result
-		if (output_equal)
+		if ((output_equal || (!minishell_output && !bash_output)) && WEXITSTATUS(bash_status) == WEXITSTATUS(minishell_status))
 		{
 			printf(GREEN "TEST PASSED!\n\n" RESET);
 			printf("Bash exit status: %d\n", WEXITSTATUS(bash_status));
@@ -181,16 +187,15 @@ void run_test(const char *command)
 		else
 		{
 			printf(RED "TEST FAILED!\n\n" RESET);
-			printf("Bash output:\n[%s]\n", bash_output);
+			printf("Bash output:\n[%s]\n", bash_output2);
 			printf("Bash exit status: %d\n\n", WEXITSTATUS(bash_status));
-			if (minishell_output)
-				printf("Minishell output:\n[%s]\n", minishell_output);
-			else
-				printf("Minishell output:\n[%s]\n", "NULL");
+			printf("Minishell output:\n[%s]\n", minishell_output2);
 		}
 		// Free allocated memory
 		free(bash_output);
 		free(minishell_output);
+		free(bash_output2);
+		free(minishell_output2);
     
 }
 

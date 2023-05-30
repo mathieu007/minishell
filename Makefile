@@ -49,6 +49,9 @@ fclean: clean
 	
 re:	fclean all
 
+tests: re 
+	cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
+
 $(TARGETDIR)/$(NAME): $(OBJECTS)
 	@$(MAKE) -C $(LIBFT_DIR)
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -o $(TARGETDIR)/$(NAME) $^ $(POST_CFLAGS) $(LIBFT)
