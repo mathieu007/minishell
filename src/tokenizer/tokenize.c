@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/29 16:51:15 by math             ###   ########.fr       */
+/*   Updated: 2023/05/30 16:16:09 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,8 @@ t_token	*tokenize(t_token_group *group)
 			i = tokenize_single_quote(str, i, group);
 		else if (type == TK_DOUBLEQUOTE)
 			i = tokenize_double_quote(str, i, group);
+		// else if (type == TK)
+		// 	i = tokeniu(str, i, group);			
 		else if (type == TK_SPACE)
 			i = add_token_space(str, i, group);
 		else if (type == TK_DASHDASH)

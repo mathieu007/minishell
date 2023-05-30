@@ -11,3 +11,9 @@ void	write_err2(int32_t stderror, char *msg, char *msg2)
 	free(err_msg);
 	free_all_and_exit(stderror);
 }
+
+void	write_msg(int32_t stderror, char *msg)
+{
+	if (msg)
+		write(stderror, msg, ft_strlen(msg));
+}
