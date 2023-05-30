@@ -359,6 +359,7 @@ t_token			*get_closing_double_quote_token(t_token *token);
 t_token			*get_closing_single_quote_token(t_token *token);
 t_cmd_seq		get_sequence_type(t_token_type type);
 
+void						write_msg(int32_t stderror, char *msg);
 void						write_err2(int32_t stderror, char *msg, char *msg2);
 t_env_cpy					*init_env(t_process *data);
 bool						is_end_of_seq(t_token *token);

@@ -3,9 +3,26 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {
-	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
-		perror("Could not execve");
-	return (1);
+	pid_t		pid;
+	t_process 	*proc;
+	int32_t		status;
+
+	proc = get_process();
+	pid = fork();
+	if (pid == -1)
+	{
+		write_msg(STDERR_FILENO, strerror(errno));
+		free_all_and_exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		get_process()->env_cpy = copy_env_from(proc);
+		if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
+			perror("Could not execve");
+	}
+	waitpid(cmd->pid, &status, 0);
+	cmd->pid = pid;
+	return (0);
 }
 
 int32_t	add_execve_func(t_cmd *cmd)

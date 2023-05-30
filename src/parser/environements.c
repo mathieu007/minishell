@@ -230,7 +230,7 @@ char	**get_env_path(void)
 	split_env = NULL;
 	env_value = get_env_value("PATH");
 	if (!env_value)
-		return (NULL);
+		return (NULL);		
 	split_env = ft_split(env_value, ':');
 	return (split_env);
 }

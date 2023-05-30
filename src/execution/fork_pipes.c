@@ -1,10 +1,6 @@
 #include "minishell.h"
 
-void	write_msg(int32_t stderror, char *msg)
-{
-	if (msg)
-		write(stderror, msg, ft_strlen(msg));
-}
+
 
 t_pipe	*init_pipes(int32_t *fds, t_cmd *cmd)
 {
