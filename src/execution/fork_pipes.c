@@ -36,15 +36,19 @@ static void	wait_childs(t_cmd *cmd)
 	i = 0;
 	while (cmd && cmd->pipe)
 	{
-		waitpid(cmd->pipe->pid, &status, 0);
+		waitpid(cmd->pid, &status, 0);
 		cmd = cmd->next;
 		i++;
 	}
+	waitpid(cmd->pid, &status, 0);
 }
 
 void	fork_first_child(t_cmd *cmd)
 {
-	pid_t	pid;
+	pid_t		pid;
+	t_process 	*proc;
+
+	proc = get_process();
 
 	pid = fork();
 	if (pid == -1)
@@ -54,21 +58,25 @@ void	fork_first_child(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
-		close(cmd->pipe->fd_in);
+		get_process()->env_cpy = copy_env_from(proc);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
-		//close_pipe_fds(cmd);
+		close(cmd->pipe->fd_in);
 		close(cmd->pipe->fd_out);
 		cmd->func(cmd);
-	}
-	close(cmd->pipe->fd_in);
-	close(cmd->pipe->fd_out);
-	cmd->pipe->pid = pid;
+		if (cmd->is_builtin)
+			exit(EXIT_SUCCESS);
+		else if (!cmd->is_builtin)
+			exit(EXIT_FAILURE);
+	}	
+	cmd->pid = pid;
 }
 
 void	fork_last_child(t_cmd *cmd)
 {
-	pid_t	pid;
+	pid_t		pid;
+	t_process 	*proc;
 
+	proc = get_process();
 	pid = fork();
 	if (pid == -1)
 	{
@@ -77,23 +85,27 @@ void	fork_last_child(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
-		dup2(cmd->pipe->fd_in, STDIN_FILENO);
-		close(cmd->pipe->fd_out);
-		close(cmd->pipe->fd_in);
-		//close_pipe_fds(cmd);
+		get_process()->env_cpy = copy_env_from(proc);
+		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
+		close(cmd->prev->pipe->fd_in);
+		close(cmd->prev->pipe->fd_out);
 		cmd->func(cmd);
+		if (cmd->is_builtin)
+			exit(EXIT_SUCCESS);
+		else if (!cmd->is_builtin)
+			exit(EXIT_FAILURE);
 	}
 	close(cmd->prev->pipe->fd_in);
 	close(cmd->prev->pipe->fd_out);
-	close(cmd->pipe->fd_in);
-	close(cmd->pipe->fd_out);
-	cmd->pipe->pid = pid;
+	cmd->pid = pid;
 }
 
 void	fork_middle_child(t_cmd *cmd)
 {
-	pid_t	pid;
+	pid_t		pid;
+	t_process 	*proc;
 
+	proc = get_process();
 	pid = fork();
 	if (pid == -1)
 	{
@@ -102,15 +114,22 @@ void	fork_middle_child(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
+		get_process()->env_cpy = copy_env_from(proc);
 		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
-		close_pipe_fds(cmd);
+		close(cmd->pipe->fd_out);
+		close(cmd->prev->pipe->fd_in);
+		close(cmd->prev->pipe->fd_out);
 		cmd->func(cmd);
+		if (cmd->is_builtin)
+			exit(EXIT_SUCCESS);			
+		else if (!cmd->is_builtin)
+			exit(EXIT_FAILURE);
 	}
 	close(cmd->prev->pipe->fd_in);
 	close(cmd->prev->pipe->fd_out);
 	close(cmd->pipe->fd_out);
-	cmd->pipe->pid = pid;
+	cmd->pid = pid;
 }
 
 void	exec_pipes(t_cmd *cmd)
@@ -119,15 +138,16 @@ void	exec_pipes(t_cmd *cmd)
 	t_cmd	*start;
 
 	i = 0;
-	// dup2(1, STDOUT_FILENO);
-	// dup2(0, STDIN_FILENO);
 	start = cmd;
-	while (cmd && cmd->pipe)
-	{
-		if (i == 0)
-			fork_first_child(cmd);
-		else if (!cmd->next || !cmd->next->pipe)
+	while (cmd)
+	{		
+		if (cmd->cmd_seq_type != CMD_PIPE)
+		{
 			fork_last_child(cmd);
+			break;
+		}
+		else if (i == 0)
+			fork_first_child(cmd);	
 		else
 			fork_middle_child(cmd);
 		cmd = cmd->next;

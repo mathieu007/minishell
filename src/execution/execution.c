@@ -3,7 +3,6 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {
-	printf("%s\n", cmd->full_path_name);
 	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
 		perror("Could not execve");
 	return (1);
@@ -44,16 +43,16 @@ t_token_group	*pipes_exec_cmds(t_token_group *token_group)
 	cmd = parse(token_group);
 	start = cmd;
 	pipe_cmd(cmd);
-	while (token_group->cmd_seq_type == CMD_PIPE)
-	{
+	token_group = token_group->next;
+	while (token_group && token_group->cmd_seq_type == CMD_PIPE)
+	{		
+		cmd = parse(token_group);
+		pipe_cmd(cmd);
 		token_group = token_group->next;
-		if (token_group)
-		{
-			cmd = parse(token_group);
-			pipe_cmd(cmd);
-		}
 	}
-	return (exec_pipes(start), token_group->next);
+	cmd = parse(token_group);	
+	exec_pipes(start);
+	return (token_group->next);
 }
 
 // exec the function right away because it is a sequential cmd.
@@ -98,6 +97,5 @@ int32_t	exec_cmds(char *str)
 			return (free_all_and_exit(EXIT_FAILURE),
 				printf("CMD_SEQUENCE_TYPE_UNKNOWN\n"));
 	}
-	//print_cmd(get_process()->cmds);
 	return (1);
 }

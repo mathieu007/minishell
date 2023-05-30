@@ -171,7 +171,6 @@ typedef struct s_pipe
 {
 	int32_t					fd_in;
 	int32_t					fd_out;
-	pid_t					pid;
 }							t_pipe;
 
 typedef struct s_env_cpy
@@ -227,6 +226,7 @@ typedef struct s_cmd
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
 	t_redirect		*redirect;
+	pid_t			pid;
 }				t_cmd;
 
 
@@ -251,7 +251,7 @@ typedef struct s_process
 }					t_process;
 
 /// @brief The entities functions
-
+t_env_cpy		*copy_env_from(t_process *proc);
 void			exec_pipes(t_cmd *cmd);
 void			pipe_cmd(t_cmd *proc);
 void			close_pipe_fds(t_cmd *cmd);

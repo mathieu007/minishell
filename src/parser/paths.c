@@ -132,6 +132,7 @@ char	*get_full_path(t_cmd *cmd)
 	path = try_get_ful_path_from_env_path(cmd);
 	if (path)
 		return (path);
-	perror("Error while trying to get the path of the command.");
-	return (free(path), NULL);
+	free(path);
+	perror(cmd->name);
+	return (NULL);
 }

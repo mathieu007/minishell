@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/24 09:25:28 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/30 10:57:38 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ t_cmd	*new_cmd()
 	t_cmd	*new;
 
 	new = ft_calloc(1, sizeof(t_cmd));
+	new->pipe = NULL;
 	if (new == NULL)
 		return (NULL);
 	return (new);

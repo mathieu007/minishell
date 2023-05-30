@@ -166,16 +166,15 @@ void run_test(const char *command)
 		// Close the pipes
 		int bash_status = pclose(bash_pipe);
 		int minishell_status = pclose(minishell_fd);
-		
+
 		// Compare the outputs
 		int output_equal = 0;
-		if (minishell_output && bash_output)
-		{
+		if (minishell_output)
 			minishell_output2 = replaceString(minishell_output, "\n", "\\n");
+		if (bash_output)	
 			bash_output2 = replaceString(bash_output, "\n", "\\n");
+		if (minishell_output && bash_output)
 			output_equal = (strcmp(bash_output, minishell_output) == 0);
-		}
-			
 
 		// Print the test result
 		if ((output_equal || (!minishell_output && !bash_output)) && WEXITSTATUS(bash_status) == WEXITSTATUS(minishell_status))
@@ -190,6 +189,7 @@ void run_test(const char *command)
 			printf("Bash output:\n[%s]\n", bash_output2);
 			printf("Bash exit status: %d\n\n", WEXITSTATUS(bash_status));
 			printf("Minishell output:\n[%s]\n", minishell_output2);
+			printf("Minishell exit status: %d\n\n", WEXITSTATUS(minishell_status));
 		}
 		// Free allocated memory
 		free(bash_output);
