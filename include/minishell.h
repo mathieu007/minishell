@@ -189,6 +189,7 @@ typedef struct s_token
 	struct s_token	*prev;
 	char			*str;
 	char			*token_str;
+	int32_t			token_count;
 	int32_t			token_len;
 	int32_t			start;
 	int32_t			end;
