@@ -49,7 +49,7 @@ fclean: clean
 	
 re:	fclean all
 
-tests: re 
+test: re 
 	cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
 
 exec: re 
