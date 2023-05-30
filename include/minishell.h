@@ -392,6 +392,10 @@ int						export_cmd(t_cmd *cmd);
 int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd *cmd);
 
+//built in utils
+int	is_valid_identifier(char *identifier);
+void	print_not_valid_identifier(int export_or_unset, char *identifier);
+
 //free section
 void					*free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);

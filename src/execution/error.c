@@ -9,6 +9,7 @@ void	write_err2(int32_t stderror, char *msg, char *msg2)
 	free(msg);
 	free(msg2);
 	free(err_msg);
+	(void)stderror;
 	free_all_and_exit(stderror);
 }
 

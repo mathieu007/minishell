@@ -1,27 +1,47 @@
 #include "minishell.h"
 
 //bash: export: `1§23': not a valid identifier
-
+//export = 0 unset = 1
 void	print_not_valid_identifier(int export_or_unset, char *identifier)
 {
-	
+	int i;
+	i=-1;
+	if (export_or_unset == 0)
+	{
+		write(2, "Minishell: export: `", 20);
+		while(identifier[++i])
+		write(2, &identifier[i],1);
+		write(2, ": not a valid identifier\n", 25);
+		
+	}
+	if (export_or_unset == 1)
+	{
+		write(2, "Minishell: unset: `", 19);
+		while(identifier[++i])
+		write(2, &identifier[i], 1);
+		write(2, ": not a valid identifier\n", 25);
+	}
 }
 
 int	is_valid_identifier(char *identifier)
 {
 	int	res;
+	int	i;
 
+	i = 0;
 	res = 0;
 	if (!identifier)
 		return (res);
-	if (identifier[0])
-		if (ft_isalpha(identifier[0]) == 1 || identifier[0] == "_")
-			;
-	res = 1;
-	if (identifier[1])
-		if (ft_isalnum(identifier[1] == 1) || identifier[1] == "_"
-			|| identifier[1] == "=")
-			res = 1;
+	while (identifier[i])
+	{
+		if (identifier[0])
+			if (ft_isalpha(identifier[0]) == 1 || identifier[0] == '_')
+				res = 1;
+		if (ft_isalnum(identifier[i]) != 1 && identifier[i] != '_'
+			&& identifier[i] != '=' && identifier[i] != '\0')
+			res = 0;
+		i++;
+	}
 	return (res);
 }
 
@@ -30,7 +50,6 @@ int	unset_cmd(t_cmd *cmd)
 	t_env_cpy	*current;
 	int			i;
 	size_t		len;
-	char		*var_name;
 	t_process	*data;
 	t_env_cpy	*temp;
 
@@ -44,12 +63,13 @@ int	unset_cmd(t_cmd *cmd)
 	current = data->env_cpy;
 	while (cmd->args[i])
 	{
+		if (is_valid_identifier(cmd->args[i]) == 0)
+			print_not_valid_identifier(1, cmd->args[i]);
 		current = data->env_cpy;
 		while (current)
 		{
-			var_name = ft_strjoin(cmd->args[i], "=");
-			len = ft_strlen(var_name);
-			if (ft_strncmp(var_name, current->variable, len) == 0)
+			len = ft_strlen(cmd->args[i]);
+			if (ft_strncmp(cmd->args[i], current->variable, len) == 0)
 			{
 				if (current->prev)
 					current->prev->next = current->next;

@@ -73,6 +73,8 @@ int	export_cmd(t_cmd *cmd)
 		printf("Export option \"%s\" not handled\n", cmd->options[0]);
 		return (1);
 	}
+		if (is_valid_identifier(cmd->args[i]) == 0)
+			print_not_valid_identifier(0, cmd->args[i]);
 	while (cmd->args[i])
 	{
 		current = data->env_cpy;
