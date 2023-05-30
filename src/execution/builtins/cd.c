@@ -20,7 +20,7 @@ char *ft_strcat(char *dest, const char *src)
 
 int	cd_cmd(t_cmd *cmd)
 {
-	char path[PATH_MAX];
+	char *path;
 	char *path_to_change;
 
 	path_to_change = cmd->args[1];
@@ -36,7 +36,8 @@ int	cd_cmd(t_cmd *cmd)
 	}
 	if (path_to_change[0] != '/')
 	{
-		if (getcwd(path, sizeof(path)) == NULL)
+		path = get_cwd(cmd);
+		if(!path)
 		{
 			perror("cd_cmd failed");
 			return (1);
