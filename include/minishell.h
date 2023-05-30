@@ -396,6 +396,10 @@ int						exit_cmd(t_cmd *cmd);
 int	is_valid_identifier(char *identifier);
 void	print_not_valid_identifier(int export_or_unset, char *identifier);
 
+//signal
+void setup_signal_handlers(void);
+void disable_ctrl_c_output();
+
 //free section
 void					*free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);

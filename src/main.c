@@ -20,7 +20,14 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		return (execute_tests(argv[1]));
 	while (1)
 	{
-		input = readline("MiniShell> ");
+		disable_ctrl_c_output();
+		setup_signal_handlers();
+		input = readline("MiniShell> \x1B[s");
+		if(input == NULL)
+		{
+			printf("\x1B[u\x1B[Aexit\n");
+			break;
+		}
 		exec_cmds(input);
 		if (strcmp(input, "exit") == 0)
 			break ;

@@ -1,13 +1,31 @@
 
 #include "minishell.h"
 
+#include <termios.h>
+
+void disable_ctrl_c_output()
+{
+    struct termios term;
+    if (tcgetattr(STDIN_FILENO, &term) != 0) {
+        perror("Error getting terminal attributes");
+        exit(1);
+    }
+
+    term.c_lflag &= ~ECHOCTL; // Disable echoing of control characters
+
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0) {
+        perror("Error setting terminal attributes");
+        exit(1);
+    }
+}
+
 void sig_handler(int sig, siginfo_t *siginfo, void *context)
 {
     (void)context;
 	(void)sig;
     if (siginfo->si_signo == SIGINT)
     {
-        printf("\nInterrupted with Ctrl + C\n");
+        write(1, "\n",1);
         rl_on_new_line();
         rl_replace_line("", 0);
         rl_redisplay();
@@ -30,6 +48,6 @@ void setup_signal_handlers()
     // Set up signal handlers for SIGINT and SIGTERM
     sigaction(SIGINT, &sa, NULL);
     sigaction(SIGTERM, &sa, NULL);
-   sigaction(SIGQUIT, &sa, NULL);
+    signal(SIGQUIT, SIG_IGN);
 	
 }
