@@ -1,6 +1,4 @@
-
 #include "minishell.h"
-
 #include <termios.h>
 
 void disable_ctrl_c_output()
@@ -10,7 +8,8 @@ void disable_ctrl_c_output()
         perror("Error termios getting terminal attributes");
         exit(1);
     }
-
+//In the line term.c_lflag &= ~ECHOCTL, the ~ operator is used to invert 
+//the bits of the ECHOCTL flag.
     term.c_lflag &= ~ECHOCTL; // Disable echoing of control characters
 
     if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0) {

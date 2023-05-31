@@ -43,10 +43,12 @@ void	export_no_variable()
 	current = head;
 	while (current)
 	{
-		printf("declare -x %s=\"%s\"\n", current->variable, current->value);
+		if(current->value != NULL)
+			printf("declare -x %s=\"%s\"\n", current->variable, current->value);
+		else
+			printf("declare -x %s\n", current->variable);
 		current = current->next;
 	}
-	// Free the chain list
 	current = head;
 	free_t_env_cpy(current);
 }
@@ -73,14 +75,16 @@ int	export_cmd(t_cmd *cmd)
 		printf("Export option \"%s\" not handled\n", cmd->options[0]);
 		return (1);
 	}
-		if (is_valid_identifier(cmd->args[i]) == 0)
-			print_not_valid_identifier(0, cmd->args[i]);
 	while (cmd->args[i])
 	{
 		current = data->env_cpy;
 		split_on_equal = ft_split(cmd->args[i], '=');
 		if (!split_on_equal)
 			return (1); // Add protection for memory allocation failure
+		///CALLLLLL COUNT SPLIT
+		////CALLLL join_split
+		if (is_valid_identifier(split_on_equal[0]) == 0)
+			print_not_valid_identifier(0, split_on_equal[0]);
 		len = ft_strlen(split_on_equal[0]);
 		while (current)
 		{			
@@ -88,7 +92,7 @@ int	export_cmd(t_cmd *cmd)
 			{
 				current->value = ft_strdup(split_on_equal[1]);
 				swap = true;
-				break ; // Exit the loop if the variable is found
+				break ;
 			}
 			current = current->next;
 		}

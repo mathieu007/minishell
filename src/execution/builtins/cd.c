@@ -39,7 +39,7 @@ int	cd_cmd(t_cmd *cmd)
 		path = get_cwd(cmd);
 		if(!path)
 		{
-			perror("cd_cmd failed");
+			printf("bash: cd: %s: No such file or directory\n",cmd->args[1]);
 			return (1);
 		}
 		ft_strcat(path, "/");
@@ -49,7 +49,7 @@ int	cd_cmd(t_cmd *cmd)
 	int result = chdir(path_to_change);
 	if (result != 0)
 	{
-		perror("cd_cmd failed");
+	printf("bash: cd: %s: No such file or directory\n",cmd->args[1]);
 		return (1);
 	}
 	return (0);

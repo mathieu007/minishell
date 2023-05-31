@@ -68,3 +68,27 @@ export VAR=" 111   222 " && echo "$VAR-123"
 export VAR=" 111   222 " && echo "$VAR '123'"
 export VAR=" 111   222 " && echo " $VAR-123"
 export VAR=" 111   222 " && echo " $VAR '123'"
+export 1
+export _1
+export _
+export __
+export a
+export A
+export allo
+export al#
+export a=a=a && echo $a
+unset a=a=a && echo $a
+unset 1
+unset _1
+unset _
+unset __
+unset a
+unset A
+unset allo
+unset al#
+cd .
+cd ..
+cd .. && cd libft && pwd && cd .. && pwd
+cd .. && pwd 
+cd .. && pwd && cd .. && pwd
+pwd

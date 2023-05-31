@@ -390,7 +390,7 @@ int						env_cmd(t_cmd *cmd);
 int						pwd_cmd(t_cmd *cmd);
 int						export_cmd(t_cmd *cmd);
 int						unset_cmd(t_cmd *cmd);
-int						exit_cmd(t_cmd *cmd);
+int						exit_cmd(t_cmd  *cmd);
 
 //built in utils
 int	is_valid_identifier(char *identifier);
