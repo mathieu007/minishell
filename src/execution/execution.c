@@ -67,7 +67,7 @@ t_token_group	*pipes_exec_cmds(t_token_group *token_group)
 		pipe_cmd(cmd);
 		token_group = token_group->next;
 	}
-	cmd = parse(token_group);	
+	cmd = parse(token_group);
 	exec_pipes(start);
 	return (token_group->next);
 }
