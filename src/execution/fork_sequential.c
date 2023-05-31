@@ -11,7 +11,6 @@ int32_t	parse_and_exec(t_token_sequence *token_seq)
 	t_process	*proc;
 
 	proc = get_process();
-
 	tokenize(token_seq);
 	str = parse_env(token_seq);
 	reset_token_group(token_seq);
