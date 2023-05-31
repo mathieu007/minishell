@@ -1,5 +1,5 @@
 #Compiler and Linker
-CC          	= cc
+CC          	= gcc
 
 #The Target Binary Program
 NAME			= minishell
@@ -14,7 +14,7 @@ TARGETDIR		= bin
 SRCEXT			= c
 OBJEXT			= o
 
-CFLAGS				= -Wall -Wextra -Werror -g 
+CFLAGS				= -Wall -Wextra -Werror -g
 INCDEP				= -I$(INCDIR)
 LIBFT_DIR			= libft
 LIBFT_FILE			= libft.a

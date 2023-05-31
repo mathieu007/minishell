@@ -14,24 +14,66 @@ t_env_cpy	*new_env(char *variable, char *value)
 	return (node);
 }
 
+int32_t		count_splits(char **split)
+{
+	int32_t i;
+	
+	i = 0;
+	while (*split)
+	{
+		split++;
+		i++;
+	}
+	return (i);
+}
+
+char *join_splits(char **split, char *join)
+{
+	char *str;
+
+	str = *split;
+	split++;	
+	while (*split)
+	{
+		str =  ft_strjoinfree(str, *split);
+		if (!str)
+			return (NULL);
+		if (split[1])
+			str =  ft_strjoinfree(str, join);
+		if (!str)
+			return (NULL);
+		split++;
+	}
+	return (str);
+}
+
 t_env_cpy	*init_env(t_process *data)
 {
 	char		**split_on_equal;
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 	int			i;
+	int32_t		count;
 
 	if (!data->env)
 		return (NULL);
 	i = 0;
 	split_on_equal = ft_split(data->env[i], '=');
-	current = new_env(split_on_equal[0], split_on_equal[1]);
+	count = count_splits(split_on_equal);
+	if (count > 2)
+		current = new_env(split_on_equal[0], join_splits(&split_on_equal[1], "="));
+	else	
+		current = new_env(split_on_equal[0], split_on_equal[1]);
 	i++;
 	head = current;
 	while (data->env[i])
 	{		
 		split_on_equal = ft_split(data->env[i], '=');
-		current->next = new_env(split_on_equal[0], split_on_equal[1]);
+		count = count_splits(split_on_equal);
+		if (count > 2)
+			current->next = new_env(split_on_equal[0], join_splits(&split_on_equal[1], "="));
+		else	
+			current->next = new_env(split_on_equal[0], split_on_equal[1]);
 		if (current->next)
 			current->next->prev = current;
 		current = current->next;

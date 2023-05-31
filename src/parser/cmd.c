@@ -7,7 +7,7 @@
 /// get updated $FLAGS so we excute first command then parse the next and exec.
 /// @param group 
 /// @return 
-t_cmd	*parse_cmd(t_token_group *token_group)
+t_cmd	*parse_cmd(t_token_sequence *token_group)
 {
 	t_cmd		*cmd;
 

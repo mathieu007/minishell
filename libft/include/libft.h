@@ -142,5 +142,6 @@ char				*ft_replace_char_temp(char *str, char to_replace,
 						char *replace_by);
 bool				ft_strn_right_cmp(const char *s1, const char *s2, size_t n);
 char				*ft_strncpy(char *src, size_t len);
+char				*ft_strjoinfree(char *s1, char const *s2);
 
 #endif

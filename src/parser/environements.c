@@ -83,7 +83,7 @@ char	*parse_env_var_value(t_token *token)
 // }
 
 
-char	*join_env_to_str(t_token_group *group)
+char	*join_env_to_str(t_token_sequence *group)
 {
 	t_token	*token;
 	char	*dest;
@@ -192,7 +192,7 @@ char	*join_env_to_str(t_token_group *group)
 /// @brief We parse environement variable from these token group
 /// @param group 
 /// @return 
-char	*parse_env(t_token_group *group)
+char	*parse_env(t_token_sequence *group)
 {
 	t_token	*token;
 	char	*str;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   single_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/29 16:50:05 by math             ###   ########.fr       */
+/*   Updated: 2023/05/31 10:04:30 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int32_t	get_token_single_quote_len(char *str)
 	return (len);
 }
 
-int32_t	add_token_single_quote(int32_t i, t_token_type type, t_token_group *group)
+int32_t	add_token_single_quote(int32_t i, t_token_type type, t_token_sequence *group)
 {
 	t_token	*token;
 
@@ -34,7 +34,7 @@ int32_t	add_token_single_quote(int32_t i, t_token_type type, t_token_group *grou
 	return (token->end);
 }
 
-int32_t	tokenize_single_quote(char *str, int32_t i, t_token_group *group)
+int32_t	tokenize_single_quote(char *str, int32_t i, t_token_sequence *group)
 {
 	t_token_type	type;
 	int32_t			t_len;

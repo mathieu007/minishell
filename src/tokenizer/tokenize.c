@@ -6,13 +6,13 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/30 16:16:09 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/31 10:04:30 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token_group	*tokenize_groups(char *str)
+t_token_sequence	*tokenize_sequences(char *str)
 {
 	int32_t			i;
 	t_token_type	type;
@@ -47,7 +47,7 @@ t_token_group	*tokenize_groups(char *str)
 	return (get_process()->token_groups);
 }
 
-int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
+int32_t	add_token_space(char *str, int32_t pos, t_token_sequence *group)
 {
 	t_token			*token;
 
@@ -58,7 +58,7 @@ int32_t	add_token_space(char *str, int32_t pos, t_token_group *group)
 	return (token->end);
 }
 
-int32_t	add_token_dash(char *str, int32_t pos, t_token_group *group)
+int32_t	add_token_dash(char *str, int32_t pos, t_token_sequence *group)
 {
 	t_token	*token;
 
@@ -113,7 +113,7 @@ int32_t	get_token_env_len(char *str)
 	return (pos);
 }
 
-int32_t	add_token_dashdash(char *str, int32_t pos, t_token_group *group)
+int32_t	add_token_dashdash(char *str, int32_t pos, t_token_sequence *group)
 {
 	t_token	*token;
 
@@ -125,7 +125,7 @@ int32_t	add_token_dashdash(char *str, int32_t pos, t_token_group *group)
 }
 
 int32_t	add_token_env(char *str, int32_t pos,
-	t_token_group *group, bool inside_dbl_quotes)
+	t_token_sequence *group, bool inside_dbl_quotes)
 {
 	t_token		*token;
 
@@ -137,7 +137,7 @@ int32_t	add_token_env(char *str, int32_t pos,
 	return (token->end);
 }
 
-void	split_tokens(t_token_group *group)
+void	split_tokens(t_token_sequence *group)
 {
 	t_token	*token;
 	char	*str;
@@ -157,7 +157,7 @@ void	split_tokens(t_token_group *group)
 }
 
 static int32_t	add_other_token(char *token_str, t_token_type type,
-	int32_t i, t_token_group *group)
+	int32_t i, t_token_sequence *group)
 {
 	t_token			*token;
 
@@ -168,7 +168,7 @@ static int32_t	add_other_token(char *token_str, t_token_type type,
 	return (i);
 }
 
-t_token	*tokenize(t_token_group *group)
+t_token	*tokenize(t_token_sequence *group)
 {
 	int32_t			i;
 	t_token_type	type;

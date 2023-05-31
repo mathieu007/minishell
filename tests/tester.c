@@ -124,7 +124,7 @@ void run_test(const char *command)
 		command = replaceString(command, "'", "'\\''");
 		snprintf(bash_cmd, MAX_COMMAND_LENGTH, "bash -c '%s' 2>&1", command);
 		// Construct the command to run in Minishell
-		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s' 2>&1", command);
+		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s'", command);
 		// Open a pipe to capture the output of the Bash command
 		bash_pipe = popen(bash_cmd, "r");
 	

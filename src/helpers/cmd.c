@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/05/29 21:45:15 by math             ###   ########.fr       */
+/*   Updated: 2023/05/31 13:43:04 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 t_cmd_seq	get_sequence_type(t_token_type type)
 {
-	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
-		|| type == TK_AMPERSAND || type == TK_GREATGREAT
-		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE)
-		return ((t_cmd_seq)type);
+	if (type == TK_AMPERSAND || type == TK_GREATGREAT || type == TK_GREAT
+		|| type == TK_LESS || type == TK_LESSLESS || type == TK_LAST_PIPE_EXIT
+		|| type == TK_PIPE || type == TK_AND || type == TK_OR)
+		return ((t_cmd_seq)((int32_t)type));
 	return (CMD_SEQUENTIAL);
 }
 

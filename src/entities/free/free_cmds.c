@@ -59,7 +59,7 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 	}
 }
 
-void	free_t_token_group(t_token_group *token_group)
+void	free_t_token_group(t_token_sequence *token_group)
 {
 	if (token_group)
 	{
@@ -74,9 +74,9 @@ void	free_t_token_group(t_token_group *token_group)
 	}
 }
 
-void	free_t_token_groups(t_token_group *token_group)
+void	free_t_token_groups(t_token_sequence *token_group)
 {
-	t_token_group	*next;
+	t_token_sequence	*next;
 	t_process 			*data;
 
 	data = get_process();

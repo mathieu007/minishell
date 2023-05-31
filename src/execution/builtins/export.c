@@ -79,6 +79,7 @@ int	export_cmd(t_cmd *cmd)
 		split_on_equal = ft_split(cmd->args[i], '=');
 		if (!split_on_equal)
 			return (1); // Add protection for memory allocation failure
+			
 		len = ft_strlen(split_on_equal[0]);
 		while (current)
 		{			

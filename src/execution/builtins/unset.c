@@ -22,7 +22,7 @@ int	unset_cmd(t_cmd *cmd)
 		while (current)
 		{
 			len = ft_strlen(cmd->args[i]);
-			if (ft_strncmp(cmd->args[i], current->variable, len) == 0)
+			if (cmd->args[i][len] == '=' && ft_strncmp(cmd->args[i], current->variable, len) == 0)
 			{
 				if (current->prev)
 					current->prev->next = current->next;

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   options.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/21 12:43:41 by math             ###   ########.fr       */
+/*   Updated: 2023/05/31 10:04:30 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int32_t	options_count(t_token_group *group, bool *table)
+static int32_t	options_count(t_token_sequence *group, bool *table)
 {
 	int32_t		count;
 	t_token		*token;
@@ -43,7 +43,7 @@ static int32_t	options_count(t_token_group *group, bool *table)
 	return (count);
 }
 
-char	**get_malloc_opts(t_token_group *group, bool *table)
+char	**get_malloc_opts(t_token_sequence *group, bool *table)
 {
 	char	**options;
 	int32_t	count;
@@ -82,7 +82,7 @@ int32_t	add_single_dash_option(char	**options, bool *table)
 /// @brief TODO not WORKING
 /// @param group 
 /// @return 
-char	**get_options(t_token_group *group)
+char	**get_options(t_token_sequence *group)
 {
 	int32_t	opt_i;
 	char	**options;

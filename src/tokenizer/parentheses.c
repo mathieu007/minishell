@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/30 14:34:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/05/31 10:04:30 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static bool	is_valid_in_dbl_quote(t_token_type type)
 }
 
 static int32_t	add_other_token(char *token_str, t_token_type type,
-	int32_t i, t_token_group *group)
+	int32_t i, t_token_sequence *group)
 {
 	t_token			*token;
 
@@ -38,7 +38,7 @@ static int32_t	add_other_token(char *token_str, t_token_type type,
 
 
 static int32_t	add_token_parenthese(int32_t i, t_token_type type,
-	t_token_group *group)
+	t_token_sequence *group)
 {
 	t_token			*token;
 
@@ -49,7 +49,7 @@ static int32_t	add_token_parenthese(int32_t i, t_token_type type,
 	return (token->end);
 }
 
-int32_t	tokenize_parenthes(char *str, int32_t i, t_token_group *group)
+int32_t	tokenize_parenthes(char *str, int32_t i, t_token_sequence *group)
 {
 	t_token_type	type;
 	int32_t			t_len;

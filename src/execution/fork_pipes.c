@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 t_pipe	*init_pipes(int32_t *fds, t_cmd *cmd)
 {
 	cmd->pipe = malloc(sizeof(t_cmd));
@@ -118,7 +116,7 @@ void	fork_middle_child(t_cmd *cmd)
 		close(cmd->prev->pipe->fd_out);
 		cmd->func(cmd);
 		if (cmd->is_builtin)
-			exit(EXIT_SUCCESS);			
+			exit(EXIT_SUCCESS);
 		else if (!cmd->is_builtin)
 			exit(EXIT_FAILURE);
 	}
@@ -128,7 +126,7 @@ void	fork_middle_child(t_cmd *cmd)
 	cmd->pid = pid;
 }
 
-void	exec_pipes(t_cmd *cmd)
+void	fork_pipes(t_cmd *cmd)
 {
 	int32_t	i;
 	t_cmd	*start;

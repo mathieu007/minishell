@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_group.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/25 07:29:16 by math             ###   ########.fr       */
+/*   Updated: 2023/05/31 10:04:30 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token_group	*new_token_group()
+t_token_sequence	*new_token_group()
 {
-	t_token_group	*new;
+	t_token_sequence	*new;
 
-	new = ft_calloc(1, sizeof(t_token_group));
+	new = ft_calloc(1, sizeof(t_token_sequence));
 	if (!new)
 		return (NULL);
 	return (new);
 }
 
-t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
+t_token_sequence	*add_token_group(char *start, t_token_type type, int32_t len)
 {
-	t_token_group	*last;
-	t_token_group	*new;
+	t_token_sequence	*last;
+	t_token_sequence	*new;
 	t_process		*data;
 
 	data = get_process();
@@ -48,7 +48,7 @@ t_token_group	*add_token_group(char *start, t_token_type type, int32_t len)
 	return (new);
 }
 
-void	reset_token_group(t_token_group *group)
+void	reset_token_group(t_token_sequence *group)
 {
 	if (!group)
 		return ;

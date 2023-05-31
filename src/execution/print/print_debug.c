@@ -4,7 +4,7 @@
 void	print_groups_and_tokens()
 {
 	t_process			*data;
-	t_token_group	*group;
+	t_token_sequence	*group;
 	t_token			*token;
 
 	data = get_process();
@@ -144,9 +144,9 @@ void	print_env(t_env_cpy *env)
 	}
 }
 
-void	print_token_group(t_token_group *token)
+void	print_token_group(t_token_sequence *token)
 {
-	t_token_group	*cpy;
+	t_token_sequence	*cpy;
 	int j = 0;
 
 	cpy = token;

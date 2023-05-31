@@ -131,7 +131,7 @@ char	*get_full_path(t_cmd *cmd)
 		return (path);
 	path = try_get_ful_path_from_env_path(cmd);
 	if (path)
-		return (path);
+		return (path);		
 	write_err2(127, cmd->name, ": command not found\n");
 	return (NULL);
 }

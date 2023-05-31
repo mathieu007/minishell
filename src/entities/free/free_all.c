@@ -10,7 +10,7 @@ void	*free_ptr(void *ptr)
 
 void	free_all(void)
 {
-	t_token_group	*token_group;
+	t_token_sequence	*token_group;
 	t_process 		*data;
 	t_cmd 			*cmd;
 

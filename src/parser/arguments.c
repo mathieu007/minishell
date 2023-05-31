@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/29 16:35:34 by math             ###   ########.fr       */
+/*   Updated: 2023/05/31 10:04:30 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int32_t	count_env_words(char *str)
 	return (count);
 }
 
-int32_t	get_args_len(t_token_group *group)
+int32_t	get_args_len(t_token_sequence *group)
 {
 	int32_t	args_len;
 	t_token	*token;
@@ -147,7 +147,7 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 	return (token);
 }
 
-void	get_args(t_token_group *group, char **split)
+void	get_args(t_token_sequence *group, char **split)
 {
 	t_token	*token;
 	char	*cpy;
@@ -173,7 +173,7 @@ void	get_args(t_token_group *group, char **split)
 	}
 }
 
-char	**parse_args(t_token_group *group)
+char	**parse_args(t_token_sequence *group)
 {
 	int32_t	args_len;
 	char	**split;
