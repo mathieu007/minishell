@@ -377,6 +377,7 @@ void						*free_cmd(t_cmd *cmd);
 void						init_data(int32_t argc, char **argv, char **env);
 int32_t						init_cwd_fd(char *cwd);
 void						free_t_env_cpy(t_env_cpy *env_cpy);
+char						*join_splits(char **split, char *join);
 
 t_env_cpy	*copy_env(void);
 //link list section
@@ -384,8 +385,8 @@ char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
-int32_t			 		fork_sequential(t_token_sequence *token_seq);
-int32_t					fork_logical(t_token_sequence *token_seq);
+int32_t					exec_sequential(t_token_sequence *token_seq);
+t_token_sequence 		*exec_logical(t_token_sequence *token_seq);
 int32_t					add_execve_func(t_cmd *cmd);
 int32_t					exec_cmds(char *str);
 

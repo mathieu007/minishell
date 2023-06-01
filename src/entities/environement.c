@@ -32,6 +32,8 @@ char	*join_splits(char **split, char *join)
 	char	*str;
 
 	str = *split;
+	if (split[1])
+		str = ft_strjoinfree(str, join);
 	split++;
 	while (*split)
 	{

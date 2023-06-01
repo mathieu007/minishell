@@ -122,7 +122,9 @@ char	*try_get_ful_path_from_env_path(t_cmd *cmd)
 char	*get_full_path(t_cmd *cmd)
 {
 	char		*path;
+	t_process	*proc;
 
+	proc = get_process();
 	path = try_get_relative_dir(cmd);
 	if (path)
 		return (path);
@@ -132,6 +134,8 @@ char	*get_full_path(t_cmd *cmd)
 	path = try_get_ful_path_from_env_path(cmd);
 	if (path)
 		return (path);
-	write_err2(127, cmd->name, ": command not found\n");
+	printf("%s: command not found\n", cmd->name);
+	proc->errnum = 127;
+	// write_err2(127, cmd->name, ": command not found\n");
 	return (NULL);
 }

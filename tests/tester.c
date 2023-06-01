@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <string.h>
 
+
 char* replaceString(const char* input, const char* search, const char* replace) {
     // Calculate the length of the resulting string
     size_t inputLen = strlen(input);
@@ -127,31 +128,12 @@ void run_test(const char *command)
 		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s' 2>&1", command);
 
 		// Open a pipe to capture the output of the Bash command
-		bash_pipe = popen(bash_cmd, "r");
-	
+		bash_pipe = popen(bash_cmd, "r");	
 		if (bash_pipe == NULL)
 		{
 			perror("popen bash_command");
 			exit(EXIT_FAILURE);
 		}
-		minishell_fd = popen(minishell_command, "r");
-		if (minishell_fd == NULL)
-		{
-			perror("popen minishell_command");
-			exit(EXIT_FAILURE);
-		}	
-		// Read the output of the Minishell command
-		while (fgets(line, sizeof(line), minishell_fd) != NULL)
-		{
-			minishell_output = realloc(minishell_output, minishell_output_len + strlen(line) + 1);
-			if (minishell_output == NULL)
-			{
-				perror("realloc minishell_output");
-				exit(EXIT_FAILURE);
-			}
-			strcpy(minishell_output + minishell_output_len, line);
-			minishell_output_len += strlen(line);
-		}		
 		// Read the output of the Bash command   
 		while (fgets(line, sizeof(line), bash_pipe) != NULL)
 		{
@@ -164,16 +146,37 @@ void run_test(const char *command)
 			strcpy(bash_output + bash_output_len, line);
 			bash_output_len += strlen(line);
 		}
-		// Close the pipes
 		int bash_status = pclose(bash_pipe);
+
+		minishell_fd = popen(minishell_command, "r");
+		if (minishell_fd == NULL)
+		{
+			perror("popen minishell_command");
+			exit(EXIT_FAILURE);
+		}	
+		usleep(500);
+		// Read the output of the Minishell command
+		while (fgets(line, sizeof(line), minishell_fd) != NULL)
+		{
+			minishell_output = realloc(minishell_output, minishell_output_len + strlen(line) + 1);
+			if (minishell_output == NULL)
+			{
+				perror("realloc minishell_output");
+				exit(EXIT_FAILURE);
+			}
+			strcpy(minishell_output + minishell_output_len, line);
+			minishell_output_len += strlen(line);
+		}
 		int minishell_status = pclose(minishell_fd);
+		// Close the pipes
+			
 
 		// Compare the outputs
 		int output_equal = 0;
 		if (minishell_output)
-			minishell_output2 = replaceString(minishell_output, "\n", "\\n");
+			minishell_output2 = minishell_output;
 		if (bash_output)	
-			bash_output2 = replaceString(bash_output, "\n", "\\n");
+			bash_output2 = bash_output;
 		if (minishell_output && bash_output)
 			output_equal = (strcmp(bash_output, minishell_output) == 0);
 
@@ -195,8 +198,8 @@ void run_test(const char *command)
 		// Free allocated memory
 		free(bash_output);
 		free(minishell_output);
-		free(bash_output2);
-		free(minishell_output2);
+		// free(bash_output2);
+		// free(minishell_output2);
     
 }
 

@@ -61,26 +61,28 @@ int32_t	exec_process_sequence(t_token_sequence *token_seq)
 {
 	int32_t		ret;
 	t_process	*proc;
+	int32_t		i;
 
+	i = 0;
 	proc = get_process();
 	while (token_seq)
 	{
 		if (token_seq->cmd_seq_type == CMD_PIPE)
 			token_seq = pipes_fork_cmds(token_seq);
 		else if (token_seq->cmd_seq_type == CMD_SEQUENTIAL)
-			ret = fork_sequential(token_seq);
+			ret = exec_sequential(token_seq);
 		else if (token_seq->cmd_seq_type == CMD_LOG_AND)
-			ret = fork_logical(token_seq);
+			token_seq = exec_logical(token_seq);
 		else if (token_seq->cmd_seq_type == CMD_LOG_OR)
-			ret = fork_logical(token_seq);
+			token_seq = exec_logical(token_seq);
 		// else if (token_seq->cmd_seq_type == CMD_GROUPING)
 		// 	token_seq = exec_sequential(token_seq);
-		print_env(proc->env_cpy);
 		if (proc->stop_process)
 			return (proc->errnum);
-		token_seq = token_seq->next;	
+		if (token_seq)	
+			token_seq = token_seq->next;
 	}
-	return (1);
+	return (proc->errnum);
 }
 
 int32_t	exec_cmds(char *str)
