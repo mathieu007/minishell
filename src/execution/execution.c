@@ -3,9 +3,11 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {
+	if (get_process()->parent->stop_process)
+		return (get_process()->parent->errnum);
 	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
-		perror("Could not execve");
-	return (1);
+		perror("execve failed\n");
+	return (errno);
 }
 
 int32_t	add_execve_func(t_cmd *cmd)
@@ -55,23 +57,28 @@ t_token_sequence	*pipes_fork_cmds(t_token_sequence *token_seq)
 	return (token_seq->next);
 }
 
-int32_t	exec_seq(t_token_sequence *token_seq)
+int32_t	exec_process_sequence(t_token_sequence *token_seq)
 {
+	int32_t		ret;
+	t_process	*proc;
+
+	proc = get_process();
 	while (token_seq)
 	{
 		if (token_seq->cmd_seq_type == CMD_PIPE)
 			token_seq = pipes_fork_cmds(token_seq);
 		else if (token_seq->cmd_seq_type == CMD_SEQUENTIAL)
-			token_seq = fork_sequential(token_seq);
+			ret = fork_sequential(token_seq);
 		else if (token_seq->cmd_seq_type == CMD_LOG_AND)
-			fork_logical(token_seq);
+			ret = fork_logical(token_seq);
 		else if (token_seq->cmd_seq_type == CMD_LOG_OR)
-			fork_logical(token_seq);
+			ret = fork_logical(token_seq);
 		// else if (token_seq->cmd_seq_type == CMD_GROUPING)
 		// 	token_seq = exec_sequential(token_seq);
-		else
-			return (free_all_and_exit(EXIT_FAILURE),
-				printf("CMD_SEQUENCE_TYPE_UNKNOWN\n"));
+		print_env(proc->env_cpy);
+		if (proc->stop_process)
+			return (proc->errnum);
+		token_seq = token_seq->next;	
 	}
 	return (1);
 }
@@ -79,8 +86,9 @@ int32_t	exec_seq(t_token_sequence *token_seq)
 int32_t	exec_cmds(char *str)
 {
 	t_token_sequence	*token_seq;
+	int32_t				ret;
 
 	token_seq = tokenize_sequences(str);
-	exec_seq(token_seq);
-	return (1);
+	ret = exec_process_sequence(token_seq);
+	return (ret);
 }

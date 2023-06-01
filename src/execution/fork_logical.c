@@ -1,18 +1,5 @@
 #include "minishell.h"
 
-static t_token_sequence	*advance_seq(t_token_sequence *token_seq)
-{
-	while (token_seq)
-	{
-		if (token_seq->cmd_seq_type == CMD_LOG_AND
-			|| token_seq->cmd_seq_type == CMD_LOG_OR)
-			token_seq = token_seq->next;
-		else
-			break ;
-	}
-	return (token_seq);
-}
-
 // exec the function right away because it is a sequential cmd.
 // No need to fork.
 // Because t_process is stored inside static variable no need 
@@ -50,8 +37,9 @@ int32_t	fork_logical(t_token_sequence *token_seq)
 	pid_t		pid;
 	t_process	*proc;
 	int32_t		status;
-	int32_t		err;
-
+	int32_t		pipefd[2];
+    
+	pipe(pipefd);
 	proc = get_process();
 	pid = fork();
 	if (pid == -1)
@@ -60,8 +48,9 @@ int32_t	fork_logical(t_token_sequence *token_seq)
 		free_all_and_exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)
-	{
-		get_process()->env_cpy = copy_env_from(proc);
+	{		
+		get_process()->env_cpy = proc->env_cpy;
+		get_process()->parent = proc;
 		if (token_seq->cmd_seq_type == CMD_LOG_AND)
 		{
 			proc->errnum = parse_and_exec(token_seq);
@@ -72,6 +61,9 @@ int32_t	fork_logical(t_token_sequence *token_seq)
 			proc->errnum = parse_and_exec(token_seq);
 			proc->stop_process = false;
 		}
+        close(pipefd[0]);
+        dup2(pipefd[1], STDOUT_FILENO);
+		exit(proc->errnum);
 	}
 	waitpid(pid, &status, 0);
 	return (proc->errnum);

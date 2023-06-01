@@ -384,8 +384,8 @@ char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
-t_token_sequence 		*fork_sequential(t_token_sequence *token_seq);
-t_token_sequence		*fork_logical(t_token_sequence *token_seq);
+int32_t			 		fork_sequential(t_token_sequence *token_seq);
+int32_t					fork_logical(t_token_sequence *token_seq);
 int32_t					add_execve_func(t_cmd *cmd);
 int32_t					exec_cmds(char *str);
 
