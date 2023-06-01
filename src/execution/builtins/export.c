@@ -22,12 +22,11 @@ void	swap_node_value(t_env_cpy *a, t_env_cpy *b)
 	b->variable = tmp;
 }
 
-void	export_no_variable()
+void	export_no_variable(void)
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 
-	printf("CALLED NO VAR\n");
 	head = copy_env();
 	current = head;
 	while (current && current->next)
@@ -43,7 +42,7 @@ void	export_no_variable()
 	current = head;
 	while (current)
 	{
-		if(current->value != NULL)
+		if (current->value != NULL)
 			printf("declare -x %s=\"%s\"\n", current->variable, current->value);
 		else
 			printf("declare -x %s\n", current->variable);
@@ -61,6 +60,7 @@ int	export_cmd(t_cmd *cmd)
 	size_t len;
 	t_process *data;
 	bool swap = false;
+	char *value;
 
 	data = get_process();
 	i = 1;
@@ -80,24 +80,26 @@ int	export_cmd(t_cmd *cmd)
 		current = data->env_cpy;
 		split_on_equal = ft_split(cmd->args[i], '=');
 		if (!split_on_equal)
-			return (1); // Add protection for memory allocation failure
-		///CALLLLLL COUNT SPLIT
-		////CALLLL join_split
+			return (1);
+		value = ft_strdup(split_on_equal[1]);
+		if (count_splits(split_on_equal) > 2)
+			value = join_splits(&split_on_equal[1], "=");
+
 		if (is_valid_identifier(split_on_equal[0]) == 0)
 			print_not_valid_identifier(0, split_on_equal[0]);
 		len = ft_strlen(split_on_equal[0]);
 		while (current)
-		{			
+		{
 			if (ft_strncmp(split_on_equal[0], current->variable, len) == 0)
 			{
-				current->value = ft_strdup(split_on_equal[1]);
+				current->value = ft_strdup(value);
 				swap = true;
 				break ;
 			}
 			current = current->next;
 		}
 		if (!swap)
-			add_env_node(data, split_on_equal[0], split_on_equal[1]);
+			add_env_node(data, split_on_equal[0], value);
 		i++;
 	}
 	free_2d_array((void **)split_on_equal);

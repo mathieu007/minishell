@@ -395,6 +395,8 @@ int						exit_cmd(t_cmd  *cmd);
 //built in utils
 int	is_valid_identifier(char *identifier);
 void	print_not_valid_identifier(int export_or_unset, char *identifier);
+int32_t		count_splits(char **split);
+char	*join_splits(char **split, char *join);
 
 //signal
 void setup_signal_handlers(void);
