@@ -6,8 +6,8 @@
 // own t_process struct
 int32_t	parse_and_exec(t_token_sequence *token_seq)
 {
-	char	*str;
-	t_cmd	*cmd;
+	char		*str;
+	t_cmd		*cmd;
 	t_process	*proc;
 
 	proc = get_process();
@@ -23,7 +23,6 @@ int32_t	parse_and_exec(t_token_sequence *token_seq)
 		add_built_in_func(cmd);
 	else
 		add_execve_func(cmd);
-	cmd->func(cmd);
 	return (proc->errnum);
 }
 

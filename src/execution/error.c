@@ -14,8 +14,8 @@ void	write_err2(int32_t stderror, char *msg, char *msg2)
 
 void	write_err3(int32_t stderror, char *msg, char *msg2, char *msg3)
 {	
-	char	*err_msg;
-	char	*err_msg2;
+	char		*err_msg;
+	char		*err_msg2;
 	t_process	*proc;
 
 	proc = get_process();

@@ -27,19 +27,19 @@ int32_t		count_splits(char **split)
 	return (i);
 }
 
-char *join_splits(char **split, char *join)
+char	*join_splits(char **split, char *join)
 {
-	char *str;
+	char	*str;
 
 	str = *split;
-	split++;	
+	split++;
 	while (*split)
 	{
-		str =  ft_strjoinfree(str, *split);
+		str = ft_strjoinfree(str, *split);
 		if (!str)
 			return (NULL);
 		if (split[1])
-			str =  ft_strjoinfree(str, join);
+			str = ft_strjoinfree(str, join);
 		if (!str)
 			return (NULL);
 		split++;
@@ -62,7 +62,7 @@ t_env_cpy	*init_env(t_process *data)
 	count = count_splits(split_on_equal);
 	if (count > 2)
 		current = new_env(split_on_equal[0], join_splits(&split_on_equal[1], "="));
-	else	
+	else
 		current = new_env(split_on_equal[0], split_on_equal[1]);
 	i++;
 	head = current;
@@ -136,7 +136,7 @@ t_env_cpy	*copy_env_from(t_process *proc)
 	t_env_cpy	*current;
 	t_env_cpy	*new_head;
 	t_env_cpy	*new_current;
-	
+
 	head = proc->env_cpy;
 	current = head;
 	if (current)

@@ -238,10 +238,12 @@ typedef struct s_cmd
 /// to keep track of the cwd if the cwd is moved, renamed or deleted..
 typedef struct s_process
 {
+	struct s_process	*parent;
 	int32_t				argc;
 	char				**argv;
 	char				**env;
 	int32_t				errnum;
+	bool				stop_process;
 	ino_t				dir_id;
 	char				*cwd;
 	t_env_cpy			*env_cpy;

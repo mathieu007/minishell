@@ -63,9 +63,10 @@ int32_t	exec_seq(t_token_sequence *token_seq)
 			token_seq = pipes_fork_cmds(token_seq);
 		else if (token_seq->cmd_seq_type == CMD_SEQUENTIAL)
 			token_seq = fork_sequential(token_seq);
-		else if (token_seq->cmd_seq_type == CMD_LOG_AND
-			|| token_seq->cmd_seq_type == CMD_LOG_OR)
-			token_seq = fork_logical(token_seq);
+		else if (token_seq->cmd_seq_type == CMD_LOG_AND)
+			fork_logical(token_seq);
+		else if (token_seq->cmd_seq_type == CMD_LOG_OR)
+			fork_logical(token_seq);
 		// else if (token_seq->cmd_seq_type == CMD_GROUPING)
 		// 	token_seq = exec_sequential(token_seq);
 		else
