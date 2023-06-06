@@ -10,7 +10,8 @@ void disable_ctrl_c_output()
     }
 //In the line term.c_lflag &= ~ECHOCTL, the ~ operator is used to invert 
 //the bits of the ECHOCTL flag.
-    term.c_lflag &= ~ECHOCTL; // Disable echoing of control characters
+// Disable echoing of control characters
+    term.c_lflag &= ~ECHOCTL; 
 
     if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0) {
         perror("Error termios setting terminal attributes");
