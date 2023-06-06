@@ -1,10 +1,8 @@
 #include "minishell.h"
 
-static t_cmd	*parse_logical_cmd(t_token *token)
+static t_cmd	*parse_logical_cmd(t_cmd *cmd)
 {
-	t_cmd		*cmd;
-	
-	cmd = parse_cmd(token);
+	cmd = parse_cmd(cmd);
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else
@@ -59,27 +57,26 @@ static void	fork_exec(t_cmd	*cmd)
 /// @brief logical operator such as && || stop the execution of the program
 /// if an error occur.
 /// @param cmd 
-t_token	*exec_logical_or(t_token *token)
+t_cmd	*exec_logical_or(t_cmd *cmd)
 {
 	t_process	*proc;
-	t_cmd		*cmd;
 
 	proc = get_process();
 	proc->errnum = 0;
-	build_token_environement(token);
-	if (contains_groups(token))
-		proc->errnum = exec_sequence(token->child_tokens);
-	cmd = parse_logical_cmd(token);
+	build_token_environement(cmd->token);
+	if (contains_groups(cmd->token))
+		proc->errnum = exec_sequence(cmd->child);
+	cmd = parse_logical_cmd(cmd);
 	if (!cmd)
-		return (token);
+		return (cmd);
 	if (cmd->is_builtin && proc->errnum == 0)
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)
 		fork_exec(cmd);
 	proc->stop_exec = false;
 	if (proc->errnum == 0)
-		token = token->next;
-	return (token);
+		cmd = cmd->next;
+	return (cmd);
 }
 
 t_token	*contains_groups(t_token *token)
@@ -96,19 +93,18 @@ t_token	*contains_groups(t_token *token)
 	return (NULL);
 }
 
-t_token	*exec_logical_and(t_token *token)
+t_cmd	*exec_logical_and(t_cmd *cmd)
 {
 	t_process	*proc;
-	t_cmd		*cmd;
 
 	proc = get_process();
-	build_token_environement(token);
-	if (contains_groups(token))
-		proc->errnum = exec_sequence(token->child_tokens);
-	proc->errnum = 0;	
-	cmd = parse_logical_cmd(token);
+	build_token_environement(cmd->token);
+	if (contains_groups(cmd->token))
+		proc->errnum = exec_sequence(cmd->child);
+	proc->errnum = 0;
+	cmd = parse_logical_cmd(cmd);
 	if (!cmd)
-		return (token);
+		return (cmd);
 	if (cmd->is_builtin && proc->errnum == 0)
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)
@@ -116,5 +112,5 @@ t_token	*exec_logical_and(t_token *token)
 	proc->stop_exec = false;
 	if (proc->errnum > 0)
 		proc->stop_exec = true;
-	return (token);
+	return (cmd);
 }

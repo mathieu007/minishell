@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_group2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/05 09:13:55 by math             ###   ########.fr       */
+/*   Updated: 2023/06/06 15:26:42 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,15 @@ int32_t	add_token_parenthese(char *str, int32_t i, t_token *parent)
 	return (i);
 }
 
+/// @brief token group are tokens that may contains othet tokens or
+/// may contains characters that may be indetified as a token.
+/// we normally skip all tokens inside a group, the tokens inside
+/// the group will be tokenize at next level
+/// @param str 
+/// @param i 
+/// @param type 
+/// @param parent 
+/// @return 
 int32_t	add_token_group(char *str, int32_t i, t_token_type type,
 	t_token *parent)
 {

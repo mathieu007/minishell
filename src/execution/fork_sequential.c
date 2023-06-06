@@ -1,10 +1,8 @@
 #include "minishell.h"
 
-static t_cmd	*parse_seq_cmd(t_token *token)
+static t_cmd	*parse_seq_cmd(t_cmd *cmd)
 {
-	t_cmd		*cmd;
-
-	cmd = parse_cmd(token);
+	cmd = parse_cmd(cmd);
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else
@@ -58,15 +56,14 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	return (ret);
 }
 
-int32_t	exec_sequential(t_token *token)
+int32_t	exec_sequential(t_cmd *cmd)
 {
 	t_process	*proc;
-	t_cmd		*cmd;
 
 	proc = get_process();
 	proc->errnum = 0;
 	proc->stop_exec = false;
-	cmd = parse_seq_cmd(token);
+	cmd = parse_seq_cmd(cmd);
 	if (!cmd)
 		return (proc->errnum);
 	if (cmd->is_builtin)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 07:12:11 by math             ###   ########.fr       */
+/*   Updated: 2023/06/06 08:37:55 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token *parent)
 	increment_counter(type);
 	new->start = pos;
 	new->type = type;
-	new->str_len = 0;
 	if (!parent && !get_process()->tokens)
 		get_process()->tokens = new;
 	else if (parent)
