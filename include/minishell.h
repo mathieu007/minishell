@@ -397,6 +397,11 @@ int	is_valid_identifier(char *identifier);
 void	print_not_valid_identifier(int export_or_unset, char *identifier);
 int32_t		count_splits(char **split);
 char	*join_splits(char **split, char *join);
+void	print_not_valid_identifier(int export_or_unset, char *identifier);
+int	is_valid_identifier(char *identifier);
+int	is_valid_identifier_unset(char *identifier);
+void	add_env_node(t_process *data, char *variable, char *value);
+void	swap_node_value(t_env_cpy *a, t_env_cpy *b);
 
 //signal
 void setup_signal_handlers(void);
