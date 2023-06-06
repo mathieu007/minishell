@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/28 15:47:21 by math             ###   ########.fr       */
+/*   Updated: 2023/06/05 09:12:12 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ inline bool	str_is_env_variable(char *str)
 	if (*str == '$')
 	{
 		str++;
-		if (ft_isalpha(*str) == 1)
+		if (ft_isalnum(*str) == 1 || *str == '_')
 			return (true);
 		else if (*str++ == '{' && ft_isalpha(*str) == 1)
 			return (true);

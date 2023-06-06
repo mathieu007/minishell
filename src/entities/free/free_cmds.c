@@ -66,9 +66,9 @@ void	free_t_token_group(t_token_sequence *token_group)
 		token_group->str = free_ptr(token_group->str);
 		// if (token_group->env_cpy)
 		// 	free_t_env_cpy(token_group->env_cpy);
-		if (token_group->first_token)
-			free_t_tokens(token_group->first_token);
-		token_group->first_token = NULL;
+		if (token_group->token)
+			free_t_tokens(token_group->token);
+		token_group->token = NULL;
 		token_group->last_token = NULL;
 		free(token_group);
 	}
@@ -77,24 +77,23 @@ void	free_t_token_group(t_token_sequence *token_group)
 void	free_t_token_groups(t_token_sequence *token_group)
 {
 	t_token_sequence	*next;
-	t_process 			*data;
+	// t_process 			*data;
 
-	data = get_process();
+	// data = get_process();
 	while (token_group)
 	{
 		next = token_group->next;
 		token_group->str = free_ptr(token_group->str);
 		// if (token_group->env_cpy)
 		// 	free_t_env_cpy(token_group->env_cpy);
-		if (token_group->first_token)
-			free_t_tokens(token_group->first_token);
-		token_group->first_token = NULL;
+		if (token_group->token)
+			free_t_tokens(token_group->token);
+		token_group->token = NULL;
 		token_group->last_token = NULL;
 		free(token_group);
 		token_group = next;
 	}
-	data->token_groups = NULL;
-	data->last_token_group = NULL;
-	data->token_groups_count = 0;
-	data->tokens_count = 0;
+	// data->token_sequence = NULL;
+	// data->last_token_sequence = NULL;
+	// data->tokens_count = 0;
 }

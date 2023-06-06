@@ -14,7 +14,5 @@ void	free_t_data(t_process *data)
 {
 	if (data->tokens)
 		free_t_tokens(data->tokens);
-	if (data->token_groups)
-		free_t_token_groups(data->token_groups);
 	free(data);
 }

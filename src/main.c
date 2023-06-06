@@ -1,11 +1,15 @@
 #include "minishell.h"
+#include <sys/time.h>
 
 int32_t	execute_tests(char *input)
 {
-	exec_cmds(input);
-	free_t_token_groups(get_process()->token_groups);
+	int32_t	ret;
+
+	ret = exec_cmds(input);
+	// free_t_token_groups(get_process()->token_sequence);
+	free_t_tokens(get_process()->tokens);
 	free_t_cmd(get_process()->cmds);
-	return (EXIT_SUCCESS);
+	return (ret);
 }
 
 int32_t	main(int32_t argc, char **argv, char **env)
@@ -25,7 +29,8 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		if (strcmp(input, "exit") == 0)
 			break ;
 		add_history(input);
-		free_t_token_groups(get_process()->token_groups);
+		// free_t_token_groups(get_process()->token_sequence);
+		free_t_tokens(get_process()->tokens);
 		free_t_cmd(get_process()->cmds);
 		free(input);
 	}

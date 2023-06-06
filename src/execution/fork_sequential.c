@@ -1,16 +1,10 @@
 #include "minishell.h"
 
-static t_cmd	*parse_seq_cmd(t_token_sequence *token_seq)
+static t_cmd	*parse_seq_cmd(t_token *token)
 {
-	char		*str;
 	t_cmd		*cmd;
 
-	tokenize(token_seq);
-	str = parse_env(token_seq);
-	reset_token_group(token_seq);
-	token_seq->str = str;
-	tokenize(token_seq);
-	cmd = parse_cmd(token_seq);
+	cmd = parse_cmd(token);
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else
@@ -57,25 +51,22 @@ static int32_t	fork_exec(t_cmd	*cmd)
 		ret = exec(cmd);
 		exit(ret);
 	}
-	waitpid(pid, &status, 0);		
+	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		ret = WEXITSTATUS(status);
 	proc->errnum = ret;
 	return (ret);
 }
 
-/// @brief logical operator such as && || stop the execution of the program
-/// if an error occur.
-/// @param cmd 
-int32_t	exec_sequential(t_token_sequence *token_seq)
+int32_t	exec_sequential(t_token *token)
 {
 	t_process	*proc;
 	t_cmd		*cmd;
 
 	proc = get_process();
 	proc->errnum = 0;
-	proc->stop_process = false;
-	cmd = parse_seq_cmd(token_seq);
+	proc->stop_exec = false;
+	cmd = parse_seq_cmd(token);
 	if (!cmd)
 		return (proc->errnum);
 	if (cmd->is_builtin)

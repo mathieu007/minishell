@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/15 11:59:19 by math             ###   ########.fr       */
+/*   Updated: 2023/06/02 11:46:46 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 inline	t_token	*advance_to(t_token *token, t_token_type type)
 {
-	while (token && token->type != type && token->type != TK_CMD_SEQ_END)
+	while (token && token->type != type && token->type != TK_END)
 		token = token->next;
 	return (token);
 }

@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/28 14:43:31 by math             ###   ########.fr       */
+/*   Updated: 2023/06/04 15:35:21 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static t_token_type	*get_tokens_lookup_table(void)
 			token_types[i] = TK_UNKNOWN;
 			i++;
 		}
-		tk_type[TK_CMD_SEQ_START] = TK_CMD_SEQ_START;
-		tk_type[TK_CMD_SEQ_END] = TK_CMD_SEQ_END;
+		tk_type[TK_START] = TK_START;
+		tk_type[TK_END] = TK_END;
 		tk_type[TK_SPACE] = TK_SPACE;
 		tk_type[TK_AMPERSAND] = TK_AMPERSAND;
 		tk_type[TK_AND] = TK_AND;
@@ -35,7 +35,8 @@ static t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_OR] = TK_OR;
 		tk_type[TK_DASH] = TK_DASH;
 		tk_type[TK_DASHDASH] = TK_DASHDASH;
-		tk_type[TK_DOLLAR_SIGN] = TK_DOLLAR_SIGN;
+		tk_type[TK_DOLLAR_SIGN] = TK_ENVIRONEMENT_VAR;
+		tk_type[TK_DOLLAR_SIGN_CURLYBRACE] = TK_ENVIRONEMENT_VAR;
 		tk_type[TK_DOUBLEQUOTE] = TK_DOUBLEQUOTE;
 		tk_type[TK_GREAT] = TK_GREAT;
 		tk_type[TK_GREATGREAT] = TK_GREATGREAT;

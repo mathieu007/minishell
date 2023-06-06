@@ -51,45 +51,13 @@ char	*parse_env_var_value(t_token *token)
 	return (var_value);
 }
 
-// char	*strip_consecutive_white_space(char *str)
-// {
-// 	int32_t	strip_len;
-// 	int32_t	i;
-// 	char	*data;
-
-// 	strip_len = 0;
-// 	i = 0;
-// 	while (str[i] && str[i + 1])
-// 	{
-// 		if (str[i] == ' ' && str[i + 1] == ' ')
-// 			strip_len--;
-// 		strip_len++;
-// 		i++;
-// 	}
-// 	data = malloc(strip_len + 1);
-// 	if (!data)
-// 		return (NULL);
-// 		while (str[i] && str[i + 1])
-// 	{
-// 		if (str[i] == ' ' && str[i + 1] == ' ')
-// 			strip_len--;
-// 		else if (str[i] == ' ')
-// 			data[i]
-// 		strip_len++;
-// 		i++;
-// 	}
-// 	data[strip_len] = '\0';
-// 	return (data);
-// }
-
-
 char	*join_env_to_str(t_token_sequence *group)
 {
 	t_token	*token;
 	char	*dest;
 	char	*cpy;
 
-	token = group->first_token;
+	token = group->token;
 	if (!token)
 		return (NULL);
 	dest = NULL;
@@ -118,109 +86,6 @@ char	*join_env_to_str(t_token_sequence *group)
 	return (dest);
 }
 
-// /// @brief We parse environement variable from these token group
-// /// @param group 
-// /// @return 
-// char	*group_to_str(t_token_group *group)
-// {
-// 	t_token	*token;
-// 	char	*dest;
-// 	char	*cpy;
-
-// 	token = group->first_token;
-// 	if (!token)
-// 		return (NULL);
-// 	dest = NULL;
-// 	while (token)
-// 	{	
-// 		if (token->type == TK_SPACE)
-// 		{
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, " ");
-// 			if (cpy)
-// 				free(cpy);
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, token->str);
-// 			if (cpy)
-// 				free(cpy);
-// 		}
-// 		else if (token->type == TK_DOUBLEQUOTE || token->type == TK_CLOSINGDOUBLEQUOTE)
-// 		{
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, "\"");
-// 			if (cpy)
-// 				free(cpy);
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, token->str);
-// 			if (cpy)
-// 				free(cpy);
-// 		}
-// 		else if (token->type == TK_SINGLEQUOTE || token->type == TK_CLOSINGSINGLEQUOTE)
-// 		{
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, "'");
-// 			if (cpy)
-// 				free(cpy);
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, token->str);
-// 			if (cpy)
-// 				free(cpy);
-// 		}
-// 		else if (token->type == TK_ENVIRONEMENT_VAR)
-// 		{
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, token->str);
-// 			if (cpy)
-// 				free(cpy);
-// 		}
-// 		else
-// 		{
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, token->token_str);
-// 			if (cpy)
-// 				free(cpy);
-// 			cpy = dest;
-// 			dest = ft_strjoin(dest, token->str);
-// 			if (cpy)
-// 				free(cpy);
-// 		}
-// 		token = token->next;
-// 	}
-// 	return (dest);
-// }
-
-/// @brief We parse environement variable from these token group
-/// @param group 
-/// @return 
-char	*parse_env(t_token_sequence *group)
-{
-	t_token	*token;
-	char	*str;
-	char	*dest;
-	char	*cpy;
-
-	dest = NULL;
-	token = group->first_token;
-	while (token)
-	{
-		str = token->str;
-		if (token->type == TK_ENVIRONEMENT_VAR)
-			dest = ft_strjoin(dest, parse_env_var_value(token));
-		else
-		{
-			cpy = dest;
-			dest = ft_strjoin(dest, token->token_str);
-			if (cpy)
-				free(cpy);
-		}
-		cpy = dest;
-		dest = ft_strjoin(dest, str);
-		if (cpy)
-			free(cpy);
-		token = token->next;
-	}
-	return (dest);
-}
 
 char	**get_env_path(void)
 {

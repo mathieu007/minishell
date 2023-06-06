@@ -1,16 +1,10 @@
 #include "minishell.h"
 
-static t_cmd	*parse_log_cmd(t_token_sequence *token_seq)
+static t_cmd	*parse_logical_cmd(t_token *token)
 {
-	char		*str;
 	t_cmd		*cmd;
-
-	tokenize(token_seq);
-	str = parse_env(token_seq);
-	reset_token_group(token_seq);
-	token_seq->str = str;
-	tokenize(token_seq);
-	cmd = parse_cmd(token_seq);
+	
+	cmd = parse_cmd(token);
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else
@@ -41,7 +35,7 @@ static void	fork_exec(t_cmd	*cmd)
 	int32_t		ret;
 	int32_t		status;
 
-	pid = fork();	
+	pid = fork();
 	proc = get_process();
 	ret = proc->errnum;
 	if (pid == -1)
@@ -58,31 +52,69 @@ static void	fork_exec(t_cmd	*cmd)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		ret = WEXITSTATUS(status);
-	if (ret != 0)	
+	if (ret != 0)
 		proc->errnum = ret;
 }
 
 /// @brief logical operator such as && || stop the execution of the program
 /// if an error occur.
 /// @param cmd 
-t_token_sequence *exec_logical(t_token_sequence *token_seq)
+t_token	*exec_logical_or(t_token *token)
 {
 	t_process	*proc;
 	t_cmd		*cmd;
 
 	proc = get_process();
 	proc->errnum = 0;
-	cmd = parse_log_cmd(token_seq);	
+	build_token_environement(token);
+	if (contains_groups(token))
+		proc->errnum = exec_sequence(token->child_tokens);
+	cmd = parse_logical_cmd(token);
 	if (!cmd)
-		return (token_seq);
-	if (cmd->is_builtin)
+		return (token);
+	if (cmd->is_builtin && proc->errnum == 0)
 		proc->errnum = exec(cmd);
-	else
+	else if (proc->errnum == 0)
 		fork_exec(cmd);
-	proc->stop_process = false;
-	if (proc->errnum > 0 && cmd->cmd_seq_type == CMD_LOG_AND)
-		proc->stop_process = true;
-	if (proc->errnum == 0 && cmd->cmd_seq_type == CMD_LOG_OR)
-		token_seq = token_seq->next;		
-	return (token_seq);
+	proc->stop_exec = false;
+	if (proc->errnum == 0)
+		token = token->next;
+	return (token);
+}
+
+t_token	*contains_groups(t_token *token)
+{
+	t_token	*child;
+	
+	child = token->child_tokens;
+	while (child)
+	{
+		if (child->type == TK_PARENTHESE_OPEN)
+			return (child);
+		child = child->next;
+	}
+	return (NULL);
+}
+
+t_token	*exec_logical_and(t_token *token)
+{
+	t_process	*proc;
+	t_cmd		*cmd;
+
+	proc = get_process();
+	build_token_environement(token);
+	if (contains_groups(token))
+		proc->errnum = exec_sequence(token->child_tokens);
+	proc->errnum = 0;	
+	cmd = parse_logical_cmd(token);
+	if (!cmd)
+		return (token);
+	if (cmd->is_builtin && proc->errnum == 0)
+		proc->errnum = exec(cmd);
+	else if (proc->errnum == 0)
+		fork_exec(cmd);
+	proc->stop_exec = false;
+	if (proc->errnum > 0)
+		proc->stop_exec = true;
+	return (token);
 }
