@@ -30,7 +30,7 @@ static int32_t	fork_group(t_cmd *cmd)
 t_cmd	*exec_group(t_cmd *cmd)
 {
 	t_process			*proc;
-	
+
 	proc = get_process();
 	proc->errnum = fork_group(cmd);
 	return (cmd);

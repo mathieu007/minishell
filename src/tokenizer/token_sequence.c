@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_sequence.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 15:48:59 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/07 07:20:38 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ inline bool	is_token_group(t_token_type type)
 static int32_t	skip_token_group(char *str, t_token_type type, int32_t i)
 {
 	if (type == TK_DOUBLEQUOTE)
-		i = goto_closing_double_quote(str, i) + 1;
+		i = goto_closing_double_quote(str, i + 1) + 1;
 	else if (type == TK_SINGLEQUOTE)
-		i = goto_closing_single_quote(str, i) + 1;
+		i = goto_closing_single_quote(str, i + 1) + 1;
 	else if (type == TK_COMMANDSUBSTITUTION_OPEN)
 		i = goto_closing_parenthese(str, i + 1) + 1;
 	else if (type == TK_ENVIRONEMENT_VAR)
-		i = goto_closing_environement(str, i + 1) + 1;	
+		i = goto_closing_environement(str, i + 1) + 1;
 	else if (type == TK_PARENTHESE_OPEN)
 		i = goto_closing_parenthese(str, i) + 1;
 	return (i);

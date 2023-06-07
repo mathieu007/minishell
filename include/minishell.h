@@ -282,6 +282,8 @@ int32_t			*get_token_counter(void);
 int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token *parent);
 
+
+t_cmd			*parse_at_execution(t_cmd *cmd);
 t_token			*tokenize_root(char *str);
 int32_t			add_token_group(char *str, int32_t i, t_token_type type,
 					t_token *parent);

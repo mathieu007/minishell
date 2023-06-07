@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 14:14:12 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/07 06:42:09 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ t_token	*add_tk(char *token_str, t_token_type type,
 /// @return 
 t_token	*tokenize(char *str)
 {
-	t_process		*proc;
-	t_token 		*root;
+	t_process	*proc;
+	t_token 	*root;
 
 	proc = get_process();
 	str = ft_strtrim(str, " ");

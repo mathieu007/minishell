@@ -3,8 +3,6 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {
-	if (get_process()->parent->stop_exec)
-		return (get_process()->parent->errnum);
 	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
 		perror("execve failed\n");
 	return (errno);
@@ -111,6 +109,16 @@ t_cmd	*create_cmds_tree(t_token *token)
 	}
 	create_nested_cmds(start);
 	return (start);
+}
+
+t_cmd	*parse_at_execution(t_cmd *cmd)
+{
+	cmd = parse_cmd(cmd);
+	if (cmd->is_builtin)
+		add_built_in_func(cmd);
+	else
+		add_execve_func(cmd);
+	return (cmd);
 }
 
 int32_t	exec_cmds(char *str)

@@ -1,14 +1,6 @@
 #include "minishell.h"
 
-static t_cmd	*parse_logical_cmd(t_cmd *cmd)
-{
-	cmd = parse_cmd(cmd);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	return (cmd);
-}
+
 
 // exec the function right away because it is a sequential cmd.
 // No need to fork.
@@ -66,7 +58,7 @@ t_cmd	*exec_logical_or(t_cmd *cmd)
 	build_token_environement(cmd->token);
 	if (contains_parentheses(cmd->token))
 		proc->errnum = exec_sequence(cmd->child);
-	cmd = parse_logical_cmd(cmd);
+	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (cmd);
 	if (cmd->is_builtin && proc->errnum == 0)
@@ -102,7 +94,7 @@ t_cmd	*exec_logical_and(t_cmd *cmd)
 	if (contains_parentheses(cmd->token))
 		proc->errnum = exec_sequence(cmd->child);
 	proc->errnum = 0;
-	cmd = parse_logical_cmd(cmd);
+	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (cmd);
 	if (cmd->is_builtin && proc->errnum == 0)

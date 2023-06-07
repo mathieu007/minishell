@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/06/06 15:53:36 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/07 07:21:42 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ inline int32_t	goto_closing_parenthese(char *str, int32_t i)
 		if (str[i] == '\\')
 			i += 2;
 		else if (str[i] == '"')
-			i = goto_closing_double_quote(str, i) + 1;
+			i = goto_closing_double_quote(str, i + 1) + 1;
 		else if (str[i] == '\'')
-			i = goto_closing_single_quote(str, i) + 1;
+			i = goto_closing_single_quote(str, i + 1) + 1;
 		else if (str[i] == '(')
-			i = goto_closing_parenthese(str, i) + 1;
+			i = goto_closing_parenthese(str, i + 1) + 1;
 		else if (str[i] == ')')
 			return (i);
 		else

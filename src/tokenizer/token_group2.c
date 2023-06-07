@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_group2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 15:26:42 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/07 07:21:56 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int32_t	add_token_single_quote(char *str, int32_t i, t_token *parent)
 	t_token	*token;
 
 	token = add_tk(ft_strdup("'"), TK_SINGLEQUOTE, i, parent);
-	i = goto_closing_double_quote(str, i);
+	i = goto_closing_double_quote(str, i + 1);
 	if (str[i] != '\'')
 		token->is_continuation = true;
 	else
@@ -31,7 +31,7 @@ int32_t	add_token_double_quote(char *str, int32_t i, t_token *parent)
 	t_token	*token;
 
 	token = add_tk(ft_strdup("\""), TK_DOUBLEQUOTE, i, parent);
-	i = goto_closing_double_quote(str, i);
+	i = goto_closing_double_quote(str, i + 1);
 	if (str[i] != '"')
 		token->is_continuation = true;
 	else

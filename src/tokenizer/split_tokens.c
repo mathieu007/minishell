@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 22:27:50 by math             ###   ########.fr       */
+/*   Updated: 2023/06/07 07:08:59 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,31 +20,39 @@ char	*build_dbl_quote_token_env(t_token *token)
 	char	*str;
 	t_token	*temp;
 
-	if (token->type == TK_DOUBLEQUOTE)
+	child = token->child_tokens;
+	str = ft_strdup("");
+	while (child)
 	{
-		child = token->child_tokens;
-		str = ft_strdup("");
-		while (child)
-		{
-			if (child->type == TK_ENVIRONEMENT_VAR)
-				value = parse_env_var_value(token);
-			else
-				value = ft_strdup(child->str);
-			str = ft_strjoinfree2(str, value);
-			temp = child;
-			child = child->next;
-			free_t_token(temp);
-		}
+		if (child->type == TK_ENVIRONEMENT_VAR)
+			value = parse_env_var_value(token);
+		else
+			value = ft_strdup(child->str);
+		str = ft_strjoinfree2(str, value);
+		temp = child;
+		child = child->next;
+		free_t_token(temp);
 	}
 	return (str);
 }
 
-bool	is_expandable(t_token *child)
+bool	is_not_expandable(t_token *child)
 {
 	return (child->type != TK_ENVIRONEMENT_VAR
 		&& child->type != TK_ENVIRONEMENT_VAR_CLOSE
 		&& child->type != TK_COMMANDSUBSTITUTION_OPEN
 		&& child->type != TK_COMMANDSUBSTITUTION_CLOSE);
+}
+
+static t_token	*goto_closing_dbl_quote_token(t_token *token)
+{
+	while (token && token->next)
+	{
+		if (token->type == TK_CLOSINGDOUBLEQUOTE)
+			return (token);
+		token = token->next;
+	}
+	return (token);
 }
 
 void	build_token_environement(t_token *token)
@@ -57,10 +65,13 @@ void	build_token_environement(t_token *token)
 	str = ft_strdup("");
 	while (child && child->next)
 	{	
-		if (!is_expandable(child))
+		if (is_not_expandable(child))
 			str = ft_strjoinfree2(str, child->token_str);
 		if (child->type == TK_DOUBLEQUOTE)
+		{
 			val = build_dbl_quote_token_env(child);
+			child = goto_closing_dbl_quote_token(child);
+		}
 		else if (child->type == TK_ENVIRONEMENT_VAR)
 			val = parse_env_var_value(child);
 		else
