@@ -295,7 +295,7 @@ t_token_sequence	*new_token_sequence();
 
 /// @brief Simples and short helpers methods.
 
-t_token		*contains_groups(t_token *token);
+t_token		*contains_parentheses(t_token *token);
 int32_t		goto_closing_environement(char *str, int32_t i);
 int32_t		goto_closing_single_quote(char *str, int32_t i);
 int32_t		goto_closing_double_quote(char *str, int32_t i);
@@ -443,6 +443,7 @@ int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd *cmd);
 
 //free section
+void					free_t_token(t_token *token);
 void					*free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
 void					free_t_tokens(t_token *token);

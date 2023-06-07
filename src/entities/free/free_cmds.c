@@ -28,6 +28,12 @@ void	free_t_cmd(t_cmd *cmd)
 	data->cmds = NULL;
 }
 
+void	free_t_token(t_token *token)
+{
+	token->str = free_ptr(token->str);
+	free(token);
+}
+
 void	free_t_tokens(t_token *token)
 {
 	t_token	*current;

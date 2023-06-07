@@ -3,69 +3,76 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 17:06:07 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/06 22:27:50 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	build_token_environement(t_token *token)
-{
-	char	*str;
-	int32_t	start;
-	int32_t	len;
-	char	*env_value;
-	bool	in_dbl_quote;
 
-	token = token->child_tokens;
-	str = token->parent_token->str;
-	in_dbl_quote = token->type == TK_DOUBLEQUOTE;
-	if (in_dbl_quote)
+char	*build_dbl_quote_token_env(t_token *token)
+{
+	t_token	*child;
+	char	*value;
+	char	*str;
+	t_token	*temp;
+
+	if (token->type == TK_DOUBLEQUOTE)
 	{
-		token = token->child_tokens;
-		while (token && token->next)
-		{	
-			if (token->type == TK_ENVIRONEMENT_VAR)
-				env_value = parse_env_var_value(token);
+		child = token->child_tokens;
+		str = ft_strdup("");
+		while (child)
+		{
+			if (child->type == TK_ENVIRONEMENT_VAR)
+				value = parse_env_var_value(token);
 			else
-				env_value = NULL;
-			len = token->next->start - token->end;
-			start = token->start + token->token_len;
-			if (env_value)
-			{
-				free(token->str);
-				token->str = env_value;
-			}		
-			if (!token->inside_dbl_quotes)
-				tokenize_space_tokens(token);
-			token = token->next;
+				value = ft_strdup(child->str);
+			str = ft_strjoinfree2(str, value);
+			temp = child;
+			child = child->next;
+			free_t_token(temp);
 		}
 	}
-	else 
-	{
-		while (token && token->next)
-		{	
-			if (token->type == TK_DOUBLEQUOTE)
-				build_token_environement(token);
-			if (token->type == TK_ENVIRONEMENT_VAR)
-				env_value = parse_env_var_value(token);
-			else
-				env_value = NULL;
-			len = token->next->start - token->end;
-			start = token->start + token->token_len;
-			if (env_value)
-			{
-				free(token->str);
-				token->str = env_value;
-			}		
-			if (!token->inside_dbl_quotes)
-				tokenize_space_tokens(token);
-			token = token->next;
-		}
-	}	
+	return (str);
+}
+
+bool	is_expandable(t_token *child)
+{
+	return (child->type != TK_ENVIRONEMENT_VAR
+		&& child->type != TK_ENVIRONEMENT_VAR_CLOSE
+		&& child->type != TK_COMMANDSUBSTITUTION_OPEN
+		&& child->type != TK_COMMANDSUBSTITUTION_CLOSE);
+}
+
+void	build_token_environement(t_token *token)
+{
+	char	*val;
+	t_token	*child;
+	char	*str;
+
+	child = token->child_tokens;
+	str = ft_strdup("");
+	while (child && child->next)
+	{	
+		if (!is_expandable(child))
+			str = ft_strjoinfree2(str, child->token_str);
+		if (child->type == TK_DOUBLEQUOTE)
+			val = build_dbl_quote_token_env(child);
+		else if (child->type == TK_ENVIRONEMENT_VAR)
+			val = parse_env_var_value(child);
+		else
+			val = ft_strdup(child->str);
+		str = ft_strjoinfree2(str, val);
+		child = child->next;
+	}
+	free_t_tokens(token->child_tokens);
+	token->child_tokens = NULL;
+	free(token->str);
+	token->str = str;
+	tokenize_group_tokens(token);
 }
 
 /// @brief we do not tokenize single quote, nothing to do

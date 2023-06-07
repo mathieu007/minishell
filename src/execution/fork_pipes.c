@@ -64,7 +64,7 @@ void	fork_first_child(t_cmd *cmd)
 	{
 		get_process()->env_cpy = proc->env_cpy;
 		build_token_environement(cmd->token);
-		if (contains_groups(cmd->token))
+		if (contains_parentheses(cmd->token))
 			proc->errnum = exec_sequence(cmd->child);
 		cmd = build_cmd(cmd);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);

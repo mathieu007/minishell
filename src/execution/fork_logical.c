@@ -64,7 +64,7 @@ t_cmd	*exec_logical_or(t_cmd *cmd)
 	proc = get_process();
 	proc->errnum = 0;
 	build_token_environement(cmd->token);
-	if (contains_groups(cmd->token))
+	if (contains_parentheses(cmd->token))
 		proc->errnum = exec_sequence(cmd->child);
 	cmd = parse_logical_cmd(cmd);
 	if (!cmd)
@@ -79,10 +79,10 @@ t_cmd	*exec_logical_or(t_cmd *cmd)
 	return (cmd);
 }
 
-t_token	*contains_groups(t_token *token)
+t_token	*contains_parentheses(t_token *token)
 {
 	t_token	*child;
-	
+
 	child = token->child_tokens;
 	while (child)
 	{
@@ -99,7 +99,7 @@ t_cmd	*exec_logical_and(t_cmd *cmd)
 
 	proc = get_process();
 	build_token_environement(cmd->token);
-	if (contains_groups(cmd->token))
+	if (contains_parentheses(cmd->token))
 		proc->errnum = exec_sequence(cmd->child);
 	proc->errnum = 0;
 	cmd = parse_logical_cmd(cmd);

@@ -2,6 +2,7 @@ NAME = libft.a
 
 SRC	=	src/alloc_pool/data_pool.c	\
 		src/ft_atoi.c	\
+		src/ft_strfill.c	\
 		src/ft_atoi_long.c	\
 		src/ft_bzero.c	\
 		src/ft_calloc.c	\
