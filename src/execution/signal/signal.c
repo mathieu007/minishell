@@ -32,7 +32,7 @@ void sig_handler(int sig, siginfo_t *siginfo, void *context)
     }
     else if (siginfo->si_signo == SIGTERM)
     {
-        printf("Exit\n");
+       // printf("Exit\n");
         exit(EXIT_SUCCESS);
     }
 

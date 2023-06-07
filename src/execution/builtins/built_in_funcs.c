@@ -4,10 +4,10 @@ int	add_built_in_func(t_cmd *cmd)
 {
 	size_t	len;
 
-	len = ft_strlen(cmd->name) +  1;
+	len = ft_strlen(cmd->name) + 1;
 	if (len == 0)
 		return (0);
-	if (ft_strnstr(cmd->name, "echo", len) == cmd->name && cmd->name[len] == '\0')
+	if (ft_strnstr(cmd->name, "echo", len) == cmd->name)
 		return (cmd->func = &echo_cmd, 1);
 	else if (ft_strnstr(cmd->name, "env", len) == cmd->name)
 		return (cmd->func = &env_cmd, 1);

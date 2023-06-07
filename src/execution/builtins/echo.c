@@ -12,8 +12,8 @@ int	count_args(t_cmd *cmd)
 
 static int32_t	skip_options(t_cmd *cmd)
 {
-	int		i;
-	int		arg_i;
+	int	i;
+	int	arg_i;
 
 	arg_i = 1;
 	if (!cmd->args[arg_i] || !cmd->args[arg_i][0] || cmd->args[arg_i][0] != '-')
@@ -34,9 +34,9 @@ static int32_t	skip_options(t_cmd *cmd)
 
 int	echo_cmd(t_cmd *cmd)
 {
-	int		j;
-	int		count;
-	bool	has_option_n;
+	int j;
+	int count;
+	bool has_option_n;
 
 	has_option_n = false;
 	count = count_args(cmd);

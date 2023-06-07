@@ -23,7 +23,7 @@ void	export_no_variable(void)
 		if (current->value != NULL)
 			printf("declare -x %s=\"%s\"\n", current->variable, current->value);
 		else
-			printf("declare -x %s\n", current->variable);
+			printf("declare -x %s", current->variable);
 		current = current->next;
 	}
 	current = head;
