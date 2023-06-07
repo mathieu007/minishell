@@ -62,9 +62,8 @@ int32_t	exec_sequence(t_cmd *cmd)
 			cmd = exec_group(cmd);
 		else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
 			cmd = exec_logical_or(cmd);
-		ret = proc->errnum;
 		if (proc->stop_exec)
-			return (ret);
+			return (proc->errnum);
 		if (cmd)
 			cmd = cmd->next;
 	}

@@ -1,9 +1,1 @@
-1. Command: The name of the command to be executed, such as "ls", "cd", "echo", or "grep".
-2. Arguments: Additional parameters that are passed to the command, such as filenames or options. Arguments are typically separated by spaces.
-3. Redirections: Special characters that redirect input or output from a file, such as "<", ">", or ">>".
-4. Pipes: The "|" character is used to pipe the output of one command to the input of another command.
-5. Background Execution: The "&" character is used to execute a command in the background, allowing the user to continue using the shell while the command is running.
-6. Variable Assignment: The "=" character is used to assign a value to a shell variable, such as "MY_VAR=value".
-7. Command Substitution: The "$()" or "``" characters are used to substitute the output of a command into another command or variable.
-8. Conditional Execution: The "&&" and "||" characters are used to execute a command only if the previous command succeeded or failed, respectively.
-9. Quotes: Single quotes or double quotes are used to enclose a string to preserve spaces and special characters. Single quotes preserve the literal value, while double quotes allow variable substitution and command substitution.
+123  111 222

@@ -38,8 +38,10 @@ char	*parse_env_var_name(t_token *token)
 char	*parse_env_var_value(t_token *token)
 {
 	char	*var_value;
+	char	*temp;
 
 	var_value = get_env_value(token->str);
+	temp = var_value;
 	if (!var_value)
 	{
 		var_value = malloc(1);

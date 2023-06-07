@@ -74,3 +74,10 @@ echo 1 && ech2 2 || echo 3
 echo 1 && echo 2 || echo 3
 echo 1 && ech2 2 && echo 3
 echo 1 || echo 2 && echo 3
+ech1 1 || ech2 2 && echo 3 && echo 4
+ech1 1 || echo 2 && echo 3 && echo 4
+ech1 1 || ech2 2 && echo 3 || echo 4
+ech1 1 || echo 2 && echo 3 || echo 4
+ech1 1 || echo 2 && echo 3 && echo 4 || echo 5 && echo 6
+ech1 1 || echo 2 && ech3 3 && echo 4 || echo 5 && ech6 6
+ech1 1 && echo 2 || echo 3 && echo 4 || echo 5 && echo 6

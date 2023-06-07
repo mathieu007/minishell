@@ -1,15 +1,5 @@
 #include "minishell.h"
 
-static t_cmd	*parse_seq_cmd(t_cmd *cmd)
-{
-	cmd = parse_cmd(cmd);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	return (cmd);
-}
-
 // exec the function right away because it is a sequential cmd.
 // No need to fork.
 // Because t_process is stored inside static variable no need 
@@ -61,9 +51,12 @@ int32_t	exec_sequential(t_cmd *cmd)
 	t_process	*proc;
 
 	proc = get_process();
+	build_token_environement(cmd->token);
+	if (contains_parentheses(cmd->token))
+		proc->errnum = exec_sequence(cmd->child);
 	proc->errnum = 0;
 	proc->stop_exec = false;
-	cmd = parse_seq_cmd(cmd);
+	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
 	if (cmd->is_builtin)

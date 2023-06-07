@@ -231,6 +231,7 @@ typedef struct s_cmd
 	char			**args; /// a terminating NULL list of string containing options and arguments
 	char			**options; /// a terminating NULL list of string containing only options
 	bool			is_builtin; /// is the command a builtins command?
+	int32_t			errnum;
 	t_token			*token;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;

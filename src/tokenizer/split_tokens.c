@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/07 07:08:59 by math             ###   ########.fr       */
+/*   Updated: 2023/06/07 12:08:00 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*build_dbl_quote_token_env(t_token *token)
 	while (child)
 	{
 		if (child->type == TK_ENVIRONEMENT_VAR)
-			value = parse_env_var_value(token);
+			value = parse_env_var_value(child);
 		else
 			value = ft_strdup(child->str);
 		str = ft_strjoinfree2(str, value);
@@ -66,11 +66,14 @@ void	build_token_environement(t_token *token)
 	while (child && child->next)
 	{	
 		if (is_not_expandable(child))
-			str = ft_strjoinfree2(str, child->token_str);
+			str = ft_strjoinfree2(str, ft_strdup(child->token_str));
 		if (child->type == TK_DOUBLEQUOTE)
 		{
 			val = build_dbl_quote_token_env(child);
+			str = ft_strjoinfree2(str, val);
 			child = goto_closing_dbl_quote_token(child);
+			str = ft_strjoinfree2(str, ft_strdup(child->token_str));
+			val = ft_strdup(child->str);
 		}
 		else if (child->type == TK_ENVIRONEMENT_VAR)
 			val = parse_env_var_value(child);
@@ -82,7 +85,8 @@ void	build_token_environement(t_token *token)
 	free_t_tokens(token->child_tokens);
 	token->child_tokens = NULL;
 	free(token->str);
-	token->str = str;
+	token->str = ft_strtrim(str, " ");
+	free(str);
 	tokenize_group_tokens(token);
 }
 
@@ -141,10 +145,10 @@ t_cmd_seq	get_sequence_type(t_token *token)
 			return (CMD_SEQUENTIAL);
 		if (token->next->type == TK_PIPE || token->type == TK_PIPE)
 			return (CMD_PIPE);
-		else if (token->next->type == TK_AND || token->type == TK_AND)
-			return (CMD_LOG_AND);
-		else if (token->next->type == TK_OR || token->type == TK_AND)
+		else if (token->type == TK_OR || (token->type == TK_START && token->next->type == TK_OR))
 			return (CMD_LOG_OR);
+		else if (token->type == TK_AND || (token->type == TK_START && token->next->type == TK_AND))
+			return (CMD_LOG_AND);		
 		else if (token->next->type == TK_LESSLESS || token->type == TK_LESSLESS)
 			return (CMD_FILEIN_APPPEND);
 		else if (token->next->type == TK_LESS || token->type == TK_LESS)

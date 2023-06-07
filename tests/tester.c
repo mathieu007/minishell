@@ -110,6 +110,7 @@ void run_test(const char *command)
         char bash_cmd[MAX_COMMAND_LENGTH];
 		char minishell_command[MAX_COMMAND_LENGTH];
 		char *bash_output = NULL;
+		char *temp_bashoutput = NULL;
 		char *minishell_output = NULL;
 		char line[MAX_COMMAND_LENGTH];
 		size_t bash_output_len = 0;
@@ -176,6 +177,12 @@ void run_test(const char *command)
 
 		// Compare the outputs
 		int output_equal = 0;
+		temp_bashoutput = bash_output;
+		if (bash_output)
+		{
+			bash_output = replaceString(bash_output, "bash: ", "");
+			free(temp_bashoutput);
+		}			
 		if (minishell_output && bash_output)
 			output_equal = (strcmp(bash_output, minishell_output) == 0);
 		// Print the test result
