@@ -407,6 +407,13 @@ void	swap_node_value(t_env_cpy *a, t_env_cpy *b);
 void setup_signal_handlers(void);
 void disable_ctrl_c_output();
 
+//redirection
+
+int	redirect_append(const char *output_file);
+int	redirect_overwrite(const char *output_file);
+
+
+
 //free section
 void					*free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
