@@ -104,7 +104,7 @@ int compare_files(const char *file1, const char *file2)
     return equal;
 }
 
-void run_test(const char *command)
+void run_test(const char *command2)
 {
 
         char bash_cmd[MAX_COMMAND_LENGTH];
@@ -117,11 +117,10 @@ void run_test(const char *command)
 		size_t minishell_output_len = 0;
 		FILE *bash_pipe;
 		FILE *minishell_fd;
-		// char *command_cpy;
+		const char *command = replaceString(command2, "'", "'\\''");
 
 		// command_cpy = strdup(command);
 		// Construct the command to run in Bash
-		command = replaceString(command, "'", "'\\''");
 		snprintf(bash_cmd, MAX_COMMAND_LENGTH, "bash -c '%s' 2>&1", command);
 		// Construct the command to run in Minishell
 		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s' 2>&1", command);
@@ -154,8 +153,8 @@ void run_test(const char *command)
 			perror("popen minishell_command");
 			exit(EXIT_FAILURE);
 		}	
-		setbuf(minishell_fd, NULL);
-		setvbuf(minishell_fd, NULL, _IONBF, 0);
+		// setbuf(minishell_fd, NULL);
+		// setvbuf(minishell_fd, NULL, _IONBF, 0);
 		// Read the output of the Minishell command
 		while (fgets(line, sizeof(line), minishell_fd) != NULL)
 		{
@@ -169,11 +168,10 @@ void run_test(const char *command)
 			strcpy(minishell_output + minishell_output_len, line);
 			minishell_output_len += line_len;
 			// fflush(minishell_fd);
-			fflush(stdout);
+			// fflush(stdout);
 		}
 		int minishell_status = pclose(minishell_fd);
 		// Close the pipes
-			
 
 		// Compare the outputs
 		int output_equal = 0;
@@ -181,6 +179,7 @@ void run_test(const char *command)
 		if (bash_output)
 		{
 			bash_output = replaceString(bash_output, "bash: ", "");
+			bash_output = replaceString(bash_output, "line 1: ", "");
 			free(temp_bashoutput);
 		}			
 		if (minishell_output && bash_output)
@@ -203,7 +202,6 @@ void run_test(const char *command)
 		// Free allocated memory
 		free(bash_output);
 		free(minishell_output);
-		// free(bash_output2);
 		// free(minishell_output2);
     
 }

@@ -62,6 +62,7 @@ SRC	=	src/alloc_pool/data_pool.c	\
 		src/temp_pool.c	\
 		src/ft_strdupn.c \
 		src/ft_strncpy.c \
+		src/ft_strchrlast.c \
 
 SRC_BONUS =	src/bonus/ft_lstadd_back.c	\
 			src/bonus/ft_lstadd_front.c	\

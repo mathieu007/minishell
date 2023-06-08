@@ -165,10 +165,9 @@ typedef enum e_cmd_seq
 
 typedef struct s_redirect
 {
-	int32_t					fd_in;
-	int32_t					fd_out;
-	char					*file_in;
-	char					*file_out;
+	int32_t		fd;
+	char		*file;
+	bool		fd_is_temp;
 }							t_redirect;
 
 typedef struct s_pipe
@@ -235,7 +234,7 @@ typedef struct s_cmd
 	t_token			*token;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
-	t_redirect		*redirect;
+	t_redirect		*redir;
 	pid_t			pid;
 }				t_cmd;
 

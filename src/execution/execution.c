@@ -36,9 +36,7 @@ t_cmd	*pipes_cmds(t_cmd *cmd)
 int32_t	exec_sequence(t_cmd *cmd)
 {
 	t_process	*proc;
-	int32_t		ret;
 
-	ret = 0;
 	proc = get_process();
 	while (cmd && cmd->cmd_seq_type != CMD_NONE)
 	{
@@ -67,7 +65,7 @@ int32_t	exec_sequence(t_cmd *cmd)
 		if (cmd)
 			cmd = cmd->next;
 	}
-	return (ret);
+	return (proc->errnum);
 }
 
 /// @brief we will create cmds from the tokens.

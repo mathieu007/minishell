@@ -46,7 +46,7 @@ static void	fork_exec(t_cmd	*cmd)
 		proc->errnum = ret;
 }
 
-int32_t	exec_or(t_cmd *cmd)
+int32_t	execute(t_cmd *cmd)
 {
 	t_process	*proc;
 
@@ -74,34 +74,27 @@ t_cmd	*exec_logical_or(t_cmd *cmd)
 	t_process	*proc;
 
 	proc = get_process();
-	proc->errnum = exec_or(cmd);
-	if (proc->errnum == -1)
-		return (NULL);
-	cmd = cmd->next;
-	if (proc->errnum > 0 && cmd && cmd->cmd_seq_type == CMD_LOG_AND)
-		cmd = exec_logical_and(cmd);
-	else if (proc->errnum > 0 && cmd && cmd->cmd_seq_type == CMD_LOG_OR)
+	proc->errnum = 1;
+	while (cmd && cmd->cmd_seq_type == CMD_LOG_OR && proc->errnum > 0)
 	{
-		while (cmd && cmd->cmd_seq_type == CMD_LOG_OR && proc->errnum > 0)
+		proc->errnum = execute(cmd);
+		if (proc->errnum == -1)
+			return (NULL);
+		cmd = cmd->next;
+		if (proc->errnum == 0 && cmd)
 		{
-			proc->errnum = 0;
-			proc->errnum = exec_or(cmd);
-			cmd = cmd->next;
-			if (proc->errnum > 0 && cmd->cmd_seq_type != CMD_LOG_OR)
-			{
-				cmd = cmd->next;
-				while (cmd && cmd->cmd_seq_type != CMD_LOG_OR)
-					cmd = cmd->next;
-				proc->errnum = exec_sequence(cmd);
-				return (NULL);
-			}
-			else if (proc->errnum == 0)	
-				break ;
-			cmd = cmd->next;			
+			if (cmd->cmd_seq_type == CMD_LOG_AND)
+				return (exec_logical_and(cmd));
+			else if (cmd->next && cmd->next->cmd_seq_type == CMD_LOG_AND)
+				return (exec_logical_and(cmd->next));
+			else if (cmd->next)
+				return (cmd->next);
+			else
+				return (cmd);
 		}
+		while (proc->errnum > 0 && cmd && cmd->cmd_seq_type == CMD_LOG_AND)
+			cmd = cmd->next;
 	}
-	else if (proc->errnum == 0 && cmd && cmd->cmd_seq_type == CMD_LOG_AND)
-		cmd = exec_logical_and(cmd);
 	return (cmd);
 }
 
@@ -143,38 +136,26 @@ int32_t exec_and(t_cmd *cmd)
 t_cmd	*exec_logical_and(t_cmd *cmd)
 {
 	t_process	*proc;
-	int32_t		ret;
 
 	proc = get_process();
-	ret = exec_and(cmd);
-	if (ret == -1)
-		return (NULL);
-	if (proc->errnum == 0)
+	proc->errnum = 0;
+	while (cmd && cmd->cmd_seq_type == CMD_LOG_AND && proc->errnum == 0)
 	{
-		if (cmd->next && cmd->next->cmd_seq_type == CMD_LOG_AND)
+		proc->errnum = execute(cmd);
+		if (proc->errnum == -1)
+			return (NULL);
+		cmd = cmd->next;
+		if (proc->errnum > 0 && cmd)
 		{
-			while (cmd && cmd->next)
-			{
-				if (cmd->next->cmd_seq_type == CMD_LOG_AND && proc->errnum == 0)
-				{
-					proc->errnum = 0;
-					proc->errnum = exec_and(cmd->next);					
-					if (proc->errnum > 0)
-						proc->stop_exec = true;
-					cmd = cmd->next;
-				}
-				else if (proc->errnum > 0 && cmd->next->cmd_seq_type == CMD_LOG_OR)
-					cmd = exec_logical_or(cmd->next);
-				else if (proc->errnum == 0 && cmd->next->cmd_seq_type == CMD_LOG_OR)
-					cmd = cmd->next;
-				else
-					break;
-			}
-		}			
-		else if (cmd->next && cmd->next->cmd_seq_type == CMD_LOG_OR)
-			cmd = cmd->next;
+			while (cmd && cmd->cmd_seq_type == CMD_LOG_AND)
+				cmd = cmd->next;
+			if (cmd && cmd->cmd_seq_type == CMD_LOG_OR)
+				return (exec_logical_or(cmd));
+			else if (cmd)
+				return (cmd);
+			else
+				return (NULL);
+		}
 	}
-	else if (cmd->next->cmd_seq_type == CMD_LOG_OR)
-		cmd = exec_logical_or(cmd->next);
-	return (cmd);
+	return (NULL);
 }
