@@ -1,12 +1,5 @@
 #include "minishell.h"
 
-
-
-// exec the function right away because it is a sequential cmd.
-// No need to fork.
-// Because t_process is stored inside static variable no need 
-// to initilized a new one, each forked process will received it's
-// own t_process struct
 static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
@@ -14,6 +7,7 @@ static int32_t	exec(t_cmd *cmd)
 	proc = get_process();
 	if (proc->errnum > 0)
 		return (proc->errnum);
+	redirect_output(cmd);
 	proc->errnum = cmd->func(cmd);
 	return (proc->errnum);
 }
@@ -54,11 +48,11 @@ int32_t	execute(t_cmd *cmd)
 	proc->stop_exec = false;
 	proc->errnum = 0;
 	build_token_environement(cmd->token);
-	if (contains_parentheses(cmd->token))
-		proc->errnum = exec_sequence(cmd->child);
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (-1);
+	if (cmd->prev && cmd->prev->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->prev);
 	if (cmd->is_builtin)
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)
@@ -98,40 +92,19 @@ t_cmd	*exec_logical_or(t_cmd *cmd)
 	return (cmd);
 }
 
-t_token	*contains_parentheses(t_token *token)
-{
-	t_token	*child;
+// t_token	*contains_parentheses(t_token *token)
+// {
+// 	t_token	*child;
 
-	child = token->child_tokens;
-	while (child)
-	{
-		if (child->type == TK_PARENTHESE_OPEN)
-			return (child);
-		child = child->next;
-	}
-	return (NULL);
-}
-
-int32_t exec_and(t_cmd *cmd)
-{
-	t_process	*proc;
-
-	proc = get_process();
-	proc->errnum = 0;
-	build_token_environement(cmd->token);
-	if (contains_parentheses(cmd->token))
-		proc->errnum = exec_sequence(cmd->child);
-	proc->errnum = 0;
-	cmd = parse_at_execution(cmd);
-	if (!cmd)
-		return (-1);
-	if (cmd->is_builtin && proc->errnum == 0)
-		proc->errnum = exec(cmd);
-	else if (proc->errnum == 0)
-		fork_exec(cmd);
-	proc->stop_exec = false;
-	return (proc->errnum);
-}
+// 	child = token->child_tokens;
+// 	while (child)
+// 	{
+// 		if (child->type == TK_PARENTHESE_OPEN)
+// 			return (child);
+// 		child = child->next;
+// 	}
+// 	return (NULL);
+// }
 
 t_cmd	*exec_logical_and(t_cmd *cmd)
 {

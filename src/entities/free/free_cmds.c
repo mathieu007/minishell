@@ -18,7 +18,7 @@ void	free_t_cmd(t_cmd *cmd)
 		cmd->args = free_2d_char_array(cmd->args);
 		cmd->options = free_2d_array((void **)cmd->options);
 		cmd->pipe = free_ptr(cmd->pipe);
-		cmd->redirect = free_t_redirect(cmd->redirect);
+		cmd->out_redir = free_t_redirect(cmd->out_redir);
 		free(current);
 		current = next;
 	}

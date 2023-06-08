@@ -14,6 +14,7 @@ static int32_t	exec(t_cmd *cmd)
 	proc = get_process();
 	if (proc->errnum > 0)
 		return (proc->errnum);
+	redirect_output(cmd);	
 	ret = cmd->func(cmd);
 	return (ret);
 }
@@ -52,13 +53,13 @@ int32_t	exec_sequential(t_cmd *cmd)
 
 	proc = get_process();
 	build_token_environement(cmd->token);
-	if (contains_parentheses(cmd->token))
-		proc->errnum = exec_sequence(cmd->child);
 	proc->errnum = 0;
 	proc->stop_exec = false;
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
+	if (cmd->prev && cmd->prev->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->prev);
 	if (cmd->is_builtin)
 		proc->errnum = exec(cmd);
 	else

@@ -166,6 +166,7 @@ typedef enum e_cmd_seq
 typedef struct s_redirect
 {
 	int32_t		fd;
+	char		*input_file;
 	char		*file;
 	bool		fd_is_temp;
 }							t_redirect;
@@ -234,7 +235,8 @@ typedef struct s_cmd
 	t_token			*token;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
-	t_redirect		*redir;
+	t_redirect		*out_redir;
+	t_redirect		*in_redir;
 	pid_t			pid;
 }				t_cmd;
 
@@ -260,6 +262,11 @@ typedef struct s_process
 
 /// @brief The entities functions
 
+void			*create_redir_out(t_cmd *cmd);
+void			*create_redir_append_out(t_cmd *cmd);
+void			redirect_output(t_cmd *cmd);
+int32_t			open_out_redir_fd(t_cmd *cmd);
+int32_t			open_out_append_redir_fd(t_cmd *cmd);
 int32_t			*reset_token_counter(void);
 t_env_cpy		*copy_env_from(t_process *proc);
 void			*fork_pipes(t_cmd *cmd);

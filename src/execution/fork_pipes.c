@@ -54,8 +54,6 @@ void	fork_first_child(t_cmd *cmd)
 	{
 		get_process()->env_cpy = proc->env_cpy;
 		build_token_environement(cmd->token);
-		if (contains_parentheses(cmd->token))
-			proc->errnum = exec_sequence(cmd->child);
 		cmd = parse_at_execution(cmd);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
 		close(cmd->pipe->fd_in);
@@ -82,8 +80,6 @@ void	fork_last_child(t_cmd *cmd)
 	{
 		get_process()->env_cpy = proc->env_cpy;
 		build_token_environement(cmd->token);
-		if (contains_parentheses(cmd->token))
-			proc->errnum = exec_sequence(cmd->child);
 		cmd = parse_at_execution(cmd);
 		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
 		close(cmd->prev->pipe->fd_in);
@@ -112,8 +108,6 @@ void	fork_middle_child(t_cmd *cmd)
 	{
 		get_process()->env_cpy = proc->env_cpy;
 		build_token_environement(cmd->token);
-		if (contains_parentheses(cmd->token))
-			proc->errnum = exec_sequence(cmd->child);
 		cmd = parse_at_execution(cmd);
 		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);

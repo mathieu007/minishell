@@ -48,14 +48,6 @@ int32_t	exec_sequence(t_cmd *cmd)
 			cmd = exec_logical_and(cmd);
 		else if (cmd->cmd_seq_type == CMD_LOG_OR)
 			cmd = exec_logical_or(cmd);
-		else if (cmd->cmd_seq_type == CMD_FILEOUT_APPPEND)
-			cmd = exec_logical_or(cmd);
-		else if (cmd->cmd_seq_type == CMD_FILEOUT)
-			cmd = exec_logical_or(cmd);
-		else if (cmd->cmd_seq_type == CMD_FILEIN)
-			cmd = exec_logical_or(cmd);
-		else if (cmd->cmd_seq_type == CMD_FILEIN_APPPEND)
-			cmd = exec_logical_or(cmd);
 		else if (cmd->cmd_seq_type == CMD_GROUPING)
 			cmd = exec_group(cmd);
 		else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
