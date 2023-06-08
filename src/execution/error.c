@@ -10,10 +10,6 @@ void	write_err2(int32_t stderror, char *msg, char *msg2)
 	write(2, err_msg, ft_strlen(err_msg));
 	proc->errnum = stderror;
 	free(err_msg);
-<<<<<<< HEAD
-	(void)stderror;
-	free_all_and_exit(stderror);
-=======
 }
 
 void	write_err3(int32_t stderror, char *msg, char *msg2, char *msg3)
@@ -38,7 +34,6 @@ void	write_err(int32_t stderror, char *msg)
 	proc = get_process();
 	write(2, msg, ft_strlen(msg));
 	proc->errnum = stderror;
->>>>>>> origin/Math
 }
 
 void	write_msg(int32_t stderror, char *msg)

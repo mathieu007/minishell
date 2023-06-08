@@ -1,18 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/18 20:16:34 by mathieu           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/06/01 11:53:19 by bmartin          ###   ########.fr       */
-=======
-/*   Updated: 2023/06/05 14:56:34 by math             ###   ########.fr       */
->>>>>>> origin/Math
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "libft.h"
 
@@ -48,9 +33,6 @@ char	*ft_strjoinfree(char *s1, char const *s2)
 	ft_memcpy(&mem[s1_l], s2, s2_l);
 	mem[s1_l + s2_l] = '\0';
 	return (free(s1), mem);
-<<<<<<< HEAD
-}
-=======
 }
 
 char	*ft_strjoinfree2(char *s1, char *s2)
@@ -79,4 +61,3 @@ char	*ft_strjoinfree2(char *s1, char *s2)
 		free(s2);
 	return (mem);
 }
->>>>>>> origin/Math

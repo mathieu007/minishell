@@ -182,9 +182,9 @@ void run_test(const char *command)
 		if ((output_equal || (!minishell_output && !bash_output)) && WEXITSTATUS(bash_status) == WEXITSTATUS(minishell_status))
 		{
 			printf(GREEN "TEST PASSED!\n\n" RESET);
-			printf("Bash output:\n[%s]\n", bash_output2);
+			printf("Bash output:\n[%s]\n", bash_output);
 			printf("Bash exit status: %d\n", WEXITSTATUS(bash_status));
-			printf("Minishell output:\n[%s]\n", minishell_output2);
+			printf("Minishell output:\n[%s]\n", minishell_output);
 			printf("Minishell exit status: %d\n\n", WEXITSTATUS(minishell_status));
 		}
 		else

@@ -12,59 +12,38 @@ int32_t	execute_tests(char *input)
 	return (ret);
 }
 
-// int32_t	main(int32_t argc, char **argv, char **env)
-// {
-// 	init_data(argc, argv, env);
-// 	(void)env;
-// 	char 	*input;
-
-// 	if (argc >= 2)
-// 		return (execute_tests(argv[1]));
-// 	while (1)
-// 	{
-// 		disable_ctrl_c_output();
-// 		setup_signal_handlers();
-// 		input = readline("MiniShell> \x1B[s");
-// 		if(input == NULL)
-// 		{
-// 			printf("\x1B[u\x1B[Aexit\n");
-// 			break;
-// 		}
-// 		exec_cmds(input);
-// 		if (strcmp(input, "exit") == 0)
-// 			break ;
-// 		add_history(input);
-// 		free_t_token_groups(get_process()->token_groups);
-// 		free_t_cmd(get_process()->cmds);
-// 		free(input);
-// 	}
-// 	return (EXIT_SUCCESS);
-// }
-
-int main (void)
+int32_t	main(int32_t argc, char **argv, char **env)
 {
-	redirect_append("test1.txt");
-	redirect_overwrite ("jaime les patates","test2.txt");
+	init_data(argc, argv, env);
+	(void)env;
+	char 	*input;
 
-<<<<<<< HEAD
-}
-=======
 	if (argc >= 2)
-	{
 		return (execute_tests(argv[1]));
-	}
 	while (1)
 	{
-		input = readline("MiniShell> ");
+		disable_ctrl_c_output();
+		setup_signal_handlers();
+		input = readline("MiniShell> \x1B[s");
+		if(input == NULL)
+		{
+			printf("\x1B[u\x1B[Aexit\n");
+			break;
+		}
 		exec_cmds(input);
 		if (strcmp(input, "exit") == 0)
 			break ;
 		add_history(input);
-		// free_t_token_groups(get_process()->token_sequence);
-		free_t_tokens(get_process()->tokens);
-		free_t_cmd(get_process()->cmds);
+		free_t_data(get_process());
 		free(input);
 	}
 	return (EXIT_SUCCESS);
 }
->>>>>>> origin/Math
+
+
+
+// int main (void)
+// {
+// 	redirect_append("test1.txt");
+// 	redirect_overwrite ("jaime les patates");
+// }
