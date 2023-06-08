@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirect.c                                         :+:      :+:    :+:   */
+/*   ft_strfill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/06/08 10:25:12 by math             ###   ########.fr       */
+/*   Created: 2022/10/18 11:47:31 by mroy              #+#    #+#             */
+/*   Updated: 2023/06/06 22:10:19 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-t_redirect	*new_redirect(t_cmd *cmd)
+char	*ft_strfill(char c, int32_t count)
 {
-	(void) cmd;
-	t_redirect	*new;
+	char	*dest;
+	int32_t	i;
 
-	new = malloc(sizeof(t_redirect));
-	if (new == NULL)
+	i = 0;
+	dest = malloc(count + 1);
+	if (dest == NULL)
 		return (NULL);
-	new->fd = -1;
-	return (new);
-}
-
-void	*free_redirect(t_cmd *cmd)
-{
-	if (cmd->out_redir != NULL)
-		free(cmd->out_redir);
-	cmd->out_redir = NULL;
-	cmd = cmd->next;
-	return (NULL);
+	while (i < count)
+		dest[i] = c;
+	return (dest);
 }

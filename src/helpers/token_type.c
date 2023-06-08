@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/06/05 14:25:09 by math             ###   ########.fr       */
+/*   Updated: 2023/06/07 07:21:42 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,19 @@ inline int32_t	goto_closing_double_quote(char *str, int32_t i)
 
 inline int32_t	goto_closing_environement(char *str, int32_t i)
 {
-	while (str[i])
+	if (str[i] == '{')
+		i++;
+	if (ft_isnum(&str[i]))
 	{
-		if (str[i] == '\\')
-			i += 2;
-		else if (str[i] == '"')
-			i = goto_closing_double_quote(str, i) + 1;
-		else if (str[i] == '\'')
-			i = goto_closing_single_quote(str, i) + 1;
-		else if (str[i] == '(')
-			i = goto_closing_parenthese(str, i) + 1;
-		else if (str[i] == ')')
-			return (i);
-		else
+		i++;
+		if (str[i] == '}')
 			i++;
-	}
+		return (i - 1);
+	}		
+	while (ft_isalnum(str[i]) == 1 || str[i] == '_')
+		i++;
+	if (str[i] == '}')
+		i++;
 	return (i - 1);
 }
 
@@ -80,11 +78,11 @@ inline int32_t	goto_closing_parenthese(char *str, int32_t i)
 		if (str[i] == '\\')
 			i += 2;
 		else if (str[i] == '"')
-			i = goto_closing_double_quote(str, i) + 1;
+			i = goto_closing_double_quote(str, i + 1) + 1;
 		else if (str[i] == '\'')
-			i = goto_closing_single_quote(str, i) + 1;
+			i = goto_closing_single_quote(str, i + 1) + 1;
 		else if (str[i] == '(')
-			i = goto_closing_parenthese(str, i) + 1;
+			i = goto_closing_parenthese(str, i + 1) + 1;
 		else if (str[i] == ')')
 			return (i);
 		else

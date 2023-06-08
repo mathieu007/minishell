@@ -117,7 +117,7 @@ void	print_token(t_token *token)
 		printf(" token in dbl quotes = %i\n", (int)cpy->inside_dbl_quotes);
 		printf(" pos = %i\n", cpy->start);
 		printf(" token type = %s\n", get_print_token_type(cpy->type));
-		printf(" total len = %i\n", cpy->str_len);
+		// printf(" total len = %i\n", cpy->str_len);
 		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;

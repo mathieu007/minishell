@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_group2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/05 09:13:55 by math             ###   ########.fr       */
+/*   Updated: 2023/06/07 09:48:42 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int32_t	add_token_single_quote(char *str, int32_t i, t_token *parent)
 	t_token	*token;
 
 	token = add_tk(ft_strdup("'"), TK_SINGLEQUOTE, i, parent);
-	i = goto_closing_double_quote(str, i);
+	i = goto_closing_single_quote(str, i + 1);
 	if (str[i] != '\'')
 		token->is_continuation = true;
 	else
@@ -31,7 +31,7 @@ int32_t	add_token_double_quote(char *str, int32_t i, t_token *parent)
 	t_token	*token;
 
 	token = add_tk(ft_strdup("\""), TK_DOUBLEQUOTE, i, parent);
-	i = goto_closing_double_quote(str, i);
+	i = goto_closing_double_quote(str, i + 1);
 	if (str[i] != '"')
 		token->is_continuation = true;
 	else
@@ -69,6 +69,15 @@ int32_t	add_token_parenthese(char *str, int32_t i, t_token *parent)
 	return (i);
 }
 
+/// @brief token group are tokens that may contains othet tokens or
+/// may contains characters that may be indetified as a token.
+/// we normally skip all tokens inside a group, the tokens inside
+/// the group will be tokenize at next level
+/// @param str 
+/// @param i 
+/// @param type 
+/// @param parent 
+/// @return 
 int32_t	add_token_group(char *str, int32_t i, t_token_type type,
 	t_token *parent)
 {

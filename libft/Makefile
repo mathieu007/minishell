@@ -2,6 +2,7 @@ NAME = libft.a
 
 SRC	=	src/alloc_pool/data_pool.c	\
 		src/ft_atoi.c	\
+		src/ft_strfill.c	\
 		src/ft_atoi_long.c	\
 		src/ft_bzero.c	\
 		src/ft_calloc.c	\
@@ -61,6 +62,7 @@ SRC	=	src/alloc_pool/data_pool.c	\
 		src/temp_pool.c	\
 		src/ft_strdupn.c \
 		src/ft_strncpy.c \
+		src/ft_strchrlast.c \
 
 SRC_BONUS =	src/bonus/ft_lstadd_back.c	\
 			src/bonus/ft_lstadd_front.c	\

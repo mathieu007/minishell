@@ -6,9 +6,7 @@ int32_t	execute_tests(char *input)
 	int32_t	ret;
 
 	ret = exec_cmds(input);
-	// free_t_token_groups(get_process()->token_sequence);
-	free_t_tokens(get_process()->tokens);
-	free_t_cmd(get_process()->cmds);
+	free_t_data(get_process());
 	return (ret);
 }
 

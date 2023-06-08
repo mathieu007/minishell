@@ -133,6 +133,7 @@ void				init_pools(void);
 int32_t				ft_log2_64(uint64_t value);
 int64_t				ft_exponent(int32_t a, int32_t b);
 void				*resize_pool(t_pool_info *pool);
+char				*ft_strfill(char c, int32_t count);
 char				*ft_strjoin_temp(char const *s1, char const *s2);
 void				free_p_all(void);
 char				**ft_split_many(char *s, char *separators);
@@ -144,5 +145,6 @@ bool				ft_strn_right_cmp(const char *s1, const char *s2, size_t n);
 char				*ft_strncpy(char *src, size_t len);
 char				*ft_strjoinfree(char *s1, char const *s2);
 char				*ft_strjoinfree2(char *s1, char *s2);
+char				*ft_strchrlast(const char *s, char c);
 
 #endif

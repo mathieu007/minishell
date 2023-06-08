@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-static t_cmd	*parse_seq_cmd(t_token *token)
-{
-	t_cmd		*cmd;
-
-	cmd = parse_cmd(token);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	return (cmd);
-}
-
 // exec the function right away because it is a sequential cmd.
 // No need to fork.
 // Because t_process is stored inside static variable no need 
@@ -20,14 +8,15 @@ static t_cmd	*parse_seq_cmd(t_token *token)
 static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
-	int32_t		ret;
 
-	ret = 0;
 	proc = get_process();
 	if (proc->errnum > 0)
 		return (proc->errnum);
-	ret = cmd->func(cmd);
-	return (ret);
+	redirect_output(cmd);
+	proc->errnum = cmd->func(cmd);
+	close(STDOUT_FILENO);
+	close(3);
+	return (proc->errnum);
 }
 
 static int32_t	fork_exec(t_cmd	*cmd)
@@ -58,20 +47,28 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	return (ret);
 }
 
-int32_t	exec_sequential(t_token *token)
+int32_t	exec_sequential(t_cmd *cmd)
 {
 	t_process	*proc;
-	t_cmd		*cmd;
 
 	proc = get_process();
 	proc->errnum = 0;
 	proc->stop_exec = false;
-	cmd = parse_seq_cmd(token);
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
-	if (cmd->is_builtin)
-		proc->errnum = exec(cmd);
-	else
+	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+	{
+		create_redir_out(cmd->next);
 		proc->errnum = fork_exec(cmd);
+	}
+	else
+	{
+		if (cmd->is_builtin)
+			proc->errnum = exec(cmd);
+		else
+			proc->errnum = fork_exec(cmd);
+	}
 	return (proc->errnum);
 }

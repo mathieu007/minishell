@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static int32_t	fork_group(t_token	*token)
+static int32_t	fork_group(t_cmd *cmd)
 {
 	pid_t		pid;
 	t_process	*proc;
@@ -18,7 +18,7 @@ static int32_t	fork_group(t_token	*token)
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
-		ret = exec_sequence(token->child_tokens);
+		ret = exec_sequence(cmd->child);
 		exit(ret);
 	}
 	waitpid(pid, &status, 0);
@@ -27,11 +27,11 @@ static int32_t	fork_group(t_token	*token)
 	return (proc->errnum);
 }
 
-t_token	*exec_group(t_token *token)
+t_cmd	*exec_group(t_cmd *cmd)
 {
 	t_process			*proc;
-	
+
 	proc = get_process();
-	proc->errnum = fork_group(token);
-	return (token);
+	proc->errnum = fork_group(cmd);
+	return (cmd);
 }

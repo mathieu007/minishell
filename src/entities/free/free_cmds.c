@@ -2,8 +2,8 @@
 
 void	free_t_cmd(t_cmd *cmd)
 {
-	t_cmd	*current;
-	t_cmd	*next;
+	t_cmd		*current;
+	t_cmd		*next;
 	t_process	*data;
 
 	data = get_process();
@@ -14,18 +14,22 @@ void	free_t_cmd(t_cmd *cmd)
 	while (current != NULL)
 	{
 		next = current->next;
-		/// do not free cmd->name is freed inside cmd->args
-		// cmd->name = free_ptr(cmd->name);
 		cmd->full_path_name = free_ptr(cmd->full_path_name);
 		cmd->args = free_2d_char_array(cmd->args);
 		cmd->options = free_2d_array((void **)cmd->options);
 		cmd->pipe = free_ptr(cmd->pipe);
-		cmd->redirect = free_t_redirect(cmd->redirect);
+		cmd->out_redir = free_t_redirect(cmd->out_redir);
 		free(current);
 		current = next;
 	}
 	data->last_cmd = NULL;
 	data->cmds = NULL;
+}
+
+void	free_t_token(t_token *token)
+{
+	token->str = free_ptr(token->str);
+	free(token);
 }
 
 void	free_t_tokens(t_token *token)

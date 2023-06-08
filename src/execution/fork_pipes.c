@@ -37,16 +37,6 @@ static void	wait_childs(t_cmd *cmd)
 	waitpid(cmd->pid, &status, 0);
 }
 
-static t_cmd	*build_cmd(t_cmd *cmd)
-{
-	cmd = parse_cmd2(cmd);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	return (cmd);
-}
-
 void	fork_first_child(t_cmd *cmd)
 {
 	pid_t		pid;
@@ -64,9 +54,7 @@ void	fork_first_child(t_cmd *cmd)
 	{
 		get_process()->env_cpy = proc->env_cpy;
 		build_token_environement(cmd->token);
-		if (contains_groups(cmd->token))
-			proc->errnum = exec_sequence(cmd->token->child_tokens);
-		cmd = build_cmd(cmd);
+		cmd = parse_at_execution(cmd);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
 		close(cmd->pipe->fd_in);
 		close(cmd->pipe->fd_out);
@@ -90,15 +78,14 @@ void	fork_last_child(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = copy_env_from(proc);
+		get_process()->env_cpy = proc->env_cpy;
+		build_token_environement(cmd->token);
+		cmd = parse_at_execution(cmd);
 		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
 		close(cmd->prev->pipe->fd_in);
 		close(cmd->prev->pipe->fd_out);
-		cmd->func(cmd);
-		if (cmd->is_builtin)
-			exit(EXIT_SUCCESS);
-		else if (!cmd->is_builtin)
-			exit(EXIT_FAILURE);
+		proc->errnum = cmd->func(cmd);
+		exit(proc->errnum);
 	}
 	close(cmd->prev->pipe->fd_in);
 	close(cmd->prev->pipe->fd_out);
@@ -119,17 +106,16 @@ void	fork_middle_child(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = copy_env_from(proc);
+		get_process()->env_cpy = proc->env_cpy;
+		build_token_environement(cmd->token);
+		cmd = parse_at_execution(cmd);
 		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
 		close(cmd->pipe->fd_out);
 		close(cmd->prev->pipe->fd_in);
 		close(cmd->prev->pipe->fd_out);
-		cmd->func(cmd);
-		if (cmd->is_builtin)
-			exit(EXIT_SUCCESS);
-		else if (!cmd->is_builtin)
-			exit(EXIT_FAILURE);
+		proc->errnum = cmd->func(cmd);
+		exit(proc->errnum);
 	}
 	close(cmd->prev->pipe->fd_in);
 	close(cmd->prev->pipe->fd_out);
@@ -139,22 +125,19 @@ void	fork_middle_child(t_cmd *cmd)
 
 void	*fork_pipes(t_cmd *cmd)
 {
-	int32_t	i;
 	t_cmd	*start;
 
-	i = 0;
 	start = cmd;
-	while (cmd)
-	{		
-		if (cmd->cmd_seq_type != CMD_PIPE)
-			return (fork_last_child(cmd), NULL);
-		else if (i == 0)
-			fork_first_child(cmd);	
-		else
-			fork_middle_child(cmd);
+	if (cmd)
+		fork_first_child(cmd);
+	cmd = cmd->next;
+	while (cmd && cmd->next && cmd->next->cmd_seq_type == CMD_PIPE)
+	{
+		fork_middle_child(cmd);
 		cmd = cmd->next;
-		i++;
 	}
+	if (cmd && cmd->cmd_seq_type == CMD_PIPE)
+		fork_last_child(cmd);
 	wait_childs(start);
 	return (NULL);
 }

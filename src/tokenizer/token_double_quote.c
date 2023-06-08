@@ -9,7 +9,7 @@ t_token	*tokenize_dbl_quotes_tokens(t_token *parent)
 	t_token			*start_token;
 
 	i = 0;
-	str = ft_strtrim(parent->str, " ");
+	str = parent->str;
 	start_token = add_tk(ft_strdup(""), TK_START, 0, parent);
 	while (str[i])
 	{
@@ -17,7 +17,7 @@ t_token	*tokenize_dbl_quotes_tokens(t_token *parent)
 		t_len = get_token_len(&str[i], type, false);
 		if (type == TK_COMMANDSUBSTITUTION_OPEN)
 			i = add_token_substitution(str, i, parent, true);
-		else if (str_is_env_variable(&str[i]))
+		else if (type == TK_ENVIRONEMENT_VAR)
 			i = add_token_env(str, i, parent, true);
 		else
 			i += t_len;

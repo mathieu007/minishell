@@ -1,22 +1,5 @@
 #include "minishell.h"
 
-static t_cmd	*parse_logical_cmd(t_token *token)
-{
-	t_cmd		*cmd;
-	
-	cmd = parse_cmd(token);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	return (cmd);
-}
-
-// exec the function right away because it is a sequential cmd.
-// No need to fork.
-// Because t_process is stored inside static variable no need 
-// to initilized a new one, each forked process will received it's
-// own t_process struct
 static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
@@ -24,6 +7,7 @@ static int32_t	exec(t_cmd *cmd)
 	proc = get_process();
 	if (proc->errnum > 0)
 		return (proc->errnum);
+	redirect_output(cmd);
 	proc->errnum = cmd->func(cmd);
 	return (proc->errnum);
 }
@@ -56,65 +40,95 @@ static void	fork_exec(t_cmd	*cmd)
 		proc->errnum = ret;
 }
 
+int32_t	execute(t_cmd *cmd)
+{
+	t_process	*proc;
+
+	proc = get_process();
+	proc->stop_exec = false;
+	proc->errnum = 0;
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
+	if (!cmd)
+		return (-1);
+	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->next);
+	if (cmd->is_builtin)
+		proc->errnum = exec(cmd);
+	else if (proc->errnum == 0)
+		fork_exec(cmd);
+	return (proc->errnum);
+}
+
 /// @brief logical operator such as && || stop the execution of the program
 /// if an error occur.
 /// @param cmd 
-t_token	*exec_logical_or(t_token *token)
+t_cmd	*exec_logical_or(t_cmd *cmd)
 {
 	t_process	*proc;
-	t_cmd		*cmd;
+
+	proc = get_process();
+	proc->errnum = 1;
+	while (cmd && cmd->cmd_seq_type == CMD_LOG_OR && proc->errnum > 0)
+	{
+		proc->errnum = execute(cmd);
+		if (proc->errnum == -1)
+			return (NULL);
+		cmd = cmd->next;
+		if (proc->errnum == 0 && cmd)
+		{
+			if (cmd->cmd_seq_type == CMD_LOG_AND)
+				return (exec_logical_and(cmd));
+			else if (cmd->next && cmd->next->cmd_seq_type == CMD_LOG_AND)
+				return (exec_logical_and(cmd->next));
+			else if (cmd->next)
+				return (cmd->next);
+			else
+				return (cmd);
+		}
+		while (proc->errnum > 0 && cmd && cmd->cmd_seq_type == CMD_LOG_AND)
+			cmd = cmd->next;
+	}
+	return (cmd);
+}
+
+// t_token	*contains_parentheses(t_token *token)
+// {
+// 	t_token	*child;
+
+// 	child = token->child_tokens;
+// 	while (child)
+// 	{
+// 		if (child->type == TK_PARENTHESE_OPEN)
+// 			return (child);
+// 		child = child->next;
+// 	}
+// 	return (NULL);
+// }
+
+t_cmd	*exec_logical_and(t_cmd *cmd)
+{
+	t_process	*proc;
 
 	proc = get_process();
 	proc->errnum = 0;
-	build_token_environement(token);
-	if (contains_groups(token))
-		proc->errnum = exec_sequence(token->child_tokens);
-	cmd = parse_logical_cmd(token);
-	if (!cmd)
-		return (token);
-	if (cmd->is_builtin && proc->errnum == 0)
-		proc->errnum = exec(cmd);
-	else if (proc->errnum == 0)
-		fork_exec(cmd);
-	proc->stop_exec = false;
-	if (proc->errnum == 0)
-		token = token->next;
-	return (token);
-}
-
-t_token	*contains_groups(t_token *token)
-{
-	t_token	*child;
-	
-	child = token->child_tokens;
-	while (child)
+	while (cmd && cmd->cmd_seq_type == CMD_LOG_AND && proc->errnum == 0)
 	{
-		if (child->type == TK_PARENTHESE_OPEN)
-			return (child);
-		child = child->next;
+		proc->errnum = execute(cmd);
+		if (proc->errnum == -1)
+			return (NULL);
+		cmd = cmd->next;
+		if (proc->errnum > 0 && cmd)
+		{
+			while (cmd && cmd->cmd_seq_type == CMD_LOG_AND)
+				cmd = cmd->next;
+			if (cmd && cmd->cmd_seq_type == CMD_LOG_OR)
+				return (exec_logical_or(cmd));
+			else if (cmd)
+				return (cmd);
+			else
+				return (NULL);
+		}
 	}
 	return (NULL);
-}
-
-t_token	*exec_logical_and(t_token *token)
-{
-	t_process	*proc;
-	t_cmd		*cmd;
-
-	proc = get_process();
-	build_token_environement(token);
-	if (contains_groups(token))
-		proc->errnum = exec_sequence(token->child_tokens);
-	proc->errnum = 0;	
-	cmd = parse_logical_cmd(token);
-	if (!cmd)
-		return (token);
-	if (cmd->is_builtin && proc->errnum == 0)
-		proc->errnum = exec(cmd);
-	else if (proc->errnum == 0)
-		fork_exec(cmd);
-	proc->stop_exec = false;
-	if (proc->errnum > 0)
-		proc->stop_exec = true;
-	return (token);
 }

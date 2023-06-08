@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 07:26:50 by math             ###   ########.fr       */
+/*   Updated: 2023/06/07 06:42:09 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ t_token	*add_tk(char *token_str, t_token_type type,
 /// @return 
 t_token	*tokenize(char *str)
 {
-	t_process		*proc;
-	t_token 		*root;
+	t_process	*proc;
+	t_token 	*root;
 
 	proc = get_process();
 	str = ft_strtrim(str, " ");
 	root = add_tk(ft_strdup(""), TK_START, 0, NULL);
 	root->str = ft_strdup(str);
-	root->str_len = ft_strlen(str);
+	proc->tokens = root;
 	tokenize_cmd_sequence(root);
 	return (proc->tokens);
 }

@@ -153,6 +153,7 @@ typedef enum e_cmd_seq
 	CMD_NONE = 0,
 	CMD_PIPE = TK_PIPE, // |
 	CMD_GROUPING = TK_PARENTHESE_OPEN, // (
+	CMD_SUBSTITUTION = TK_COMMANDSUBSTITUTION_OPEN, // (
 	CMD_LOG_AND = TK_AND, // &&
 	CMD_LOG_OR = TK_OR, // ||
 	CMD_BACKGROUND_EXEC = TK_AMPERSAND, // &
@@ -165,10 +166,10 @@ typedef enum e_cmd_seq
 
 typedef struct s_redirect
 {
-	int32_t					fd_in;
-	int32_t					fd_out;
-	char					*file_in;
-	char					*file_out;
+	int32_t		fd;
+	char		*input_file;
+	char		*file;
+	bool		fd_is_temp;
 }							t_redirect;
 
 typedef struct s_pipe
@@ -193,7 +194,6 @@ typedef struct s_token
 	struct s_token		*prev;
 	struct s_token		*last;
 	char				*str;
-	int32_t				str_len;
 	char				*token_str;
 	int32_t				token_len;
 	int32_t				start;
@@ -232,10 +232,12 @@ typedef struct s_cmd
 	char			**args; /// a terminating NULL list of string containing options and arguments
 	char			**options; /// a terminating NULL list of string containing only options
 	bool			is_builtin; /// is the command a builtins command?
+	int32_t			errnum;
 	t_token			*token;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
-	t_redirect		*redirect;
+	t_redirect		*out_redir;
+	t_redirect		*in_redir;
 	pid_t			pid;
 }				t_cmd;
 
@@ -261,6 +263,12 @@ typedef struct s_process
 
 /// @brief The entities functions
 
+t_cmd			*parse_redirect(t_cmd *cmd);
+t_cmd			*create_redir_out(t_cmd *cmd);
+t_cmd			*create_redir_append_out(t_cmd *cmd);
+void			redirect_output(t_cmd *cmd);
+int32_t			open_out_redir_fd(t_cmd *cmd);
+int32_t			open_out_append_redir_fd(t_cmd *cmd);
 int32_t			*reset_token_counter(void);
 t_env_cpy		*copy_env_from(t_process *proc);
 void			*fork_pipes(t_cmd *cmd);
@@ -283,10 +291,14 @@ int32_t			*get_token_counter(void);
 int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token *parent);
 
+
+t_cmd			*parse_at_execution(t_cmd *cmd);
 t_token			*tokenize_root(char *str);
 int32_t			add_token_group(char *str, int32_t i, t_token_type type,
 					t_token *parent);
 t_cmd			*add_cmd(void);
+t_cmd			*add_root_cmd_token(t_token *token);
+t_cmd			*add_child_cmd(t_cmd *parent, t_token *token);
 void			dup_env(void);
 t_token			*new_token();
 t_cmd			*new_cmd();
@@ -294,7 +306,8 @@ t_token_sequence	*new_token_sequence();
 
 /// @brief Simples and short helpers methods.
 
-t_token		*contains_groups(t_token *token);
+t_token		*contains_parentheses(t_token *token);
+int32_t		goto_closing_environement(char *str, int32_t i);
 int32_t		goto_closing_single_quote(char *str, int32_t i);
 int32_t		goto_closing_double_quote(char *str, int32_t i);
 int32_t		goto_closing_parenthese(char *str, int32_t i);
@@ -313,7 +326,7 @@ char			*get_end_of_cmd(char *str);
 int32_t			get_token_type_len2(t_token_type type);
 
 t_cmd			*parse_cmd2(t_cmd *cmd);
-t_token			*exec_group(t_token *token);
+t_cmd			*exec_group(t_cmd *cmd);
 bool			is_token_group(t_token_type type);
 bool			is_end_of_seq(t_token_type type);
 bool			is_env_variable(t_token *token);
@@ -383,12 +396,12 @@ int32_t			increment_counter(t_token_type type);
 int32_t			decrement_counter(t_token_type type);
 
 /// parsing
-int32_t			exec_sequence(t_token *token);
+int32_t			exec_sequence(t_cmd *cmd);
 bool			token_count_is_odd(char *str);
-t_cmd			*parse_cmd(t_token *token);
+t_cmd			*parse_cmd(t_cmd *cmd);
 char			*group_to_str(t_token_sequence *group);
 int32_t			count_env_words(char *str);
-t_cmd			*get_seq_cmds(t_token_sequence *group);
+
 char			**parse_args(t_token *group);
 char			**get_options(t_token *group);
 int32_t			get_args_len(t_token *group);
@@ -424,9 +437,9 @@ char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
-int32_t					exec_sequential(t_token *token);
-t_token			 		*exec_logical_or(t_token *token);
-t_token			 		*exec_logical_and(t_token *token);
+int32_t					exec_sequential(t_cmd *cmd);
+t_cmd			 		*exec_logical_or(t_cmd *cmd);
+t_cmd			 		*exec_logical_and(t_cmd *cmd);
 int32_t					add_execve_func(t_cmd *cmd);
 int32_t					exec_cmds(char *str);
 
@@ -463,6 +476,7 @@ int	redirect_overwrite(const char *output_file);
 
 
 //free section
+void					free_t_token(t_token *token);
 void					*free_2d_char_array(char **tab);
 void					free_t_cmd(t_cmd *cmd);
 void					free_t_tokens(t_token *token);
