@@ -14,17 +14,10 @@ t_env_cpy	*new_env(char *variable, char *value)
 	return (node);
 }
 
-<<<<<<< HEAD
-int32_t	count_splits(char **split)
-{
-	int32_t	i;
-
-=======
 int32_t		count_splits(char **split)
 {
 	int32_t i;
 	
->>>>>>> origin/Math
 	i = 0;
 	while (*split)
 	{
@@ -39,13 +32,8 @@ char	*join_splits(char **split, char *join)
 	char	*str;
 
 	str = *split;
-<<<<<<< HEAD
-	if(split[1])
-			str = ft_strjoinfree(str, join);
-=======
 	if (split[1])
 		str = ft_strjoinfree(str, join);
->>>>>>> origin/Math
 	split++;
 	while (*split)
 	{
@@ -75,12 +63,7 @@ t_env_cpy	*init_env(t_process *data)
 	split_on_equal = ft_split(data->env[i], '=');
 	count = count_splits(split_on_equal);
 	if (count > 2)
-<<<<<<< HEAD
-		current = new_env(split_on_equal[0], join_splits(&split_on_equal[1],
-					"="));
-=======
 		current = new_env(split_on_equal[0], join_splits(&split_on_equal[1], "="));
->>>>>>> origin/Math
 	else
 		current = new_env(split_on_equal[0], split_on_equal[1]);
 	i++;
@@ -90,14 +73,8 @@ t_env_cpy	*init_env(t_process *data)
 		split_on_equal = ft_split(data->env[i], '=');
 		count = count_splits(split_on_equal);
 		if (count > 2)
-<<<<<<< HEAD
-			current->next = new_env(split_on_equal[0],
-					join_splits(&split_on_equal[1], "="));
-		else
-=======
 			current->next = new_env(split_on_equal[0], join_splits(&split_on_equal[1], "="));
 		else	
->>>>>>> origin/Math
 			current->next = new_env(split_on_equal[0], split_on_equal[1]);
 		if (current->next)
 			current->next->prev = current;
@@ -156,17 +133,10 @@ t_env_cpy	*copy_env(void)
 
 t_env_cpy	*copy_env_from(t_process *proc)
 {
-<<<<<<< HEAD
-	t_env_cpy *head;
-	t_env_cpy *current;
-	t_env_cpy *new_head;
-	t_env_cpy *new_current;
-=======
 	t_env_cpy	*head;
 	t_env_cpy	*current;
 	t_env_cpy	*new_head;
 	t_env_cpy	*new_current;
->>>>>>> origin/Math
 
 	head = proc->env_cpy;
 	current = head;

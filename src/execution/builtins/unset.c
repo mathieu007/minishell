@@ -48,29 +48,9 @@ int	unset_cmd(t_cmd *cmd)
 	{
 		if (is_valid_identifier_unset(cmd->args[i]) == 0)
 		{
-<<<<<<< HEAD
 			print_not_valid_identifier(1, cmd->args[i]);
 			i++;
 			continue ;
-=======
-			len = ft_strlen(cmd->args[i]);
-			if (cmd->args[i][len] == '=' && ft_strncmp(cmd->args[i], current->variable, len) == 0)
-			{
-				if (current->prev)
-					current->prev->next = current->next;
-				else
-					data->env_cpy = current->next;
-				if (current->next)
-					current->next->prev = current->prev;
-				temp = current;
-				current = current->next;
-				free_t_env_cpy(temp);
-			}
-			else
-			{
-				current = current->next;
-			}
->>>>>>> origin/Math
 		}
 		remove_env_var(data, cmd->args[i]);
 		i++;

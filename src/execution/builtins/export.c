@@ -104,28 +104,7 @@ int	export_cmd(t_cmd *cmd)
 	i = 1;
 	while (cmd->args[i])
 	{
-<<<<<<< HEAD
 		handle_export(data, cmd->args[i]);
-=======
-		current = data->env_cpy;
-		split_on_equal = ft_split(cmd->args[i], '=');
-		if (!split_on_equal)
-			return (1); // Add protection for memory allocation failure
-			
-		len = ft_strlen(split_on_equal[0]);
-		while (current)
-		{			
-			if (ft_strncmp(split_on_equal[0], current->variable, len) == 0)
-			{
-				current->value = ft_strdup(split_on_equal[1]);
-				swap = true;
-				break ; // Exit the loop if the variable is found
-			}
-			current = current->next;
-		}
-		if (!swap)
-			add_env_node(data, split_on_equal[0], split_on_equal[1]);
->>>>>>> origin/Math
 		i++;
 	}
 	return (0);
