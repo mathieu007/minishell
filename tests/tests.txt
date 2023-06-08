@@ -68,6 +68,7 @@ export VAR=" 111   222 " && echo "$VAR-123"
 export VAR=" 111   222 " && echo "$VAR '123'"
 export VAR=" 111   222 " && echo " $VAR-123"
 export VAR=" 111   222 " && echo " $VAR '123'"
+<<<<<<< HEAD
 export 
 export 1
 export _1
@@ -99,3 +100,11 @@ cd .. && pwd
 cd .. && pwd && cd .. && pwd
 pwd
 echo 1 && ech1 && echo 3
+=======
+ech1 1 || ech2 2 || echo 3
+ech1 1 || ech2 2 && echo 3
+echo 1 && ech2 2 || echo 3
+echo 1 && echo 2 || echo 3
+echo 1 && ech2 2 && echo 3
+echo 1 || echo 2 && echo 3
+>>>>>>> origin/Math

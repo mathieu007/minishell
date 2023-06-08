@@ -1,26 +1,24 @@
 #include "minishell.h"
 ////////////delete me after /////////
 
-void	print_groups_and_tokens()
-{
-	t_process			*data;
-	t_token_group	*group;
-	t_token			*token;
+// void	print_groups_and_tokens()
+// {
+// 	t_token_sequence	*group;
+// 	t_token			*token;
 
-	data = get_process();
-	group = data->token_groups;
-	print_token_group(group);
-	while (group)
-	{		
-		token = group->first_token;
-		if (token)
-		{
-			print_token(token);
-			token = token->next;
-		}
-		group = group->next;
-	}	
-}
+// 	data = get_process();
+// 	print_token_group(group);
+// 	while (group)
+// 	{		
+// 		token = group->token;
+// 		if (token)
+// 		{
+// 			print_token(token);
+// 			token = token->next;
+// 		}
+// 		group = group->next;
+// 	}	
+// }
 
 static char	*get_print_token_type(t_token_type type)
 {
@@ -31,8 +29,8 @@ static char	*get_print_token_type(t_token_type type)
 	{
 		tk_type[TK_ENVIRONEMENT_VAR] = "TK_ENVIRONEMENT_VAR";
 		tk_type[TK_UNKNOWN] = "TK_UNKNOWN";
-		tk_type[TK_CMD_SEQ_START] = "TK_CMD_SEQ_START";
-		tk_type[TK_CMD_SEQ_END] = "TK_CMD_SEQ_END";
+		tk_type[TK_START] = "TK_SEQ_START";
+		tk_type[TK_END] = "TK_SEQ_END";
 		tk_type[TK_CLOSINGDOUBLEQUOTE] = "TK_CLOSINGDOUBLEQUOTE";
 		tk_type[TK_CLOSINGSINGLEQUOTE] = "TK_CLOSINGSINGLEQUOTE";
 		tk_type[TK_SPACE] = "TK_SPACE";
@@ -144,9 +142,9 @@ void	print_env(t_env_cpy *env)
 	}
 }
 
-void	print_token_group(t_token_group *token)
+void	print_token_group(t_token_sequence *token)
 {
-	t_token_group	*cpy;
+	t_token_sequence	*cpy;
 	int j = 0;
 
 	cpy = token;
@@ -158,7 +156,7 @@ void	print_token_group(t_token_group *token)
 		printf(" str = %s\n", cpy->str);
 		printf(" len = %i\n", cpy->len);
 		printf(" cmd sequence type = %i\n", cpy->cmd_seq_type);
-		printf(" token_count = %i\n", cpy->token_count);
+		// printf(" token_count = %i\n", cpy->token_count);
 		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_counter.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/19 11:52:33 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/05 14:42:40 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,18 @@ inline int32_t	get_token_type_count(t_token_type type)
 	if (type == TK_UNKNOWN)
 		return (0);
 	counter = get_token_counter();
+	return (counter[(int32_t) type]);
+}
+
+inline int32_t	increment_counter2(t_token_type type)
+{
+	int32_t	*counter;
+
+	if (type == TK_UNKNOWN)
+		return (0);
+	counter = get_token_counter();
+	
+	counter[(int32_t) type]++;
 	return (counter[(int32_t) type]);
 }
 

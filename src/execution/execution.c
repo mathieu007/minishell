@@ -3,26 +3,11 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {
-	pid_t		pid;
-	t_process 	*proc;
-	int32_t		status;
-
-	proc = get_process();
-	pid = fork();
-	if (pid == -1)
-	{
-		write_msg(STDERR_FILENO, strerror(errno));
-		free_all_and_exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		get_process()->env_cpy = copy_env_from(proc);
-		if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
-			perror("Could not execve");
-	}
-	waitpid(cmd->pid, &status, 0);
-	cmd->pid = pid;
-	return (0);
+	if (get_process()->parent->stop_exec)
+		return (get_process()->parent->errnum);
+	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
+		perror("execve failed\n");
+	return (errno);
 }
 
 int32_t	add_execve_func(t_cmd *cmd)
@@ -31,88 +16,78 @@ int32_t	add_execve_func(t_cmd *cmd)
 	return (1);
 }
 
-static t_cmd	*parse(t_token_group *token_group)
-{
-	char	*str;
-	t_cmd	*cmd;
-
-	tokenize(token_group);
-	str = parse_env(token_group);
-	reset_token_group(token_group);
-	token_group->str = str;
-	tokenize(token_group);
-	cmd = parse_cmd(token_group);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	return (cmd);
-}
-
 /// @brief fork all piped command and execute then waitpid for all command to complete
 /// @param token_group 
 /// @return we return the last pipe command
-t_token_group	*pipes_exec_cmds(t_token_group *token_group)
+t_token	*pipes_cmds(t_token *token)
 {
 	t_cmd	*cmd;
 	t_cmd	*start;
 
-	cmd = parse(token_group);
+	cmd = new_cmd();
+	cmd->token = token;
 	start = cmd;
 	pipe_cmd(cmd);
-	token_group = token_group->next;
-	while (token_group && token_group->cmd_seq_type == CMD_PIPE)
-	{		
-		cmd = parse(token_group);
-		pipe_cmd(cmd);
-		token_group = token_group->next;
+	token = token->next;
+	while (token && token->cmd_seq_type == CMD_PIPE)
+	{
+		cmd->next = new_cmd();
+		cmd->next->token = token;
+		pipe_cmd(cmd->next);
+		token = token->next;
 	}
-	cmd = parse(token_group);	
-	exec_pipes(start);
-	return (token_group->next);
+	cmd->next = new_cmd();
+	cmd->next->token = token;
+	fork_pipes(start);
+	return (token->next);
 }
 
-// exec the function right away because it is a sequential cmd.
-// No need to fork.
-// Because t_process is stored inside static variable no need 
-// to initilized a new one, each forked process will received it's
-// own t_process struct
-t_token_group	*exec_sequential(t_token_group *token_group)
+int32_t	exec_sequence(t_token *token)
 {
-	char	*str;
-	t_cmd	*cmd;
+	t_process	*proc;
+	int32_t		ret;
 
-	tokenize(token_group);
-	str = parse_env(token_group);
-	reset_token_group(token_group);
-	token_group->str = str;
-	tokenize(token_group);
-	cmd = parse_cmd(token_group);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	cmd->func(cmd);
-	return (token_group->next);
+	ret = 0;
+	proc = get_process();
+	while (token && token->type != TK_END)
+	{
+		if (token->cmd_seq_type == CMD_PIPE)
+			token = pipes_cmds(token);
+		else if (token->cmd_seq_type == CMD_SEQUENTIAL
+			|| token->cmd_seq_type == CMD_NONE)
+			exec_sequential(token);
+		else if (token->cmd_seq_type == CMD_LOG_AND)
+			token = exec_logical_and(token);
+		else if (token->cmd_seq_type == CMD_LOG_OR)
+			token = exec_logical_or(token);
+		else if (token->cmd_seq_type == CMD_FILEOUT_APPPEND)
+			token = exec_logical_or(token);
+		else if (token->cmd_seq_type == CMD_FILEOUT)
+			token = exec_logical_or(token);
+		else if (token->cmd_seq_type == CMD_FILEIN)
+			token = exec_logical_or(token);
+		else if (token->cmd_seq_type == CMD_FILEIN_APPPEND)
+			token = exec_logical_or(token);
+		else if (token->type == TK_PARENTHESE_OPEN)
+			token = exec_group(token);
+		else if (token->type == TK_COMMANDSUBSTITUTION_OPEN)
+			token = exec_logical_or(token);
+		ret = proc->errnum;
+		if (proc->stop_exec)
+			return (ret);
+		if (token)
+			token = token->next;
+	}
+	return (ret);
 }
 
 int32_t	exec_cmds(char *str)
 {
-	t_token_group	*token_group;
+	t_token	*token;
+	int32_t	ret;
 
-	token_group = tokenize_groups(str);
-	while (token_group)
-	{
-		if (token_group->cmd_seq_type == CMD_PIPE)
-			token_group = pipes_exec_cmds(token_group);
-		else if (token_group->cmd_seq_type == CMD_NONE
-			|| token_group->cmd_seq_type == CMD_SEQUENTIAL
-			|| token_group->cmd_seq_type == CMD_LOG_AND
-			|| token_group->cmd_seq_type == CMD_LOG_OR)
-				token_group = exec_sequential(token_group);
-		else
-			return (free_all_and_exit(EXIT_FAILURE),
-				printf("CMD_SEQUENCE_TYPE_UNKNOWN\n"));
-	}
-	return (1);
+	token = tokenize(str);
+	get_process()->tokens = token->child_tokens;
+	ret = exec_sequence(token->child_tokens);
+	return (ret);
 }

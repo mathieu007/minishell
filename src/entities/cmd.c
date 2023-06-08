@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/30 10:57:38 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/06 07:10:42 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ inline t_cmd	*add_cmd(void)
 {
 	t_cmd		*last;
 	t_cmd		*new;
-	t_process		*data;
+	t_process	*data;
 
 	data = get_process();
 	last = data->last_cmd;
@@ -41,7 +41,7 @@ inline t_cmd	*add_cmd(void)
 		last->next = new;
 		new->prev = last;
 	}
-	data->tokens_count++;
+	// data->tokens_count++;
 	data->last_cmd = new;
 	return (new);
 }
