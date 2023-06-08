@@ -19,6 +19,7 @@ char	*ft_strcat(char *dest, const char *src)
 	return (dest);
 }
 
+
 int	cd_cmd(t_cmd *cmd)
 {
 	char *path;
@@ -26,21 +27,16 @@ int	cd_cmd(t_cmd *cmd)
 
 	path_to_change = cmd->args[1];
 	if (cmd->options != NULL)
-	{
-		printf("Error: Option \"%s\" not supported.\n", cmd->options[0]);
-		return (1);
-	}
+		return(printf("Error: Option \"%s\" not supported.\n", cmd->options[0]),1);
 	if (cmd->args[1] == NULL)
-	{
-		printf("Error: No directory specified.\n");
-		return (1);
-	}
+		return(printf("Error: No directory specified.\n"),1);
 	if (path_to_change[0] != '/')
 	{
 		path = get_cwd(cmd);
 		if (!path)
 		{
-			printf("minishell: cd: %s: No such file or directory\n", cmd->args[1]);
+			printf("minishell: cd: %s: No such file or directory\n",
+					cmd->args[1]);
 			return (1);
 		}
 		ft_strcat(path, "/");
@@ -49,9 +45,6 @@ int	cd_cmd(t_cmd *cmd)
 	}
 	int result = chdir(path_to_change);
 	if (result != 0)
-	{
-		printf("minishell: cd: %s: No such file or directory\n", cmd->args[1]);
-		return (1);
-	}
+		return(printf("minishell: cd: %s: No such file or directory\n", cmd->args[1]),1);
 	return (0);
 }
