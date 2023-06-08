@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/06/08 08:53:06 by math             ###   ########.fr       */
+/*   Updated: 2023/06/08 10:25:12 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 t_redirect	*new_redirect(t_cmd *cmd)
 {
+	(void) cmd;
 	t_redirect	*new;
 
 	new = malloc(sizeof(t_redirect));
 	if (new == NULL)
 		return (NULL);
 	new->fd = -1;
-	new->fd = -1;
-	cmd->out_redir = new;
 	return (new);
 }
 

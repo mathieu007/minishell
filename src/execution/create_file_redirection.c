@@ -1,29 +1,19 @@
 #include "minishell.h"
 
-void	*create_redir_out(t_cmd *cmd)
+t_cmd	*create_redir_out(t_cmd *cmd)
 {
-	t_redirect	*redir;
-
 	build_token_environement(cmd->token);
-	cmd = parse_at_execution(cmd);
+	cmd = parse_redirect(cmd);
 	open_out_redir_fd(cmd);
-	redir = cmd->out_redir;
-	if (cmd && cmd->prev)
-		cmd->prev->out_redir = redir;
-	return (NULL);
+	return (cmd->next);
 }
 
-void	*create_redir_append_out(t_cmd *cmd)
+t_cmd	*create_redir_append_out(t_cmd *cmd)
 {
-	t_redirect	*redir;
-
 	build_token_environement(cmd->token);
-	cmd = parse_at_execution(cmd);
+	cmd = parse_redirect(cmd);
 	open_out_append_redir_fd(cmd);
-	redir = cmd->out_redir;
-	if (cmd && cmd->prev)
-		cmd->prev->out_redir = redir;
-	return (NULL);
+	return (cmd->next);
 }
 
 void	redirect_output(t_cmd *cmd)

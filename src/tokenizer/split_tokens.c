@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/07 12:08:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/08 09:46:21 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,21 +148,23 @@ t_cmd_seq	get_sequence_type(t_token *token)
 		else if (token->type == TK_OR || (token->type == TK_START && token->next->type == TK_OR))
 			return (CMD_LOG_OR);
 		else if (token->type == TK_AND || (token->type == TK_START && token->next->type == TK_AND))
-			return (CMD_LOG_AND);		
-		else if (token->next->type == TK_LESSLESS || token->type == TK_LESSLESS)
+			return (CMD_LOG_AND);
+		else if (token->type == TK_LESSLESS)
 			return (CMD_FILEIN_APPPEND);
-		else if (token->next->type == TK_LESS || token->type == TK_LESS)
+		else if (token->type == TK_LESS)
 			return (CMD_FILEIN);
-		else if (token->next->type == TK_GREATGREAT || token->type == TK_GREATGREAT)
+		else if (token->type == TK_GREATGREAT)
 			return (CMD_FILEOUT_APPPEND);
-		else if (token->next->type == TK_GREAT || token->type == TK_GREAT)
+		else if (token->type == TK_GREAT)
 			return (CMD_FILEOUT);
-		else if (token->next->type == TK_SEMICOLON || token->type == TK_SEMICOLON)
+		else if (token->type == TK_SEMICOLON)
 			return (CMD_SEQUENTIAL);
 		else if (token->type == TK_PARENTHESE_OPEN)
 			return (CMD_GROUPING);
 		else if (token->type == TK_COMMANDSUBSTITUTION_OPEN)
 			return (CMD_SUBSTITUTION);
+		else if (token->type == TK_START)
+			return (CMD_SEQUENTIAL);
 	}
 	return (CMD_NONE);
 }

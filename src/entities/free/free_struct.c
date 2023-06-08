@@ -5,7 +5,6 @@ void	*free_t_redirect(t_redirect *redirect)
 	if (!redirect)
 		return (NULL);
 	redirect->file = free_ptr(redirect->file);
-	redirect->file = free_ptr(redirect->file);
 	free(redirect);
 	return (NULL);
 }

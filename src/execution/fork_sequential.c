@@ -8,15 +8,13 @@
 static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
-	int32_t		ret;
 
-	ret = 0;
 	proc = get_process();
 	if (proc->errnum > 0)
 		return (proc->errnum);
-	redirect_output(cmd);	
-	ret = cmd->func(cmd);
-	return (ret);
+	redirect_output(cmd);
+	proc->errnum = cmd->func(cmd);
+	return (proc->errnum);
 }
 
 static int32_t	fork_exec(t_cmd	*cmd)
@@ -52,17 +50,23 @@ int32_t	exec_sequential(t_cmd *cmd)
 	t_process	*proc;
 
 	proc = get_process();
-	build_token_environement(cmd->token);
 	proc->errnum = 0;
 	proc->stop_exec = false;
+	build_token_environement(cmd->token);
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
-	if (cmd->prev && cmd->prev->cmd_seq_type == CMD_FILEOUT)
-		create_redir_out(cmd->prev);
-	if (cmd->is_builtin)
-		proc->errnum = exec(cmd);
-	else
+	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+	{
+		create_redir_out(cmd->next);
 		proc->errnum = fork_exec(cmd);
+	}
+	else
+	{
+		if (cmd->is_builtin)
+			proc->errnum = exec(cmd);
+		else
+			proc->errnum = fork_exec(cmd);
+	}
 	return (proc->errnum);
 }

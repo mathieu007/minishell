@@ -51,8 +51,8 @@ int32_t	execute(t_cmd *cmd)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (-1);
-	if (cmd->prev && cmd->prev->cmd_seq_type == CMD_FILEOUT)
-		create_redir_out(cmd->prev);
+	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->next);
 	if (cmd->is_builtin)
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)

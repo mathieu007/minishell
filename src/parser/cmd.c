@@ -10,7 +10,7 @@
 t_cmd	*parse_cmd(t_cmd *cmd)
 {
 	cmd->args = parse_args(cmd->token);
-	cmd->name = cmd->args[0];
+	cmd->name = ft_strdup(cmd->args[0]);
 	if (cmd->name == NULL)
 		return (NULL);
 	cmd->is_builtin = is_builtins(cmd->name);
@@ -20,10 +20,19 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 	return (cmd);
 }
 
+t_cmd	*parse_redirect(t_cmd *cmd)
+{
+	cmd->args = parse_args(cmd->token);
+	cmd->name = ft_strdup(cmd->args[0]);
+	if (cmd->name == NULL)
+		return (NULL);
+	return (cmd);
+}
+
 t_cmd	*parse_cmd2(t_cmd *cmd)
 {
 	cmd->args = parse_args(cmd->token);
-	cmd->name = cmd->args[0];
+	cmd->name =  ft_strdup(cmd->args[0]);
 	if (cmd->name == NULL)
 		return (NULL);
 	cmd->is_builtin = is_builtins(cmd->name);
