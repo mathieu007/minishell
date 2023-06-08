@@ -14,6 +14,8 @@ static int32_t	exec(t_cmd *cmd)
 		return (proc->errnum);
 	redirect_output(cmd);
 	proc->errnum = cmd->func(cmd);
+	close(STDOUT_FILENO);
+	close(3);
 	return (proc->errnum);
 }
 

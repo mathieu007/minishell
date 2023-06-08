@@ -38,8 +38,8 @@ int32_t	open_out_redir_fd(t_cmd *cmd)
 		return (-1);
 	redir = cmd->out_redir;
 	redir->file = ft_strdup(f_name);
-	out_flags = O_WRONLY | O_CREAT | O_CLOEXEC | O_TRUNC;
-	redir->fd = open(redir->file, out_flags, 0644);
+	out_flags = O_RDWR | O_CREAT | O_CLOEXEC | O_TRUNC;
+	redir->fd = open(redir->file, out_flags, 0777);
 	if (redir->fd == -1)
 	{
 		write_err3(2, strerror(errno), " ", redir->file);
@@ -60,8 +60,8 @@ int32_t	open_out_append_redir_fd(t_cmd *cmd)
 		return (-1);
 	redir = cmd->out_redir;
 	redir->file = ft_strdup(cmd->name);
-	out_flags = O_WRONLY | O_CREAT | O_CLOEXEC | O_APPEND;
-	redir->fd = open(redir->file, out_flags, 0644);
+	out_flags = O_RDWR | O_CREAT | O_CLOEXEC | O_APPEND;
+	redir->fd = open(redir->file, out_flags, 0777);
 	if (redir->fd == -1)
 	{
 		write_err3(2, strerror(errno), " ", redir->file);

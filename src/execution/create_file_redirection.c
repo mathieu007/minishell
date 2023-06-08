@@ -26,5 +26,7 @@ void	redirect_output(t_cmd *cmd)
 			free_all_and_exit(EXIT_FAILURE);
 		}
 		close(cmd->out_redir->fd);
+		close(STDOUT_FILENO);
+		close(3);
 	}
 }
