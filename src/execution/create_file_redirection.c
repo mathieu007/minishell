@@ -25,8 +25,11 @@ void	redirect_output(t_cmd *cmd)
 			perror("Failed to redirect output");
 			free_all_and_exit(EXIT_FAILURE);
 		}
-		close(cmd->out_redir->fd);
-		close(STDOUT_FILENO);
-		close(3);
+		if (close(cmd->out_redir->fd) == -1)
+		{
+			perror("Failed to close file descriptor.");
+			free_all_and_exit(EXIT_FAILURE);
+		}
+			
 	}
 }

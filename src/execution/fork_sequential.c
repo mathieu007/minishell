@@ -14,8 +14,7 @@ static int32_t	exec(t_cmd *cmd)
 		return (proc->errnum);
 	redirect_output(cmd);
 	proc->errnum = cmd->func(cmd);
-	close(STDOUT_FILENO);
-	close(3);
+	close(cmd->out_redir->fd);
 	return (proc->errnum);
 }
 
@@ -59,16 +58,10 @@ int32_t	exec_sequential(t_cmd *cmd)
 	if (!cmd)
 		return (proc->errnum);
 	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
-	{
 		create_redir_out(cmd->next);
-		proc->errnum = fork_exec(cmd);
-	}
+	if (cmd->is_builtin)
+		proc->errnum = exec(cmd);
 	else
-	{
-		if (cmd->is_builtin)
-			proc->errnum = exec(cmd);
-		else
-			proc->errnum = fork_exec(cmd);
-	}
+		proc->errnum = fork_exec(cmd);
 	return (proc->errnum);
 }

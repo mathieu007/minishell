@@ -64,6 +64,7 @@ char	*recursive_search_dir(t_cmd *cmd, char *path, ino_t ino)
 		if (recursive_search_dir(cmd, new_path, ino))
 			return (free(path), proc->cwd);
 	}
+	closedir(dir);
 	if (new_path)
 		free(new_path);
 	return (free(path), NULL);
