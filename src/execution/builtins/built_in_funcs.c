@@ -4,7 +4,7 @@ int	add_built_in_func(t_cmd *cmd)
 {
 	size_t	len;
 
-	len = ft_strlen(cmd->name);
+	len = ft_strlen(cmd->name) + 1;
 	if (len == 0)
 		return (0);
 	if (ft_strnstr(cmd->name, "echo", len) == cmd->name)

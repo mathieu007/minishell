@@ -17,12 +17,17 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	char 	*input;
 
 	if (argc >= 2)
-	{
 		return (execute_tests(argv[1]));
-	}
 	while (1)
 	{
-		input = readline("MiniShell> ");
+		disable_ctrl_c_output();
+		setup_signal_handlers();
+		input = readline("MiniShell> \x1B[s");
+		if(input == NULL)
+		{
+			printf("\x1B[u\x1B[Aexit\n");
+			break;
+		}
 		exec_cmds(input);
 		if (strcmp(input, "exit") == 0)
 			break ;
@@ -32,3 +37,11 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	}
 	return (EXIT_SUCCESS);
 }
+
+
+
+// int main (void)
+// {
+// 	redirect_append("test1.txt");
+// 	redirect_overwrite ("jaime les patates");
+// }

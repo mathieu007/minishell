@@ -69,7 +69,7 @@ t_env_cpy	*init_env(t_process *data)
 	i++;
 	head = current;
 	while (data->env[i])
-	{		
+	{
 		split_on_equal = ft_split(data->env[i], '=');
 		count = count_splits(split_on_equal);
 		if (count > 2)
@@ -83,7 +83,6 @@ t_env_cpy	*init_env(t_process *data)
 	}
 	return (head);
 }
-
 
 //take a variable and return the value
 char	*get_env_value(char *variable)
@@ -117,12 +116,12 @@ t_env_cpy	*copy_env(void)
 	if (current)
 	{
 		new_current = new_env(ft_strdup(current->variable),
-				ft_strdup(current->value));
+								ft_strdup(current->value));
 		new_head = new_current;
 		while (current)
 		{
 			new_current->next = new_env(ft_strdup(current->variable),
-					ft_strdup(current->value));
+										ft_strdup(current->value));
 			new_current->next->prev = new_current;
 			new_current = new_current->next;
 			current = current->next;
@@ -144,12 +143,12 @@ t_env_cpy	*copy_env_from(t_process *proc)
 	if (current)
 	{
 		new_current = new_env(ft_strdup(current->variable),
-				ft_strdup(current->value));
+								ft_strdup(current->value));
 		new_head = new_current;
 		while (current)
 		{
 			new_current->next = new_env(ft_strdup(current->variable),
-					ft_strdup(current->value));
+										ft_strdup(current->value));
 			new_current->next->prev = new_current;
 			new_current = new_current->next;
 			current = current->next;

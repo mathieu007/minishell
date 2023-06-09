@@ -16,6 +16,7 @@
 # include <sys/stat.h>
 # include <unistd.h>
 # include <dirent.h>
+#include  <signal.h>
 
 # define BUILTINS_EXPORT "export"
 # define BUILTINS_UNSET "unset"
@@ -450,7 +451,29 @@ int						env_cmd(t_cmd *cmd);
 int						pwd_cmd(t_cmd *cmd);
 int						export_cmd(t_cmd *cmd);
 int						unset_cmd(t_cmd *cmd);
-int						exit_cmd(t_cmd *cmd);
+int						exit_cmd(t_cmd  *cmd);
+
+//built in utils
+int	is_valid_identifier(char *identifier);
+void	print_not_valid_identifier(int export_or_unset, char *identifier);
+int32_t		count_splits(char **split);
+char	*join_splits(char **split, char *join);
+void	print_not_valid_identifier(int export_or_unset, char *identifier);
+int	is_valid_identifier(char *identifier);
+int	is_valid_identifier_unset(char *identifier);
+void	add_env_node(t_process *data, char *variable, char *value);
+void	swap_node_value(t_env_cpy *a, t_env_cpy *b);
+
+//signal
+void setup_signal_handlers(void);
+void disable_ctrl_c_output();
+
+//redirection
+
+int	redirect_append(const char *output_file);
+int	redirect_overwrite(const char *output_file);
+
+
 
 //free section
 void					free_t_token(t_token *token);
