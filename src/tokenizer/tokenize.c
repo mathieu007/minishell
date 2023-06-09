@@ -12,7 +12,6 @@ t_token	*add_tk(char *token_str, t_token_type type,
 	return (token);
 }
 
-
 /// @brief we add a root token that contains the full string
 /// it's no very usefull, but i just need a root node.
 /// @param str 

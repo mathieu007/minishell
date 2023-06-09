@@ -307,7 +307,7 @@ t_token_sequence	*new_token_sequence();
 
 /// @brief Simples and short helpers methods.
 
-bool		is_redirection(t_cmd *cmd);
+bool		is_redirection(t_cmd_seq seq);
 t_token		*contains_parentheses(t_token *token);
 int32_t		goto_closing_environement(char *str, int32_t i);
 int32_t		goto_closing_single_quote(char *str, int32_t i);

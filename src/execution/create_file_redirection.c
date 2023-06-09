@@ -1,17 +1,45 @@
 #include "minishell.h"
 
-bool	is_redirection(t_cmd *cmd)
+bool	is_redirection(t_cmd_seq seq)
 {
-	return (cmd && (cmd->cmd_seq_type == CMD_FILEIN
-		|| cmd->cmd_seq_type == CMD_FILEOUT
-		|| cmd->cmd_seq_type == CMD_FILEOUT_APPPEND
-		|| cmd->cmd_seq_type == CMD_HEREDOC));
+	return (seq && (seq == CMD_FILEIN
+		|| seq == CMD_FILEOUT
+		|| seq== CMD_FILEOUT_APPPEND
+		|| seq == CMD_HEREDOC));
 }
+
+// int32_t count_args2(char **args)
+// {
+// 	int32_t count;
+
+// 	count = 0;
+// 	if (args)
+// 	{
+// 		while (args[count])
+// 			count++;
+// 	}
+// 	return (count);
+// }
 
 t_cmd	*create_redir_out(t_cmd *cmd)
 {
+	// char	*cmd_str;
+	// int32_t	i;
+
 	build_token_environement(cmd->token);
 	cmd = parse_redirect(cmd);
+	// if (count_args2(cmd->args) > 1)
+	// {
+	// 	i = 1;
+	// 	cmd_str = cmd->prev->token->str;
+	// 	cmd_str = ft_strjoinfree(cmd_str, " ");
+	// 	while (cmd->args[i])
+	// 	{
+	// 		cmd_str = ft_strjoinfree(cmd_str, cmd->args[i]);
+	// 		cmd_str = ft_strjoinfree(cmd_str, " ");
+	// 		i++;
+	// 	}
+	// }
 	open_out_redir_fd(cmd);
 	return (cmd->next);
 }
