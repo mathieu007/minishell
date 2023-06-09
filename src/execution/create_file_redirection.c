@@ -16,6 +16,26 @@ t_cmd	*create_redir_append_out(t_cmd *cmd)
 	return (cmd->next);
 }
 
+t_cmd	*create_redir_append_in(t_cmd *cmd)
+{
+	build_token_environement(cmd->token);
+	cmd = parse_redirect(cmd);
+	open_out_append_redir_fd(cmd);
+	return (cmd->next);
+}
+
+t_cmd	*create_redir(t_cmd *cmd)
+{
+	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->next);
+	else if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT_APPPEND)
+		create_redir_append_out(cmd->next);
+	else if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->next);
+	else if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->next);
+}
+
 void	redirect_output(t_cmd *cmd)
 {
 	if (cmd->out_redir)

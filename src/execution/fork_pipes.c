@@ -82,6 +82,7 @@ void	fork_last_child(t_cmd *cmd)
 		build_token_environement(cmd->token);
 		cmd = parse_at_execution(cmd);
 		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
+		redirect_output(cmd);
 		close(cmd->prev->pipe->fd_in);
 		close(cmd->prev->pipe->fd_out);
 		proc->errnum = cmd->func(cmd);
@@ -136,6 +137,8 @@ void	*fork_pipes(t_cmd *cmd)
 		fork_middle_child(cmd);
 		cmd = cmd->next;
 	}
+	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+		create_redir_out(cmd->next);
 	if (cmd && cmd->cmd_seq_type == CMD_PIPE)
 		fork_last_child(cmd);
 	wait_childs(start);

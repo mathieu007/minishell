@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/08 09:46:21 by math             ###   ########.fr       */
+/*   Updated: 2023/06/08 22:33:00 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,11 +139,9 @@ t_cmd_seq	get_sequence_type(t_token *token)
 {
 	if (token && token->next)
 	{
-		if (token->prev && token->prev->type == TK_PIPE)
-			return (CMD_PIPE);
 		if (token->type == TK_START && token->next->type == TK_END)
 			return (CMD_SEQUENTIAL);
-		if (token->next->type == TK_PIPE || token->type == TK_PIPE)
+		if (token->type == TK_PIPE || (token->next && token->next->type == TK_PIPE))
 			return (CMD_PIPE);
 		else if (token->type == TK_OR || (token->type == TK_START && token->next->type == TK_OR))
 			return (CMD_LOG_OR);
