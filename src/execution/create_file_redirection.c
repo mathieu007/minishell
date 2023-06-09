@@ -55,25 +55,10 @@ t_cmd	*create_redir(t_cmd *cmd)
 
 void	redirect_output(t_cmd *cmd)
 {
-<<<<<<< HEAD
-	if (cmd->out_redir)
-	{
-		if (dup2(cmd->out_redir->fd, STDOUT_FILENO) == -1)
-		{
-			perror("Failed to redirect output");
-			free_all_and_exit(EXIT_FAILURE);
-		}
-		close(cmd->out_redir->fd);
-		close(STDOUT_FILENO);
-
-		close(3);
-	}
-=======
 	if (!cmd->out_redir)
 		return ;
 	if (dup2(cmd->out_redir->fd, STDOUT_FILENO) == -1)
 		free_all_and_exit2(errno, "Could not redirect output");
 	if (close(cmd->out_redir->fd) == -1)
 		free_all_and_exit2(errno, "Could not close the fd");
->>>>>>> 44a597db8b4b8ec171198f31070d7362ffb990a4
 }
