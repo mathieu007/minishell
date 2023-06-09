@@ -11,7 +11,7 @@ void	write_err2(int32_t stderror, char *msg, char *msg2)
 	proc = get_process();
 	err_msg = ft_strjoin(msg, msg2);
 	if (err_msg)
-		return (NULL);
+		return ;
 	write(2, err_msg, ft_strlen(err_msg));
 	proc->errnum = stderror;
 	free(err_msg);
