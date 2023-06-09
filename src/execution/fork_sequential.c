@@ -1,10 +1,5 @@
 #include "minishell.h"
 
-// exec the function right away because it is a sequential cmd.
-// No need to fork.
-// Because t_process is stored inside static variable no need 
-// to initilized a new one, each forked process will received it's
-// own t_process struct
 static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
@@ -59,9 +54,6 @@ int32_t	exec_sequential(t_cmd *cmd)
 		return (proc->errnum);
 	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
 		create_redir_out(cmd->next);
-	if (cmd->is_builtin)
-		proc->errnum = exec(cmd);
-	else
-		proc->errnum = fork_exec(cmd);
+	proc->errnum = fork_exec(cmd);
 	return (proc->errnum);
 }

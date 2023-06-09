@@ -30,6 +30,5 @@ void	redirect_output(t_cmd *cmd)
 			perror("Failed to close file descriptor.");
 			free_all_and_exit(EXIT_FAILURE);
 		}
-			
 	}
 }
