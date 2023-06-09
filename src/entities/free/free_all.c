@@ -10,22 +10,28 @@ void	*free_ptr(void *ptr)
 
 void	free_all(void)
 {
-	t_token_group	*token_group;
+
 	t_process 		*data;
 	t_cmd 			*cmd;
 
 	data = get_process();
-	token_group = data->token_groups;
 	cmd = data->cmds;
-	if (token_group != NULL)
-		free_t_token_groups(token_group);
+	// if (token_group != NULL)
+	// 	free_t_token_groups(token_group);
 	if (cmd != NULL)
 		free_t_cmd(cmd);
 }
 
 void	*free_all_and_exit(int32_t status)
-{
+{	
 	free_all();
 	exit(status);
 	return (NULL);
+}
+
+void	free_all_and_exit2(int32_t status, char *msg)
+{
+	perror(msg);
+	free_all();
+	exit(status);
 }

@@ -7,19 +7,37 @@
 /// get updated $FLAGS so we excute first command then parse the next and exec.
 /// @param group 
 /// @return 
-t_cmd	*parse_cmd(t_token_group *token_group)
+t_cmd	*parse_cmd(t_cmd *cmd)
 {
-	t_cmd		*cmd;
-
-	cmd = add_cmd();
-	cmd->args = parse_args(token_group);
-	cmd->name = cmd->args[0];
+	cmd->args = parse_args(cmd->token);
+	cmd->name = ft_strdup(cmd->args[0]);
 	if (cmd->name == NULL)
 		return (NULL);
 	cmd->is_builtin = is_builtins(cmd->name);
 	if (!cmd->is_builtin)
 		cmd->full_path_name = get_full_path(cmd);
-	cmd->options = get_options(token_group);
-	cmd->cmd_seq_type = token_group->cmd_seq_type;
+	cmd->options = get_options(cmd->token);
+	return (cmd);
+}
+
+t_cmd	*parse_redirect(t_cmd *cmd)
+{
+	cmd->args = parse_args(cmd->token);
+	cmd->name = ft_strdup(cmd->args[0]);
+	if (cmd->name == NULL)
+		return (NULL);
+	return (cmd);
+}
+
+t_cmd	*parse_cmd2(t_cmd *cmd)
+{
+	cmd->args = parse_args(cmd->token);
+	cmd->name =  ft_strdup(cmd->args[0]);
+	if (cmd->name == NULL)
+		return (NULL);
+	cmd->is_builtin = is_builtins(cmd->name);
+	if (!cmd->is_builtin)
+		cmd->full_path_name = get_full_path(cmd);
+	cmd->options = get_options(cmd->token);
 	return (cmd);
 }

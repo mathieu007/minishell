@@ -1,4 +1,0 @@
-#!/bin/bash
-
-export VAR=345;
-echo $VAR;

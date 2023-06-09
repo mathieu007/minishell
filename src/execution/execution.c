@@ -3,26 +3,9 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {
-	pid_t		pid;
-	t_process 	*proc;
-	int32_t		status;
-
-	proc = get_process();
-	pid = fork();
-	if (pid == -1)
-	{
-		write_msg(STDERR_FILENO, strerror(errno));
-		free_all_and_exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		get_process()->env_cpy = copy_env_from(proc);
-		if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
-			perror("Could not execve");
-	}
-	waitpid(cmd->pid, &status, 0);
-	cmd->pid = pid;
-	return (0);
+	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
+		perror("execve failed\n");
+	return (errno);
 }
 
 int32_t	add_execve_func(t_cmd *cmd)
@@ -31,17 +14,97 @@ int32_t	add_execve_func(t_cmd *cmd)
 	return (1);
 }
 
-static t_cmd	*parse(t_token_group *token_group)
+/// @brief fork all piped command and execute then waitpid for all command to complete
+/// @param token_group 
+/// @return we return the last pipe command
+t_cmd	*pipes_cmds(t_cmd *cmd)
 {
-	char	*str;
-	t_cmd	*cmd;
+	t_cmd	*start;
 
-	tokenize(token_group);
-	str = parse_env(token_group);
-	reset_token_group(token_group);
-	token_group->str = str;
-	tokenize(token_group);
-	cmd = parse_cmd(token_group);
+	start = cmd;
+	pipe_cmd(cmd);
+	cmd = cmd->next;
+	while (cmd && cmd->next && cmd->next->cmd_seq_type == CMD_PIPE)
+	{
+		pipe_cmd(cmd);
+		cmd = cmd->next;
+	}
+	fork_pipes(start);
+	return (cmd->next);
+}
+
+int32_t	exec_sequence(t_cmd *cmd)
+{
+	t_process	*proc;
+
+	proc = get_process();
+	while (cmd && cmd->cmd_seq_type != CMD_NONE)
+	{
+		if (cmd->cmd_seq_type == CMD_PIPE)
+			cmd = pipes_cmds(cmd);
+		else if (cmd->cmd_seq_type == CMD_SEQUENTIAL)
+			exec_sequential(cmd);
+		else if (cmd->cmd_seq_type == CMD_LOG_AND)
+			cmd = exec_logical_and(cmd);
+		else if (cmd->cmd_seq_type == CMD_LOG_OR)
+			cmd = exec_logical_or(cmd);
+		else if (cmd->cmd_seq_type == CMD_GROUPING)
+			cmd = exec_group(cmd);
+		else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
+			cmd = exec_logical_or(cmd);
+		else if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
+			cmd = create_redir_out(cmd);
+		if (proc->stop_exec)
+			return (proc->errnum);
+		if (cmd)
+			cmd = cmd->next;
+	}
+	return (proc->errnum);
+}
+
+/// @brief we will create cmds from the tokens.
+/// the commands are not yet parsed with the whole data.
+/// it is just a hierarchical cmd representation of the cmd execution order.
+/// @param token 
+/// @return 
+void	create_nested_cmds(t_cmd *cmd)
+{
+	t_token	*childs;
+	t_cmd	*child_cmd;
+
+	while (cmd)
+	{
+		childs = cmd->token->child_tokens;
+		if (childs && get_sequence_type(childs) != CMD_NONE)
+		{
+			child_cmd = add_child_cmd(cmd, childs);
+			create_nested_cmds(child_cmd);
+			childs = childs->next;
+		}
+		cmd = cmd->next;
+	}
+}
+
+t_cmd	*create_cmds_tree(t_token *token)
+{
+	t_cmd	*start;
+
+	if (!token)
+		return (NULL);
+	start = add_root_cmd_token(token);
+	token = token->next;
+	while (token && token->next)
+	{
+		add_root_cmd_token(token);
+		token = token->next;
+	}
+	create_nested_cmds(start);
+	return (start);
+}
+
+t_cmd	*parse_at_execution(t_cmd *cmd)
+{
+	cmd = parse_cmd(cmd);
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else
@@ -49,70 +112,16 @@ static t_cmd	*parse(t_token_group *token_group)
 	return (cmd);
 }
 
-/// @brief fork all piped command and execute then waitpid for all command to complete
-/// @param token_group 
-/// @return we return the last pipe command
-t_token_group	*pipes_exec_cmds(t_token_group *token_group)
-{
-	t_cmd	*cmd;
-	t_cmd	*start;
-
-	cmd = parse(token_group);
-	start = cmd;
-	pipe_cmd(cmd);
-	token_group = token_group->next;
-	while (token_group && token_group->cmd_seq_type == CMD_PIPE)
-	{		
-		cmd = parse(token_group);
-		pipe_cmd(cmd);
-		token_group = token_group->next;
-	}
-	cmd = parse(token_group);	
-	exec_pipes(start);
-	return (token_group->next);
-}
-
-// exec the function right away because it is a sequential cmd.
-// No need to fork.
-// Because t_process is stored inside static variable no need 
-// to initilized a new one, each forked process will received it's
-// own t_process struct
-t_token_group	*exec_sequential(t_token_group *token_group)
-{
-	char	*str;
-	t_cmd	*cmd;
-
-	tokenize(token_group);
-	str = parse_env(token_group);
-	reset_token_group(token_group);
-	token_group->str = str;
-	tokenize(token_group);
-	cmd = parse_cmd(token_group);
-	if (cmd->is_builtin)
-		add_built_in_func(cmd);
-	else
-		add_execve_func(cmd);
-	cmd->func(cmd);
-	return (token_group->next);
-}
-
 int32_t	exec_cmds(char *str)
 {
-	t_token_group	*token_group;
+	t_token	*token;
+	int32_t	ret;
+	t_cmd	*root_cmd;
 
-	token_group = tokenize_groups(str);
-	while (token_group)
-	{
-		if (token_group->cmd_seq_type == CMD_PIPE)
-			token_group = pipes_exec_cmds(token_group);
-		else if (token_group->cmd_seq_type == CMD_NONE
-			|| token_group->cmd_seq_type == CMD_SEQUENTIAL
-			|| token_group->cmd_seq_type == CMD_LOG_AND
-			|| token_group->cmd_seq_type == CMD_LOG_OR)
-				token_group = exec_sequential(token_group);
-		else
-			return (free_all_and_exit(EXIT_FAILURE),
-				printf("CMD_SEQUENCE_TYPE_UNKNOWN\n"));
-	}
-	return (1);
+	token = tokenize(str);
+	get_process()->tokens = token->child_tokens;
+	root_cmd = create_cmds_tree(token->child_tokens);
+	get_process()->cmds = root_cmd;
+	ret = exec_sequence(root_cmd);
+	return (ret);
 }

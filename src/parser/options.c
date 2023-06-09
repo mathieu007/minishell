@@ -6,20 +6,19 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/21 12:43:41 by math             ###   ########.fr       */
+/*   Updated: 2023/06/05 14:39:16 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int32_t	options_count(t_token_group *group, bool *table)
+static int32_t	options_count(t_token *token, bool *table)
 {
 	int32_t		count;
-	t_token		*token;
 	char		*str;
 
 	count = 0;
-	token = group->first_token;
+	token = token->child_tokens;
 	token = token->next;
 	while (token)
 	{
@@ -43,12 +42,12 @@ static int32_t	options_count(t_token_group *group, bool *table)
 	return (count);
 }
 
-char	**get_malloc_opts(t_token_group *group, bool *table)
+char	**get_malloc_opts(t_token *token, bool *table)
 {
 	char	**options;
 	int32_t	count;
 
-	count = options_count(group, table);
+	count = options_count(token, table);
 	if (count == 0)
 		return (NULL);
 	options = malloc(sizeof(char *) * (count + 1));
@@ -82,7 +81,7 @@ int32_t	add_single_dash_option(char	**options, bool *table)
 /// @brief TODO not WORKING
 /// @param group 
 /// @return 
-char	**get_options(t_token_group *group)
+char	**get_options(t_token *token)
 {
 	int32_t	opt_i;
 	char	**options;
@@ -90,15 +89,13 @@ char	**get_options(t_token_group *group)
 	bool	table[256];
 
 	ft_memset(table, 0, 256);
-	options = get_malloc_opts(group, &table[0]);
+	options = get_malloc_opts(token, &table[0]);
 	opt_i = add_single_dash_option(options, &table[0]);
-	tk = group->first_token;
+	tk = token->child_tokens;
 	while (tk)
 	{
 		if (tk->type == TK_DASHDASH)
-		{
 			options[opt_i++] = ft_strdup(tk->str);
-		}
 		tk = tk->next;
 	}
 	return (options);

@@ -2,8 +2,8 @@
 
 void	free_t_cmd(t_cmd *cmd)
 {
-	t_cmd	*current;
-	t_cmd	*next;
+	t_cmd		*current;
+	t_cmd		*next;
 	t_process	*data;
 
 	data = get_process();
@@ -14,18 +14,22 @@ void	free_t_cmd(t_cmd *cmd)
 	while (current != NULL)
 	{
 		next = current->next;
-		/// do not free cmd->name is freed inside cmd->args
-		// cmd->name = free_ptr(cmd->name);
 		cmd->full_path_name = free_ptr(cmd->full_path_name);
 		cmd->args = free_2d_char_array(cmd->args);
 		cmd->options = free_2d_array((void **)cmd->options);
 		cmd->pipe = free_ptr(cmd->pipe);
-		cmd->redirect = free_t_redirect(cmd->redirect);
+		cmd->out_redir = free_t_redirect(cmd->out_redir);
 		free(current);
 		current = next;
 	}
 	data->last_cmd = NULL;
 	data->cmds = NULL;
+}
+
+void	free_t_token(t_token *token)
+{
+	token->str = free_ptr(token->str);
+	free(token);
 }
 
 void	free_t_tokens(t_token *token)
@@ -59,42 +63,41 @@ void	free_t_env_cpy(t_env_cpy *env_cpy)
 	}
 }
 
-void	free_t_token_group(t_token_group *token_group)
+void	free_t_token_group(t_token_sequence *token_group)
 {
 	if (token_group)
 	{
 		token_group->str = free_ptr(token_group->str);
 		// if (token_group->env_cpy)
 		// 	free_t_env_cpy(token_group->env_cpy);
-		if (token_group->first_token)
-			free_t_tokens(token_group->first_token);
-		token_group->first_token = NULL;
+		if (token_group->token)
+			free_t_tokens(token_group->token);
+		token_group->token = NULL;
 		token_group->last_token = NULL;
 		free(token_group);
 	}
 }
 
-void	free_t_token_groups(t_token_group *token_group)
+void	free_t_token_groups(t_token_sequence *token_group)
 {
-	t_token_group	*next;
-	t_process 			*data;
+	t_token_sequence	*next;
+	// t_process 			*data;
 
-	data = get_process();
+	// data = get_process();
 	while (token_group)
 	{
 		next = token_group->next;
 		token_group->str = free_ptr(token_group->str);
 		// if (token_group->env_cpy)
 		// 	free_t_env_cpy(token_group->env_cpy);
-		if (token_group->first_token)
-			free_t_tokens(token_group->first_token);
-		token_group->first_token = NULL;
+		if (token_group->token)
+			free_t_tokens(token_group->token);
+		token_group->token = NULL;
 		token_group->last_token = NULL;
 		free(token_group);
 		token_group = next;
 	}
-	data->token_groups = NULL;
-	data->last_token_group = NULL;
-	data->token_groups_count = 0;
-	data->tokens_count = 0;
+	// data->token_sequence = NULL;
+	// data->last_token_sequence = NULL;
+	// data->tokens_count = 0;
 }

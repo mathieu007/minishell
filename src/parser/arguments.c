@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/29 16:35:34 by math             ###   ########.fr       */
+/*   Updated: 2023/06/05 14:39:42 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,20 +100,19 @@ int32_t	count_env_words(char *str)
 	return (count);
 }
 
-int32_t	get_args_len(t_token_group *group)
+int32_t	get_args_len(t_token *token)
 {
 	int32_t	args_len;
-	t_token	*token;
 
+	token = token->child_tokens;
 	args_len = 0;
-	token = group->first_token;
 	if (!token)
 		return (0);
 	while (token)
 	{
 		if (token->type == TK_SPACE)
 			args_len++;
-		else if (token->type == TK_CMD_SEQ_END)
+		else if (token->type == TK_END)
 			args_len++;
 		token = token->next;
 	}
@@ -132,7 +131,7 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 	{
 		if (token->type == TK_SINGLEQUOTE || token->type == TK_DOUBLEQUOTE)
 			token = get_quotes_str(token, str, arg);
-		else if (token->type == TK_SPACE || token->type == TK_CMD_SEQ_END)
+		else if (token->type == TK_SPACE || token->type == TK_END)
 		{
 			arg_start_pos = start_token->start + start_token->token_len;
 			arg_len = token->start - start_token->start;
@@ -147,14 +146,13 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 	return (token);
 }
 
-void	get_args(t_token_group *group, char **split)
+void	set_args(t_token *token, char **split)
 {
-	t_token	*token;
 	char	*cpy;
 	int32_t	i;
 
 	i = 0;
-	token = group->first_token;
+	token = token->child_tokens;
 	while (token)
 	{
 		if (token->type == TK_SPACE)
@@ -173,14 +171,14 @@ void	get_args(t_token_group *group, char **split)
 	}
 }
 
-char	**parse_args(t_token_group *group)
+char	**parse_args(t_token *token)
 {
 	int32_t	args_len;
 	char	**split;
 	int32_t	i;
 
 	i = 0;
-	args_len = get_args_len(group);
+	args_len = get_args_len(token);
 	split = malloc((args_len + 1) * sizeof(char *));
 	while (i < args_len)
 	{
@@ -190,6 +188,6 @@ char	**parse_args(t_token_group *group)
 	if (!split)
 		return (NULL);
 	split[args_len] = NULL;
-	get_args(group, split);
+	set_args(token, split);
 	return (split);
 }

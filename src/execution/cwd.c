@@ -28,15 +28,11 @@ char	*get_home(void)
 /// @return 
 char	*join_path(char *path1, char *path2)
 {
-	char	*temp;
+	char	*path;
 
-	temp = path1;
-	path1 = ft_strjoin(temp, "/");
-	free(temp);
-	temp = ft_strjoin(path1, path2);
-	free(path1);
-	free(path2);
-	return (temp);
+	path = ft_strjoin(path1, "/");
+	path = ft_strjoin(path, path2);
+	return (path);
 }
 
 char	*recursive_search_dir(t_cmd *cmd, char *path, ino_t ino)
@@ -49,23 +45,29 @@ char	*recursive_search_dir(t_cmd *cmd, char *path, ino_t ino)
 	if (path == NULL)
 		return (NULL);
 	dir = opendir(path);
+	if (!dir)
+		return (NULL);
 	entry = readdir(dir);
+	if (!entry || (entry->d_name[0] == '.' && entry->d_name[1] == '.'))
+		return (closedir(dir), NULL);
 	new_path = NULL;
-	proc = get_process();	
+	proc = get_process();
 	while (entry)
 	{
 		new_path = join_path(path, entry->d_name);
 		if (entry->d_ino == ino)
 		{
-			free(proc->cwd);
 			proc->cwd = new_path;
 			return (free(path), proc->cwd);
 		}
-		if (recursive_search_dir(cmd, new_path, ino))
+		if (recursive_search_dir(cmd, ft_strdup(new_path), ino))
 			return (free(path), proc->cwd);
-	}
-	if (new_path)
 		free(new_path);
+		entry = readdir(dir);
+		if (!entry || (entry->d_name[0] == '.' && entry->d_name[1] == '.'))
+			break ;
+	}
+	closedir(dir);
 	return (free(path), NULL);
 }
 
@@ -95,10 +97,7 @@ char	*get_cwd(t_cmd *cmd)
 		return (proc->cwd);
 	}
 	if (stat(proc->cwd, &file_stat) != 0)
-	{
-		perror("fstat() error");
-		return (free_all_and_exit(EXIT_FAILURE));
-	}
+		free_all_and_exit2(errno, "stat error");
 	if (proc->dir_id == 0)
 		proc->dir_id = file_stat.st_ino;
 	if (file_stat.st_ino == proc->dir_id)

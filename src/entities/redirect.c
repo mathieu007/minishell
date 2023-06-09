@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/05/03 08:13:15 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/08 10:25:12 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,21 @@
 
 t_redirect	*new_redirect(t_cmd *cmd)
 {
+	(void) cmd;
 	t_redirect	*new;
 
 	new = malloc(sizeof(t_redirect));
 	if (new == NULL)
 		return (NULL);
-	new->fd_in = -1;
-	new->fd_out = -1;
-	cmd->redirect = new;
+	new->fd = -1;
 	return (new);
 }
 
 void	*free_redirect(t_cmd *cmd)
 {
-	if (cmd->redirect != NULL)
-		free(cmd->redirect);
-	cmd->redirect = NULL;
+	if (cmd->out_redir != NULL)
+		free(cmd->out_redir);
+	cmd->out_redir = NULL;
 	cmd = cmd->next;
 	return (NULL);
 }
