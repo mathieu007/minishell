@@ -26,7 +26,7 @@ int	redirect_overwrite(const char *output_file)
 {
 	int output_fd;
 
-	output_fd = open(output_file, O_WRONLY | O_CREAT | O_WRONLY, 0644);
+	output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC , 0644);
 	if (output_fd == -1)
 		return(perror("Failed to open output file"),1);
 	if (dup2(output_fd, STDOUT_FILENO) == -1)

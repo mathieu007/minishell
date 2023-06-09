@@ -27,6 +27,7 @@ void	redirect_output(t_cmd *cmd)
 		}
 		close(cmd->out_redir->fd);
 		close(STDOUT_FILENO);
+
 		close(3);
 	}
 }
