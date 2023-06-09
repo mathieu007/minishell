@@ -82,3 +82,17 @@ ech1 1 && echo 2 && echo 3
 echo 1 && echo 2 && ech3 3
 ech1 1 && ech2 2 && echo 3
 echo 1 && ech2 2 && ech3 3
+echo 1 || ech6 6 || echo 2 && ech23 23 && echo 3 || ech10 10 || ech11 11
+ech1 1 || ech6 6 || ech2 2 && ech23 23 && ech3 3 || ech10 10 || ech11 11
+echo 1 || ech6 6 || ech2 2 && ech23 23 && echo 3 || ech10 10 || ech11 11
+ech1 1 || ech6 6 || echo 2 && ech23 23 && echo 3 || ech10 10 || ech11 11
+echo 1 || ech6 6 || echo 2 && ech23 23 && ech3 3 || ech10 10 || ech11 11
+ech1 1 || ech6 6 || ech2 2 && ech23 23 && echo 3 || ech10 10 || ech11 11
+echo 1 || ech6 6 || ech2 2 && ech23 23 && ech3 3 || ech10 10 || ech11 11
+echo 1 || ech6 6 || echo 2 && ech23 23 && echo 3 || ech10 10 || echo 11
+ech1 1 || ech6 6 || ech2 2 && ech23 23 && ech3 3 || ech10 10 || echo 11
+echo 1 || ech6 6 || ech2 2 && ech23 23 && echo 3 || ech10 10 || echo 11
+ech1 1 || ech6 6 || echo 2 && ech23 23 && echo 3 || ech10 10 || echo 11
+echo 1 || ech6 6 || echo 2 && ech23 23 && ech3 3 || ech10 10 || echo 11
+ech1 1 || ech6 6 || ech2 2 && ech23 23 && echo 3 || ech10 10 || echo 11
+echo 1 || ech6 6 || ech2 2 && ech23 23 && ech3 3 || ech10 10 || echo 11

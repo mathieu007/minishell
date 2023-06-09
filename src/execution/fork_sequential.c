@@ -1,10 +1,5 @@
 #include "minishell.h"
 
-// exec the function right away because it is a sequential cmd.
-// No need to fork.
-// Because t_process is stored inside static variable no need 
-// to initilized a new one, each forked process will received it's
-// own t_process struct
 static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
@@ -14,8 +9,6 @@ static int32_t	exec(t_cmd *cmd)
 		return (proc->errnum);
 	redirect_output(cmd);
 	proc->errnum = cmd->func(cmd);
-	close(STDOUT_FILENO);
-	close(3);
 	return (proc->errnum);
 }
 
@@ -30,10 +23,7 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	ret = 0;
 	proc = get_process();
 	if (pid == -1)
-	{
-		write_msg(STDERR_FILENO, strerror(errno));
-		free_all_and_exit(EXIT_FAILURE);
-	}
+		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
@@ -58,17 +48,10 @@ int32_t	exec_sequential(t_cmd *cmd)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
-	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
-	{
-		create_redir_out(cmd->next);
+		create_redir(cmd);
+	if (cmd->is_builtin && !is_redirection(cmd->next))
+		proc->errnum = exec(cmd);
+	else if (proc->errnum == 0)
 		proc->errnum = fork_exec(cmd);
-	}
-	else
-	{
-		if (cmd->is_builtin)
-			proc->errnum = exec(cmd);
-		else
-			proc->errnum = fork_exec(cmd);
-	}
 	return (proc->errnum);
 }

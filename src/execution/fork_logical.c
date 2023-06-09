@@ -23,10 +23,7 @@ static void	fork_exec(t_cmd	*cmd)
 	proc = get_process();
 	ret = proc->errnum;
 	if (pid == -1)
-	{
-		write_msg(STDERR_FILENO, strerror(errno));
-		free_all_and_exit(EXIT_FAILURE);
-	}
+		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
@@ -51,9 +48,8 @@ int32_t	execute(t_cmd *cmd)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (-1);
-	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
-		create_redir_out(cmd->next);
-	if (cmd->is_builtin)
+	create_redir(cmd);
+	if (cmd->is_builtin && !is_redirection(cmd->next))
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)
 		fork_exec(cmd);
