@@ -97,10 +97,7 @@ char	*get_cwd(t_cmd *cmd)
 		return (proc->cwd);
 	}
 	if (stat(proc->cwd, &file_stat) != 0)
-	{
-		perror("fstat() error");
-		return (free_all_and_exit(EXIT_FAILURE));
-	}
+		free_all_and_exit2(errno, "stat error");
 	if (proc->dir_id == 0)
 		proc->dir_id = file_stat.st_ino;
 	if (file_stat.st_ino == proc->dir_id)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/08 22:33:00 by math             ###   ########.fr       */
+/*   Updated: 2023/06/09 08:45:38 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ t_cmd_seq	get_sequence_type(t_token *token)
 		else if (token->type == TK_AND || (token->type == TK_START && token->next->type == TK_AND))
 			return (CMD_LOG_AND);
 		else if (token->type == TK_LESSLESS)
-			return (CMD_FILEIN_APPPEND);
+			return (CMD_HEREDOC);
 		else if (token->type == TK_LESS)
 			return (CMD_FILEIN);
 		else if (token->type == TK_GREATGREAT)

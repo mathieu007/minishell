@@ -23,8 +23,15 @@ void	free_all(void)
 }
 
 void	*free_all_and_exit(int32_t status)
-{
+{	
 	free_all();
 	exit(status);
 	return (NULL);
+}
+
+void	free_all_and_exit2(int32_t status, char *msg)
+{
+	perror(msg);
+	free_all();
+	exit(status);
 }

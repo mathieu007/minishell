@@ -43,13 +43,9 @@ void	fork_first_child(t_cmd *cmd)
 	t_process 	*proc;
 
 	proc = get_process();
-
 	pid = fork();
 	if (pid == -1)
-	{
-		write_msg(STDERR_FILENO, strerror(errno));
-		free_all_and_exit(EXIT_FAILURE);
-	}
+		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
@@ -72,10 +68,7 @@ void	fork_last_child(t_cmd *cmd)
 	proc = get_process();
 	pid = fork();
 	if (pid == -1)
-	{
-		write_msg(STDERR_FILENO, strerror(errno));
-		free_all_and_exit(EXIT_FAILURE);
-	}
+		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
@@ -93,7 +86,7 @@ void	fork_last_child(t_cmd *cmd)
 	cmd->pid = pid;
 }
 
-void	fork_middle_child(t_cmd *cmd)
+t_cmd	*fork_middle_child(t_cmd *cmd)
 {
 	pid_t		pid;
 	t_process 	*proc;
@@ -101,10 +94,7 @@ void	fork_middle_child(t_cmd *cmd)
 	proc = get_process();
 	pid = fork();
 	if (pid == -1)
-	{
-		write_msg(STDERR_FILENO, strerror(errno));
-		free_all_and_exit(EXIT_FAILURE);
-	}
+		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
@@ -122,6 +112,7 @@ void	fork_middle_child(t_cmd *cmd)
 	close(cmd->prev->pipe->fd_out);
 	close(cmd->pipe->fd_out);
 	cmd->pid = pid;
+	return (cmd->next);
 }
 
 void	*fork_pipes(t_cmd *cmd)
@@ -129,16 +120,11 @@ void	*fork_pipes(t_cmd *cmd)
 	t_cmd	*start;
 
 	start = cmd;
-	if (cmd)
-		fork_first_child(cmd);
+	fork_first_child(cmd);
 	cmd = cmd->next;
 	while (cmd && cmd->next && cmd->next->cmd_seq_type == CMD_PIPE)
-	{
-		fork_middle_child(cmd);
-		cmd = cmd->next;
-	}
-	if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
-		create_redir_out(cmd->next);
+		cmd = fork_middle_child(cmd);
+	create_redir(cmd);
 	if (cmd && cmd->cmd_seq_type == CMD_PIPE)
 		fork_last_child(cmd);
 	wait_childs(start);

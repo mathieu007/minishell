@@ -158,7 +158,7 @@ typedef enum e_cmd_seq
 	CMD_LOG_OR = TK_OR, // ||
 	CMD_BACKGROUND_EXEC = TK_AMPERSAND, // &
 	CMD_FILEOUT_APPPEND = TK_GREATGREAT,
-	CMD_FILEIN_APPPEND = TK_LESSLESS,
+	CMD_HEREDOC = TK_LESSLESS,
 	CMD_FILEOUT = TK_GREAT,
 	CMD_FILEIN = TK_LESS,
 	CMD_SEQUENTIAL = TK_SEMICOLON // ;
@@ -267,6 +267,7 @@ t_cmd			*parse_redirect(t_cmd *cmd);
 t_cmd			*create_redir_out(t_cmd *cmd);
 t_cmd			*create_redir_append_out(t_cmd *cmd);
 void			redirect_output(t_cmd *cmd);
+int32_t			open_in_redir_fd(t_cmd *cmd);
 int32_t			open_out_redir_fd(t_cmd *cmd);
 int32_t			open_out_append_redir_fd(t_cmd *cmd);
 int32_t			*reset_token_counter(void);
@@ -292,20 +293,21 @@ int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token *parent);
 
 
-t_cmd			*parse_at_execution(t_cmd *cmd);
-t_token			*tokenize_root(char *str);
-int32_t			add_token_group(char *str, int32_t i, t_token_type type,
+t_cmd				*parse_at_execution(t_cmd *cmd);
+t_token				*tokenize_root(char *str);
+int32_t				add_token_group(char *str, int32_t i, t_token_type type,
 					t_token *parent);
-t_cmd			*add_cmd(void);
-t_cmd			*add_root_cmd_token(t_token *token);
-t_cmd			*add_child_cmd(t_cmd *parent, t_token *token);
-void			dup_env(void);
-t_token			*new_token();
-t_cmd			*new_cmd();
+t_cmd				*add_cmd(void);
+t_cmd				*add_root_cmd_token(t_token *token);
+t_cmd				*add_child_cmd(t_cmd *parent, t_token *token);
+void				dup_env(void);
+t_token				*new_token();
+t_cmd				*new_cmd();
 t_token_sequence	*new_token_sequence();
 
 /// @brief Simples and short helpers methods.
 
+bool		is_redirection(t_cmd *cmd);
 t_token		*contains_parentheses(t_token *token);
 int32_t		goto_closing_environement(char *str, int32_t i);
 int32_t		goto_closing_single_quote(char *str, int32_t i);
@@ -437,6 +439,7 @@ char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
+t_cmd					*create_redir(t_cmd *cmd);
 int32_t					exec_sequential(t_cmd *cmd);
 t_cmd			 		*exec_logical_or(t_cmd *cmd);
 t_cmd			 		*exec_logical_and(t_cmd *cmd);
@@ -454,15 +457,15 @@ int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd  *cmd);
 
 //built in utils
-int	is_valid_identifier(char *identifier);
-void	print_not_valid_identifier(int export_or_unset, char *identifier);
+int			is_valid_identifier(char *identifier);
+void		print_not_valid_identifier(int export_or_unset, char *identifier);
 int32_t		count_splits(char **split);
-char	*join_splits(char **split, char *join);
-void	print_not_valid_identifier(int export_or_unset, char *identifier);
-int	is_valid_identifier(char *identifier);
-int	is_valid_identifier_unset(char *identifier);
-void	add_env_node(t_process *data, char *variable, char *value);
-void	swap_node_value(t_env_cpy *a, t_env_cpy *b);
+char		*join_splits(char **split, char *join);
+void		print_not_valid_identifier(int export_or_unset, char *identifier);
+int			is_valid_identifier(char *identifier);
+int			is_valid_identifier_unset(char *identifier);
+void		add_env_node(t_process *data, char *variable, char *value);
+void		swap_node_value(t_env_cpy *a, t_env_cpy *b);
 
 //signal
 void setup_signal_handlers(void);
@@ -485,6 +488,7 @@ void					*free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_process *data);
 void					*free_2d_array(void **tab);
 void					free_all();
+void					free_all_and_exit2(int32_t status, char *msg);
 void					*free_all_and_exit(int32_t status);
 void					*free_ptr(void *ptr);
 
