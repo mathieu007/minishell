@@ -48,7 +48,7 @@ int32_t	exec_sequential(t_cmd *cmd)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
-	create_redir(cmd);
+	create_redir(cmd, cmd);
 	if (cmd->is_builtin && cmd->next && !is_redirection(cmd->next->cmd_seq_type))
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)

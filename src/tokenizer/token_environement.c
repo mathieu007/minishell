@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_environement.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 16:10:34 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/11 16:36:51 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,12 @@ int32_t	add_token_env(char *str, int32_t pos, t_token *parent,
 	bool inside_dbl_quotes)
 {
 	t_token		*token;
+	
 	pos++;
 	if (str[pos] == '{')
 	{
 		token = add_tk(ft_strdup("${"), TK_ENVIRONEMENT_VAR, pos - 1, parent);
-		pos++;	
+		pos++;
 		while (str[pos] && str[pos] != '}')
 			pos++;
 		if (str[pos] != '}')
@@ -74,34 +75,34 @@ int32_t	add_token_env(char *str, int32_t pos, t_token *parent,
 	return (token->end);
 }
 
-/// @brief separators are spaces, this function does not execute inside
-/// token string.
-/// @param parent 
-/// @return 
-t_token	*tokenize_expandable_tokens(t_token *parent)
-{
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-	char			*str;
-	bool			in_dbl_quotes;
+// /// @brief separators are spaces, this function does not execute inside
+// /// token string.
+// /// @param parent 
+// /// @return 
+// t_token	*tokenize_expandable_tokens(t_token *parent)
+// {
+// 	int32_t			i;
+// 	t_token_type	type;
+// 	int32_t			t_len;
+// 	char			*str;
+// 	bool			in_dbl_quotes;
 
-	i = 0;
-	in_dbl_quotes = parent->type == TK_DOUBLEQUOTE;
-	str = ft_strtrim(parent->str, " ");
-	add_tk(ft_strdup(""), TK_START, 0, parent);
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (type == TK_COMMANDSUBSTITUTION_OPEN)
-			i = add_token_cmd_substitution(str, i, parent, in_dbl_quotes);
-		if (type == TK_ENVIRONEMENT_VAR)
-			i = add_token_env(str, i, parent, in_dbl_quotes);
-		else
-			i += t_len;
-	}
-	add_tk(ft_strdup(""), TK_END, i, parent);
-	build_token_environement(parent);
-	return (parent->child_tokens);
-}
+// 	i = 0;
+// 	in_dbl_quotes = parent->type == TK_DOUBLEQUOTE;
+// 	str = ft_strtrim(parent->str, " ");
+// 	add_tk(ft_strdup(""), TK_START, 0, parent);
+// 	while (str[i])
+// 	{
+// 		type = get_token_type(&str[i]);
+// 		t_len = get_token_len(&str[i], type, false);
+// 		if (type == TK_COMMANDSUBSTITUTION_OPEN)
+// 			i = add_token_cmd_substitution(str, i, parent, in_dbl_quotes);
+// 		if (type == TK_ENVIRONEMENT_VAR)
+// 			i = add_token_env(str, i, parent, in_dbl_quotes);
+// 		else
+// 			i += t_len;
+// 	}
+// 	add_tk(ft_strdup(""), TK_END, i, parent);
+// 	build_token_environement(parent);
+// 	return (parent->child_tokens);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/09 15:52:06 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/11 16:34:38 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,74 @@ static t_token	*goto_closing_dbl_quote_token(t_token *token)
 			return (token);
 		token = token->next;
 	}
+	return (token);
+}
+
+char	*parse_redirect_env_var_value(t_token *child, t_cmd_seq cmd_type)
+{
+	char	*val;
+	char	*ambigous_redirect;
+
+	val = parse_env_var_value(child);
+	if (child->type == TK_ENVIRONEMENT_VAR
+		&& child->prev && child->prev->type != TK_SPACE
+		&& cmd_type == CMD_HEREDOC)
+	{
+		val = ft_strjoin(child->token_str, child->str);
+		if (child->token_len == 2)
+			val = ft_strjoinfree(val, "}");
+	}
+	else if (child->prev && child->prev->type != TK_SPACE
+		&& val && val[0] == ' ')
+	{
+		ambigous_redirect = ft_strjoin(child->prev->str, child->token_str);
+		ambigous_redirect = ft_strjoinfree(ambigous_redirect, child->str);
+		if (child->token_len == 2)
+			ambigous_redirect = ft_strjoinfree(ambigous_redirect, "}");
+		get_process()->errnum = 1;
+		write_err2(1, ambigous_redirect, ": ambiguous redirect");
+		return (free(val), NULL);
+	}
+	return (val);
+}
+
+void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
+{
+	char	*val;
+	t_token	*child;
+	char	*str;
+
+	child = token->child_tokens;
+	str = ft_strdup("");
+	while (child && child->next)
+	{	
+		if (is_not_expandable(child))
+			str = ft_strjoinfree(str, child->token_str);
+		if (child->type == TK_DOUBLEQUOTE)
+		{
+			val = build_dbl_quote_token_env(child);
+			str = ft_strjoinfree(str, val);
+			child = goto_closing_dbl_quote_token(child);
+			str = ft_strjoinfree(str, child->token_str);
+			val = ft_strdup(child->str);
+		}
+		else if (child->type == TK_ENVIRONEMENT_VAR)
+		{
+			val = parse_redirect_env_var_value(child, cmd_type);
+			if (!val)
+				return (free(val), free(str), NULL);
+		}
+		else
+			val = ft_strdup(child->str);
+		str = ft_strjoinfree2(str, val);
+		child = child->next;
+	}
+	free_t_tokens(token->child_tokens);
+	token->child_tokens = NULL;
+	free(token->str);
+	token->str = ft_strtrim(str, " ");
+	free(str);
+	tokenize_group_tokens(token);
 	return (token);
 }
 

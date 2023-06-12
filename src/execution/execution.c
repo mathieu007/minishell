@@ -52,8 +52,6 @@ int32_t	exec_sequence(t_cmd *cmd)
 			cmd = exec_group(cmd);
 		else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
 			cmd = exec_logical_or(cmd);
-		else if (cmd->next && cmd->next->cmd_seq_type == CMD_FILEOUT)
-			cmd = create_redir_out(cmd);
 		if (proc->stop_exec)
 			return (proc->errnum);
 		if (cmd)

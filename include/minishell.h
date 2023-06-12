@@ -263,9 +263,9 @@ typedef struct s_process
 
 /// @brief The entities functions
 
-t_cmd			*parse_redirect(t_cmd *cmd);
-t_cmd			*create_redir_out(t_cmd *cmd);
-t_cmd			*create_redir_append_out(t_cmd *cmd);
+t_cmd			*parse_redirect(t_cmd *main, t_cmd *cmd);
+t_cmd			*create_redir_out(t_cmd *main, t_cmd *cmd);
+t_cmd			*create_redir_append_out(t_cmd *main, t_cmd *cmd);
 void			redirect_output(t_cmd *cmd);
 int32_t			open_in_redir_fd(t_cmd *cmd);
 int32_t			open_out_redir_fd(t_cmd *cmd);
@@ -365,6 +365,7 @@ char			*get_cwd(t_cmd *cmd);
 
 void			split_tokens(t_token *parent);
 t_token			*tokenize_dbl_quotes_tokens(t_token *parent);
+void			*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type);
 void			build_token_environement(t_token *parent);
 void			split_token_sequence(t_token *parent);
 void			split_token_groups(t_token *parent);
@@ -439,7 +440,7 @@ char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
-t_cmd					*create_redir(t_cmd *cmd);
+t_cmd					*create_redir(t_cmd *main, t_cmd *cmd);
 int32_t					exec_sequential(t_cmd *cmd);
 t_cmd			 		*exec_logical_or(t_cmd *cmd);
 t_cmd			 		*exec_logical_and(t_cmd *cmd);
