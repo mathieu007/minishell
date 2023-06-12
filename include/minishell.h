@@ -263,6 +263,7 @@ typedef struct s_process
 
 /// @brief The entities functions
 
+void			close_redirections(t_cmd *cmd);
 t_cmd			*parse_redirect(t_cmd *main, t_cmd *cmd);
 t_cmd			*create_redir_out(t_cmd *main, t_cmd *cmd);
 t_cmd			*create_redir_append_out(t_cmd *main, t_cmd *cmd);
@@ -293,6 +294,7 @@ int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token *parent);
 
 
+int32_t				count_args(t_cmd *cmd);
 t_cmd				*parse_at_execution(t_cmd *cmd);
 t_token				*tokenize_root(char *str);
 int32_t				add_token_group(char *str, int32_t i, t_token_type type,

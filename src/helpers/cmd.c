@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/06/05 11:04:06 by math             ###   ########.fr       */
+/*   Updated: 2023/06/12 10:07:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ bool	is_builtins(char *str)
 {
 	int32_t	i;
 	char	**builtins;
-	int32_t	len;
+	size_t	len;
 
 	builtins = get_builtins_cmd();
 	i = 0;
 	while (builtins[i])
 	{
 		len = ft_strlen(builtins[i]);
-		if (ft_strncmp(str, builtins[i], len) == 0)
+		if (ft_strncmp(str, builtins[i], len) == 0 && len == ft_strlen(str))
 			return (true);
 		i++;
 	}

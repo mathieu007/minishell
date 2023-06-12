@@ -124,9 +124,10 @@ void	*fork_pipes(t_cmd *cmd)
 	cmd = cmd->next;
 	while (cmd && cmd->next && cmd->next->cmd_seq_type == CMD_PIPE)
 		cmd = fork_middle_child(cmd);
-	create_redir(cmd, cmd);
+	create_redir(cmd, cmd->next);
 	if (cmd && cmd->cmd_seq_type == CMD_PIPE)
-		fork_last_child(cmd);
+		fork_last_child(cmd);	
 	wait_childs(start);
+	close_redirections(cmd);
 	return (NULL);
 }
