@@ -50,8 +50,8 @@ int32_t	exec_sequence(t_cmd *cmd)
 			cmd = exec_logical_or(cmd);
 		else if (cmd->cmd_seq_type == CMD_GROUPING)
 			cmd = exec_group(cmd);
-		else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
-			cmd = exec_logical_or(cmd);
+		// else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
+		// 	cmd = exec_logical_or(cmd);
 		if (proc->stop_exec)
 			return (proc->errnum);
 		if (cmd)

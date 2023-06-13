@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static t_cmd *last_in_redir(t_cmd *cmd)
+t_cmd *last_in_redir(t_cmd *cmd)
 {
 	t_cmd *last;
 
@@ -14,7 +14,7 @@ static t_cmd *last_in_redir(t_cmd *cmd)
 	return (last);
 }
 
-static t_cmd *last_out_redir(t_cmd *cmd)
+t_cmd *last_out_redir(t_cmd *cmd)
 {
 	t_cmd *last;
 
@@ -28,7 +28,7 @@ static t_cmd *last_out_redir(t_cmd *cmd)
 	return (last);
 }
 
-static void	exec_redirection(t_cmd *main, t_cmd *cmd)
+void	exec_redirection(t_cmd *main, t_cmd *cmd)
 {
 	t_process	*proc;
 	t_cmd		*last_in;
@@ -39,21 +39,13 @@ static void	exec_redirection(t_cmd *main, t_cmd *cmd)
 	last_out = last_out_redir(cmd);
 	if (last_in)
 	{
-		redirect_output(last_in);
-		proc->errnum = main->func(main);
+		redirect_input(last_in);
 		if (last_out)
-		{
 			redirect_output(last_out);
-			proc->errnum = main->func(main);
-		}
 	}
 	else if (last_out)
-	{
 		redirect_output(last_out);
-		proc->errnum = main->func(main);
-	}
-	else
-		proc->errnum = main->func(main);
+	proc->errnum = main->func(main);
 }
 
 static int32_t	exec(t_cmd *cmd)

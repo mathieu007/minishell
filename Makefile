@@ -2,12 +2,14 @@
 CC          	= gcc
 
 #The Target Binary Program
-NAME			= minishell
-NAME_TESTS		= tests
+NAME				= minishell
+NAME_TESTS			= tests
+NAME_REDIR_TESTS	= tests_redir
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR			= src
 TESTSDIR		= tests
+TESTS_REDIR_DIR	= tests_redir
 INCDIR			= include
 BUILDDIR		= obj
 TARGETDIR		= bin
@@ -33,11 +35,13 @@ POST_CFLAGS := -lreadline -lncurses $(READLINE) $(READLINEHISTORY)
 
 SOURCES     = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 TESTS       = $(shell find $(TESTSDIR) -type f -name *.$(SRCEXT))
+TESTS_REDIR = $(shell find $(TESTS_REDIR_DIR) -type f -name *.$(SRCEXT))
 
 OBJECTS		 = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 OBJECT_TESTS = $(patsubst $(TESTSDIR)/%,$(BUILDDIR)/%,$(TESTS:.$(SRCEXT)=.$(OBJEXT)))
+OBJECT_REDIR_TESTS = $(patsubst $(TESTS_REDIR_DIR)/%,$(BUILDDIR)/%,$(TESTS_REDIR:.$(SRCEXT)=.$(OBJEXT)))
 
-all: directories $(TARGETDIR)/$(NAME) $(TARGETDIR)/$(NAME_TESTS)
+all: directories $(TARGETDIR)/$(NAME) $(TARGETDIR)/$(NAME_TESTS) $(TARGETDIR)/$(NAME_REDIR_TESTS)
 
 directories:
 	@mkdir -p $(TARGETDIR)
@@ -55,19 +59,18 @@ re:	fclean all
 
 test: re 
 	cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
+test2: re 
+	cd bin && chmod 777 ./tests_redir && chmod +x ./tests_redir && ./tests_redir	
 
 exec: re 
 	cd bin && ./minishell
 
 $(TARGETDIR)/$(NAME): $(OBJECTS)
 	@$(MAKE) -C $(LIBFT_DIR)
-	# @$(MAKE) -C $(PRINTF_ERR_DIR)
-	# $(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) $(INCPRINTFERRDEP) -o $(TARGETDIR)/$(NAME) $^ $(POST_CFLAGS) $(LIBFT) $(PRINTF_ERR)
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -o $(TARGETDIR)/$(NAME) $^ $(POST_CFLAGS) $(LIBFT)
 
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
-	# $(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) $(INCPRINTFERRDEP) -c -o $@ $<
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
 
 $(TARGETDIR)/$(NAME_TESTS): $(OBJECT_TESTS)
@@ -77,5 +80,18 @@ $(TARGETDIR)/$(NAME_TESTS): $(OBJECT_TESTS)
 $(BUILDDIR)/%.$(OBJEXT): $(TESTSDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(TARGETDIR)/$(NAME_REDIR_TESTS): $(OBJECT_REDIR_TESTS)
+	@$(MAKE) -C $(LIBFT_DIR)
+	cp $(TESTS_REDIR_DIR)/tests_redir.txt $(TARGETDIR)/
+	cp $(TESTS_REDIR_DIR)/in1 $(TARGETDIR)/
+	cp $(TESTS_REDIR_DIR)/in2 $(TARGETDIR)/
+	cp $(TESTS_REDIR_DIR)/in3 $(TARGETDIR)/
+	cp $(TESTS_REDIR_DIR)/outfile* $(TARGETDIR)/
+	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -o $(TARGETDIR)/$(NAME_REDIR_TESTS) $^ $(LIBFT)
+	
+$(BUILDDIR)/%.$(OBJEXT): $(TESTS_REDIR_DIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
 
 .PHONY: all clean fclean re
