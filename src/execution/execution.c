@@ -24,10 +24,12 @@ t_cmd	*pipes_cmds(t_cmd *cmd)
 	start = cmd;
 	pipe_cmd(cmd);
 	cmd = cmd->next;
-	while (cmd && cmd->next && cmd->next->cmd_seq_type == CMD_PIPE)
+	while (cmd->cmd_seq_type == CMD_PIPE)
 	{
 		pipe_cmd(cmd);
 		cmd = cmd->next;
+		while (is_redirection(cmd->cmd_seq_type))
+			cmd = cmd->next;
 	}
 	fork_pipes(start);
 	return (cmd->next);

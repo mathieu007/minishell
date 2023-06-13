@@ -93,13 +93,24 @@ void	fork_first_child(t_cmd *cmd)
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
-		build_token_environement(cmd->token);
-		cmd = parse_at_execution(cmd);
+		if (cmd->next && !is_redirection(cmd->cmd_seq_type))
+		{
+			build_token_environement(cmd->token);
+			cmd = parse_at_execution(cmd);
+		}
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
 		exec_first_pipe_redirection(cmd, cmd->next);
 		exit(proc->errnum);
 	}	
 	cmd->pid = pid;
+}
+
+void close_prev_pipes(t_cmd *cmd)
+{
+	while (cmd && cmd->cmd_seq_type != CMD_PIPE)
+		cmd = cmd->prev;
+	close(cmd->pipe->fd_in);
+	close(cmd->pipe->fd_out);
 }
 
 void	fork_last_child(t_cmd *cmd)
@@ -120,8 +131,7 @@ void	fork_last_child(t_cmd *cmd)
 		exec_last_pipe_redirection(cmd, cmd->next);
 		exit(proc->errnum);
 	}
-	close(cmd->prev->pipe->fd_in);
-	close(cmd->prev->pipe->fd_out);
+	close_prev_pipes(cmd);
 	cmd->pid = pid;
 }
 
@@ -147,8 +157,7 @@ t_cmd	*fork_middle_child(t_cmd *cmd)
 		proc->errnum = cmd->func(cmd);
 		exit(proc->errnum);
 	}
-	close(cmd->prev->pipe->fd_in);
-	close(cmd->prev->pipe->fd_out);
+	close_prev_pipes(cmd);
 	close(cmd->pipe->fd_out);
 	cmd->pid = pid;
 	return (cmd->next);
@@ -166,7 +175,7 @@ void	*fork_pipes(t_cmd *cmd)
 		cmd = cmd->next;
 	while (cmd && cmd->next && cmd->next->cmd_seq_type != CMD_PIPE)
 		cmd = fork_middle_child(cmd);
-	create_redir(cmd, cmd->next);	
+	create_redir(cmd, cmd->next);
 	if (cmd && cmd->cmd_seq_type == CMD_PIPE)
 		fork_last_child(cmd);
 	wait_childs(start);
