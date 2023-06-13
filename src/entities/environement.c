@@ -80,6 +80,7 @@ t_env_cpy	*init_env(t_process *data)
 			current->next->prev = current;
 		current = current->next;
 		i++;
+		
 	}
 	return (head);
 }

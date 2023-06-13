@@ -268,6 +268,8 @@ void			close_redirections(t_cmd *cmd);
 t_cmd			*parse_redirect(t_cmd *main, t_cmd *cmd);
 t_cmd			*create_redir_out(t_cmd *main, t_cmd *cmd);
 t_cmd			*create_redir_append_out(t_cmd *main, t_cmd *cmd);
+void			exec_redirection(t_cmd *main, t_cmd *cmd);
+void			redirect_input(t_cmd *cmd);
 void			redirect_output(t_cmd *cmd);
 void			redirect_input(t_cmd *cmd);
 int32_t			open_in_redir_fd(t_cmd *cmd);
@@ -311,6 +313,8 @@ t_token_sequence	*new_token_sequence();
 
 /// @brief Simples and short helpers methods.
 
+t_cmd 		*last_in_redir(t_cmd *cmd);
+t_cmd 		*last_out_redir(t_cmd *cmd);
 bool		is_redirection(t_cmd_seq seq);
 t_token		*contains_parentheses(t_token *token);
 int32_t		goto_closing_environement(char *str, int32_t i);

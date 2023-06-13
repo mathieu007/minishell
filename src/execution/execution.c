@@ -24,10 +24,12 @@ t_cmd	*pipes_cmds(t_cmd *cmd)
 	start = cmd;
 	pipe_cmd(cmd);
 	cmd = cmd->next;
-	while (cmd && cmd->next && cmd->next->cmd_seq_type == CMD_PIPE)
+	while (cmd->cmd_seq_type == CMD_PIPE)
 	{
 		pipe_cmd(cmd);
 		cmd = cmd->next;
+		while (is_redirection(cmd->cmd_seq_type))
+			cmd = cmd->next;
 	}
 	fork_pipes(start);
 	return (cmd->next);
@@ -50,8 +52,8 @@ int32_t	exec_sequence(t_cmd *cmd)
 			cmd = exec_logical_or(cmd);
 		else if (cmd->cmd_seq_type == CMD_GROUPING)
 			cmd = exec_group(cmd);
-		else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
-			cmd = exec_logical_or(cmd);
+		// else if (cmd->cmd_seq_type == CMD_SUBSTITUTION)
+		// 	cmd = exec_logical_or(cmd);
 		if (proc->stop_exec)
 			return (proc->errnum);
 		if (cmd)

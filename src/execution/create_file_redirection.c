@@ -137,7 +137,7 @@ void	redirect_input(t_cmd *cmd)
 {
 	if (!cmd || !cmd->in_redir)
 		return ;
-
+	
 	if (dup2(cmd->in_redir->fd, STDIN_FILENO) == -1)
 		free_all_and_exit2(errno, "Could not redirect input");
 	if (close(cmd->in_redir->fd) == -1)

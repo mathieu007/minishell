@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/06 12:26:13 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/13 16:48:22 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_cmd	*add_root_cmd_token(t_token *token)
 	data = get_process();
 	last = data->last_cmd;
 	new = new_cmd();
-	new->cmd_seq_type = get_sequence_type(token);
+	new->cmd_seq_type = token->cmd_seq_type;
 	new->token = token;
 	if (new == NULL)
 		return (NULL);
