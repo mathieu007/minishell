@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-static t_cmd *last_in_redir(t_cmd *cmd)
+t_cmd	*last_in_redir(t_cmd *cmd)
 {
-	t_cmd *last;
+	t_cmd	*last;
 
 	last = NULL;
 	while (cmd && is_redirection(cmd->cmd_seq_type))
@@ -14,9 +14,9 @@ static t_cmd *last_in_redir(t_cmd *cmd)
 	return (last);
 }
 
-static t_cmd *last_out_redir(t_cmd *cmd)
+t_cmd	*last_out_redir(t_cmd *cmd)
 {
-	t_cmd *last;
+	t_cmd	*last;
 
 	last = NULL;
 	while (cmd && is_redirection(cmd->cmd_seq_type))
@@ -28,7 +28,7 @@ static t_cmd *last_out_redir(t_cmd *cmd)
 	return (last);
 }
 
-static void	exec_redirection(t_cmd *main, t_cmd *cmd)
+void	exec_redirection(t_cmd *main, t_cmd *cmd)
 {
 	t_process	*proc;
 	t_cmd		*last_in;
@@ -39,8 +39,7 @@ static void	exec_redirection(t_cmd *main, t_cmd *cmd)
 	last_out = last_out_redir(cmd);
 	if (last_in)
 	{
-		redirect_output(last_in);
-		proc->errnum = main->func(main);
+		redirect_input(last_in);
 		if (last_out)
 		{
 			redirect_output(last_out);
@@ -107,6 +106,6 @@ int32_t	exec_sequential(t_cmd *cmd)
 	if (cmd->is_builtin && cmd->next && !is_redirection(cmd->next->cmd_seq_type))
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)
-	 	proc->errnum = fork_exec(cmd);
+		proc->errnum = fork_exec(cmd);
 	return (proc->errnum);
 }

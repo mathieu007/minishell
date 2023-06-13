@@ -31,7 +31,7 @@ int32_t	open_out_redir_fd(t_cmd *cmd)
 	if (cmd->out_redir == NULL)
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
 	redir = cmd->out_redir;
-	redir->file = ft_strdup(f_name);	
+	redir->file = ft_strdup(f_name);
 	redir->fd = open(redir->file, out_flags, 0777);
 	if (redir->fd == -1)
 		free_all_and_exit2(errno, "Failed to open fd");

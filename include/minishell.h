@@ -263,11 +263,13 @@ typedef struct s_process
 
 /// @brief The entities functions
 
+void			exec_redirection(t_cmd *main, t_cmd *cmd);
 void			close_redirections(t_cmd *cmd);
 t_cmd			*parse_redirect(t_cmd *main, t_cmd *cmd);
 t_cmd			*create_redir_out(t_cmd *main, t_cmd *cmd);
 t_cmd			*create_redir_append_out(t_cmd *main, t_cmd *cmd);
 void			redirect_output(t_cmd *cmd);
+void			redirect_input(t_cmd *cmd);
 int32_t			open_in_redir_fd(t_cmd *cmd);
 int32_t			open_out_redir_fd(t_cmd *cmd);
 int32_t			open_out_append_redir_fd(t_cmd *cmd);
