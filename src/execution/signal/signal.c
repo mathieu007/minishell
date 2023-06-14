@@ -30,7 +30,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 		rl_redisplay();
 	}
 	else if (siginfo->si_signo == SIGTERM)
-		exit(EXIT_SUCCESS);
+		free_all_and_exit(0);
 }
 
 void	setup_signal_handlers(void)

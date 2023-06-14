@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/09 08:45:38 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/13 16:32:49 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*build_dbl_quote_token_env(t_token *token)
 		str = ft_strjoinfree2(str, value);
 		temp = child;
 		child = child->next;
-		free_t_token(temp);
+		free_t_tokens(temp);
 	}
 	return (str);
 }

@@ -1,15 +1,15 @@
 #include "minishell.h"
 ////////////delete me after /////////
 
-// void	print_groups_and_tokens()
+// void	print_groups_and_tokens(void)
 // {
-// 	t_token_sequence	*group;
+// 		*group;
 // 	t_token			*token;
 
 // 	data = get_process();
 // 	print_token_group(group);
 // 	while (group)
-// 	{		
+// 	{
 // 		token = group->token;
 // 		if (token)
 // 		{
@@ -17,14 +17,15 @@
 // 			token = token->next;
 // 		}
 // 		group = group->next;
-// 	}	
+// 	}
 // }
 
 static char	*get_print_token_type(t_token_type type)
 {
 	static char	*token_types[255 * 255 + (255 * 2)];
-	char		**tk_type = &token_types[8];
+	char		**tk_type;
 
+	tk_type = &token_types[8];
 	if (!token_types[0])
 	{
 		tk_type[TK_ENVIRONEMENT_VAR] = "TK_ENVIRONEMENT_VAR";
@@ -60,16 +61,15 @@ void	print_cmd(t_cmd *command)
 {
 	t_cmd	*cpy;
 	int		i;
-	int 	j;
+	int		j;
 
 	i = 0;
 	j = 0;
 	cpy = command;
-
 	printf("[[CMD CHAINLIST]]\n\n");
 	while (cpy)
 	{
-		printf("[[NODE # %i]]\n",j);
+		printf("[[NODE # %i]]\n", j);
 		printf("\n");
 		printf("cmd name = %s\n", cpy->name);
 		printf("cmd_seq_type = %i\n", (int)cpy->cmd_seq_type);
@@ -104,13 +104,14 @@ void	print_cmd(t_cmd *command)
 void	print_token(t_token *token)
 {
 	t_token	*cpy;
-	int j =0;
+	int		j;
 
+	j = 0;
 	cpy = token;
 	printf("[[TOKEN CHAINLIST]]\n\n");
 	while (cpy)
 	{
-		printf("[[NODE # %i]]\n",j);
+		printf("[[NODE # %i]]\n", j);
 		printf("---------------------------------------------------------\n");
 		printf(" str = %s\n", cpy->str);
 		printf(" token len = %i\n", cpy->token_len);
@@ -127,13 +128,14 @@ void	print_token(t_token *token)
 void	print_env(t_env_cpy *env)
 {
 	t_env_cpy	*cpy;
-	int j = 0;
+	int			j;
 
+	j = 0;
 	cpy = env;
 	printf("[[ENVIRONEMENTS CHAINLIST]]\n\n");
 	while (cpy)
 	{
-		printf("[[NODE # %i]]\n",j);
+		printf("[[NODE # %i]]\n", j);
 		printf("---------------------------------------------------------\n");
 		printf("  %s = %s\n", cpy->variable, cpy->value);
 		printf("---------------------------------------------------------\n");
@@ -145,13 +147,14 @@ void	print_env(t_env_cpy *env)
 void	print_token_group(t_token_sequence *token)
 {
 	t_token_sequence	*cpy;
-	int j = 0;
+	int					j;
 
+	j = 0;
 	cpy = token;
 	printf("[[TOKEN GROUP CHAINLIST]]\n\n");
 	while (cpy)
 	{
-		printf("[[NODE # %i]]\n",j);
+		printf("[[NODE # %i]]\n", j);
 		printf("---------------------------------------------------------\n");
 		printf(" str = %s\n", cpy->str);
 		printf(" len = %i\n", cpy->len);

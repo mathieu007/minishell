@@ -10,16 +10,12 @@ void	*free_ptr(void *ptr)
 
 void	free_all(void)
 {
+	t_process 		*proc;
 
-	t_process 		*data;
-	t_cmd 			*cmd;
+	proc = get_process();
+	printf("\n\n\n !!!  YOU USE FREE ALL !!! \n\n\n");
 
-	data = get_process();
-	cmd = data->cmds;
-	// if (token_group != NULL)
-	// 	free_t_token_groups(token_group);
-	if (cmd != NULL)
-		free_t_cmd(cmd);
+	free_t_process (proc);
 }
 
 void	*free_all_and_exit(int32_t status)

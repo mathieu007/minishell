@@ -24,7 +24,7 @@ void	*free_2d_char_array(char **tab)
 	if (!tab)
 		return (NULL);
 	i = 0;
-	while (tab && tab[i])
+	while (tab[i])
 	{
 		free(tab[i]);
 		i++;
