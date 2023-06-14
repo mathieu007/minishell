@@ -33,29 +33,6 @@ t_cmd	*pipes_cmds(t_cmd *cmd)
 	return (cmd->next);
 }
 
-int32_t	exec_redirection(t_cmd *cmd)
-{
-	t_process	*proc;
-
-	proc = get_process();
-	while (cmd && cmd->cmd_seq_type != CMD_NONE)
-	{
-		if (cmd->cmd_seq_type == CMD_FILEIN)
-			cmd = pipes_cmds(cmd);
-		else if (cmd->cmd_seq_type == CMD_FILEOUT)
-			exec_sequential(cmd);
-		else if (cmd->cmd_seq_type == CMD_FILEOUT_APPPEND)
-			cmd = exec_logical_and(cmd);
-		else if (cmd->cmd_seq_type == CMD_HEREDOC)
-			cmd = exec_logical_or(cmd);
-		if (proc->stop_exec)
-			return (proc->errnum);
-		if (cmd)
-			cmd = cmd->next;
-	}
-	return (proc->errnum);
-}
-
 int32_t	exec_sequence(t_cmd *cmd)
 {
 	t_process	*proc;
