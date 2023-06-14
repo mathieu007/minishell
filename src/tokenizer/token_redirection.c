@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_group.c                                      :+:      :+:    :+:   */
+/*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/13 20:12:34 by math             ###   ########.fr       */
+/*   Updated: 2023/06/13 20:21:23 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int32_t	add_token_redir(char *str, int32_t i, t_token_type type,
 /// and curlybrace but also spaces.
 /// @param high
 /// @return 
-t_token	*tokenize_group_tokens(t_token *parent)
+t_token	*tokenize_redirection(t_token *parent)
 {
 	int32_t			i;
 	t_token_type	type;
@@ -43,14 +43,12 @@ t_token	*tokenize_group_tokens(t_token *parent)
 	{
 		type = get_token_type(&str[i]);
 		t_len = get_token_len(&str[i], type, false);
-		if (is_token_group(type))
-			i = add_token_group(str, i, type, parent);
-		else if (type == TK_SPACE)
-			i = add_token_space(str, i, parent);
+		if (is_token_redir(type))
+			i = add_token_redir(str, i, type, parent);
 		else
 			i += t_len;
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
-	split_token_groups(parent);
+	split_token_redir(parent);
 	return (start_token);
 }

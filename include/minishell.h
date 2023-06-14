@@ -202,6 +202,7 @@ typedef struct s_token
 	struct s_token		*child_tokens;
 	bool				inside_dbl_quotes;
 	bool				is_continuation;
+	bool				contains_redir;
 	t_cmd_seq			cmd_seq_type;
 	t_token_type		type;
 }						t_token;
@@ -263,6 +264,8 @@ typedef struct s_process
 
 /// @brief The entities functions
 
+t_token			*tokenize_redirection(t_token *parent);
+void			split_token_redir(t_token *parent);
 void			exec_redirection(t_cmd *main, t_cmd *cmd);
 void			close_redirections(t_cmd *cmd);
 t_cmd			*parse_redirect(t_cmd *main, t_cmd *cmd);
@@ -316,6 +319,7 @@ t_token_sequence	*new_token_sequence();
 t_cmd 		*last_in_redir(t_cmd *cmd);
 t_cmd 		*last_out_redir(t_cmd *cmd);
 bool		is_redirection(t_cmd_seq seq);
+bool		is_token_redir(t_token_type type);
 t_token		*contains_parentheses(t_token *token);
 int32_t		goto_closing_environement(char *str, int32_t i);
 int32_t		goto_closing_single_quote(char *str, int32_t i);
@@ -448,7 +452,7 @@ char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
-t_cmd					*create_redir(t_cmd *main, t_cmd *cmd);
+t_cmd					*create_fd_redir(t_cmd *main, t_cmd *cmd);
 int32_t					exec_sequential(t_cmd *cmd);
 t_cmd			 		*exec_logical_or(t_cmd *cmd);
 t_cmd			 		*exec_logical_and(t_cmd *cmd);

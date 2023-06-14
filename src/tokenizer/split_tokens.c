@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/13 16:24:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/13 20:21:23 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,29 @@ void	build_token_environement(t_token *token)
 /// @brief we do not tokenize single quote, nothing to do
 /// 
 /// @param parent 
+void	split_token_redir(t_token *parent)
+{
+	char	*str;
+	int32_t	start;
+	int32_t	len;
+	t_token	*token;
+
+	token = parent->child_tokens;
+	str = parent->str;
+	while (token && token->next)
+	{	
+		len = token->next->start - token->end;
+		start = token->start + token->token_len;
+		token->str = ft_substr(str, start, len);
+		if (is_token_redir(token->type))
+			tokenize_group_tokens(token);
+		token = token->next;
+	}
+}
+
+/// @brief we do not tokenize single quote, nothing to do
+/// 
+/// @param parent 
 void	split_token_groups(t_token *parent)
 {
 	char	*str;
@@ -275,8 +298,11 @@ void	split_token_sequence(t_token *parent)
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
 		token->str = ft_strtrim(ft_substr(str, start, len), " ");
-		token = set_cmd_sequence(token);
-		token->child_tokens = tokenize_group_tokens(token);
+		token->cmd_seq_type = get_sequence_type(token);
+		if (token->contains_redir)
+			token->child_tokens = tokenize_redirection(token);
+		else
+			token->child_tokens = tokenize_group_tokens(token);
 		token = token->next;
 	}
 }

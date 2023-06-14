@@ -8,6 +8,14 @@ bool	is_redirection(t_cmd_seq seq)
 			|| seq == CMD_HEREDOC));
 }
 
+bool	is_token_redir(t_token_type type)
+{
+	return (type && (type == TK_GREAT
+			|| type == TK_GREATGREAT
+			|| type == TK_LESS
+			|| type == TK_LESSLESS));
+}
+
 // int32_t count_args2(char **args)
 // {
 // 	int32_t count;
@@ -84,8 +92,10 @@ t_cmd	*create_redir_heredoc(t_cmd *main, t_cmd *cmd)
 /// @param main 
 /// @param cmd 
 /// @return
-t_cmd	*create_redir(t_cmd *main, t_cmd *cmd)
+t_cmd	*create_fd_redir(t_cmd *main, t_cmd *cmd)
 {
+	if (!cmd)
+		return (NULL);
 	if (cmd && cmd->cmd_seq_type == CMD_FILEOUT)
 		create_redir_out(main, cmd);
 	else if (cmd && cmd->cmd_seq_type == CMD_FILEOUT_APPPEND)
@@ -95,7 +105,7 @@ t_cmd	*create_redir(t_cmd *main, t_cmd *cmd)
 	else if (cmd && cmd->cmd_seq_type == CMD_HEREDOC)
 		create_redir_heredoc(main, cmd);
 	if (cmd && cmd->next && is_redirection(cmd->next->cmd_seq_type))
-		cmd = create_redir(main, cmd->next);
+		cmd = create_fd_redir(main, cmd->next);
 	return (cmd);
 }
 

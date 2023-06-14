@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_sequence.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/09 13:51:39 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/13 20:17:43 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,38 @@ static int32_t	skip_token_group(char *str, t_token_type type, int32_t i)
 /// it is just a way identify and split tokens easily.
 /// @param parent 
 /// @return 
+t_token	*tokenize_cmd_redirection(t_token *parent)
+{
+	int32_t			i;
+	t_token_type	type;
+	int32_t			t_len;
+	char			*str;
+	t_token			*token;
+
+	i = 0;
+	str = ft_strtrim(parent->str, " ");
+	token = add_tk(ft_strdup(""), TK_START, 0, parent);
+	while (str[i])
+	{
+		type = get_token_type(&str[i]);
+		t_len = get_token_len(&str[i], type, false);
+		if (is_token_group(type))
+			i = skip_token_group(str, type, i);
+		else if (is_token_redir(type))
+			i = add_token_sequence(ft_substr(&str[i], 0, t_len), i, type, parent);
+		else
+			i += t_len;
+	}
+	add_tk(ft_strdup(""), TK_END, i, parent);
+	split_token_sequence(parent);
+	return (token);
+}
+
+/// @brief cmd sequence tokens are tokens that separate commands
+/// we add a "false token" at the end and start of the tokenization
+/// it is just a way identify and split tokens easily.
+/// @param parent 
+/// @return 
 t_token	*tokenize_cmd_sequence(t_token *parent)
 {
 	int32_t			i;
@@ -77,6 +109,8 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 	{
 		type = get_token_type(&str[i]);
 		t_len = get_token_len(&str[i], type, false);
+		if (is_redirection(type))
+			parent->last->contains_redir = true;
 		if (is_token_group(type))
 			i = skip_token_group(str, type, i);
 		else if (is_end_of_seq(type))
