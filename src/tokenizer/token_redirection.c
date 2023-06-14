@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/13 20:21:23 by math             ###   ########.fr       */
+/*   Updated: 2023/06/14 09:39:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,15 @@
 int32_t	add_token_redir(char *str, int32_t i, t_token_type type,
 	t_token *parent)
 {
-	add_tk(str, type, i, parent);
-	i += get_token_len(&str[i], type, false);
+	t_token			*token;
+
+	token = add_token(i, type, parent);
+	token->token_len = get_token_len(&str[i], type, false);
+	token->token_str = ft_substr(&str[i], 0, token->token_len);
+	if (!token->token_str)
+		free_all_and_exit2(errno, "malloc error");
+	token->end = i + token->token_len;
+	i += token->token_len;
 	while (str[i] && str[i] == ' ')
 		i++;
 	return (i);
@@ -34,11 +41,9 @@ t_token	*tokenize_redirection(t_token *parent)
 	t_token_type	type;
 	int32_t			t_len;
 	char			*str;
-	t_token			*start_token;
 
 	i = 0;
 	str = parent->str;
-	start_token = add_tk(ft_strdup(""), TK_START, 0, parent);
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -50,5 +55,5 @@ t_token	*tokenize_redirection(t_token *parent)
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
 	split_token_redir(parent);
-	return (start_token);
+	return (parent->child_tokens);
 }

@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   token_group.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/13 20:12:34 by math             ###   ########.fr       */
+/*   Updated: 2023/06/14 07:55:24 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int32_t	add_token_redir(char *str, int32_t i, t_token_type type,
-	t_token *parent)
-{
-	add_tk(str, type, i, parent);
-	i += get_token_len(&str[i], type, false);
-	while (str[i] && str[i] == ' ')
-		i++;
-	return (i);
-}
 
 /// @brief this is the second level of tokenization
 /// this level of tokenization will tokenize all
