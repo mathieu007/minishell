@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 09:39:01 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/14 11:08:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ t_token	*tokenize_redirection(t_token *parent)
 
 	i = 0;
 	str = parent->str;
+	add_tk(ft_strdup(""), parent->type, i, parent);
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);

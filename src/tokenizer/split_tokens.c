@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 10:48:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/14 13:02:12 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	build_token_environement(t_token *token)
 	child = token->child_tokens;
 	str = ft_strdup("");
 	while (child && child->next)
-	{	
+	{
 		if (is_not_expandable(child))
 			str = ft_strjoinfree2(str, ft_strdup(child->token_str));
 		if (child->type == TK_DOUBLEQUOTE)
@@ -155,7 +155,10 @@ void	build_token_environement(t_token *token)
 	free(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
-	tokenize_group_tokens(token);
+	if (token->contains_redir)
+		tokenize_redirection(token);
+	else
+		tokenize_group_tokens(token);
 }
 
 /// @brief we do not tokenize single quote, nothing to do
@@ -290,7 +293,6 @@ void	split_token_sequence(t_token *parent)
 	int32_t	start;
 	int32_t	len;
 	t_token	*token;	
-	int32_t i;
 
 	token = parent->child_tokens;
 	str = parent->str;
@@ -301,14 +303,7 @@ void	split_token_sequence(t_token *parent)
 		token->str = ft_strtrim(ft_substr(str, start, len), " ");
 		token->cmd_seq_type = get_sequence_type(token);
 		if (token->contains_redir)
-		{
-			i = start;
 			token->child_tokens = tokenize_redirection(token);
-			free(token->str);
-			while (str[i] && !is_token_redir(get_token_type(&str[i])))
-				i++;
-			token->str = ft_strtrim(ft_substr(&str[start], 0, i - start), " ");
-		}
 		else
 			token->child_tokens = tokenize_group_tokens(token);
 		token = token->next;

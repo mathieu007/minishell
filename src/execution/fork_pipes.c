@@ -119,7 +119,7 @@ void	fork_last_child(t_cmd *cmd)
 	t_process 	*proc;
 
 	proc = get_process();
-	pid = fork();
+	pid = fork();	
 	build_token_environement(cmd->token);
 	cmd = parse_at_execution(cmd);
 	if (pid == -1)

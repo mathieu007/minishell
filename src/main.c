@@ -12,7 +12,7 @@ int32_t	execute_tests(char *input)
 
 int32_t	main(int32_t argc, char **argv, char **env)
 {
-	init_data(argc, argv, env);
+	init_data(argc, argv, env);	
 	(void)env;
 	char 	*input;
 
