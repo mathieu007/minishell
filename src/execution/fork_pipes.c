@@ -65,7 +65,7 @@ void	exec_first_pipe_redirection(t_cmd *main, t_cmd *cmd)
 	proc->errnum = main->func(main);
 }
 
-void	exec_last_pipe_redirection(t_cmd *main, t_cmd *cmd)
+void	file_redirection(t_cmd *cmd)
 {
 	t_process	*proc;
 	t_cmd		*last_in;
@@ -82,8 +82,6 @@ void	exec_last_pipe_redirection(t_cmd *main, t_cmd *cmd)
 	}
 	else if (last_out)
 		redirect_output(last_out);
-	close_pipes(main->prev->pipe);
-	proc->errnum = main->func(main);
 }
 
 void	fork_first_child(t_cmd *cmd)
@@ -102,7 +100,9 @@ void	fork_first_child(t_cmd *cmd)
 		cmd = parse_at_execution(cmd);
 		create_fd_redir(cmd, cmd->child);
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
-		exec_first_pipe_redirection(cmd, cmd->child);
+		file_redirection(cmd->child);
+		close_pipes(cmd->pipe);
+		proc->errnum = cmd->func(cmd);
 		exit(proc->errnum);
 	}	
 	cmd->pid = pid;
@@ -130,7 +130,9 @@ void	fork_last_child(t_cmd *cmd)
 		cmd = parse_at_execution(cmd);
 		create_fd_redir(cmd, cmd->child);
 		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
-		exec_last_pipe_redirection(cmd, cmd->next);
+		file_redirection(cmd->child);
+		close_pipes(cmd->prev->pipe);
+		proc->errnum = cmd->func(cmd);
 		exit(proc->errnum);
 	}
 	close_pipes(cmd->prev->pipe);
