@@ -115,7 +115,7 @@ char	*get_env_value(char *variable)
 	while (current)
 	{
 		if (ft_strnstr(current->variable, variable, len) == current->variable)
-			return (ft_strdup(current->value));
+			return ((current->value));
 		current = current->next;
 	}
 	return (NULL);

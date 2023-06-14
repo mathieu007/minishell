@@ -6,7 +6,7 @@
 /*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/13 16:32:49 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/06/14 13:52:57 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void	split_token_sequence(t_token *parent)
 	{	
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
-		token->str = ft_strtrim(ft_substr(str, start, len), " ");
+		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		token->cmd_seq_type = get_sequence_type(token);
 		token->child_tokens = tokenize_group_tokens(token);
 		token = token->next;

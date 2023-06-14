@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_sequence.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/07 07:20:38 by math             ###   ########.fr       */
+/*   Updated: 2023/06/14 13:48:11 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,6 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
 	split_token_sequence(parent);
+	free(str);
 	return (token);
 }
