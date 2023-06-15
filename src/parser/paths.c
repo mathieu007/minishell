@@ -101,17 +101,18 @@ char	*try_get_ful_path_from_env_path(t_cmd *cmd)
 	paths = get_env_path();
 	path = ("");
 	dup_paths = paths;
-	if (paths)
-		while (*paths)
-		{
-			path = ft_strjoin(*paths, "/");
-			path = ft_strjoinfree(path, cmd->name);
-			if (access(path, F_OK | X_OK) == 0)
-				return (free_split(dup_paths), path);
-			if (path)
-				free(path);
-			paths++;
-		}
+	if (!paths)
+		return (NULL);
+	while (*paths)
+	{
+		path = ft_strjoin(*paths, "/");
+		path = ft_strjoinfree(path, cmd->name);
+		if (access(path, F_OK | X_OK) == 0)
+			return (free_split(dup_paths), path);
+		if (path)
+			free(path);
+		paths++;
+	}
 	return (free_split(dup_paths), NULL);
 }
 
@@ -133,7 +134,6 @@ char	*get_full_path(t_cmd *cmd)
 	path = try_get_ful_path_from_env_path(cmd);
 	if (path)
 		return (path);
-	// printf("%s: command not found\n", cmd->name);
 	proc->errnum = 127;
 	write_err2(127, cmd->name, ": command not found\n");
 	return (NULL);

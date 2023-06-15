@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   tokens2.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 12:36:44 by bmartin          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -51,9 +40,12 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token *parent)
 	increment_counter(type);
 	new->start = pos;
 	new->type = type;
+	new->is_redirection = false;
 	if (!parent && !get_process()->tokens)
 		get_process()->tokens = new;
 	else if (parent && !parent->child_tokens)
 		parent->child_tokens = new;
+	if (parent)	
+		parent->last = new;
 	return (new);
 }

@@ -202,6 +202,8 @@ typedef struct s_token
 	struct s_token		*child_tokens;
 	bool				inside_dbl_quotes;
 	bool				is_continuation;
+	bool				is_redirection;
+	bool				is_last_pipe;
 	t_cmd_seq			cmd_seq_type;
 	t_token_type		type;
 }						t_token;
@@ -223,6 +225,7 @@ typedef struct s_token_sequence
 //name echo , option: -n, -a, -z; args: [echo, -naaaaznnnnzzzz, 123, "6    6" "123    test"]
 typedef struct s_cmd
 {
+	int32_t			errnum;
 	int32_t			(*func)(struct s_cmd *);
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
@@ -232,7 +235,7 @@ typedef struct s_cmd
 	char			**args; /// a terminating NULL list of string containing options and arguments
 	char			**options; /// a terminating NULL list of string containing only options
 	bool			is_builtin; /// is the command a builtins command?
-	int32_t			errnum;
+	bool			is_redirection;	
 	t_token			*token;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;
@@ -263,10 +266,17 @@ typedef struct s_process
 
 /// @brief The entities functions
 
-t_cmd			*parse_redirect(t_cmd *cmd);
-t_cmd			*create_redir_out(t_cmd *cmd);
-t_cmd			*create_redir_append_out(t_cmd *cmd);
+t_token			*tokenize_redirection(t_token *parent);
+void			split_token_redir(t_token *parent);
+void			exec_redirection(t_cmd *main, t_cmd *cmd);
+void			close_redirections(t_cmd *cmd);
+t_cmd			*parse_redirect(t_cmd *main, t_cmd *cmd);
+t_cmd			*create_redir_out(t_cmd *main, t_cmd *cmd);
+t_cmd			*create_redir_append_out(t_cmd *main, t_cmd *cmd);
+void			exec_redirection(t_cmd *main, t_cmd *cmd);
+void			redirect_input(t_cmd *cmd);
 void			redirect_output(t_cmd *cmd);
+void			redirect_input(t_cmd *cmd);
 int32_t			open_in_redir_fd(t_cmd *cmd);
 int32_t			open_out_redir_fd(t_cmd *cmd);
 int32_t			open_out_append_redir_fd(t_cmd *cmd);
@@ -293,6 +303,7 @@ int32_t			get_token_type_count(t_token_type type);
 t_token			*add_token(int32_t char_pos, t_token_type type, t_token *parent);
 
 
+int32_t				count_args(t_cmd *cmd);
 t_cmd				*parse_at_execution(t_cmd *cmd);
 t_token				*tokenize_root(char *str);
 int32_t				add_token_group(char *str, int32_t i, t_token_type type,
@@ -307,7 +318,10 @@ t_token_sequence	*new_token_sequence();
 
 /// @brief Simples and short helpers methods.
 
-bool		is_redirection(t_cmd *cmd);
+t_cmd 		*last_in_redir(t_cmd *cmd);
+t_cmd 		*last_out_redir(t_cmd *cmd);
+bool		is_redirection(t_cmd_seq seq);
+bool		is_token_redir(t_token_type type);
 t_token		*contains_parentheses(t_token *token);
 int32_t		goto_closing_environement(char *str, int32_t i);
 int32_t		goto_closing_single_quote(char *str, int32_t i);
@@ -365,6 +379,7 @@ char			*get_cwd(t_cmd *cmd);
 
 void			split_tokens(t_token *parent);
 t_token			*tokenize_dbl_quotes_tokens(t_token *parent);
+void			*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type);
 void			build_token_environement(t_token *parent);
 void			split_token_sequence(t_token *parent);
 void			split_token_groups(t_token *parent);
@@ -438,7 +453,7 @@ char						*get_env_value(char *variable);
 void						add_env_node(t_process *data, char *variable, char *value);
 
 /// execution
-t_cmd					*create_redir(t_cmd *cmd);
+t_cmd					*create_fd_redir(t_cmd *main, t_cmd *cmd);
 int32_t					exec_sequential(t_cmd *cmd);
 t_cmd			 		*exec_logical_or(t_cmd *cmd);
 t_cmd			 		*exec_logical_and(t_cmd *cmd);
