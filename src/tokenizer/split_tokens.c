@@ -218,22 +218,27 @@ void	split_tokens(t_token *parent)
 	}
 }
 
+t_token_type	get_next_non_redir_type(t_token *token)
+{
+	if (!is_token_redir(token->type) && token->next && is_redirection(token->next->type))
+	{			
+		token = token->next;
+		while (token && token && is_redirection(token->type))
+			token = token->next;
+		return (token->type);
+	}
+	return (token->type);
+}
+
 t_cmd_seq	get_sequence_type(t_token *token)
 {
 	if (token && token->next)
 	{
-		if (token->type == TK_START
-			&& (token->next->type != TK_PIPE
-				&& token->next->type != TK_OR
-				&& token->next->type != TK_AND))
-			return (CMD_SEQUENTIAL);
-		if (token->type == TK_PIPE || (token->next && token->next->type == TK_PIPE 
-			&& token->type != TK_LESSLESS && token->type != TK_LESS
-			&& token->type != TK_GREAT && token->type != TK_GREATGREAT))
+		if (token->type == TK_PIPE || (token->next && token->next->type == TK_PIPE) || get_next_non_redir_type(token) == TK_PIPE)
 			return (CMD_PIPE);
-		else if (token->type == TK_OR || (token->type == TK_START && token->next->type == TK_OR))
+		else if (token->type == TK_OR || (token->type == TK_OR && get_next_non_redir_type(token) == TK_OR))
 			return (CMD_LOG_OR);
-		else if (token->type == TK_AND || (token->type == TK_START && token->next->type == TK_AND))
+		else if (token->type == TK_AND || (token->type == TK_OR && get_next_non_redir_type(token) == TK_AND))
 			return (CMD_LOG_AND);
 		else if (token->type == TK_LESSLESS)
 			return (CMD_HEREDOC);

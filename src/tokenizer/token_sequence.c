@@ -89,8 +89,10 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 	int32_t			t_len;
 	char			*str;
 	t_token			*token;
+	t_token			*last_seq;
 
 	i = 0;
+	last_seq = NULL;
 	str = ft_strtrim(parent->str, " ");
 	token = add_tk(ft_strdup(""), TK_START, 0, parent);
 	while (str[i])
@@ -100,11 +102,14 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 		if (is_token_group(type))
 			i = skip_token_group(str, type, i);
 		else if (is_end_of_seq(type))
-			i = add_token_sequence(ft_substr(&str[i], 0, t_len), i, type, parent);
+		{
+			i = add_token_sequence(ft_substr(&str[i], 0, t_len), i, type, parent);			
+			last_seq = parent->last;
+		}			
 		else
 			i += t_len;
-		if (is_token_redir(type))
-			parent->last->is_redirection = true;
+		if (is_token_redir(type) && last_seq)
+			last_seq->is_redirection = true;
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
 	split_token_sequence(parent);

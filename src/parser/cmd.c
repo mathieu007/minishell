@@ -28,7 +28,7 @@ int32_t	count_arr(char **arr)
 	i = 0;
 	if (!arr)
 		return (0);
-	while (arr && arr[i])
+	while (arr && arr[i] && *arr[i] != '\0')
 		i++;
 	return (i);
 }
