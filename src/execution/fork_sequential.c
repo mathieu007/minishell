@@ -80,7 +80,9 @@ int32_t	exec_sequential(t_cmd *cmd)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
-	if (cmd->is_builtin)
+	if (cmd->next && cmd->next->is_redirection)
+		proc->errnum = fork_exec(cmd);
+	else if (cmd->is_builtin)
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)
 	 	proc->errnum = fork_exec(cmd);
