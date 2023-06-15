@@ -13,7 +13,7 @@ void	free_all(void)
 	t_process 		*proc;
 
 	proc = get_process();
-	printf("\n\n\n !!!  YOU USE FREE ALL !!! \n\n\n");
+	// printf("\n\n\n !!!  YOU USE FREE ALL !!! \n\n\n");
 
 	free_t_process (proc);
 }

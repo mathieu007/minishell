@@ -47,10 +47,11 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	{
 		disable_ctrl_c_output();
 		setup_signal_handlers();
-		input = readline("MiniShell> \x1B[s");
+		input = readline("MiniShell> ");
 		if(input == NULL)
 		{
-			printf("\x1B[u\x1B[Aexit\n");
+			// printf("\x1B[u\x1B[Aexit\n");
+			printf("exit\n");
 			break;
 		}
 		exec_cmds(input);
@@ -58,12 +59,11 @@ int32_t	main(int32_t argc, char **argv, char **env)
 			break ;
 		add_history(input);
 		free(input);
-		free_all_and_exit(0);
+		free_t_tokens(get_process()->tokens);
+		free_t_cmd(get_process()->cmds);
 	}
 	return (EXIT_SUCCESS);
 }
-
-
 
 // int main (void)
 // {
