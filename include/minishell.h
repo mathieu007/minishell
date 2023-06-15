@@ -225,6 +225,7 @@ typedef struct s_token_sequence
 //name echo , option: -n, -a, -z; args: [echo, -naaaaznnnnzzzz, 123, "6    6" "123    test"]
 typedef struct s_cmd
 {
+	int32_t			errnum;
 	int32_t			(*func)(struct s_cmd *);
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
@@ -234,8 +235,7 @@ typedef struct s_cmd
 	char			**args; /// a terminating NULL list of string containing options and arguments
 	char			**options; /// a terminating NULL list of string containing only options
 	bool			is_builtin; /// is the command a builtins command?
-	bool			is_redirection;
-	int32_t			errnum;
+	bool			is_redirection;	
 	t_token			*token;
 	t_cmd_seq		cmd_seq_type;
 	t_pipe			*pipe;

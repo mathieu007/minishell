@@ -24,9 +24,12 @@ t_cmd	*pipes_cmds(t_cmd *cmd)
 	start = cmd;
 	pipe_cmd(cmd);
 	cmd = cmd->next;
-	while (cmd && cmd->cmd_seq_type == CMD_PIPE)
-	{
-		pipe_cmd(cmd);
+	while (cmd)
+	{	
+		if (cmd->cmd_seq_type == CMD_PIPE)
+			pipe_cmd(cmd);
+		if (cmd && cmd->token->is_last_pipe)
+			break;
 		cmd = cmd->next;
 	}
 	fork_pipes(start);

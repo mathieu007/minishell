@@ -14,6 +14,18 @@ void	close_prev_pipes(t_cmd *cmd)
 	}	
 }
 
+t_pipe	*prev_pipe(t_cmd *cmd)
+{
+	if (!cmd)
+		return (NULL);
+	cmd = cmd->prev;
+	while (cmd && cmd->cmd_seq_type != CMD_PIPE)
+		cmd = cmd->prev;
+	if (cmd)
+		return (cmd->pipe);
+	return (NULL);
+}
+
 void	close_pipes(t_pipe *pipe)
 {
 	close(pipe->fd_in);
@@ -109,15 +121,16 @@ t_cmd	*fork_first_child(t_cmd *cmd)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
+		if (cmd->next && cmd->next->is_redirection)
+			create_fd_redir(cmd, cmd->next);
 		get_process()->env_cpy = proc->env_cpy;
 		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
-		// if (cmd->next && cmd->next->is_redirection)
-		// 	create_fd_redir(cmd, cmd->next);
-		// file_redirection(cmd->next);
+		if (cmd->next && cmd->next->is_redirection)
+			file_redirection(cmd->next);
 		close_pipes(cmd->pipe);
 		proc->errnum = cmd->func(cmd);
 		exit(proc->errnum);
-	}	
+	}
 	cmd->pid = pid;
 	cmd = cmd->next;
 	while (cmd && cmd->is_redirection)
@@ -137,18 +150,19 @@ t_cmd	*fork_last_child(t_cmd *cmd)
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
-	{
+	{	
+		if (cmd->next && cmd->next->is_redirection)
+			create_fd_redir(cmd, cmd->next);
 		get_process()->env_cpy = proc->env_cpy;
-		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
-		// if (cmd->next && cmd->next->is_redirection)
-		// 	create_fd_redir(cmd, cmd->next);
-		// file_redirection(cmd->next);
-		close_prev_pipes(cmd);
+		dup2(prev_pipe(cmd)->fd_in, STDIN_FILENO);
+		if (cmd->next && cmd->next->is_redirection)
+			file_redirection(cmd->next);
+		close_prev_pipes(cmd);		
 		proc->errnum = cmd->func(cmd);
 		exit(proc->errnum);
-	}
-	close_prev_pipes(cmd);
+	}	
 	cmd->pid = pid;
+	close_prev_pipes(cmd);
 	cmd = cmd->next;
 	while (cmd && cmd->is_redirection)
 		cmd = cmd->next;
@@ -168,14 +182,25 @@ t_cmd	*fork_middle_child(t_cmd *cmd)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
+		if (cmd->next && cmd->next->is_redirection)
+			create_fd_redir(cmd, cmd->next);
 		get_process()->env_cpy = proc->env_cpy;
-		dup2(cmd->prev->pipe->fd_in, STDIN_FILENO);
-		dup2(cmd->pipe->fd_out, STDOUT_FILENO);
-		close(cmd->pipe->fd_out);
-		close_prev_pipes(cmd);
+		dup2(prev_pipe(cmd)->fd_in, STDIN_FILENO);
+		if (cmd->next && cmd->next->is_redirection)
+		{
+			close(prev_pipe(cmd)->fd_in);
+			file_redirection(cmd->next);
+		}			
+		else
+		{
+			dup2(cmd->pipe->fd_out, STDOUT_FILENO);
+			close_prev_pipes(cmd);
+			close(cmd->pipe->fd_out);
+		}		
 		proc->errnum = cmd->func(cmd);
 		exit(proc->errnum);
 	}
+	close(cmd->pipe->fd_out);
 	close_prev_pipes(cmd);
 	cmd->pid = pid;
 	cmd = cmd->next;
