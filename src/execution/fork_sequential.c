@@ -28,26 +28,6 @@ t_cmd *last_out_redir(t_cmd *cmd)
 	return (last);
 }
 
-void	exec_redirection(t_cmd *main, t_cmd *cmd)
-{
-	t_process	*proc;
-	t_cmd		*last_in;
-	t_cmd		*last_out;
-
-	proc = get_process();
-	last_in = last_in_redir(cmd);
-	last_out = last_out_redir(cmd);
-	if (last_in)
-	{
-		redirect_input(last_in);
-		if (last_out)
-			redirect_output(last_out);
-	}
-	else if (last_out)
-		redirect_output(last_out);
-	proc->errnum = main->func(main);
-}
-
 static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
@@ -55,7 +35,7 @@ static int32_t	exec(t_cmd *cmd)
 	proc = get_process();
 	if (proc->errnum > 0)
 		return (proc->errnum);
-	exec_redirection(cmd, cmd->next);
+	proc->errnum = cmd->func(cmd);
 	return (proc->errnum);
 }
 
@@ -74,6 +54,11 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
+		if (cmd && cmd->next && cmd->next->is_redirection)
+		{
+			create_fd_redir(cmd, cmd->next);
+			file_redirection(cmd->next);
+		}
 		ret = exec(cmd);
 		exit(ret);
 	}
@@ -95,11 +80,9 @@ int32_t	exec_sequential(t_cmd *cmd)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
-	create_fd_redir(cmd, cmd->next);
-	if (cmd->is_builtin && cmd->next
-		&& !is_redirection(cmd->next->cmd_seq_type))
+	if (cmd->is_builtin)
 		proc->errnum = exec(cmd);
 	else if (proc->errnum == 0)
-		proc->errnum = fork_exec(cmd);
+	 	proc->errnum = fork_exec(cmd);
 	return (proc->errnum);
 }

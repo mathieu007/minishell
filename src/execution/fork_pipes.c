@@ -68,27 +68,6 @@ static void	wait_childs(t_cmd *cmd)
 	}
 }
 
-void	exec_first_pipe_redirection(t_cmd *main, t_cmd *cmd)
-{
-	t_process	*proc;
-	t_cmd		*last_in;
-	t_cmd		*last_out;
-
-	proc = get_process();
-	last_in = last_in_redir(cmd);
-	last_out = last_out_redir(cmd);
-	if (last_in)
-	{
-		redirect_input(last_in);
-		if (last_out)
-			redirect_output(last_out);
-	}
-	else if (last_out)
-		redirect_output(last_out);
-	close_pipes(main->pipe);
-	proc->errnum = main->func(main);
-}
-
 void	file_redirection(t_cmd *cmd)
 {
 	t_cmd		*last_in;

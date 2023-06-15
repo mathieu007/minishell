@@ -1,7 +1,3 @@
-<<<<<<< HEAD:out2
-drwxr-xr-x    9 mroy  2022_quebec    306 Jun  9 12:16 src
-drwxr-xr-x    9 mroy  2022_quebec    306 Jun  9 12:16 src
-=======
 total 176
 drwxr-xr-x   24 mroy  2022_quebec    816 Jun 13 08:20 .
 drwxr-xr-x   14 mroy  2022_quebec    476 May 30 13:55 ..
@@ -27,4 +23,3 @@ drwxr-xr-x  123 mroy  2022_quebec   4182 May 24 08:19 readline-master
 drwxr-xr-x    9 mroy  2022_quebec    306 Jun  9 12:16 src
 drwxr-xr-x   15 mroy  2022_quebec    510 Jun 13 08:21 tests
 -rw-r--r--    1 mroy  2022_quebec     13 Jun  9 12:16 tokens.txt
->>>>>>> a8ffe44f2027f7b9109c5d0c91aa0b20e8dc8696:tests_redir/in3

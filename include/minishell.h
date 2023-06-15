@@ -266,6 +266,7 @@ typedef struct s_process
 
 /// @brief The entities functions
 
+void			file_redirection(t_cmd *cmd);
 t_token			*tokenize_redirection(t_token *parent);
 void			split_token_redir(t_token *parent);
 void			exec_redirection(t_cmd *main, t_cmd *cmd);

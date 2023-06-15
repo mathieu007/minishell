@@ -7,7 +7,7 @@ char	*build_dbl_quote_token_env(t_token *token)
 	t_token	*child;
 	char	*value;
 	char	*str;
-	t_token	*temp;
+	// t_token	*temp;
 
 	child = token->child_tokens;
 	str = ft_strdup("");
@@ -18,9 +18,9 @@ char	*build_dbl_quote_token_env(t_token *token)
 		else
 			value = ft_strdup(child->str);
 		str = ft_strjoinfree2(str, value);
-		temp = child;
+		// temp = child;
 		child = child->next;
-		free_t_tokens(temp);
+		// free_t_tokens(temp);
 	}
 	return (str);
 }

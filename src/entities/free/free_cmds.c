@@ -10,11 +10,11 @@ void	*free_t_tokens(t_token *token)
 	{
 		next = current->next;
 		if(current->str)
-		current->str = free_ptr(current->str);
+			current->str = free_ptr(current->str);
 		if(current->token_str)
-		current->token_str = free_ptr(current->token_str);
+			current->token_str = free_ptr(current->token_str);
 		if(current->child_tokens)
-		current->child_tokens = free_t_tokens(current->child_tokens);
+			current->child_tokens = free_t_tokens(current->child_tokens);
 		free(current);
 		current = next;
 	}

@@ -33,8 +33,6 @@ int32_t	execute_tests(char *input)
 // 	return (EXIT_SUCCESS);
 // }
 
-
-
 int32_t	main(int32_t argc, char **argv, char **env)
 {
 	init_data(argc, argv, env);	
