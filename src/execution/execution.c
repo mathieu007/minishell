@@ -124,5 +124,6 @@ int32_t	exec_cmds(char *str)
 	get_process()->cmds = root_cmd;
 	ret = exec_sequence(root_cmd);
 	free(token);
+	free_t_cmd(root_cmd);
 	return (ret);
 }
