@@ -23,9 +23,10 @@ t_token	*tokenize(char *str)
 
 	proc = get_process();
 	str = ft_strtrim(str, " ");
-	root = add_tk(ft_strdup(""), TK_START, 0, NULL);
-	root->str = ft_strdup(str);
+	root = add_tk((""), TK_START, 0, NULL);
+	root->str =str;
 	proc->tokens = root;
 	tokenize_cmd_sequence(root);
+	free(str);
 	return (proc->tokens);
 }

@@ -15,7 +15,7 @@ int32_t	add_execve_func(t_cmd *cmd)
 }
 
 /// @brief fork all piped command and execute then waitpid for all command to complete
-/// @param token_group 
+/// @param token_group
 /// @return we return the last pipe command
 t_cmd	*pipes_cmds(t_cmd *cmd)
 {
@@ -66,8 +66,8 @@ int32_t	exec_sequence(t_cmd *cmd)
 /// @brief we will create cmds from the tokens.
 /// the commands are not yet parsed with the whole data.
 /// it is just a hierarchical cmd representation of the cmd execution order.
-/// @param token 
-/// @return 
+/// @param token
+/// @return
 void	create_nested_cmds(t_cmd *cmd)
 {
 	t_token	*childs;
@@ -124,5 +124,6 @@ int32_t	exec_cmds(char *str)
 	root_cmd = create_cmds_tree(token->child_tokens);
 	get_process()->cmds = root_cmd;
 	ret = exec_sequence(root_cmd);
+	free(token);
 	return (ret);
 }

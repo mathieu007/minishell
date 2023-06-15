@@ -146,5 +146,5 @@ char				*ft_strncpy(char *src, size_t len);
 char				*ft_strjoinfree(char *s1, char const *s2);
 char				*ft_strjoinfree2(char *s1, char *s2);
 char				*ft_strchrlast(const char *s, char c);
-
+char				*ft_strtrimfree(char *s1, char *set);
 #endif

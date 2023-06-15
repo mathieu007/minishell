@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   split_tokens.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 16:37:33 by math             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -31,7 +20,7 @@ char	*build_dbl_quote_token_env(t_token *token)
 		str = ft_strjoinfree2(str, value);
 		temp = child;
 		child = child->next;
-		free_t_token(temp);
+		free_t_tokens(temp);
 	}
 	return (str);
 }
@@ -302,7 +291,7 @@ void	split_token_sequence(t_token *parent)
 	{	
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
-		token->str = ft_substr(str, start, len);
+		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		token->cmd_seq_type = get_sequence_type(token);
 		token->child_tokens = tokenize_group_tokens(token);
 		if (token->cmd_seq_type == CMD_PIPE)

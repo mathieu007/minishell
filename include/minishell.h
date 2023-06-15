@@ -445,7 +445,6 @@ void						*free_redirect(t_cmd *cmd);
 void						*free_cmd(t_cmd *cmd);
 void						init_data(int32_t argc, char **argv, char **env);
 int32_t						init_cwd_fd(char *cwd);
-void						free_t_env_cpy(t_env_cpy *env_cpy);
 char						*join_splits(char **split, char *join);
 
 t_env_cpy	*copy_env(void);
@@ -494,10 +493,10 @@ int	redirect_overwrite(const char *output_file);
 
 
 //free section
-void					free_t_token(t_token *token);
+void	*free_t_process(t_process *proc);
 void					*free_2d_char_array(char **tab);
-void					free_t_cmd(t_cmd *cmd);
-void					free_t_tokens(t_token *token);
+void					*free_t_cmd(t_cmd *cmd);
+void					*free_t_tokens(t_token *token);
 void					free_t_token_groups(t_token_sequence *token_group);
 void					*free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_process *data);
@@ -506,6 +505,8 @@ void					free_all();
 void					free_all_and_exit2(int32_t status, char *msg);
 void					*free_all_and_exit(int32_t status);
 void					*free_ptr(void *ptr);
+void						*free_t_env_cpy(t_env_cpy *env_cpy);
+char	*ft_strcat(char *dest, const char *src);
 
 void					print_token_group(t_token_sequence *token);
 void					print_token(t_token *token);

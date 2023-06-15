@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   token_sequence.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 14:50:19 by math             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 /// @brief sequence token are tokens that separate the commands
@@ -120,5 +108,6 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
 	split_token_sequence(parent);
+	free(str);
 	return (token);
 }

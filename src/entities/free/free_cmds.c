@@ -1,38 +1,6 @@
 #include "minishell.h"
 
-void	free_t_cmd(t_cmd *cmd)
-{
-	t_cmd		*current;
-	t_cmd		*next;
-	t_process	*data;
-
-	data = get_process();
-	if (cmd == NULL)
-		return ;
-	current = cmd;
-
-	while (current != NULL)
-	{
-		next = current->next;
-		cmd->full_path_name = free_ptr(cmd->full_path_name);
-		cmd->args = free_2d_char_array(cmd->args);
-		cmd->options = free_2d_array((void **)cmd->options);
-		cmd->pipe = free_ptr(cmd->pipe);
-		cmd->out_redir = free_t_redirect(cmd->out_redir);
-		free(current);
-		current = next;
-	}
-	data->last_cmd = NULL;
-	data->cmds = NULL;
-}
-
-void	free_t_token(t_token *token)
-{
-	token->str = free_ptr(token->str);
-	free(token);
-}
-
-void	free_t_tokens(t_token *token)
+void	*free_t_tokens(t_token *token)
 {
 	t_token	*current;
 	t_token	*next;
@@ -41,63 +9,54 @@ void	free_t_tokens(t_token *token)
 	while (current != NULL)
 	{
 		next = current->next;
+		if(current->str)
 		current->str = free_ptr(current->str);
+		if(current->token_str)
+		current->token_str = free_ptr(current->token_str);
+		if(current->child_tokens)
+		current->child_tokens = free_t_tokens(current->child_tokens);
 		free(current);
 		current = next;
 	}
+	return(NULL);
 }
 
-void	free_t_env_cpy(t_env_cpy *env_cpy)
+void	*free_t_cmd(t_cmd *cmd)
 {
-	t_env_cpy	*current;
-	t_env_cpy	*next;
+	t_cmd	*current;
+	t_cmd	*next;
 
-	current = env_cpy;
+	current = cmd;
 	while (current != NULL)
 	{
 		next = current->next;
-		current->variable = free_ptr(current->variable);
-		current->value = free_ptr(current->value);
+		if(cmd->child != NULL)
+		cmd->child = free_t_cmd(cmd->child);
+		cmd->name = free_ptr(cmd->name);
+		cmd->full_path_name = free_ptr(cmd->full_path_name);
+		cmd->args = free_2d_char_array(cmd->args);
+		cmd->options = free_2d_array((void **)cmd->options);
+		cmd->pipe = free_ptr(cmd->pipe);
+		cmd->out_redir = free_t_redirect(cmd->out_redir);
+		cmd->out_redir = free_t_redirect(cmd->in_redir);
 		free(current);
 		current = next;
 	}
+	return (NULL);
 }
 
-void	free_t_token_group(t_token_sequence *token_group)
+void	*free_t_process(t_process *proc)
 {
-	if (token_group)
+	if(proc)
 	{
-		token_group->str = free_ptr(token_group->str);
-		// if (token_group->env_cpy)
-		// 	free_t_env_cpy(token_group->env_cpy);
-		if (token_group->token)
-			free_t_tokens(token_group->token);
-		token_group->token = NULL;
-		token_group->last_token = NULL;
-		free(token_group);
+		if(proc->cwd)
+		proc->cwd = free_ptr(proc->cwd);
+		if(proc->env_cpy)
+		proc->env_cpy = free_t_env_cpy(proc->env_cpy);
+		if(proc->tokens)
+		proc->tokens = free_t_tokens(proc->tokens);
+		if(proc->env_cpy)
+		proc->cmds = free_t_cmd(proc->cmds);
 	}
-}
-
-void	free_t_token_groups(t_token_sequence *token_group)
-{
-	t_token_sequence	*next;
-	// t_process 			*data;
-
-	// data = get_process();
-	while (token_group)
-	{
-		next = token_group->next;
-		token_group->str = free_ptr(token_group->str);
-		// if (token_group->env_cpy)
-		// 	free_t_env_cpy(token_group->env_cpy);
-		if (token_group->token)
-			free_t_tokens(token_group->token);
-		token_group->token = NULL;
-		token_group->last_token = NULL;
-		free(token_group);
-		token_group = next;
-	}
-	// data->token_sequence = NULL;
-	// data->last_token_sequence = NULL;
-	// data->tokens_count = 0;
+		return(NULL);
 }

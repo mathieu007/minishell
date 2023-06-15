@@ -93,7 +93,7 @@ char	*get_cwd(t_cmd *cmd)
 	proc = get_process();
 	if (cmd == NULL || proc->cwd == NULL)
 	{
-		proc->cwd = getcwd(&buffer[0], PATH_MAX + 1);
+		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
 		return (proc->cwd);
 	}
 	if (stat(proc->cwd, &file_stat) != 0)
@@ -107,6 +107,6 @@ char	*get_cwd(t_cmd *cmd)
 		proc->cwd = recursive_search_dir(cmd, ft_strdup(home), file_stat.st_ino);
 	//TODO if (!cwd) search trash bin or return an error msg do the same but for trash bin.
 	if (!proc->cwd)
-		proc->cwd = getcwd(&buffer[0], PATH_MAX + 1);
+		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
 	return (proc->cwd);
 }

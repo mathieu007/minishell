@@ -26,8 +26,7 @@ void	export_no_variable(void)
 			printf("declare -x %s", current->variable);
 		current = current->next;
 	}
-	current = head;
-	free_t_env_cpy(current);
+	free_t_env_cpy(head);
 }
 
 bool	update_env_variable(t_env_cpy *current, char *variable, char *value,
@@ -53,7 +52,7 @@ char	*handle_export_value(char **split_on_equal)
 {
 	char	*value;
 
-	value = ft_strdup(split_on_equal[1]);
+	value = (split_on_equal[1]);
 	if (count_splits(split_on_equal) > 2)
 		value = join_splits(&split_on_equal[1], "=");
 	return (value);
