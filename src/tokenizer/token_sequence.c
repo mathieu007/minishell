@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_sequence.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 09:02:47 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/14 14:50:19 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 			i = add_token_sequence(ft_substr(&str[i], 0, t_len), i, type, parent);
 		else
 			i += t_len;
-		if (is_redirection(type))
-			parent->last->contains_redir = true;
+		if (is_token_redir(type))
+			parent->last->is_redirection = true;
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
 	split_token_sequence(parent);

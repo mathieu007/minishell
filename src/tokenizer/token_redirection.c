@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 11:08:01 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/14 16:21:41 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int32_t	add_token_redir(char *str, int32_t i, t_token_type type,
 	t_token			*token;
 
 	token = add_token(i, type, parent);
+	token->is_redirection = true;
 	token->token_len = get_token_len(&str[i], type, false);
 	token->token_str = ft_substr(&str[i], 0, token->token_len);
 	if (!token->token_str)
@@ -41,10 +42,13 @@ t_token	*tokenize_redirection(t_token *parent)
 	t_token_type	type;
 	int32_t			t_len;
 	char			*str;
+	t_token			*start_token;
 
 	i = 0;
-	str = parent->str;
-	add_tk(ft_strdup(""), parent->type, i, parent);
+	str = ft_strjoin(parent->token_str, parent->str);
+	parent->is_redirection = false;
+	start_token = add_tk(ft_strdup(parent->token_str), parent->type, i, parent);
+	start_token->is_redirection = true;
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -55,6 +59,7 @@ t_token	*tokenize_redirection(t_token *parent)
 			i += t_len;
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
+	parent->child_tokens = start_token;
 	split_token_redir(parent);
 	return (parent->child_tokens);
 }

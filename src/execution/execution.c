@@ -42,8 +42,6 @@ int32_t	exec_sequence(t_cmd *cmd)
 	proc = get_process();
 	while (cmd && cmd->cmd_seq_type != CMD_NONE)
 	{
-		if (cmd->is_redirection)
-			return (exec_sequence(cmd->child));
 		if (cmd->cmd_seq_type == CMD_PIPE)
 			cmd = pipes_cmds(cmd);
 		else if (cmd->cmd_seq_type == CMD_SEQUENTIAL)

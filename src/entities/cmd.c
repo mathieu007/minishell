@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 11:48:23 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/14 14:50:19 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ inline t_cmd	*add_child_cmd(t_cmd *parent, t_token *token)
 	last_child = goto_last_child_cmd(parent);
 	new = new_cmd();
 	new->cmd_seq_type = get_sequence_type(token);
-	new->is_redirection = token->contains_redir;
+	new->is_redirection = token->is_redirection;
 	new->token = token;
 	if (new == NULL)
 		return (NULL);
@@ -79,7 +79,7 @@ t_cmd	*add_root_cmd_token(t_token *token)
 	last = data->last_cmd;
 	new = new_cmd();
 	new->cmd_seq_type = token->cmd_seq_type;
-	new->is_redirection = token->contains_redir;
+	new->is_redirection = token->is_redirection;
 	new->token = token;
 	if (new == NULL)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/06/13 19:45:07 by math             ###   ########.fr       */
+/*   Updated: 2023/06/14 14:39:28 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ inline bool	is_end_of_seq(t_token_type type)
 {
 	if ((type == TK_SEMICOLON || type == TK_AND || type == TK_OR
 			|| type == TK_AMPERSAND || type == TK_LAST_PIPE_EXIT
-			|| type == TK_PIPE || type == TK_END))
+			|| type == TK_PIPE || type == TK_END
+			|| type == TK_GREAT || type == TK_GREATGREAT
+			|| type == TK_LESS || type == TK_LESSLESS))
 		return (true);
 	return (false);
 }

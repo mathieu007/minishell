@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_group.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 07:55:24 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/14 14:11:29 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_token	*tokenize_group_tokens(t_token *parent)
 			i += t_len;
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
+	parent->child_tokens = start_token;
 	split_token_groups(parent);
 	return (start_token);
 }

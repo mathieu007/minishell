@@ -202,7 +202,8 @@ typedef struct s_token
 	struct s_token		*child_tokens;
 	bool				inside_dbl_quotes;
 	bool				is_continuation;
-	bool				contains_redir;
+	bool				is_redirection;
+	bool				is_last_pipe;
 	t_cmd_seq			cmd_seq_type;
 	t_token_type		type;
 }						t_token;

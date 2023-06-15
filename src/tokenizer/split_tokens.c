@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/14 13:02:12 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/14 16:37:33 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,10 +155,7 @@ void	build_token_environement(t_token *token)
 	free(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
-	if (token->contains_redir)
-		tokenize_redirection(token);
-	else
-		tokenize_group_tokens(token);
+	tokenize_group_tokens(token);
 }
 
 /// @brief we do not tokenize single quote, nothing to do
@@ -179,7 +176,10 @@ void	split_token_redir(t_token *parent)
 		start = token->start + token->token_len;
 		token->str = ft_strtrim(ft_substr(str, start, len), " ");
 		if (is_token_redir(token->type))
+		{
+			token->is_redirection = true;
 			tokenize_group_tokens(token);
+		}
 		token = token->next;
 	}
 }
@@ -293,19 +293,22 @@ void	split_token_sequence(t_token *parent)
 	int32_t	start;
 	int32_t	len;
 	t_token	*token;	
+	t_token	*last_pipe;
 
 	token = parent->child_tokens;
 	str = parent->str;
+	last_pipe = NULL;
 	while (token && token->next)
 	{	
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
-		token->str = ft_strtrim(ft_substr(str, start, len), " ");
+		token->str = ft_substr(str, start, len);
 		token->cmd_seq_type = get_sequence_type(token);
-		if (token->contains_redir)
-			token->child_tokens = tokenize_redirection(token);
-		else
-			token->child_tokens = tokenize_group_tokens(token);
+		token->child_tokens = tokenize_group_tokens(token);
+		if (token->cmd_seq_type == CMD_PIPE)
+			last_pipe = token;
 		token = token->next;
 	}
+	if (last_pipe)
+		last_pipe->is_last_pipe = true;
 }
