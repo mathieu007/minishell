@@ -61,6 +61,9 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		free(input);
 		free_t_tokens(get_process()->tokens);
 		free_t_cmd(get_process()->cmds);
+		get_process()->tokens = NULL;
+		get_process()->cmds = NULL;
+		get_process()->last_cmd = NULL;
 	}
 	return (EXIT_SUCCESS);
 }
