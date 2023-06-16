@@ -220,10 +220,10 @@ void	split_tokens(t_token *parent)
 
 t_token_type	get_next_non_redir_type(t_token *token)
 {
-	if (!is_token_redir(token->type) && token->next && is_redirection(token->next->type))
+	if (!is_token_redir(token->type) && token->next && is_token_redir(token->next->type))
 	{			
 		token = token->next;
-		while (token && token && is_redirection(token->type))
+		while (token && is_token_redir(token->type))
 			token = token->next;
 		return (token->type);
 	}
@@ -234,13 +234,7 @@ t_cmd_seq	get_sequence_type(t_token *token)
 {
 	if (token && token->next)
 	{
-		if (token->type == TK_PIPE || (token->next && token->next->type == TK_PIPE) || get_next_non_redir_type(token) == TK_PIPE)
-			return (CMD_PIPE);
-		else if (token->type == TK_OR || (token->type == TK_OR && get_next_non_redir_type(token) == TK_OR))
-			return (CMD_LOG_OR);
-		else if (token->type == TK_AND || (token->type == TK_OR && get_next_non_redir_type(token) == TK_AND))
-			return (CMD_LOG_AND);
-		else if (token->type == TK_LESSLESS)
+		if (token->type == TK_LESSLESS)
 			return (CMD_HEREDOC);
 		else if (token->type == TK_LESS)
 			return (CMD_FILEIN);
@@ -248,6 +242,12 @@ t_cmd_seq	get_sequence_type(t_token *token)
 			return (CMD_FILEOUT_APPPEND);
 		else if (token->type == TK_GREAT)
 			return (CMD_FILEOUT);
+		else if (token->type == TK_PIPE || (token->next && token->next->type == TK_PIPE) || get_next_non_redir_type(token) == TK_PIPE)
+			return (CMD_PIPE);
+		else if (token->type == TK_OR || (token->type == TK_OR && get_next_non_redir_type(token) == TK_OR))
+			return (CMD_LOG_OR);
+		else if (token->type == TK_AND || (token->type == TK_OR && get_next_non_redir_type(token) == TK_AND))
+			return (CMD_LOG_AND);
 		else if (token->type == TK_SEMICOLON)
 			return (CMD_SEQUENTIAL);
 		else if (token->type == TK_PARENTHESE_OPEN)
@@ -278,6 +278,18 @@ t_token *set_cmd_sequence(t_token *token)
 	return (token);
 }
 
+t_token	*get_prev_non_redir(t_token *token)
+{
+	if (token->prev)
+	{			
+		token = token->prev;
+		while (token && is_token_redir(token->type))
+			token = token->prev;
+		return (token);
+	}
+	return (token);
+}
+
 /// @brief once we have identified all command tokens we separate them
 /// it's just an ft_substr from token to next token
 /// @param parent 
@@ -288,6 +300,7 @@ void	split_token_sequence(t_token *parent)
 	int32_t	len;
 	t_token	*token;	
 	t_token	*last_pipe;
+	t_token	*start_token;
 
 	token = parent->child_tokens;
 	str = parent->str;
@@ -298,6 +311,11 @@ void	split_token_sequence(t_token *parent)
 		start = token->start + token->token_len;
 		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		token->cmd_seq_type = get_sequence_type(token);
+		if (token->type == TK_PIPE)
+		{
+			start_token = get_prev_non_redir(token);
+			start_token->child_tokens = token;
+		}
 		token->child_tokens = tokenize_group_tokens(token);
 		if (token->cmd_seq_type == CMD_PIPE)
 			last_pipe = token;

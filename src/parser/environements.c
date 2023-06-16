@@ -48,42 +48,6 @@ char	*parse_env_var_value(t_token *token)
 	return (var_value);
 }
 
-char	*join_env_to_str(t_token_sequence *group)
-{
-	t_token	*token;
-	char	*dest;
-	char	*cpy;
-
-	token = group->token;
-	if (!token)
-		return (NULL);
-	dest = NULL;
-	while (token)
-	{
-		if (token->type == TK_ENVIRONEMENT_VAR)
-		{
-			cpy = dest;
-			dest = ft_strjoin(dest, get_env_value(token->str));
-			if (cpy)
-				free(cpy);
-		}
-		else
-		{
-			cpy = dest;
-			dest = ft_strjoin(dest, token->token_str);
-			if (cpy)
-				free(cpy);
-			cpy = dest;
-			dest = ft_strjoin(dest, token->str);
-			if (cpy)
-				free(cpy);
-		}
-		token = token->next;
-	}
-	return (dest);
-}
-
-
 char	**get_env_path(void)
 {
 	char			**split_env;
@@ -92,7 +56,7 @@ char	**get_env_path(void)
 	split_env = NULL;
 	env_value = get_env_value("PATH");
 	if (!env_value)
-		return (NULL);		
+		return (NULL);
 	split_env = ft_split(env_value, ':');
 	return (split_env);
 }

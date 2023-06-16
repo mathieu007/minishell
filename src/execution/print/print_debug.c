@@ -144,27 +144,6 @@ void	print_env(t_env_cpy *env)
 	}
 }
 
-void	print_token_group(t_token_sequence *token)
-{
-	t_token_sequence	*cpy;
-	int					j;
-
-	j = 0;
-	cpy = token;
-	printf("[[TOKEN GROUP CHAINLIST]]\n\n");
-	while (cpy)
-	{
-		printf("[[NODE # %i]]\n", j);
-		printf("---------------------------------------------------------\n");
-		printf(" str = %s\n", cpy->str);
-		printf(" len = %i\n", cpy->len);
-		printf(" cmd sequence type = %i\n", cpy->cmd_seq_type);
-		// printf(" token_count = %i\n", cpy->token_count);
-		printf("---------------------------------------------------------\n");
-		cpy = cpy->next;
-		j++;
-	}
-}
 void	print_2darray(char **array)
 {
 	int	i;

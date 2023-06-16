@@ -186,6 +186,40 @@ typedef struct s_env_cpy
 	struct s_env_cpy	*prev;
 }						t_env_cpy;
 
+typedef struct s_token_params
+{
+	struct s_token		*next;
+	struct s_token		*prev;
+	struct s_token		*last;
+	char				*after_str;
+	char				*before_str;
+	char				*token_str;
+	int32_t				token_len;
+	int32_t				start;
+	int32_t				end;
+	struct s_token		*parent_token;
+	struct s_token		*child_tokens;
+	bool				inside_dbl_quotes;
+	t_cmd_seq			cmd_seq_type;
+}						t_token_params;
+
+typedef struct s_gen_token
+{
+	struct s_token		*next;
+	struct s_token		*prev;
+	struct s_token		*last;
+	char				*after_str;
+	char				*before_str;
+	char				*token_str;
+	int32_t				token_len;
+	int32_t				start;
+	int32_t				end;
+	struct s_token		*parent_token;
+	struct s_token		*child_tokens;
+	bool				inside_dbl_quotes;
+	t_cmd_seq			cmd_seq_type;
+}						t_gen_token;
+
 /// token->value contains the value of the token but whithout the termination char.
 /// if cmd = echo -n "fewfew" and token is -, value == -n "fewfew"
 typedef struct s_token
@@ -208,18 +242,6 @@ typedef struct s_token
 	t_token_type		type;
 }						t_token;
 
-/// @brief A token group is just a group of tokens.
-/// each group of token end by one of the endings token type.
-typedef struct s_token_sequence
-{
-	struct s_token_sequence	*prev;
-	struct s_token_sequence	*next;
-	char					*str;
-	int32_t					len;
-	t_token					*token;
-	t_token					*last_token;
-	t_cmd_seq				cmd_seq_type;
-}							t_token_sequence;
 
 /// "ec"$VAR -naaaaznnnnzzzz 123$VAR2"123   test" $VAR=ho $VAR2=" 6    6 "
 //name echo , option: -n, -a, -z; args: [echo, -naaaaznnnnzzzz, 123, "6    6" "123    test"]
@@ -291,8 +313,6 @@ char			*replace_env_value(char *variable, char *value);
 char			*get_cmd_env_value(char *variable, t_cmd *cmd);
 t_redirect		*new_redirect(t_cmd *cmd);
 t_process		*get_process(void);
-t_token_sequence	*get_first_token_group(void);
-t_token_sequence	*get_last_token_group(void);
 t_token			*get_first_token(void);
 t_token			*get_last_token(void);
 t_cmd			*get_first_cmd(void);
@@ -315,7 +335,6 @@ t_cmd				*add_child_cmd(t_cmd *parent, t_token *token);
 void				dup_env(void);
 t_token				*new_token();
 t_cmd				*new_cmd();
-t_token_sequence	*new_token_sequence();
 
 /// @brief Simples and short helpers methods.
 
@@ -378,6 +397,7 @@ char			*get_cwd(t_cmd *cmd);
 
 /// tokenizer functions
 
+t_cmd_seq		get_sequence_type(t_token *token);
 void			split_tokens(t_token *parent);
 t_token			*tokenize_dbl_quotes_tokens(t_token *parent);
 void			*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type);
@@ -393,8 +413,6 @@ int32_t			add_token_double_quote(char *str, int32_t i, t_token *parent);
 int32_t			add_token_substitution(char *str, int32_t i, t_token *parent,
 					bool inside_dbl_quotes);
 int32_t			add_token_parenthese(char *str, int32_t i, t_token *parent);
-char			*join_env_to_str(t_token_sequence *group);
-void			reset_token_sequence(t_token_sequence *group);
 int32_t			add_token_env(char *str, int32_t pos, t_token *parent, bool inside_dbl_quotes);
 t_token			*tokenize_cmd_sequence(t_token *parent);
 t_token			*tokenize(char *str);
@@ -403,9 +421,7 @@ char			*parse_env_var_value(t_token *token);
 
 t_token			*tokenize_space_tokens(t_token *parent);
 int32_t			tokenize_curlybrace(char *str, int32_t i);
-int32_t			tokenize_parenthes(char *str, int32_t i, t_token_sequence *group);
 int32_t			tokenize_double_quote(char *str, int32_t i, t_token *token);
-int32_t			tokenize_single_quote(char *str, int32_t i, t_token_sequence *group);
 char			*cpy_single_quote_str(char *str, char *output, int32_t *i);
 char			*cpy_esc_env_var(char *input, char *output, int32_t *i);
 char			*cpy_env_var_value(char *input, char *output, int32_t *i);
@@ -417,23 +433,21 @@ int32_t			decrement_counter(t_token_type type);
 int32_t			exec_sequence(t_cmd *cmd);
 bool			token_count_is_odd(char *str);
 t_cmd			*parse_cmd(t_cmd *cmd);
-char			*group_to_str(t_token_sequence *group);
 int32_t			count_env_words(char *str);
 
 char			**parse_args(t_token *group);
 char			**get_options(t_token *group);
 int32_t			get_args_len(t_token *group);
 void			set_args(t_token *group, char **split);
- t_token		*get_quotes_str(t_token *token, char *str, char **ouput);
+t_token			*get_quotes_str(t_token *token, char *str, char **ouput);
 char			*get_single_quote_str(t_token *token, char *str);
 char			*get_double_quote_str(t_token *token, char *str);
-char			*parse_env(t_token_sequence *group);
 void			replace_env_name(char *input, char *output);
 char			**get_env_path();
 t_token			*get_token_at(int32_t index);
 t_token			*get_closing_double_quote_token(t_token *token);
 t_token			*get_closing_single_quote_token(t_token *token);
-t_cmd_seq		get_sequence_type(t_token *token);
+t_cmd_seq		_type(t_token *token);
 
 void						write_err3(int32_t stderror, char *msg, char *msg2, char *msg3);
 void						write_msg(int32_t stderror, char *msg);
@@ -498,7 +512,6 @@ void	*free_t_process(t_process *proc);
 void					*free_2d_char_array(char **tab);
 void					*free_t_cmd(t_cmd *cmd);
 void					*free_t_tokens(t_token *token);
-void					free_t_token_groups(t_token_sequence *token_group);
 void					*free_t_redirect(t_redirect *redirect);
 void					free_t_data(t_process *data);
 void					*free_2d_array(void **tab);
@@ -509,7 +522,6 @@ void					*free_ptr(void *ptr);
 void						*free_t_env_cpy(t_env_cpy *env_cpy);
 char	*ft_strcat(char *dest, const char *src);
 
-void					print_token_group(t_token_sequence *token);
 void					print_token(t_token *token);
 void					print_groups_and_tokens();
 void					print_cmd(t_cmd *command);
