@@ -186,40 +186,6 @@ typedef struct s_env_cpy
 	struct s_env_cpy	*prev;
 }						t_env_cpy;
 
-typedef struct s_token_params
-{
-	struct s_token		*next;
-	struct s_token		*prev;
-	struct s_token		*last;
-	char				*after_str;
-	char				*before_str;
-	char				*token_str;
-	int32_t				token_len;
-	int32_t				start;
-	int32_t				end;
-	struct s_token		*parent_token;
-	struct s_token		*child_tokens;
-	bool				inside_dbl_quotes;
-	t_cmd_seq			cmd_seq_type;
-}						t_token_params;
-
-typedef struct s_gen_token
-{
-	struct s_token		*next;
-	struct s_token		*prev;
-	struct s_token		*last;
-	char				*after_str;
-	char				*before_str;
-	char				*token_str;
-	int32_t				token_len;
-	int32_t				start;
-	int32_t				end;
-	struct s_token		*parent_token;
-	struct s_token		*child_tokens;
-	bool				inside_dbl_quotes;
-	t_cmd_seq			cmd_seq_type;
-}						t_gen_token;
-
 /// token->value contains the value of the token but whithout the termination char.
 /// if cmd = echo -n "fewfew" and token is -, value == -n "fewfew"
 typedef struct s_token
