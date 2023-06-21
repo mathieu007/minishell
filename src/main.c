@@ -1,16 +1,15 @@
 #include "minishell.h"
 #include <sys/time.h>
 
-int32_t	execute_tests(char *input)
+int32_t	execute_tests(char **inputs)
 {
 	int32_t	ret;
 
-	ret = exec_cmds(input);
-	free_t_tokens(get_process()->tokens);
-	free_t_cmd(get_process()->cmds);
-	get_process()->tokens = NULL;
-	get_process()->cmds = NULL;
-	get_process()->last_cmd = NULL;
+	ret = exec_cmds(*inputs);
+	inputs++;
+	while (*inputs)
+		ret = exec_cmds(*inputs);
+	free_all_and_exit(0);
 	return (ret);
 }
 
@@ -44,7 +43,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	init_data(argc, argv, env);
 	(void)env;
 	if (argc >= 2)
-		return (execute_tests(argv[1]));
+		return (execute_tests(&argv[1]));
 	while (1)
 	{
 		disable_ctrl_c_output();

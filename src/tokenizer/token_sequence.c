@@ -98,6 +98,7 @@ bool has_semicolon_token(char *str)
 	t_token_type	type;
 	int32_t			t_len;
 
+	i = 0;
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -152,6 +153,7 @@ bool has_sequence_token(char *str)
 	t_token_type	type;
 	int32_t			t_len;
 
+	i = 0;
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);

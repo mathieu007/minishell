@@ -7,6 +7,67 @@
 #include <sys/stat.h>
 #include <string.h>
 
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*mem;
+	size_t	s1_l;
+	size_t	s2_l;
+
+	s1_l = strlen(s1);
+	s2_l = strlen(s2);
+	mem = (char *)malloc(sizeof(char) * (s1_l + s2_l + 1));
+	if (!mem)
+		return (NULL);
+	memcpy(mem, s1, s1_l);
+	memcpy(&mem[s1_l], s2, s2_l);
+	mem[s1_l + s2_l] = '\0';
+	return (mem);
+}
+
+char	*ft_strjoinfree(char *s1, char const *s2)
+{
+	char	*mem;
+	size_t	s1_l;
+	size_t	s2_l;
+
+	s1_l = strlen(s1);
+	s2_l = strlen(s2);
+	mem = (char *)malloc(sizeof(char) * (s1_l + s2_l + 1));
+	if (!mem)
+		return (free(s1), NULL);
+	memcpy(mem, s1, s1_l);
+	memcpy(&mem[s1_l], s2, s2_l);
+	mem[s1_l + s2_l] = '\0';
+	return (free(s1), mem);
+}
+
+char	*ft_strjoinfree2(char *s1, char *s2)
+{
+	char	*mem;
+	size_t	s1_l;
+	size_t	s2_l;
+
+	s1_l = strlen(s1);
+	s2_l = strlen(s2);
+	mem = (char *)malloc(sizeof(char) * (s1_l + s2_l + 1));
+	if (!mem)
+	{
+		if (s1)
+			free(s1);
+		if (s2)
+			free(s2);
+		return (NULL);
+	}
+	memcpy(mem, s1, s1_l);
+	memcpy(&mem[s1_l], s2, s2_l);
+	mem[s1_l + s2_l] = '\0';
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
+	return (mem);
+}
+
 
 char* replaceString(const char* input, const char* search, const char* replace) {
     // Calculate the length of the resulting string
@@ -104,33 +165,28 @@ int compare_files(const char *file1, const char *file2)
     return equal;
 }
 
-void run_test(const char *command2)
+void run_test(char **command2)
 {
-
-        char bash_cmd[MAX_COMMAND_LENGTH];
 		char minishell_command[MAX_COMMAND_LENGTH];
-		char *bash_output = NULL;
-		char *temp_bashoutput = NULL;
 		char *minishell_output = NULL;
 		char line[MAX_COMMAND_LENGTH];
-		size_t bash_output_len = 0;
 		size_t minishell_output_len = 0;
-		FILE *bash_pipe;
 		FILE *minishell_fd;
-		const char *command = replaceString(command2, "'", "'\\''");
 
-		snprintf(minishell_command, MAX_COMMAND_LENGTH, "valgrind --track-fds=yes --leak-check=full --track-origins=yes --show-reachable=yes ./minishell '%s' 2>&1 | grep -e 'lost: ' -e 'still reachable: '", command);
-
+		snprintf(minishell_command, MAX_COMMAND_LENGTH, "valgrind --track-fds=yes --leak-check=full --track-origins=yes --show-reachable=yes ./minishell %s", *command2);
+		command2++;
+		while (*command2)
+		{
+			snprintf(minishell_command, MAX_COMMAND_LENGTH, "%s '%s'", &minishell_command[0], *command2);
+			command2++;
+		}
+		snprintf(minishell_command, MAX_COMMAND_LENGTH, "%s 2>&1 | grep -e 'lost: ' -e 'still reachable: '", &minishell_command[0]);
 		minishell_fd = popen(minishell_command, "r");
 		if (minishell_fd == NULL)
 		{
-			pclose(bash_pipe);
 			perror("popen minishell_command");
 			exit(EXIT_FAILURE);
 		}	
-		// setbuf(minishell_fd, NULL);
-		// setvbuf(minishell_fd, NULL, _IONBF, 0);
-		// Read the output of the Minishell command
 		while (fgets(line, sizeof(line), minishell_fd) != NULL)
 		{
 			size_t line_len = strlen(line);
@@ -142,40 +198,78 @@ void run_test(const char *command2)
 			}
 			strcpy(minishell_output + minishell_output_len, line);
 			minishell_output_len += line_len;
-			// fflush(minishell_fd);
-			// fflush(stdout);
 		}
 		int minishell_status = pclose(minishell_fd);
-		// Close the pipes
-
-		printf("\n[%s]\n", minishell_output);
-
+		printf("\n%s\n status:%i\n", minishell_output, minishell_status);
 		free(minishell_output);
-		// free(minishell_output2);
+}
+
+static int	iswhitespace(int c)
+{
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
+}
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }
 
 
-int main(void)
+int	ft_atoi(const char *str)
 {
+	int	neg;
+	int	n;
+
+	neg = 1;
+	n = 0;
+	while (*str != '\0' && iswhitespace(*str) == 1)
+		str++;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			neg = -1;
+		str++;
+	}
+	while (ft_isdigit(*str) == 1)
+		n = (n * 10) + (*str++ - 48);
+	return (n * neg);
+}
+
+int main(int32_t argc, char **argv)
+{
+	(void) argc;
+	char **commands;
+	int32_t cmd_count = ft_atoi(argv[1]);
+	int32_t i;
+	commands = malloc(cmd_count + 1);
+	commands[cmd_count] = NULL;
     FILE *file;
     char line[MAX_COMMAND_LENGTH];
-
-    file = fopen("./tests.txt", "r");
+    file = fopen("./tests_valgrind.txt", "r");
     if (file == NULL)
     {
         perror("fopen");
         return (EXIT_FAILURE);
     }
-
+	i = 0;
     while (fgets(line, sizeof(line), file) != NULL)
     {
-        // Remove trailing newline character
-        line[strcspn(line, "\n")] = '\0';
-        printf("--------------------------------------------------------\n");
-        printf(VIOLET "TEST  %s\n" RESET, line);
-        run_test(line);
-    }
-
+		if (i == cmd_count)
+		{
+			printf("LEAKS TESTS--------------------------------------------------------\n");
+			i = 0;
+			while (i < cmd_count)
+				printf("%s\n", commands[i]);
+			run_test(commands);
+			i = 0;
+		}
+        line[strcspn(line, "\n")] = '\0'; 
+		commands[i] = line;
+		i++;
+	}
     fclose(file);
     return (EXIT_SUCCESS);
 }
