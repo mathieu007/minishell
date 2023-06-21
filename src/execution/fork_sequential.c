@@ -51,6 +51,8 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	ret = 0;
 	proc = get_process();
 	redir = cmd->next;
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_group2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/19 08:28:48 by math             ###   ########.fr       */
+/*   Updated: 2023/06/21 10:43:37 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,11 @@ int32_t	add_token_group(char *str, int32_t i, t_token_type type,
 		i = add_token_substitution(str, i, parent, false);
 	else if (type == TK_PARENTHESE_OPEN)
 		i = add_token_parenthese(str, i, parent);
+	else if (type == TK_LAST_PIPE_EXIT)
+	{
+		add_tk(ft_substr(&str[i], 0, 2), type, i, parent);
+		i += 2;
+	}		
 	else if (type == TK_ENVIRONEMENT_VAR)
 		i = add_token_env(str, i, parent, false);
 	return (i);

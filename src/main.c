@@ -55,12 +55,11 @@ int32_t	main(int32_t argc, char **argv, char **env)
 			printf("exit\n");
 			break ;
 		}
-		exec_cmds(input);
+		exec_cmds(input);		
 		if (strcmp(input, "exit") == 0)
 			break ;
 		add_history(input);
 		free(input);
-
 	}
 	return (EXIT_SUCCESS);
 }

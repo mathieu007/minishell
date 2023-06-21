@@ -6,7 +6,7 @@ void	*free_ptr(void *ptr)
 	if (ptr)
 		free(ptr);
 	ptr = NULL;
-	return (NULL);
+	return (ptr);
 }
 
 void	free_all(void)

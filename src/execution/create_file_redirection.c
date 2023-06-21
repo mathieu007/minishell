@@ -33,6 +33,10 @@ void	copy_redirection(t_redirect *dest, t_redirect *src)
 {
 	dest->fd = src->fd;
 	dest->fd_is_temp = src->fd_is_temp;
+	if (dest->file)
+		free(dest->file);
+	if (dest->input_file)
+		free(dest->input_file);	
 	dest->file = ft_strdup(src->file);
 	dest->input_file = ft_strdup(src->input_file);
 }
@@ -106,7 +110,7 @@ void	close_unnecessary_out_fd(t_cmd *redir)
 	{
 		if (redir->out_redir && redir->out_redir->fd > 0)
 			count++;
-		if (count > 1)
+		if (count > 1 && redir->out_redir)
 			close(redir->out_redir->fd);
 		redir = redir->prev;
 	}
@@ -121,7 +125,7 @@ void	close_unnecessary_in_fd(t_cmd *redir)
 	{
 		if (redir->in_redir && redir->in_redir->fd > 0)
 			count++;
-		if (count > 1)
+		if (count > 1 && redir->in_redir)
 			close(redir->in_redir->fd);
 		redir = redir->prev;
 	}

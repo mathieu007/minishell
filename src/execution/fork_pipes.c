@@ -85,13 +85,15 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	cmd = pipe->child;
 	redir = cmd->next;
 	proc = get_process();
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
 	pid = fork();
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
-	{		
+	{
 		get_process()->env_cpy = proc->env_cpy;
 		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
 		file_redirection(cmd);
@@ -116,6 +118,8 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 	cmd = pipe->child;
 	redir = cmd->next;
 	proc = get_process();
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
 	pid = fork();
@@ -147,6 +151,8 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	cmd = pipe->child;
 	redir = cmd->next;
 	proc = get_process();
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
 	pid = fork();

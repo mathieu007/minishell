@@ -29,7 +29,8 @@ bool	is_not_expandable(t_token *child)
 	return (child->type != TK_ENVIRONEMENT_VAR
 		&& child->type != TK_ENVIRONEMENT_VAR_CLOSE
 		&& child->type != TK_COMMANDSUBSTITUTION_OPEN
-		&& child->type != TK_COMMANDSUBSTITUTION_CLOSE);
+		&& child->type != TK_COMMANDSUBSTITUTION_CLOSE
+		&& child->type != TK_LAST_PIPE_EXIT);
 }
 
 static t_token	*goto_closing_dbl_quote_token(t_token *token)
@@ -101,8 +102,7 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 		str = ft_strjoinfree2(str, val);
 		child = child->next;
 	}
-	free_t_tokens(token->child);
-	token->child = NULL;
+	token->child = free_t_tokens(token->child);
 	free(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
@@ -112,10 +112,12 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 
 void	build_token_environement(t_token *token)
 {
-	char	*val;
-	t_token	*child;
-	char	*str;
+	char		*val;
+	t_token		*child;
+	char		*str;
+	t_process	*proc;
 
+	proc = get_process();
 	child = token->child;
 	str = ft_strdup("");
 	while (child && child->next)
@@ -132,6 +134,8 @@ void	build_token_environement(t_token *token)
 		}
 		else if (child->type == TK_ENVIRONEMENT_VAR)
 			val = parse_env_var_value(child);
+		else if (child->type == TK_LAST_PIPE_EXIT)
+			val = ft_itoa(proc->last_errnum);
 		else
 			val = ft_strdup(child->str);
 		str = ft_strjoinfree2(str, val);

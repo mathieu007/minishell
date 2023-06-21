@@ -253,6 +253,7 @@ typedef struct s_process
 	char				**env;
 	int32_t				errnum;
 	char				*last_error;
+	int32_t				last_errnum;
 	bool				stop_exec;
 	ino_t				dir_id;
 	char				*cwd;

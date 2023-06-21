@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/17 12:14:16 by math             ###   ########.fr       */
+/*   Updated: 2023/06/21 13:57:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ char	**parse_args(t_token *token)
 	split = malloc((args_len + 1) * sizeof(char *));
 	if (!split)
 		free_all_and_exit2(errno, "malloc error");
-	while (i < args_len)
+	while (i <= args_len)
 	{
 		split[i] = NULL;
 		i++;

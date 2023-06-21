@@ -10,6 +10,8 @@ static int32_t	fork_group(t_cmd *cmd)
 
 	redir = cmd->next;
 	proc = get_process();
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
 	pid = fork();

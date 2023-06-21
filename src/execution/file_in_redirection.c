@@ -38,8 +38,8 @@ int32_t	open_redir_heredoc(t_cmd *cmd)
 	if (cmd->in_redir == NULL)
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
 	redir = cmd->in_redir;
-	redir->file = cmd->name;
-	redir->input_file = redir->file;
+	redir->file = ft_strdup(cmd->name);
+	redir->input_file = ft_strdup(redir->file);
 	redir->fd = open(redir->file, flags, 0777);
 	if (redir->fd == -1)
 		open_temp_file(cmd);
@@ -59,8 +59,8 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 	if (cmd->in_redir == NULL)
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
 	redir = cmd->in_redir;
-	redir->file = cmd->name;
-	redir->input_file = redir->file;
+	redir->file = ft_strdup(cmd->name);
+	redir->input_file = ft_strdup(redir->file);
 	redir->fd = open(redir->file, flags, 0777);
 	if (redir->fd == -1)
 		open_temp_file(cmd);

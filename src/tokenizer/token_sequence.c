@@ -36,7 +36,8 @@ int32_t	add_token_redirection(char *str, int32_t i, t_token_type type,
 inline bool	is_token_group(t_token_type type)
 {
 	return (type == TK_DOUBLEQUOTE || type == TK_SINGLEQUOTE
-		|| type == TK_ENVIRONEMENT_VAR || type == TK_PARENTHESE_OPEN);
+		|| type == TK_ENVIRONEMENT_VAR || type == TK_PARENTHESE_OPEN
+		|| type == TK_LAST_PIPE_EXIT);
 }
 
 /// @brief token group are token that may contains other tokens
@@ -55,6 +56,8 @@ static int32_t	skip_token_group(char *str, t_token_type type, int32_t i)
 		i = goto_closing_parenthese(str, i + 1) + 1;
 	else if (type == TK_ENVIRONEMENT_VAR)
 		i = goto_closing_environement(str, i + 1);
+	else if (type == TK_LAST_PIPE_EXIT)
+		i += 2;
 	else if (type == TK_PARENTHESE_OPEN)
 		i = goto_closing_parenthese(str, i + 1) + 1;
 	return (i);

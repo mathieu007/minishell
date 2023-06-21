@@ -54,6 +54,8 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	ret = 0;
 	proc = get_process();
 	redir = cmd->next;
+	build_token_environement(cmd->token);
+	cmd = parse_at_execution(cmd);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
 	pid = fork();
@@ -103,7 +105,9 @@ int32_t	execute_command(t_cmd *cmd, bool should_exec_in_child)
 int32_t	exec_commands(t_cmd *cmd, bool should_exec_in_child)
 {
 	int32_t		ret;
+	t_process	*proc;
 
+	proc = get_process();
 	ret = 0;
 	if (cmd->type == CMD_GROUP_OR)
 		ret = 1;
@@ -123,7 +127,7 @@ int32_t	exec_commands(t_cmd *cmd, bool should_exec_in_child)
 			ret = execute_command(cmd, should_exec_in_child);
 		cmd = cmd->next;
 	}
-	return (ret);
+	return (proc->errnum);
 }
 
 t_cmd	*create_cmds_tree(t_token *token)
@@ -159,9 +163,9 @@ int32_t	exec_cmds(char *str)
 	token = tokenize(str);
 	if (has_error())
 		return (proc->errnum);
-	get_process()->tokens = token->child;
+	proc->tokens = token->child;
 	root_cmd = create_cmds_tree(token->child);
-	get_process()->cmds = root_cmd;
+	proc->cmds = root_cmd;
 	ret = exec_commands(root_cmd->child, false);
 	free_t_tokens(token);
 	free_t_cmd(root_cmd);
@@ -169,5 +173,6 @@ int32_t	exec_cmds(char *str)
 	get_process()->cmds = NULL;
 	get_process()->last_cmd = NULL;
 	proc->tokens = NULL;
+	proc->last_errnum = proc->errnum;
 	return (ret);
 }
