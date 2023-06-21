@@ -6,18 +6,19 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/06/04 15:35:21 by math             ###   ########.fr       */
+/*   Updated: 2023/06/17 08:58:31 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_token_type	*get_tokens_lookup_table(void)
+static inline t_token_type	*get_tokens_lookup_table(void)
 {
 	static t_token_type	token_types[(255 * 255) + (255 * 2)];
 	static int32_t		i;
-	t_token_type 		*tk_type = &token_types[8];
+	t_token_type		*tk_type;
 
+	tk_type = &token_types[8];
 	if (i == 0)
 	{
 		while (i < (255 * 255) + (255 * 2))
@@ -25,6 +26,7 @@ static t_token_type	*get_tokens_lookup_table(void)
 			token_types[i] = TK_UNKNOWN;
 			i++;
 		}
+		tk_type[TK_CMD] = TK_CMD;
 		tk_type[TK_START] = TK_START;
 		tk_type[TK_END] = TK_END;
 		tk_type[TK_SPACE] = TK_SPACE;
@@ -59,7 +61,7 @@ static t_token_type	*get_tokens_lookup_table(void)
 	return (tk_type);
 }
 
-t_token_type	get_token_type(char *str)
+inline t_token_type	get_token_type(char *str)
 {
 	t_token_type	*lookup_table;
 	t_token_type	tk_type;

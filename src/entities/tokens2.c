@@ -25,11 +25,11 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token *parent)
 
 	last = NULL;
 	if (parent)
-		last = get_last(parent->child_tokens);
+		last = get_last(parent->child);
 	else
 		last = get_last(get_process()->tokens);
 	new = new_token();
-	new->parent_token = parent;
+	new->parent = parent;
 	if (!new)
 		return (NULL);
 	if (last)
@@ -43,9 +43,9 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token *parent)
 	new->is_redirection = false;
 	if (!parent && !get_process()->tokens)
 		get_process()->tokens = new;
-	else if (parent && !parent->child_tokens)
-		parent->child_tokens = new;
-	if (parent)	
+	else if (parent && !parent->child)
+		parent->child = new;
+	if (parent)
 		parent->last = new;
 	return (new);
 }

@@ -2,9 +2,9 @@
 #include "minishell.h"
 
 int32_t	execve_cmd(t_cmd *cmd)
-{
+{	
 	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
-		perror("execve failed\n");
+		free_all_and_exit2(errno, "execve error");
 	return (errno);
 }
 
@@ -17,90 +17,124 @@ int32_t	add_execve_func(t_cmd *cmd)
 /// @brief fork all piped command and execute then waitpid for all command to complete
 /// @param token_group
 /// @return we return the last pipe command
-t_cmd	*pipes_cmds(t_cmd *cmd)
+int32_t	exec_pipes_cmds(t_cmd *pipe_group)
 {
 	t_cmd	*start;
+	t_cmd	*cmd;
 
+	cmd = pipe_group->child;
 	start = cmd;
 	pipe_cmd(cmd);
 	cmd = cmd->next;
 	while (cmd)
-	{	
-		if (cmd->cmd_seq_type == CMD_PIPE)
-			pipe_cmd(cmd);
-		if (cmd && cmd->token->is_last_pipe)
-			break;
+	{
+		pipe_cmd(cmd);
 		cmd = cmd->next;
 	}
-	fork_pipes(start);
-	if (!cmd)
-		return (cmd);
-	return (cmd->next);
+	return (fork_pipes(start));
 }
 
-int32_t	exec_sequence(t_cmd *cmd)
+static int32_t	exec(t_cmd *cmd)
 {
 	t_process	*proc;
 
 	proc = get_process();
-	while (cmd && cmd->cmd_seq_type != CMD_NONE)
-	{
-		if (cmd->cmd_seq_type == CMD_PIPE)
-			cmd = pipes_cmds(cmd);
-		else if (cmd->cmd_seq_type == CMD_SEQUENTIAL)
-			exec_sequential(cmd);
-		else if (cmd->cmd_seq_type == CMD_LOG_AND)
-			cmd = exec_logical_and(cmd);
-		else if (cmd->cmd_seq_type == CMD_LOG_OR)
-			cmd = exec_logical_or(cmd);
-		else if (cmd->cmd_seq_type == CMD_GROUPING)
-			cmd = exec_group(cmd);
-		if (proc->stop_exec)
-			return (proc->errnum);
-		if (cmd)
-			cmd = cmd->next;
-	}
+	proc->errnum = cmd->func(cmd);
 	return (proc->errnum);
 }
 
-/// @brief we will create cmds from the tokens.
-/// the commands are not yet parsed with the whole data.
-/// it is just a hierarchical cmd representation of the cmd execution order.
-/// @param token
-/// @return
-void	create_nested_cmds(t_cmd *cmd)
+static int32_t	fork_exec(t_cmd	*cmd)
 {
-	t_token	*childs;
-	t_cmd	*child_cmd;
+	pid_t		pid;
+	t_process	*proc;
+	int32_t		ret;
+	int32_t		status;
+	t_cmd		*redir;
 
-	while (cmd)
+	ret = 0;
+	proc = get_process();
+	redir = cmd->next;
+	if (cmd->has_redirection)
+		create_fd_redir(cmd, redir->child);
+	pid = fork();
+	if (pid == -1)
+		free_all_and_exit2(errno, "fork error");
+	else if (pid == 0)
 	{
-		childs = cmd->token->child_tokens;
-		if (childs && get_sequence_type(childs) != CMD_NONE)
-		{
-			child_cmd = add_child_cmd(cmd, childs);
-			create_nested_cmds(child_cmd);
-			childs = childs->next;
-		}
+		get_process()->env_cpy = proc->env_cpy;
+		file_redirection(cmd);
+		ret = exec(cmd);
+		close_files_redirections(cmd);
+		exit(ret);
+	}
+	close_files_redirections(cmd);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		ret = WEXITSTATUS(status);
+	proc->errnum = ret;
+	return (ret);
+}
+
+int32_t	execute_command(t_cmd *cmd, bool should_exec_in_child)
+{
+	int32_t		ret;
+	t_process	*proc;
+
+	proc = get_process();
+	proc->errnum = 0;
+	if (!cmd->args)
+	{
+		build_token_environement(cmd->token);
+		cmd = parse_at_execution(cmd);
+	}
+	if (proc->errnum > 0)
+		return (proc->errnum);
+	if (ft_strncmp(cmd->name, "export", 6) == 0 && ft_strlen(cmd->name) == 6)
+		should_exec_in_child = false;
+	if (should_exec_in_child || (cmd->has_redirection && (cmd->out_redir->fd == -1 && cmd->in_redir->fd == -1)))
+		ret = fork_exec(cmd);
+	else if (cmd->is_builtin && !should_exec_in_child)
+		ret = exec(cmd);
+	else
+		ret = fork_exec(cmd);
+	return (ret);
+}
+
+int32_t	exec_commands(t_cmd *cmd, bool should_exec_in_child)
+{
+	int32_t		ret;
+
+	ret = 0;
+	if (cmd->type == CMD_GROUP_OR)
+		ret = 1;
+	while (cmd && cmd->type != CMD_NONE)
+	{
+		if (cmd->type == CMD_GROUP_PIPE)
+			ret = exec_pipes_cmds(cmd);
+		else if (cmd->type == CMD_GROUP_SEQUENTIAL)
+			ret = exec_sequential(cmd);
+		else if (cmd->type == CMD_GROUP_AND && ret == 0)
+			ret = exec_logical_and(cmd);
+		else if (cmd->type == CMD_GROUP_OR && ret > 0)
+			ret = exec_logical_or(cmd);
+		else if (cmd->type == CMD_PARENTHESES)
+			ret = exec_group(cmd);
+		else if (cmd->type == CMD)
+			ret = execute_command(cmd, should_exec_in_child);
 		cmd = cmd->next;
 	}
+	return (ret);
 }
 
 t_cmd	*create_cmds_tree(t_token *token)
 {
-	t_cmd	*start;
+	t_cmd	*root_cmd;
 
 	if (!token)
 		return (NULL);
-	start = add_root_cmd_token(token);
-	token = token->next;
-	while (token && token->next)
-	{
-		add_root_cmd_token(token);
-		token = token->next;
-	}
-	create_nested_cmds(start);
-	return (start);
+	root_cmd = new_cmd(NULL);
+	create_cmds(token, root_cmd);
+	return (root_cmd);
 }
 
 t_cmd	*parse_at_execution(t_cmd *cmd)
@@ -115,15 +149,25 @@ t_cmd	*parse_at_execution(t_cmd *cmd)
 
 int32_t	exec_cmds(char *str)
 {
-	t_token	*token;
-	int32_t	ret;
-	t_cmd	*root_cmd;
+	t_token		*token;
+	int32_t		ret;
+	t_cmd		*root_cmd;
+	t_process	*proc;
 
+	proc = get_process();
+	proc->errnum = 0;
 	token = tokenize(str);
-	get_process()->tokens = token->child_tokens;
-	root_cmd = create_cmds_tree(token->child_tokens);
+	if (has_error())
+		return (proc->errnum);
+	get_process()->tokens = token->child;
+	root_cmd = create_cmds_tree(token->child);
 	get_process()->cmds = root_cmd;
-	ret = exec_sequence(root_cmd);
-	free(token);
+	ret = exec_commands(root_cmd->child, false);
+	free_t_tokens(token);
+	free_t_cmd(root_cmd);
+	get_process()->tokens = NULL;
+	get_process()->cmds = NULL;
+	get_process()->last_cmd = NULL;
+	proc->tokens = NULL;
 	return (ret);
 }

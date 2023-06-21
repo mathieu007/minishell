@@ -35,7 +35,7 @@ char	*join_path(char *path1, char *path2)
 	return (path);
 }
 
-char	*recursive_search_dir(t_cmd *cmd, char *path, ino_t ino)
+char	*recursive_search_dir(char *path, ino_t ino)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -60,7 +60,7 @@ char	*recursive_search_dir(t_cmd *cmd, char *path, ino_t ino)
 			proc->cwd = new_path;
 			return (free(path), proc->cwd);
 		}
-		if (recursive_search_dir(cmd, ft_strdup(new_path), ino))
+		if (recursive_search_dir(ft_strdup(new_path), ino))
 			return (free(path), proc->cwd);
 		free(new_path);
 		entry = readdir(dir);
@@ -70,11 +70,6 @@ char	*recursive_search_dir(t_cmd *cmd, char *path, ino_t ino)
 	closedir(dir);
 	return (free(path), NULL);
 }
-
-// void	set_cwd(t_cmd *cmd, char *cwd)
-// {
-	
-// }
 
 /// @brief this function automatically get the updated current working directory
 /// even if an other process modify the current working directory location
@@ -94,6 +89,8 @@ char	*get_cwd(t_cmd *cmd)
 	if (cmd == NULL || proc->cwd == NULL)
 	{
 		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
+		if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
+			proc->cwd = ft_strjoinfree(proc->cwd, "/");
 		return (proc->cwd);
 	}
 	if (stat(proc->cwd, &file_stat) != 0)
@@ -104,9 +101,10 @@ char	*get_cwd(t_cmd *cmd)
 		return (proc->cwd);
 	home = get_home();
 	if (home)
-		proc->cwd = recursive_search_dir(cmd, ft_strdup(home), file_stat.st_ino);
-	//TODO if (!cwd) search trash bin or return an error msg do the same but for trash bin.
+		proc->cwd = recursive_search_dir(ft_strdup(home), file_stat.st_ino);
 	if (!proc->cwd)
 		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
+	if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
+		proc->cwd = ft_strjoinfree(proc->cwd, "/");
 	return (proc->cwd);
 }

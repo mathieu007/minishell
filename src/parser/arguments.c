@@ -6,16 +6,16 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/05 14:39:42 by math             ###   ########.fr       */
+/*   Updated: 2023/06/17 12:14:16 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /// @brief get the single quote string without the quotes
-/// @param token 
-/// @param str 
-/// @return 
+/// @param token
+/// @param str
+/// @return
 char	*get_single_quote_str(t_token *token, char *str)
 {
 	t_token	*closing_token;
@@ -34,9 +34,9 @@ char	*get_single_quote_str(t_token *token, char *str)
 }
 
 /// @brief get the double quote string without the quotes
-/// @param token 
-/// @param str 
-/// @return 
+/// @param token
+/// @param str
+/// @return
 char	*get_double_quote_str(t_token *token, char *str)
 {
 	t_token	*closing_token;
@@ -54,10 +54,10 @@ char	*get_double_quote_str(t_token *token, char *str)
 	return (NULL);
 }
 
-char **add_env_words(char *str, char **split)
+char	**add_env_words(char *str, char **split)
 {
-	int32_t i;
-	int32_t start;
+	int32_t	i;
+	int32_t	start;
 
 	if (*str)
 		return (0);
@@ -80,7 +80,7 @@ char **add_env_words(char *str, char **split)
 
 int32_t	count_env_words(char *str)
 {
-	int32_t count;
+	int32_t	count;
 
 	count = 1;
 	if (*str)
@@ -104,7 +104,7 @@ int32_t	get_args_len(t_token *token)
 {
 	int32_t	args_len;
 
-	token = token->child_tokens;
+	token = token->child;
 	args_len = 0;
 	if (!token)
 		return (0);
@@ -141,7 +141,6 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 		}
 		else
 			token = token->next;
-		
 	}
 	return (token);
 }
@@ -152,7 +151,7 @@ void	set_args(t_token *token, char **split)
 	int32_t	i;
 
 	i = 0;
-	token = token->child_tokens;
+	token = token->child;
 	while (token)
 	{
 		if (token->type == TK_SPACE)
@@ -180,6 +179,8 @@ char	**parse_args(t_token *token)
 	i = 0;
 	args_len = get_args_len(token);
 	split = malloc((args_len + 1) * sizeof(char *));
+	if (!split)
+		free_all_and_exit2(errno, "malloc error");
 	while (i < args_len)
 	{
 		split[i] = NULL;

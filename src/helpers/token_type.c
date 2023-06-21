@@ -3,22 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   token_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/06/15 15:55:31 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/19 09:04:48 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+inline bool	is_semicolon(t_token_type type)
+{
+	if (type == TK_SEMICOLON)
+		return (true);
+	return (false);
+}
+
 inline bool	is_end_of_seq(t_token_type type)
 {
-	if ((type == TK_SEMICOLON || type == TK_AND || type == TK_OR
-			|| type == TK_AMPERSAND || type == TK_LAST_PIPE_EXIT
-			|| type == TK_PIPE || type == TK_END
-			|| type == TK_GREAT || type == TK_GREATGREAT
-			|| type == TK_LESS || type == TK_LESSLESS))
+	if (type == TK_AND || type == TK_OR || type == TK_PIPE)
 		return (true);
 	return (false);
 }
@@ -80,7 +83,7 @@ inline int32_t	goto_closing_parenthese(char *str, int32_t i)
 		else if (str[i] == '\'')
 			i = goto_closing_single_quote(str, i + 1) + 1;
 		else if (str[i] == '(')
-			i = goto_closing_parenthese(str, i + 1) + 1;
+			i = goto_closing_parenthese(str, i + 1);
 		else if (str[i] == ')')
 			return (i);
 		else

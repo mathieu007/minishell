@@ -1,15 +1,14 @@
 
 #include "minishell.h"
 
-
 char	*build_dbl_quote_token_env(t_token *token)
 {
 	t_token	*child;
 	char	*value;
 	char	*str;
-	// t_token	*temp;
 
-	child = token->child_tokens;
+	// t_token	*temp;
+	child = token->child;
 	str = ft_strdup("");
 	while (child)
 	{
@@ -50,16 +49,15 @@ char	*parse_redirect_env_var_value(t_token *child, t_cmd_seq cmd_type)
 	char	*ambigous_redirect;
 
 	val = parse_env_var_value(child);
-	if (child->type == TK_ENVIRONEMENT_VAR
-		&& child->prev && child->prev->type != TK_SPACE
-		&& cmd_type == CMD_HEREDOC)
+	if (child->type == TK_ENVIRONEMENT_VAR && child->prev
+		&& child->prev->type != TK_SPACE && cmd_type == CMD_HEREDOC)
 	{
 		val = ft_strjoin(child->token_str, child->str);
 		if (child->token_len == 2)
 			val = ft_strjoinfree(val, "}");
 	}
-	else if (child->prev && child->prev->type != TK_SPACE
-		&& val && val[0] == ' ')
+	else if (child->prev && child->prev->type != TK_SPACE && val
+			&& val[0] == ' ')
 	{
 		ambigous_redirect = ft_strjoin(child->prev->str, child->token_str);
 		ambigous_redirect = ft_strjoinfree(ambigous_redirect, child->str);
@@ -78,10 +76,10 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 	t_token	*child;
 	char	*str;
 
-	child = token->child_tokens;
+	child = token->child;
 	str = ft_strdup("");
 	while (child && child->next)
-	{	
+	{
 		if (is_not_expandable(child))
 			str = ft_strjoinfree(str, child->token_str);
 		if (child->type == TK_DOUBLEQUOTE)
@@ -103,8 +101,8 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 		str = ft_strjoinfree2(str, val);
 		child = child->next;
 	}
-	free_t_tokens(token->child_tokens);
-	token->child_tokens = NULL;
+	free_t_tokens(token->child);
+	token->child = NULL;
 	free(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
@@ -118,7 +116,7 @@ void	build_token_environement(t_token *token)
 	t_token	*child;
 	char	*str;
 
-	child = token->child_tokens;
+	child = token->child;
 	str = ft_strdup("");
 	while (child && child->next)
 	{
@@ -139,8 +137,8 @@ void	build_token_environement(t_token *token)
 		str = ft_strjoinfree2(str, val);
 		child = child->next;
 	}
-	free_t_tokens(token->child_tokens);
-	token->child_tokens = NULL;
+	free_t_tokens(token->child);
+	token->child = NULL;
 	free(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
@@ -148,34 +146,8 @@ void	build_token_environement(t_token *token)
 }
 
 /// @brief we do not tokenize single quote, nothing to do
-/// 
-/// @param parent 
-void	split_token_redir(t_token *parent)
-{
-	char	*str;
-	int32_t	start;
-	int32_t	len;
-	t_token	*token;
-
-	token = parent->child_tokens;
-	str = parent->str;
-	while (token && token->next)
-	{	
-		len = token->next->start - token->end;
-		start = token->start + token->token_len;
-		token->str = ft_strtrim(ft_substr(str, start, len), " ");
-		if (is_token_redir(token->type))
-		{
-			token->is_redirection = true;
-			tokenize_group_tokens(token);
-		}
-		token = token->next;
-	}
-}
-
-/// @brief we do not tokenize single quote, nothing to do
-/// 
-/// @param parent 
+///
+/// @param parent
 void	split_token_groups(t_token *parent)
 {
 	char	*str;
@@ -183,10 +155,10 @@ void	split_token_groups(t_token *parent)
 	int32_t	len;
 	t_token	*token;
 
-	token = parent->child_tokens;
+	token = parent->child;
 	str = parent->str;
 	while (token && token->next)
-	{	
+	{
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
 		token->str = ft_substr(str, start, len);
@@ -207,10 +179,10 @@ void	split_tokens(t_token *parent)
 	int32_t	len;
 	t_token	*token;
 
-	token = parent->child_tokens;
+	token = parent->child;
 	str = parent->str;
 	while (token && token->next)
-	{	
+	{
 		len = token->next->start - token->end;
 		start = token->end;
 		token->str = ft_substr(str, start, len);
@@ -220,8 +192,9 @@ void	split_tokens(t_token *parent)
 
 t_token_type	get_next_non_redir_type(t_token *token)
 {
-	if (!is_token_redir(token->type) && token->next && is_token_redir(token->next->type))
-	{			
+	if (!is_token_redir(token->type) && token->next
+		&& is_token_redir(token->next->type))
+	{
 		token = token->next;
 		while (token && is_token_redir(token->type))
 			token = token->next;
@@ -242,16 +215,20 @@ t_cmd_seq	get_sequence_type(t_token *token)
 			return (CMD_FILEOUT_APPPEND);
 		else if (token->type == TK_GREAT)
 			return (CMD_FILEOUT);
-		else if (token->type == TK_PIPE || (token->next && token->next->type == TK_PIPE) || get_next_non_redir_type(token) == TK_PIPE)
+		else if (token->type == TK_PIPE || (token->next
+					&& token->next->type == TK_PIPE)
+				|| get_next_non_redir_type(token) == TK_PIPE)
 			return (CMD_PIPE);
-		else if (token->type == TK_OR || (token->type == TK_OR && get_next_non_redir_type(token) == TK_OR))
+		else if (token->type == TK_OR || (token->type == TK_OR
+					&& get_next_non_redir_type(token) == TK_OR))
 			return (CMD_LOG_OR);
-		else if (token->type == TK_AND || (token->type == TK_OR && get_next_non_redir_type(token) == TK_AND))
+		else if (token->type == TK_AND || (token->type == TK_OR
+					&& get_next_non_redir_type(token) == TK_AND))
 			return (CMD_LOG_AND);
 		else if (token->type == TK_SEMICOLON)
 			return (CMD_SEQUENTIAL);
 		else if (token->type == TK_PARENTHESE_OPEN)
-			return (CMD_GROUPING);
+			return (CMD_PARENTHESES);
 		else if (token->type == TK_COMMANDSUBSTITUTION_OPEN)
 			return (CMD_SUBSTITUTION);
 		else if (token->type == TK_START)
@@ -260,17 +237,19 @@ t_cmd_seq	get_sequence_type(t_token *token)
 	return (CMD_NONE);
 }
 
-t_token *set_cmd_sequence(t_token *token)
+t_token	*set_cmd_sequence(t_token *token)
 {
 	t_token	*redir_token;
-	
+
 	token->cmd_seq_type = get_sequence_type(token);
-	if (!is_redirection(token->cmd_seq_type) && token->next && is_redirection(get_sequence_type(token->next)))
+	if (!is_redirection(token->cmd_seq_type) && token->next
+		&& is_redirection(get_sequence_type(token->next)))
 	{
 		redir_token = token->next;
 		while (redir_token)
 		{
-			if (!is_redirection(get_sequence_type(redir_token)) && redir_token->type != TK_END)
+			if (!is_redirection(get_sequence_type(redir_token))
+				&& redir_token->type != TK_END)
 				token->cmd_seq_type = get_sequence_type(redir_token);
 			redir_token = redir_token->next;
 		}
@@ -281,7 +260,7 @@ t_token *set_cmd_sequence(t_token *token)
 t_token	*get_prev_non_redir(t_token *token)
 {
 	if (token->prev)
-	{			
+	{
 		token = token->prev;
 		while (token && is_token_redir(token->type))
 			token = token->prev;
@@ -290,37 +269,87 @@ t_token	*get_prev_non_redir(t_token *token)
 	return (token);
 }
 
+void	split_token_cmd(t_token *parent)
+{
+	char	*str;
+	int32_t	start;
+	int32_t	len;
+	t_token	*token;
+
+	token = parent->child;
+	str = parent->str;
+	while (token && token->next)
+	{
+		len = token->next->start - token->end;
+		start = token->start + token->token_len;
+		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
+		if (token->type == TK_PARENTHESE_OPEN)
+			token->child = tokenize_semicolon(token);
+		else if (token->str[0])
+			token->child = tokenize_group_tokens(token);
+		token = token->next;
+	}
+}
+
 /// @brief once we have identified all command tokens we separate them
 /// it's just an ft_substr from token to next token
-/// @param parent 
+/// @param parent
+void	split_token_redirection(t_token *parent)
+{
+	char	*str;
+	int32_t	start;
+	int32_t	len;
+	t_token	*token;
+
+	token = parent->child;
+	str = parent->str;
+	while (token && token->next)
+	{
+		len = token->next->start - token->end;
+		start = token->start + token->token_len;
+		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
+		token->child = tokenize_group_tokens(token);
+		token = token->next;
+	}
+}
+
+/// @brief once we have identified all command tokens we separate them
+/// it's just an ft_substr from token to next token
+/// @param parent
 void	split_token_sequence(t_token *parent)
 {
 	char	*str;
 	int32_t	start;
 	int32_t	len;
-	t_token	*token;	
-	t_token	*last_pipe;
-	t_token	*start_token;
+	t_token	*token;
 
-	token = parent->child_tokens;
+	token = parent->child;
 	str = parent->str;
-	last_pipe = NULL;
 	while (token && token->next)
-	{	
+	{
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
 		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
-		token->cmd_seq_type = get_sequence_type(token);
-		if (token->type == TK_PIPE)
-		{
-			start_token = get_prev_non_redir(token);
-			start_token->child_tokens = token;
-		}
-		token->child_tokens = tokenize_group_tokens(token);
-		if (token->cmd_seq_type == CMD_PIPE)
-			last_pipe = token;
+		token->child = tokenize_cmd(token);
 		token = token->next;
 	}
-	if (last_pipe)
-		last_pipe->is_last_pipe = true;
+}
+
+void	split_token_semicolon(t_token *parent)
+{
+	char	*str;
+	int32_t	start;
+	int32_t	len;
+	t_token	*token;
+
+	token = parent->child;
+	str = parent->str;
+	while (token && token->next)
+	{
+		len = token->next->start - token->end;
+		start = token->start + token->token_len;
+		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
+		token->child = tokenize_cmd_sequence(token);
+		token = token->next;
+	}
 }

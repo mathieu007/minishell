@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirect.c                                         :+:      :+:    :+:   */
+/*   cmd_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/06/20 13:22:24 by math             ###   ########.fr       */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/06/20 10:27:56 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_redirect	*new_redirect()
+static t_cmd	*create_cmd_execution(t_token *token, t_cmd *parent)
 {
-	t_redirect	*new;
+	t_cmd	*cmd;
 
-	new = ft_calloc(1, sizeof(t_redirect));
-	if (new == NULL)
-		free_all_and_exit2(errno, "malloc error");
-	new->fd = -1;
-	return (new);
+	cmd = new_cmd(parent);
+	cmd->type = CMD;
+	cmd->token = token;
+	return (cmd);
 }
 
-void	*free_redirect(t_cmd *cmd)
+t_token	*add_cmd_execution(t_token *token, t_cmd *parent)
 {
-	if (cmd->out_redir != NULL)
-		free(cmd->out_redir);
-	cmd->out_redir = NULL;
-	cmd = cmd->next;
-	return (NULL);
+	t_cmd	*cmd;
+
+	if (!parent || !token)
+		return (NULL);
+	cmd = create_cmd_execution(token, parent);
+	create_redirection(token, cmd);
+	return (token->next);
 }

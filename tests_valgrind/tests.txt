@@ -1,0 +1,114 @@
+echo ' tata '
+echo "toto"
+echo '"'toto'"'
+echo """totot"""
+echo "'""totot""'"
+echo '''ta'''
+"echo" tata
+echo " tata "
+ec'ho' "123"
+ec"ho" "123"
+echo "123""456"
+echo " 123 "" 456 "
+echo "123" "456"
+echo "123"   "456"
+echo "   123   ""   456   "
+echo "   123   " "   456   "
+echo "   123   "   "   456   "
+echo
+echo        
+echo ""
+echo ''
+echo      ' '    
+echo      " "    
+echo      "    "    
+echo      '    '    
+echo $VAR
+echo "$VAR"
+echo '$VAR'
+echo ${VAR}
+echo "${VAR}"
+export VAR="-n" && echo ${VAR}
+export VAR="-n-n-n-n" && echo ${VAR}
+export VAR="-n -n -n -n" && echo ${VAR}
+export VAR="-n -a" && echo ${VAR}
+export VAR="-n-n-n-n -a-a-a-a-a" && echo ${VAR}
+export VAR="-n -n -n -n -a -a -a -a" && echo ${VAR}
+export VAR="-na" && echo ${VAR}
+export VAR="-nnnnnn" && echo ${VAR}
+export VAR="-nnnnnnaaaaaa" && echo ${VAR}
+export VAR="-n" && echo ${VAR} 123 test
+export VAR="-n-n-n-n" && echo ${VAR} 123 test
+export VAR="-n -n -n -n" && echo ${VAR} 123 test
+export VAR="-n -a" && echo ${VAR} 123 test
+export VAR="-n-n-n-n -a-a-a-a-a" && echo ${VAR} 123 test
+export VAR="-n -n -n -n -a -a -a -a" && echo ${VAR} 123 test
+export VAR="-na" && echo ${VAR} 123 test
+export VAR="-nnnnnn" && echo ${VAR} 123 test
+export VAR="-nnnnnnaaaaaa" && echo ${VAR} 123 test
+export VAR="-n 123 test" && echo ${VAR}
+export VAR="-n-n-n-n 123 test" && echo ${VAR}
+export VAR="-n -n -n -n 123 test" && echo ${VAR}
+export VAR="-na 123 test" && echo ${VAR}
+export VAR="-nnnnnn 123 test" && echo ${VAR}
+export VAR="-nnnnnnaaaaaa 123 test" && echo ${VAR}
+export VAR=" 111   222 " && echo ${VAR}
+export VAR="ho" && "ec$VAR" "123"
+export VAR="ho" && ec$VAR "123"
+export VAR="ho" && ec"$VAR" "123"
+export VAR="ho" && ec'$VAR' "123"
+export VAR=" 111   222 " && echo "123"${VAR}
+export VAR=" 111   222 " && echo "123"$VAR
+export VAR=" 111   222 " && echo "123 "$VAR
+export VAR=" 111   222 " && echo "123"'$VAR'
+export VAR=" 111   222 " && echo "123$VAR"
+export VAR=" 111   222 " && echo "123 $VAR"
+export VAR=" 111   222 " && echo "$VAR123"
+export VAR=" 111   222 " && echo "$VAR-123"
+export VAR=" 111   222 " && echo "$VAR '123'"
+export VAR=" 111   222 " && echo " $VAR-123"
+export VAR=" 111   222 " && echo " $VAR '123'"
+export 
+export 1
+export _1
+export al#
+export _
+export __
+export a
+export A
+export allo
+export a=1 b=2 c=3 
+export a=1 b=2 c=3 && env
+export a=a=a && echo $a
+unset a=a=a && echo $a
+unset 1
+unset _1
+unset _
+unset __
+unset a
+unset A
+unset allo
+unset al#
+export a=1 b=2 c=3 && unset a b c && env
+export a=1 b=2 c=3 && unset a b && env
+export a=1 b=2 c=3 && unset a  && env
+cd .
+cd ..
+cd .. && cd libft && pwd && cd .. && pwd
+cd .. && pwd 
+cd .. && pwd && cd .. && pwd
+pwd
+echo 1 && ech1 && echo 3
+ech1 1 || ech2 2 || echo 3
+ech1 1 || ech2 2 && echo 3
+echo 1 && ech2 2 || echo 3
+echo 1 && echo 2 || echo 3
+echo 1 && ech2 2 && echo 3
+echo 1 || echo 2 && echo 3
+echo 1 || ech6 6 || echo 2 && ech23 23 && echo 3 || ech10 10 || ech1 11
+ech1 1 || ech6 6 || ech2 2 && ech23 23 && ech3 3 || ech10 10 || ech1 11
+echo 1 || ech6 6 || ech2 2 && ech23 23 && echo 3 || ech10 10 || ech1 11
+ech1 1 || ech6 6 || echo 2 && ech23 23 && echo 3 || ech10 10 || ech1 11
+echo 1 || ech6 6 || echo 2 && ech23 23 && ech3 3 || ech10 10 || ech1 11
+ech1 1 || ech6 6 || ech2 2 && ech23 23 && echo 3 || ech10 10 || ech1 11
+echo 1 || ech6 6 || ech2 2 && ech23 23 && ech3 3 || ech10 10 || ech1 11

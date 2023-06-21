@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/06/12 10:07:49 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/16 11:53:26 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ inline bool	is_token_sequence(t_token *token)
 
 	type = token->type;
 	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
-		|| type == TK_AMPERSAND || type == TK_GREATGREAT
-		|| type == TK_LAST_PIPE_EXIT || type == TK_PIPE)
+		|| type == TK_GREATGREAT || type == TK_GREAT || type == TK_PIPE
+		|| type == TK_LESS || type == TK_LESSLESS)
 		return (true);
 	return (false);
 }

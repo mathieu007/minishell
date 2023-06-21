@@ -72,7 +72,7 @@ void	print_cmd(t_cmd *command)
 		printf("[[NODE # %i]]\n", j);
 		printf("\n");
 		printf("cmd name = %s\n", cpy->name);
-		printf("cmd_seq_type = %i\n", (int)cpy->cmd_seq_type);
+		printf("cmd_seq_type = %i\n", (int)cpy->type);
 		printf("full_path_name = %s\n", cpy->full_path_name);
 		printf("is_builtin = %i\n", cpy->is_builtin);
 		printf("---------------------------------------------------------");
