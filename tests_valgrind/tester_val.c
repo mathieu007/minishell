@@ -262,7 +262,7 @@ int main(int32_t argc, char **argv)
 			printf("LEAKS TESTS--------------------------------------------------------\n");
 			i = 0;
 			while (i < cmd_count)
-				printf("%s\n", commands[i]);
+				printf("%s\n", commands[i++]);
 			run_test(commands);
 			i = 0;
 		}
