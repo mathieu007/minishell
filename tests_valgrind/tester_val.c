@@ -173,7 +173,7 @@ void run_test(char **command2)
 		size_t minishell_output_len = 0;
 		FILE *minishell_fd;
 
-		snprintf(minishell_command, MAX_COMMAND_LENGTH, "valgrind --track-fds=yes --leak-check=full --track-origins=yes --show-reachable=yes ./minishell %s", *command2);
+		snprintf(minishell_command, MAX_COMMAND_LENGTH, "valgrind --track-fds=yes --leak-check=full --track-origins=yes --show-reachable=yes ./minishell '%s'", *command2);
 		command2++;
 		while (*command2)
 		{
@@ -181,6 +181,7 @@ void run_test(char **command2)
 			command2++;
 		}
 		snprintf(minishell_command, MAX_COMMAND_LENGTH, "%s 2>&1 | grep -e 'lost: ' -e 'still reachable: '", &minishell_command[0]);
+		printf("minishell_command:%s", minishell_command);
 		minishell_fd = popen(minishell_command, "r");
 		if (minishell_fd == NULL)
 		{
