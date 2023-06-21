@@ -162,11 +162,6 @@ int32_t	exec_cmds(char *str)
 	get_process()->tokens = token->child;
 	root_cmd = create_cmds_tree(token->child);
 	get_process()->cmds = root_cmd;
-<<<<<<< HEAD
-	ret = exec_sequence(root_cmd);
-	free(token);
-	free_t_cmd(root_cmd);
-=======
 	ret = exec_commands(root_cmd->child, false);
 	free_t_tokens(token);
 	free_t_cmd(root_cmd);
@@ -174,6 +169,5 @@ int32_t	exec_cmds(char *str)
 	get_process()->cmds = NULL;
 	get_process()->last_cmd = NULL;
 	proc->tokens = NULL;
->>>>>>> origin/master
 	return (ret);
 }

@@ -21,7 +21,9 @@ void	*free_t_env_cpy(t_env_cpy *env_cpy)
 	while (current != NULL)
 	{
 		next = current->next;
+		if(current->variable)
 		current->variable = free_ptr(current->variable);
+		if(current->variable)
 		current->value = free_ptr(current->value);
 		free(current);
 		current = next;

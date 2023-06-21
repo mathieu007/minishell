@@ -97,22 +97,28 @@ char	*try_get_ful_path_from_env_path(t_cmd *cmd)
 	char	*path;
 	char	**paths;
 	char	**dup_paths;
+	char	*path_free1;
 
 	paths = get_env_path();
-	path = ft_strdup("");
+	path = ("");
 	dup_paths = paths;
 	if (!paths)
-		return (NULL);
+		return (free(path), NULL);
 	while (*paths)
 	{
+		path_free1 = path;
 		path = ft_strjoin(*paths, "/");
-		path = ft_strjoinfree(path, cmd->name);
+			path = ft_strjoinfree(path, cmd->name);
 		if (access(path, F_OK | X_OK) == 0)
 			return (free_split(dup_paths), path);
 		if (path)
 			free(path);
+		if(path_free1)
+		free(path_free1);
 		paths++;
 	}
+	if (path)
+		free(path);
 	return (free_split(dup_paths), NULL);
 }
 
