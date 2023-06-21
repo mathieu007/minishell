@@ -4,8 +4,10 @@ void	*free_t_redirect(t_redirect *redirect)
 {
 	if (!redirect)
 		return (NULL);
-	redirect->file = free_ptr(redirect->file);
-	redirect->input_file = free_ptr(redirect->input_file);
+	if (redirect->file)
+		redirect->file = free_ptr(redirect->file);
+	if (redirect->input_file)
+		redirect->input_file = free_ptr(redirect->input_file);
 	free(redirect);
 	return (NULL);
 }

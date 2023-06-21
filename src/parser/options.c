@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/05 14:39:16 by math             ###   ########.fr       */
+/*   Updated: 2023/06/16 13:27:38 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int32_t	options_count(t_token *token, bool *table)
 	char		*str;
 
 	count = 0;
-	token = token->child_tokens;
+	token = token->child;
 	token = token->next;
 	while (token)
 	{
@@ -91,7 +91,7 @@ char	**get_options(t_token *token)
 	ft_memset(table, 0, 256);
 	options = get_malloc_opts(token, &table[0]);
 	opt_i = add_single_dash_option(options, &table[0]);
-	tk = token->child_tokens;
+	tk = token->child;
 	while (tk)
 	{
 		if (tk->type == TK_DASHDASH)

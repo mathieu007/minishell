@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_group2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/07 09:48:42 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/19 08:28:48 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int32_t	add_token_double_quote(char *str, int32_t i, t_token *parent)
 	return (i);
 }
 
-int32_t	add_token_substitution(char *str, int32_t i, t_token *parent, bool inside_dbl_quotes)
+int32_t	add_token_substitution(char *str, int32_t i, t_token *parent,
+		bool inside_dbl_quotes)
 {
 	t_token	*token;
 
@@ -57,12 +58,10 @@ int32_t	add_token_substitution(char *str, int32_t i, t_token *parent, bool insid
 
 int32_t	add_token_parenthese(char *str, int32_t i, t_token *parent)
 {
-	t_token	*token;
-
-	token = add_tk(ft_strdup("("), TK_PARENTHESE_OPEN, i, parent);
+	add_tk(ft_strdup("("), TK_PARENTHESE_OPEN, i, parent);
 	i = goto_closing_parenthese(str, i);
 	if (str[i] != ')')
-		token->is_continuation = true;
+		parent->child->prev->is_continuation = true;
 	else
 		add_tk(ft_strdup(")"), TK_PARENTHESE_CLOSE, i, parent);
 	i++;
@@ -73,13 +72,13 @@ int32_t	add_token_parenthese(char *str, int32_t i, t_token *parent)
 /// may contains characters that may be indetified as a token.
 /// we normally skip all tokens inside a group, the tokens inside
 /// the group will be tokenize at next level
-/// @param str 
-/// @param i 
-/// @param type 
-/// @param parent 
-/// @return 
+/// @param str
+/// @param i
+/// @param type
+/// @param parent
+/// @return
 int32_t	add_token_group(char *str, int32_t i, t_token_type type,
-	t_token *parent)
+		t_token *parent)
 {
 	if (type == TK_DOUBLEQUOTE)
 		i = add_token_double_quote(str, i, parent);

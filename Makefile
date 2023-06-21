@@ -5,10 +5,13 @@ CC          	= gcc
 NAME				= minishell
 NAME_TESTS			= tests
 NAME_REDIR_TESTS	= tests_redir
+NAME_VAL_TESTS		= tests_valgrind
+NUM_VALGRIND_CMDS  	= 2;
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR			= src
 TESTSDIR		= tests
+TESTS_VAL_DIR	= tests_valgrind
 TESTS_REDIR_DIR	= tests_redir
 INCDIR			= include
 BUILDDIR		= obj
@@ -35,13 +38,15 @@ POST_CFLAGS := -lreadline -lncurses $(READLINE) $(READLINEHISTORY)
 
 SOURCES     = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 TESTS       = $(shell find $(TESTSDIR) -type f -name *.$(SRCEXT))
+TESTS_VAL   = $(shell find $(TESTS_VAL_DIR) -type f -name *.$(SRCEXT))
 TESTS_REDIR = $(shell find $(TESTS_REDIR_DIR) -type f -name *.$(SRCEXT))
 
 OBJECTS		 = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 OBJECT_TESTS = $(patsubst $(TESTSDIR)/%,$(BUILDDIR)/%,$(TESTS:.$(SRCEXT)=.$(OBJEXT)))
+OBJECT_VAL_TESTS = $(patsubst $(TESTS_VAL_DIR)/%,$(BUILDDIR)/%,$(TESTS_VAL:.$(SRCEXT)=.$(OBJEXT)))
 OBJECT_REDIR_TESTS = $(patsubst $(TESTS_REDIR_DIR)/%,$(BUILDDIR)/%,$(TESTS_REDIR:.$(SRCEXT)=.$(OBJEXT)))
 
-all: directories $(TARGETDIR)/$(NAME) $(TARGETDIR)/$(NAME_TESTS) $(TARGETDIR)/$(NAME_REDIR_TESTS)
+all: directories $(TARGETDIR)/$(NAME) $(TARGETDIR)/$(NAME_TESTS) $(TARGETDIR)/$(NAME_REDIR_TESTS) $(TARGETDIR)/$(NAME_VAL_TESTS)
 
 directories:
 	@mkdir -p $(TARGETDIR)
@@ -60,8 +65,9 @@ re:	fclean all
 test: re 
 	cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
 test2: re 
-	cd bin && chmod 777 ./tests_redir && chmod +x ./tests_redir && ./tests_redir	
-
+	cd bin && chmod 777 ./tests_redir && chmod +x ./tests_redir && ./tests_redir
+mem: re 
+	cd bin && chmod 777 ./tests_valgrind && chmod +x ./tests_valgrind && ./tests_valgrind $(NUM_VALGRIND_CMDS)	
 exec: re 
 	cd bin && ./minishell
 
@@ -93,5 +99,13 @@ $(TARGETDIR)/$(NAME_REDIR_TESTS): $(OBJECT_REDIR_TESTS)
 $(BUILDDIR)/%.$(OBJEXT): $(TESTS_REDIR_DIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
+
+$(TARGETDIR)/$(NAME_VAL_TESTS): $(OBJECT_VAL_TESTS)
+	cp $(TESTS_VAL_DIR)/tests_valgrind.txt $(TARGETDIR)/
+	$(CC) $(CFLAGS) -o $(TARGETDIR)/$(NAME_VAL_TESTS) $^
+	
+$(BUILDDIR)/%.$(OBJEXT): $(TESTS_VAL_DIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: all clean fclean re

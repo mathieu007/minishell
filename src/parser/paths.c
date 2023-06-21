@@ -99,7 +99,7 @@ char	*try_get_ful_path_from_env_path(t_cmd *cmd)
 	char	**dup_paths;
 
 	paths = get_env_path();
-	path = ("");
+	path = ft_strdup("");
 	dup_paths = paths;
 	if (!paths)
 		return (NULL);
