@@ -48,7 +48,6 @@ char	*join_splits(char **split, char *join)
 	str[0] = '\0';
 	while (*split != NULL)
 	{
-		printf("split = [%s]\n",*split);
 		ft_strcat(str, *split);
 		if (*(split + 1) != NULL)
 			ft_strcat(str, join);
