@@ -3,7 +3,7 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {	
-	if (execve(cmd->full_path_name, cmd->args, get_env_path()) == -1)
+	if (execve(cmd->full_path_name, cmd->args, get_env()) == -1)
 		free_all_and_exit2(errno, "execve error");
 	return (errno);
 }
@@ -64,7 +64,7 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
-		file_redirection(cmd);
+		file_redirection(cmd);		
 		ret = exec(cmd);
 		close_files_redirections(cmd);
 		exit(ret);

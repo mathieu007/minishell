@@ -103,6 +103,47 @@ t_env_cpy	*init_env(t_process *data)
 	return (head);
 }
 
+int32_t	count_env()
+{
+	t_env_cpy	*head;
+	t_env_cpy	*current;
+	int32_t		count;
+
+	count = 0;
+	head = get_process()->env_cpy;
+	current = head;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+char	**get_env()
+{
+	t_env_cpy	*head;
+	t_env_cpy	*current;
+	int32_t		count;
+	char		**data;
+	int32_t		i;
+
+	i = 0;
+	count = count_env();
+	data = malloc(count + 1);
+	data[count] = NULL;
+	head = get_process()->env_cpy;
+	current = head;
+	while (current)
+	{
+		data[i] = ft_strdup(current->value);
+		current = current->next;
+		i++;
+	}
+	return (data);
+}
+
+
 //take a variable and return the value
 char	*get_env_value(char *variable)
 {

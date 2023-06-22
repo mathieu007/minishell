@@ -8,9 +8,9 @@ static int32_t	execve_subshell(t_cmd *cmd)
 	proc = get_process();
 	subshell_args = malloc(3 * sizeof(char *));
 	subshell_args[2] = NULL;
-	subshell_args[0] = proc->program;
+	subshell_args[0] = proc->full_program_name;
 	subshell_args[1] = cmd->token->str;
-	if (execve(proc->full_program_name, subshell_args, get_env_path()) == -1)
+	if (execve(proc->full_program_name, subshell_args, get_env()) == -1)
 		free_all_and_exit2(errno, "execve error");
 	return (errno);
 }
