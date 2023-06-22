@@ -105,7 +105,10 @@ void	*add_cmd_arg_to_main(t_cmd *main, t_cmd *redir)
 		free_all_and_exit2(errno, "malloc error");
 	main->is_builtin = is_builtins(main->name);
 	if (!main->is_builtin)
+	{
+		main->full_path_name = free_ptr(main->full_path_name);
 		main->full_path_name = get_full_path(main);
+	}		
 	return (main);
 }
 
