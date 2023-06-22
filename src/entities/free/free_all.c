@@ -5,8 +5,7 @@ void	*free_ptr(void *ptr)
 {
 	if (ptr)
 		free(ptr);
-	ptr = NULL;
-	return (ptr);
+	return (NULL);
 }
 
 void	free_all(void)

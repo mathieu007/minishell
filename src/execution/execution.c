@@ -122,7 +122,7 @@ int32_t	exec_commands(t_cmd *cmd, bool should_exec_in_child)
 		else if (cmd->type == CMD_GROUP_OR && ret > 0)
 			ret = exec_logical_or(cmd);
 		else if (cmd->type == CMD_PARENTHESES)
-			ret = exec_group(cmd);
+			ret = exec_subshell(cmd);
 		else if (cmd->type == CMD)
 			ret = execute_command(cmd, should_exec_in_child);
 		cmd = cmd->next;

@@ -251,6 +251,8 @@ typedef struct s_process
 	int32_t				argc;
 	char				**argv;
 	char				**env;
+	char				*program;
+	char				*full_program_name;
 	int32_t				errnum;
 	char				*last_error;
 	int32_t				last_errnum;
@@ -288,7 +290,8 @@ t_token					*tokenize_redirection(t_token *parent);
 void					split_token_redir(t_token *parent);
 void					exec_redirection(t_cmd *main, t_cmd *cmd);
 void					close_redirections(t_cmd *cmd);
-t_cmd					*parse_redirect(t_cmd *main, t_cmd *cmd);
+t_cmd					*parse_redirect_in(t_cmd *main, t_cmd *redir);
+t_cmd					*parse_redirect_out(t_cmd *main, t_cmd *redir);
 t_cmd					*create_redir_out(t_cmd *main, t_cmd *cmd);
 t_cmd					*create_redir_append_out(t_cmd *main, t_cmd *cmd);
 void					exec_redirection(t_cmd *main, t_cmd *cmd);
@@ -357,7 +360,7 @@ char					*get_end_of_cmd(char *str);
 int32_t					get_token_type_len2(t_token_type type);
 
 t_cmd					*parse_cmd2(t_cmd *cmd);
-int32_t					exec_group(t_cmd *cmd);
+int32_t					exec_subshell(t_cmd *cmd);
 bool					is_token_group(t_token_type type);
 bool					is_end_of_seq(t_token_type type);
 bool					is_env_variable(t_token *token);

@@ -95,7 +95,7 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 		{
 			val = parse_redirect_env_var_value(child, cmd_type);
 			if (!val)
-				return (free(val), free(str), NULL);
+				return (free(str), NULL);
 		}
 		else
 			val = ft_strdup(child->str);
@@ -103,7 +103,7 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 		child = child->next;
 	}
 	token->child = free_t_tokens(token->child);
-	free(token->str);
+	token->str = free_ptr(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
 	tokenize_group_tokens(token);
@@ -143,7 +143,7 @@ void	build_token_environement(t_token *token)
 	}
 	free_t_tokens(token->child);
 	token->child = NULL;
-	free(token->str);
+	token->str = free_ptr(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
 	tokenize_group_tokens(token);
@@ -165,6 +165,7 @@ void	split_token_groups(t_token *parent)
 	{
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
+		token->str = free_ptr(token->str);
 		token->str = ft_substr(str, start, len);
 		if (token->type == TK_DOUBLEQUOTE)
 			tokenize_dbl_quotes_tokens(token);
@@ -189,6 +190,7 @@ void	split_tokens(t_token *parent)
 	{
 		len = token->next->start - token->end;
 		start = token->end;
+		token->str = free_ptr(str);
 		token->str = ft_substr(str, start, len);
 		token = token->next;
 	}
@@ -286,6 +288,7 @@ void	split_token_cmd(t_token *parent)
 	{
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
+		token->str = free_ptr(token->str);
 		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		if (token->type == TK_PARENTHESE_OPEN)
 			token->child = tokenize_semicolon(token);
@@ -333,6 +336,7 @@ void	split_token_sequence(t_token *parent)
 	{
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
+		token->str = free_ptr(token->str);
 		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		token->child = tokenize_cmd(token);
 		token = token->next;
@@ -352,6 +356,7 @@ void	split_token_semicolon(t_token *parent)
 	{
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
+		token->str = free_ptr(token->str);
 		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		token->child = tokenize_cmd_sequence(token);
 		token = token->next;

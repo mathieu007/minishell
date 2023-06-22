@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/11 16:36:51 by math             ###   ########.fr       */
+/*   Updated: 2023/06/21 21:13:59 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int32_t	add_token_env(char *str, int32_t pos, t_token *parent,
 	bool inside_dbl_quotes)
 {
 	t_token		*token;
-	
+
 	pos++;
 	if (str[pos] == '{')
 	{
