@@ -266,6 +266,7 @@ typedef struct s_process
 }						t_process;
 
 /// @brief The entities functions
+t_token					*add_tk_malloc(char *token_str, t_token_type type, int32_t i, t_token *parent);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
 void					create_redirection(t_token *token, t_cmd *cmd);

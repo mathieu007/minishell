@@ -23,7 +23,10 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 		return (NULL);
 	cmd->is_builtin = is_builtins(cmd->name);
 	if (!cmd->is_builtin)
+	{
+		cmd->full_path_name = free_ptr(cmd->full_path_name);
 		cmd->full_path_name = get_full_path(cmd);
+	}		
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }
@@ -141,7 +144,10 @@ t_cmd	*parse_cmd2(t_cmd *cmd)
 		return (NULL);
 	cmd->is_builtin = is_builtins(cmd->name);
 	if (!cmd->is_builtin)
+	{
+		cmd->full_path_name = free_ptr(cmd->full_path_name);
 		cmd->full_path_name = get_full_path(cmd);
+	}		
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }

@@ -77,21 +77,6 @@ static char	*try_get_relative_dir2(t_cmd *cmd)
 	return (NULL);
 }
 
-void	*free_split(char **split)
-{
-	char	**dup;
-
-	if (!split)
-		return (NULL);
-	dup = split;
-	while (*split)
-	{
-		free(*split);
-		split++;
-	}
-	return (free(dup), NULL);
-}
-
 char	*try_get_full_path_from_env_path(t_cmd *cmd)
 {
 	char	*path;
@@ -99,9 +84,8 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 	char	**dup_paths;
 	char	*path_free1;
 
-
 	paths = get_env_path();
-	path = ft_strdup("");
+	path = NULL;
 	dup_paths = paths;
 	if (!paths)
 		return (NULL);
@@ -109,16 +93,18 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 	{
 		path_free1 = path;
 		path = ft_strjoin(*paths, "/");
-		path = ft_strjoinfree(path, cmd->name);
-		if (access(path, F_OK | X_OK) == 0)
-			return (free_split(dup_paths), free(path_free1), path);
-		if(path_free1)
+		free(path_free1);
+		path_free1 = ft_strjoin(path, cmd->name);
+		free(path);
+		if (access(path_free1, F_OK | X_OK) == 0)
+			return (free_2d_char_array(dup_paths), path_free1);
+		if (path_free1)	
 			free(path_free1);
 		paths++;
 	}
 	if (path)
 		free(path);
-	return (free_split(dup_paths), NULL);
+	return (free_2d_char_array(dup_paths), NULL);
 }
 
 /// @brief handling ./path/to/file and ../../path/to/file

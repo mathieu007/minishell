@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/22 09:55:58 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/22 15:47:15 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_token	*tokenize_redirection(t_token *parent)
 
 	i = 0;
 	str = parent->str;
-	token = add_tk(ft_strdup(parent->token_str), parent->type, i, parent);
+	token = add_tk_malloc(ft_strdup(parent->token_str), parent->type, i, parent);
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -97,7 +97,7 @@ t_token	*tokenize_redirection(t_token *parent)
 		if (has_error())
 			return (NULL);
 	}
-	add_tk(ft_strdup(""), TK_END, i, parent);
+	add_tk("", TK_END, i, parent);
 	parent->child = token;
 	split_token_redirection(parent);
 	return (parent->child);

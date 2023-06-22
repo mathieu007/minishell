@@ -12,7 +12,7 @@ int32_t	add_token_sequence(char *str, int32_t i, t_token_type type,
 	int32_t	len;
 
 	len = get_token_len(str, type, false);
-	add_tk(ft_substr(&str[i], 0, len), type, i, parent);
+	add_tk_malloc(ft_substr(&str[i], 0, len), type, i, parent);
 	i += get_token_len(&str[i], type, false);
 	while (str[i] && str[i] == ' ')
 		i++;
@@ -26,7 +26,7 @@ int32_t	add_token_redirection(char *str, int32_t i, t_token_type type,
 	int32_t	len;
 
 	len = get_token_len(str, type, false);
-	token = add_tk(ft_substr(&str[i], 0, len), type, i, parent);
+	token = add_tk_malloc(ft_substr(&str[i], 0, len), type, i, parent);
 	if (token->prev->type == TK_START)
 		token->prev->type = TK_CMD;
 	i += len;
@@ -78,7 +78,7 @@ t_token	*tokenize_cmd_redirection(t_token *parent)
 
 	i = 0;
 	str = ft_strtrim(parent->str, " ");
-	token = add_tk(ft_strdup(""), TK_START, 0, parent);
+	token = add_tk("", TK_START, 0, parent);
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -90,7 +90,7 @@ t_token	*tokenize_cmd_redirection(t_token *parent)
 		else
 			i += t_len;
 	}
-	add_tk(ft_strdup(""), TK_END, i, parent);
+	add_tk("", TK_END, i, parent);
 	split_token_redirection(parent);
 	return (token);
 }
