@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/18 20:16:34 by mathieu           #+#    #+#             */
-/*   Updated: 2023/06/07 16:22:45 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/06/22 09:00:40 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ size_t	ft_strlen(const char *str)
 	int	i;
 
 	i = 0;
-	if (!str)
+	if (!str || *str == '\0')
 		return (0);
 	while (str[i])
 		i++;
