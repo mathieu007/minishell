@@ -36,7 +36,7 @@ void	copy_redirection(t_redirect *dest, t_redirect *src)
 	if (dest->file)
 		free(dest->file);
 	if (dest->input_file)
-		free(dest->input_file);	
+		free(dest->input_file);
 	dest->file = ft_strdup(src->file);
 	dest->input_file = ft_strdup(src->input_file);
 }
@@ -50,8 +50,9 @@ t_cmd	*create_redir_out(t_cmd *main, t_cmd *redir)
 	build_redir_token_environement(redir->token, redir->type);
 	if (proc->errnum > 0)
 		return (redir->next);
-	redir = parse_redirect(main, redir);
+	redir = parse_redirect_out(main, redir);
 	open_out_redir_fd(redir);
+	main->out_redir = new_redirect();
 	copy_redirection(main->out_redir, redir->out_redir);
 	return (redir);
 }
@@ -65,7 +66,7 @@ t_cmd	*create_redir_append_out(t_cmd *main, t_cmd *redir)
 	build_redir_token_environement(redir->token, redir->type);
 	if (proc->errnum > 0)
 		return (redir->next);
-	redir = parse_redirect(main, redir);
+	redir = parse_redirect_out(main, redir);
 	open_out_append_redir_fd(redir);
 	copy_redirection(main->out_redir, redir->out_redir);
 	return (redir);
@@ -80,8 +81,9 @@ t_cmd	*create_redir_in(t_cmd *main, t_cmd *redir)
 	build_redir_token_environement(redir->token, redir->type);
 	if (proc->errnum > 0)
 		return (redir->next);
-	redir = parse_redirect(main, redir);
+	redir = parse_redirect_in(main, redir);
 	open_in_redir_fd(redir);
+	main->in_redir = new_redirect();
 	copy_redirection(main->in_redir, redir->in_redir);
 	return (redir);
 }
@@ -95,7 +97,7 @@ t_cmd	*create_redir_heredoc(t_cmd *main, t_cmd *redir)
 	build_redir_token_environement(redir->token, redir->type);
 	if (proc->errnum > 0)
 		return (redir->next);
-	redir = parse_redirect(main, redir);
+	redir = parse_redirect_in(main, redir);
 	open_in_redir_fd(redir);
 	copy_redirection(main->in_redir, redir->in_redir);
 	return (redir);
@@ -111,7 +113,10 @@ void	close_unnecessary_out_fd(t_cmd *redir)
 		if (redir->out_redir && redir->out_redir->fd > 0)
 			count++;
 		if (count > 1 && redir->out_redir)
+		{
 			close(redir->out_redir->fd);
+			redir->out_redir->fd = -1;
+		}
 		redir = redir->prev;
 	}
 }
@@ -126,7 +131,10 @@ void	close_unnecessary_in_fd(t_cmd *redir)
 		if (redir->in_redir && redir->in_redir->fd > 0)
 			count++;
 		if (count > 1 && redir->in_redir)
+		{
 			close(redir->in_redir->fd);
+			redir->in_redir->fd = -1;
+		}
 		redir = redir->prev;
 	}
 }

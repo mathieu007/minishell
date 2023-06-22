@@ -9,8 +9,7 @@
 /// @return
 t_cmd	*parse_cmd(t_cmd *cmd)
 {
-	if (cmd->args)
-		cmd->args = free_2d_char_array(cmd->args);
+	cmd->args = free_2d_char_array(cmd->args);
 	cmd->args = parse_args(cmd->token);
 	if (cmd->name)
 	{
@@ -53,7 +52,7 @@ char	**resize_array(char **arr, int32_t add_count)
 	count = count_arr(arr);
 	new = malloc(add_count + count + 1);
 	if (!new)
-		return (new);
+		free_all_and_exit2(errno, "malloc error");
 	new[add_count + count] = NULL;
 	i = 0;
 	while (i < count)
@@ -70,7 +69,6 @@ char	**copy_args(char **dest, int32_t i, char **src)
 		return (NULL);
 	while (*src)
 	{
-		
 		dest[i] = ft_strdup(*src);
 		if (!dest[i])
 			free_all_and_exit2(errno, "malloc error");
@@ -81,28 +79,25 @@ char	**copy_args(char **dest, int32_t i, char **src)
 	return (dest);
 }
 
-void	*add_cmd_arg_to_main(t_cmd *main, t_cmd *cmd)
+void	*add_cmd_arg_to_main(t_cmd *main, t_cmd *redir)
 {
 	int32_t	args_count;
 	int32_t	main_args_count;
 	int32_t	index;
 	char	**new_args;
 	char	**args;
-	
-	args = cmd->args;
+
+	args = redir->args;
 	args_count = count_arr(args);
 	main_args_count = count_arr(main->args);
 	if (args_count <= 1)
 		return (NULL);
 	index = main_args_count;
 	new_args = resize_array(main->args, args_count - 1);
-	if (!new_args)
-		free_all_and_exit2(errno, "malloc error");
 	main->args = free_2d_char_array(main->args);
-	copy_args(new_args, index, &args[1]);
-	main->args = new_args;
+	main->args = copy_args(new_args, index, &args[1]);
 	if (main_args_count == 0)
-		main->name = ft_strtrim(ft_strdup(main->args[0]), " ");
+		main->name = ft_strtrim(main->args[0], " ");
 	if (!main->name)
 		free_all_and_exit2(errno, "malloc error");
 	main->is_builtin = is_builtins(main->name);
@@ -111,18 +106,30 @@ void	*add_cmd_arg_to_main(t_cmd *main, t_cmd *cmd)
 	return (main);
 }
 
-t_cmd	*parse_redirect(t_cmd *main, t_cmd *cmd)
+t_cmd	*parse_redirect_out(t_cmd *main, t_cmd *redir)
 {
-	if (cmd->args)
-		free(cmd->args);
-	if (cmd->name)
-		free(cmd->name);
-	cmd->args = parse_args(cmd->token);
-	cmd->name = ft_strdup(cmd->args[0]);
-	if (cmd->name == NULL)
+	redir->args = free_2d_char_array(redir->args);
+	redir->name = free_ptr(redir->name);
+	redir->args = parse_args(redir->token);
+	redir->name = ft_strdup(redir->args[0]);
+	if (redir->name == NULL)
 		return (NULL);
-	add_cmd_arg_to_main(main, cmd);
-	return (cmd);
+	//main->out_redir = free_t_redirect(main->out_redir);
+	add_cmd_arg_to_main(main, redir);
+	return (redir);
+}
+
+t_cmd	*parse_redirect_in(t_cmd *main, t_cmd *redir)
+{
+	redir->args = free_2d_char_array(redir->args);
+	redir->name = free_ptr(redir->name);
+	redir->args = parse_args(redir->token);
+	redir->name = ft_strdup(redir->args[0]);
+	if (redir->name == NULL)
+		return (NULL);
+	//main->in_redir = free_t_redirect(main->in_redir);
+	add_cmd_arg_to_main(main, redir);
+	return (redir);
 }
 
 t_cmd	*parse_cmd2(t_cmd *cmd)
