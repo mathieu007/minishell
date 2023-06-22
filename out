@@ -1,41 +1,32 @@
-current-adress 4305434560 
-current-var = SECURITYSESSIONID
-var = PATH
-len = 4
-current-adress 4305435152 
-current-var = USER
-var = PATH
-len = 4
-current-adress 4305435744 
-current-var = MallocNanoZone
-var = PATH
-len = 4
-current-adress 4305436336 
-current-var = COMMAND_MODE
-var = PATH
-len = 4
-current-adress 4305437792 
-current-var = PATH
-var = PATH
-len = 4
 env_value /Users/mroy/.brew/bin:/Users/mroy/.pyenv/shims:/Users/mroy/.pyenv/bin:/Users/mroy/homebrew/bin:/Users/mroy/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/mroy/.brew/bin:/Users/mroy/.pyenv/bin:/Users/mroy/homebrew/bin:/Users/mroy/homebrew/sbin 
--rw-r--r--    1 mroy  2022_quebec    872 May 24 08:19 .gitignore
--rw-r--r--    1 mroy  2022_quebec     25 Jun 14 12:36 222
--rw-r--r--    1 mroy  2022_quebec   2990 Jun 13 10:15 Makefile
--rw-r--r--    1 mroy  2022_quebec   1053 May 17 12:14 ansi_c_quoting.txt
--rw-r--r--    1 mroy  2022_quebec    698 May  1 08:18 builtin_cmd.txt
--rw-r--r--    1 mroy  2022_quebec      0 Jun 15 08:16 cat
--rw-r--r--    1 mroy  2022_quebec   1277 May  1 08:18 escape_characters.txt
--rw-r--r--    1 mroy  2022_quebec   3562 May  1 08:18 method_desc.txt
--rw-r--r--    1 mroy  2022_quebec   3515 Apr 27 14:06 methods.txt
--rw-r--r--    1 mroy  2022_quebec   1522 Jun 14 07:50 ou2
--rw-r--r--    1 mroy  2022_quebec      0 Jun 14 07:50 ou4
--rw-r--r--    1 mroy  2022_quebec     24 Jun 14 07:50 out
--rw-r--r--    1 mroy  2022_quebec     24 Jun 14 07:50 out2
--rw-r--r--    1 mroy  2022_quebec      0 Jun 14 07:50 out4
--rw-r--r--    1 mroy  2022_quebec      0 Jun 13 17:44 outfile1
--rw-r--r--    1 mroy  2022_quebec      0 Jun 13 16:40 outfile2
--rw-r--r--    1 mroy  2022_quebec     24 Jun 15 08:16 test
--rw-r--r--    1 mroy  2022_quebec      8 Jun 15 08:16 test2
--rw-r--r--    1 mroy  2022_quebec    152 Jun 15 08:16 tett
--rw-r--r--    1 mroy  2022_quebec     13 Jun  9 12:16 tokens.txt
+Makefile
+VALGRIND TEST COMMAND
+a.out
+ansi_c_quoting.txt
+bin
+binoutfile1
+binoutfile2
+builtin_cmd.txt
+cat
+in2
+in3
+include
+libft
+ls
+method_desc.txt
+methods.txt
+minishell.sup
+obj
+out
+out1
+out2
+out3
+outfile1
+outfile2
+printf_stderr
+readline-master
+src
+test1
+tests
+tests_redir
+tests_valgrind
