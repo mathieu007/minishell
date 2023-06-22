@@ -30,7 +30,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		if (input == NULL)
 		{
 			printf("\x1B[u\x1B[Aexit\n");
-		free_all_and_exit(0);
+			free_all_and_exit(0);
 			break;
 		}
 		exec_cmds(input);

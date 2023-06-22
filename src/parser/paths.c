@@ -92,27 +92,26 @@ void	*free_split(char **split)
 	return (free(dup), NULL);
 }
 
-char	*try_get_ful_path_from_env_path(t_cmd *cmd)
+char	*try_get_full_path_from_env_path(t_cmd *cmd)
 {
 	char	*path;
 	char	**paths;
 	char	**dup_paths;
 	char	*path_free1;
 
+
 	paths = get_env_path();
-	path = ("");
+	path = ft_strdup("");
 	dup_paths = paths;
 	if (!paths)
-		return (free(path), NULL);
+		return (NULL);
 	while (*paths)
 	{
 		path_free1 = path;
 		path = ft_strjoin(*paths, "/");
-			path = ft_strjoinfree(path, cmd->name);
+		path = ft_strjoinfree(path, cmd->name);
 		if (access(path, F_OK | X_OK) == 0)
-			return (free_split(dup_paths), path);
-		if (path)
-			free(path);
+			return (free_split(dup_paths),free(path_free1), path);
 		if(path_free1)
 		free(path_free1);
 		paths++;
@@ -137,7 +136,7 @@ char	*get_full_path(t_cmd *cmd)
 	path = try_get_relative_dir2(cmd);
 	if (path)
 		return (path);
-	path = try_get_ful_path_from_env_path(cmd);
+	path = try_get_full_path_from_env_path(cmd);
 	if (path)
 		return (path);
 	proc->errnum = 127;
