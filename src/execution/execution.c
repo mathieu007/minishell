@@ -154,28 +154,24 @@ t_cmd	*parse_at_execution(t_cmd *cmd)
 int32_t	exec_cmds(char *str)
 {
 	t_token		*token;
-	int32_t		ret;
 	t_cmd		*root_cmd;
 	t_process	*proc;
 
+	root_cmd = NULL;
 	proc = get_process();
 	proc->errnum = 0;
 	token = tokenize(str);
-	free_t_tokens(token);
-	return (0);
 	if (!has_error())
 	{
-		proc->tokens = token->child;
-		proc->tokens = free_t_tokens(proc->tokens);
 		root_cmd = create_cmds_tree(token->child);
 		proc->cmds = root_cmd;
-		ret = exec_commands(root_cmd->child, false);
+		exec_commands(root_cmd->child, false);
 	}	
 	free_t_tokens(token);
 	free_t_cmd(root_cmd);
-	get_process()->tokens = NULL;
-	get_process()->cmds = NULL;
-	get_process()->last_cmd = NULL;
+	proc->tokens = NULL;
+	proc->cmds = NULL;
+	proc->last_cmd = NULL;
 	proc->tokens = NULL;
 	proc->last_errnum = proc->errnum;
 	return (proc->errnum);

@@ -117,7 +117,6 @@ void	build_token_environement(t_token *token)
 	char		*str;
 	t_process	*proc;
 
-	printf("build_token_environement: %s\n", token->str);
 	proc = get_process();
 	child = token->child;
 	str = ft_strdup("");
@@ -143,7 +142,6 @@ void	build_token_environement(t_token *token)
 		child = child->next;
 	}
 	token->child = free_t_tokens(token->child);
-	printf("build_token_environement new: %s\n", str);
 	token->str = free_ptr(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);

@@ -115,10 +115,6 @@ char	*get_env_value(char *variable)
 	current = head;
 	while (current)
 	{
-	printf("current-adress %lu \n", (uintptr_t)current);
-	printf("current-var = %s\n", current->variable);
-	printf("var = %s\n", variable);
-	printf("len = %zu\n", len);
 		if (ft_strnstr(current->variable, variable, len) == current->variable)
 			return (ft_strdup(current->value));
 		current = current->next;
