@@ -285,6 +285,7 @@ void	split_token_cmd(t_token *parent)
 	int32_t	start;
 	int32_t	len;
 	t_token	*token;
+	char *tmp_str;
 
 	token = parent->child;
 	str = parent->str;
@@ -293,7 +294,8 @@ void	split_token_cmd(t_token *parent)
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
 		token->str = free_ptr(token->str);
-		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
+		tmp_str = ft_substr(str, start, len);
+		token->str = ft_strtrimfree(tmp_str, " ");
 		if (token->type == TK_PARENTHESE_OPEN)
 			token->child = tokenize_semicolon(token);
 		else if (token->str[0])

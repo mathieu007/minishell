@@ -1,0 +1,1 @@
+valgrind --leak-check=full  --show-reachable=yes --track-fds=yes --track-origins=yes --suppressions=./minishell.sup ./bin/minishell

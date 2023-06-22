@@ -55,8 +55,10 @@ char	**get_env_path(void)
 
 	split_env = NULL;
 	env_value = get_env_value("PATH");
+	printf("env_value %s \n", env_value);
 	if (!env_value)
 		return (NULL);
 	split_env = ft_split(env_value, ':');
+	free(env_value);
 	return (split_env);
 }

@@ -132,7 +132,7 @@ t_token	*tokenize_semicolon(t_token *parent)
 	// str = ft_strtrim(parent->str, " ");
 	str = parent->str;
 	if (!has_semicolon_token(str))
-		return (tokenize_cmd_sequence(parent));
+		return (free(str),tokenize_cmd_sequence(parent));
 	add_tk(ft_strdup(""), TK_START, 0, parent);
 	while (str[i])
 	{
@@ -187,7 +187,7 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 	// str = ft_strtrim(parent->str, " ");
 	str = parent->str;
 	if (!has_sequence_token(str))
-		return (tokenize_cmd(parent));
+		return (free(str),tokenize_cmd(parent));
 	add_tk(ft_strdup(""), TK_START, 0, parent);
 	while (str[i])
 	{

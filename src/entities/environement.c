@@ -7,8 +7,6 @@ t_env_cpy	*new_env(char *variable, char *value)
 	node = ft_calloc(1, sizeof(t_env_cpy));
 	if (node == NULL)
 		return (NULL);
-	// free(node->value);
-	// free(node->variable);
 	node->value = value;
 	node->variable = variable;
 	node->next = NULL;
@@ -36,7 +34,6 @@ char	*join_splits(char **split, char *join)
 	char	**temp;
 
 	total_length = 0;
-	str = NULL;
 	temp = split;
 	while (*temp != NULL)
 	{
@@ -66,6 +63,7 @@ t_env_cpy	*init_env(t_process *data)
 	t_env_cpy	*current;
 	int			i;
 	int32_t		count;
+	char		*tmp_str;
 
 	if (!data->env)
 		return (NULL);
@@ -74,10 +72,10 @@ t_env_cpy	*init_env(t_process *data)
 	count = count_splits(split_on_equal);
 	if (count > 2)
 		current = new_env(ft_strdup(split_on_equal[0]),
-				join_splits(&split_on_equal[1], "="));
+							join_splits(&split_on_equal[1], "="));
 	else
 		current = new_env(ft_strdup(split_on_equal[0]),
-				ft_strdup(split_on_equal[1]));
+							ft_strdup(split_on_equal[1]));
 	if (split_on_equal)
 		free_2d_char_array(split_on_equal);
 	i++;
@@ -86,18 +84,21 @@ t_env_cpy	*init_env(t_process *data)
 	{
 		split_on_equal = ft_split(data->env[i], '=');
 		count = count_splits(split_on_equal);
+		tmp_str = join_splits(&split_on_equal[1], "=");
 		if (count > 2)
 			current->next = new_env(ft_strdup(split_on_equal[0]),
-					join_splits(&split_on_equal[1], "="));
+									ft_strdup(tmp_str));
 		else
 			current->next = new_env(ft_strdup(split_on_equal[0]),
-					ft_strdup(split_on_equal[1]));
+									ft_strdup(split_on_equal[1]));
+		if (tmp_str)
+			free(tmp_str);
 		if (current->next)
 			current->next->prev = current;
-		current = current->next;
-		i++;
 		if (split_on_equal)
 			free_2d_char_array(split_on_equal);
+		current = current->next;
+		i++;
 	}
 	return (head);
 }
@@ -114,13 +115,16 @@ char	*get_env_value(char *variable)
 	current = head;
 	while (current)
 	{
+	printf("current-adress %lu \n", (uintptr_t)current);
+	printf("current-var = %s\n", current->variable);
+	printf("var = %s\n", variable);
+	printf("len = %zu\n", len);
 		if (ft_strnstr(current->variable, variable, len) == current->variable)
 			return (ft_strdup(current->value));
 		current = current->next;
 	}
 	return (NULL);
 }
-
 //make a copy of the environement variable
 t_env_cpy	*copy_env(void)
 {

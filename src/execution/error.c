@@ -27,6 +27,7 @@ void	write_err2(int32_t error, char *msg, char *msg2)
 	if (proc->last_error)
 		free(proc->last_error);
 	proc->last_error = ft_strdup(err_msg);
+	free(err_msg);
 }
 
 void	write_err3(int32_t error, char *msg, char *msg2, char *msg3)
