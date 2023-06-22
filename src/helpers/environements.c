@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environements.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/05 09:12:12 by math             ###   ########.fr       */
+/*   Updated: 2023/06/22 09:44:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ inline bool	is_env_variable(t_token *token)
 	char	*str;
 
 	str = token->str;
-	if (!str || !*str)
+	if (!str || *str == '\0')
 		return (false);
 	if (*str == '$')
 	{
 		str++;
 		if (ft_isalpha(*str) == 1)
 			return (true);
-		else if (*str++ == '{' && ft_isalpha(*str) == 1)
+		else if ((*str)++ == '{' && ft_isalpha(*str) == 1)
 			return (true);
 	}
 	return (false);

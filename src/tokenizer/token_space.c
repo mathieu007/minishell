@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_space.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/16 13:27:38 by math             ###   ########.fr       */
+/*   Updated: 2023/06/22 10:01:06 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_token	*tokenize_space_tokens(t_token *parent)
 	char			*str;
 
 	i = 0;
-	str = ft_strtrim(parent->str, " ");
+	str = parent->str;
 	add_tk(ft_strdup(""), TK_START, 0, parent);
 	while (str[i])
 	{

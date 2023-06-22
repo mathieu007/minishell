@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/19 08:15:22 by math             ###   ########.fr       */
+/*   Updated: 2023/06/22 09:55:58 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ t_token	*tokenize_redirection(t_token *parent)
 	t_token			*token;
 
 	i = 0;
-	str = ft_strdup(parent->str);
+	str = parent->str;
 	token = add_tk(ft_strdup(parent->token_str), parent->type, i, parent);
 	while (str[i])
 	{
@@ -95,10 +95,9 @@ t_token	*tokenize_redirection(t_token *parent)
 		else
 			i += t_len;
 		if (has_error())
-			return (free(str), NULL);
+			return (NULL);
 	}
 	add_tk(ft_strdup(""), TK_END, i, parent);
-	free(str);
 	parent->child = token;
 	split_token_redirection(parent);
 	return (parent->child);

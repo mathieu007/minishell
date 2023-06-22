@@ -33,7 +33,7 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token *parent)
 	if (!new)
 		return (NULL);
 	if (last)
-	{		
+	{	
 		last->next = new;
 		new->prev = last;
 	}

@@ -117,6 +117,7 @@ void	build_token_environement(t_token *token)
 	char		*str;
 	t_process	*proc;
 
+	printf("build_token_environement: %s\n", token->str);
 	proc = get_process();
 	child = token->child;
 	str = ft_strdup("");
@@ -137,15 +138,16 @@ void	build_token_environement(t_token *token)
 		else if (child->type == TK_LAST_PIPE_EXIT)
 			val = ft_itoa(proc->last_errnum);
 		else
-			val = ft_strdup(child->str);
+			val = ft_strdup(child->str);		
 		str = ft_strjoinfree2(str, val);
 		child = child->next;
 	}
-	free_t_tokens(token->child);
-	token->child = NULL;
+	token->child = free_t_tokens(token->child);
+	printf("build_token_environement new: %s\n", str);
 	token->str = free_ptr(token->str);
 	token->str = ft_strtrim(str, " ");
 	free(str);
+	
 	tokenize_group_tokens(token);
 }
 
@@ -163,6 +165,7 @@ void	split_token_groups(t_token *parent)
 	str = parent->str;
 	while (token && token->next)
 	{
+
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
 		token->str = free_ptr(token->str);
@@ -174,6 +177,7 @@ void	split_token_groups(t_token *parent)
 		else if (token->type == TK_COMMANDSUBSTITUTION_OPEN)
 			tokenize_cmd_sequence(token);
 		token = token->next;
+	
 	}
 }
 
@@ -190,7 +194,7 @@ void	split_tokens(t_token *parent)
 	{
 		len = token->next->start - token->end;
 		start = token->end;
-		token->str = free_ptr(str);
+		token->str = free_ptr(token->str);
 		token->str = ft_substr(str, start, len);
 		token = token->next;
 	}
@@ -295,6 +299,7 @@ void	split_token_cmd(t_token *parent)
 		else if (token->str[0])
 			token->child = tokenize_group_tokens(token);
 		token = token->next;
+		
 	}
 }
 
@@ -307,6 +312,7 @@ void	split_token_redirection(t_token *parent)
 	int32_t	start;
 	int32_t	len;
 	t_token	*token;
+	char 	*temp;
 
 	token = parent->child;
 	str = parent->str;
@@ -314,7 +320,10 @@ void	split_token_redirection(t_token *parent)
 	{
 		len = token->next->start - token->end;
 		start = token->start + token->token_len;
-		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
+		temp = ft_substr(str, start, len);
+		token->str = free_ptr(token->str);
+		token->str = ft_strtrimfree(temp, " ");
+		free(temp);
 		token->child = tokenize_group_tokens(token);
 		token = token->next;
 	}
@@ -339,7 +348,7 @@ void	split_token_sequence(t_token *parent)
 		token->str = free_ptr(token->str);
 		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		token->child = tokenize_cmd(token);
-		token = token->next;
+		token = token->next;		
 	}
 }
 
@@ -359,6 +368,6 @@ void	split_token_semicolon(t_token *parent)
 		token->str = free_ptr(token->str);
 		token->str = ft_strtrimfree(ft_substr(str, start, len), " ");
 		token->child = tokenize_cmd_sequence(token);
-		token = token->next;
+		token = token->next;		
 	}
 }

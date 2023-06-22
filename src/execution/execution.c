@@ -161,12 +161,16 @@ int32_t	exec_cmds(char *str)
 	proc = get_process();
 	proc->errnum = 0;
 	token = tokenize(str);
-	if (has_error())
-		return (proc->errnum);
-	proc->tokens = token->child;
-	root_cmd = create_cmds_tree(token->child);
-	proc->cmds = root_cmd;
-	ret = exec_commands(root_cmd->child, false);
+	free_t_tokens(token);
+	return (0);
+	if (!has_error())
+	{
+		proc->tokens = token->child;
+		proc->tokens = free_t_tokens(proc->tokens);
+		root_cmd = create_cmds_tree(token->child);
+		proc->cmds = root_cmd;
+		ret = exec_commands(root_cmd->child, false);
+	}	
 	free_t_tokens(token);
 	free_t_cmd(root_cmd);
 	get_process()->tokens = NULL;
@@ -174,5 +178,5 @@ int32_t	exec_cmds(char *str)
 	get_process()->last_cmd = NULL;
 	proc->tokens = NULL;
 	proc->last_errnum = proc->errnum;
-	return (ret);
+	return (proc->errnum);
 }

@@ -4,7 +4,7 @@
 void	*free_ptr(void *ptr)
 {
 	if (ptr)
-		free(ptr);
+		free(ptr);	
 	return (NULL);
 }
 

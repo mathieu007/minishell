@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/18 20:16:34 by mathieu           #+#    #+#             */
-/*   Updated: 2023/06/14 13:53:36 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/06/22 09:51:23 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,18 +111,17 @@ char	*ft_strtrimfree(char  *s1, char  *set)
 	{
 		mem = (char *)malloc(sizeof(char) * 1);
 		if (!mem)
-			return (NULL);
+			return (free(s1),NULL);
 		mem[0] = '\0';
-		return (mem);
+		return (free(s1), mem);
 	}
 	start_count = count_matching_chars(s1, set);
 	end_count = reverse_count_matching_chars(s1, set);
 	mem_l = (s1_l - end_count - start_count);
 	mem = (char *)malloc(sizeof(char) * (mem_l + 1));
 	if (!mem)
-		return (NULL);
+		return (free(s1), NULL);
 	ft_memcpy(mem, &s1[start_count], mem_l);
 	mem[mem_l] = '\0';
-	free(s1);
-	return (mem);
+	return (free(s1), mem);
 }
