@@ -133,7 +133,7 @@ t_token	*tokenize_semicolon(t_token *parent)
 	str = parent->str;
 	if (!has_semicolon_token(str))
 		return (tokenize_cmd_sequence(parent));
-	add_tk(ft_strdup(""), TK_START, 0, parent);
+	add_tk("", TK_START, 0, parent);
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -145,7 +145,7 @@ t_token	*tokenize_semicolon(t_token *parent)
 		else
 			i += t_len;	
 	}
-	add_tk(ft_strdup(""), TK_END, i, parent);
+	add_tk("", TK_END, i, parent);
 	split_token_semicolon(parent);
 	return (parent->child);
 }
@@ -188,7 +188,7 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 	str = parent->str;
 	if (!has_sequence_token(str))
 		return (tokenize_cmd(parent));
-	add_tk(ft_strdup(""), TK_START, 0, parent);
+	add_tk("", TK_START, 0, parent);
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -202,7 +202,7 @@ t_token	*tokenize_cmd_sequence(t_token *parent)
 		if (has_error())
 			return (NULL);
 	}
-	add_tk(ft_strdup(""), TK_END, i, parent);
+	add_tk("", TK_END, i, parent);
 	split_token_sequence(parent);
 	return (parent->child);
 }
@@ -218,7 +218,7 @@ t_token	*tokenize_cmd(t_token *parent)
 	i = 0;
 	// str = ft_strtrim(parent->str, " ");
 	str = parent->str;
-	add_tk(ft_strdup(""), TK_START, 0, parent);
+	add_tk("", TK_START, 0, parent);
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
@@ -232,7 +232,7 @@ t_token	*tokenize_cmd(t_token *parent)
 		if (has_error())
 			return (NULL);
 	}
-	token = add_tk(ft_strdup(""), TK_END, i, parent);
+	token = add_tk("", TK_END, i, parent);
 	if (token->prev->type == TK_START)
 		token->prev->type = TK_CMD;
 	split_token_cmd(parent);
