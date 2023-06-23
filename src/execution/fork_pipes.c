@@ -24,8 +24,16 @@ t_pipe	*prev_pipe(t_cmd *cmd)
 
 void	close_pipes(t_pipe *pipe)
 {
-	close(pipe->fd_in);
-	close(pipe->fd_out);
+	if (pipe->fd_in != -1)
+	{
+		pipe->fd_in = -1;
+		close(pipe->fd_in);
+	}
+	if (pipe->fd_out != -1)
+	{
+		close(pipe->fd_out);
+		pipe->fd_out = -1;
+	}
 }
 
 t_pipe	*init_pipes(int32_t *fds, t_cmd *cmd)
@@ -65,13 +73,13 @@ void	file_redirection(t_cmd *cmd)
 {
 	if (!cmd)
 		return ;
-	if (cmd->in_redir && cmd->in_redir->fd > 0)
+	if (cmd->has_redirection && cmd->in_redir && cmd->in_redir->fd > 0)
 	{
 		redirect_input(cmd);
 		if (cmd->out_redir && cmd->out_redir->fd > 0)
 			redirect_output(cmd);
 	}
-	else if (cmd->out_redir && cmd->out_redir->fd > 0)
+	else if (cmd->has_redirection && cmd->out_redir && cmd->out_redir->fd > 0)
 		redirect_output(cmd);
 }
 
@@ -87,8 +95,12 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	proc = get_process();
 	build_token_environement(cmd->token);
 	cmd = parse_at_execution(cmd);
+	if (!cmd)
+		return (pipe->next);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
+	if (has_error())
+		return (close_files_redirections(cmd), pipe->next);
 	pid = fork();
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
@@ -98,8 +110,8 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
 		file_redirection(cmd);
 		close(pipe->pipe->fd_out);
-		proc->errnum = exec_commands(cmd, false);
 		close_files_redirections(cmd);
+		proc->errnum = exec_commands(cmd, false);		
 		exit(proc->errnum);
 	}
 	close_files_redirections(cmd);
@@ -120,22 +132,25 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 	proc = get_process();
 	build_token_environement(cmd->token);
 	cmd = parse_at_execution(cmd);
+	if (!cmd)
+		return (pipe->next);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
+	if (has_error())
+		return (close_files_redirections(cmd), pipe->next);
 	pid = fork();
 	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");
+		free_all_and_exit2(errno, "fork error");	
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
 		dup2(pipe->prev->pipe->fd_in, STDIN_FILENO);
 		file_redirection(cmd);
 		close_prev_pipes(pipe);
-		proc->errnum = exec_commands(cmd, false);
 		close_files_redirections(cmd);
+		proc->errnum = exec_commands(cmd, false);		
 		exit(proc->errnum);
 	}
-	close_files_redirections(cmd);
 	pipe->pid = pid;
 	close_prev_pipes(pipe);
 	return (pipe->next);
@@ -153,11 +168,15 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	proc = get_process();
 	build_token_environement(cmd->token);
 	cmd = parse_at_execution(cmd);
+	if (!cmd)
+		return (pipe->next);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
+	if (has_error())
+		return (close_files_redirections(cmd), pipe->next);
 	pid = fork();
 	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");
+		free_all_and_exit2(errno, "fork error");	
 	else if (pid == 0)
 	{
 		get_process()->env_cpy = proc->env_cpy;
@@ -173,8 +192,8 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 			close_prev_pipes(pipe);
 			close(pipe->pipe->fd_out);
 		}
-		proc->errnum = exec_commands(cmd, false);
 		close_files_redirections(cmd);
+		proc->errnum = exec_commands(cmd, false);
 		exit(proc->errnum);
 	}
 	pipe->pid = pid;
@@ -199,5 +218,6 @@ int32_t	fork_pipes(t_cmd *cmd)
 	if (pipe)
 		pipe = fork_last_child(pipe);
 	wait_childs(start);
+
 	return (proc->errnum);
 }

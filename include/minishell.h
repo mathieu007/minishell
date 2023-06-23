@@ -481,6 +481,7 @@ void					add_env_node(t_process *data, char *variable,
 							char *value);
 
 /// execution
+bool					is_a_directory(char *path_to_dir);
 t_cmd					*create_fd_redir(t_cmd *main, t_cmd *cmd);
 int32_t					exec_sequential(t_cmd *cmd);
 int32_t					exec_logical_or(t_cmd *cmd);

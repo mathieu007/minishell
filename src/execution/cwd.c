@@ -58,24 +58,22 @@ char	*recursive_search_dir(char *path, ino_t ino)
 		if (entry->d_ino == ino)
 		{
 			proc->cwd = new_path;
-			return (free(path), proc->cwd);
+			return (closedir(dir), free(path), proc->cwd);
 		}
 		if (recursive_search_dir(ft_strdup(new_path), ino))
-			return (free(path), proc->cwd);
+			return (closedir(dir), free(path), proc->cwd);
 		free(new_path);
 		entry = readdir(dir);
 		if (!entry || (entry->d_name[0] == '.' && entry->d_name[1] == '.'))
 			break ;
 	}
-	closedir(dir);
-	return (free(path), NULL);
+	return (closedir(dir), free(path), NULL);
 }
 
 /// @brief this function automatically get the updated current working directory
 /// even if an other process modify the current working directory location
 /// ex: rename, move, or delete the current workin dir. 
 /// There is multiple fall back layer, don't know if bash do it that way.
-/// TODO need to also add the trash bin dir
 /// @param cmd 
 /// @return 
 char	*get_cwd(t_cmd *cmd)
@@ -90,7 +88,10 @@ char	*get_cwd(t_cmd *cmd)
 	{
 		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
 		if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
+		{
+			proc->cwd = free_ptr(proc->cwd);
 			proc->cwd = ft_strjoinfree(proc->cwd, "/");
+		}			
 		return (proc->cwd);
 	}
 	if (stat(proc->cwd, &file_stat) != 0)

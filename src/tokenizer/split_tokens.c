@@ -7,9 +7,9 @@ char	*build_dbl_quote_token_env(t_token *token)
 	char	*value;
 	char	*str;
 
-	// t_token	*temp;
 	child = token->child;
-	str = ft_strdup("");
+	str = NULL;
+	value = NULL;
 	while (child)
 	{
 		if (child->type == TK_ENVIRONEMENT_VAR)
@@ -17,9 +17,7 @@ char	*build_dbl_quote_token_env(t_token *token)
 		else
 			value = ft_strdup(child->str);
 		str = ft_strjoinfree2(str, value);
-		// temp = child;
 		child = child->next;
-		// free_t_tokens(temp);
 	}
 	return (str);
 }
@@ -65,7 +63,7 @@ char	*parse_redirect_env_var_value(t_token *child, t_cmd_seq cmd_type)
 		if (child->token_len == 2)
 			ambigous_redirect = ft_strjoinfree(ambigous_redirect, "}");
 		get_process()->errnum = 1;
-		write_err2(1, ambigous_redirect, ": ambiguous redirect");
+		write_err2(1, ambigous_redirect, ": ambiguous redirect\n");
 		return (free(val), NULL);
 	}
 	return (val);
@@ -78,7 +76,7 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 	char	*str;
 
 	child = token->child;
-	str = ft_strdup("");
+	str = NULL;
 	while (child && child->next)
 	{
 		if (is_not_expandable(child))
@@ -105,7 +103,8 @@ void	*build_redir_token_environement(t_token *token, t_cmd_seq cmd_type)
 	token->child = free_t_tokens(token->child);
 	token->str = free_ptr(token->str);
 	token->str = ft_strtrim(str, " ");
-	free(str);
+	if (str)
+		free(str);
 	tokenize_group_tokens(token);
 	return (token);
 }
@@ -119,7 +118,7 @@ void	build_token_environement(t_token *token)
 
 	proc = get_process();
 	child = token->child;
-	str = ft_strdup("");
+	str = NULL;
 	while (child && child->next)
 	{
 		if (is_not_expandable(child))
@@ -144,8 +143,7 @@ void	build_token_environement(t_token *token)
 	token->child = free_t_tokens(token->child);
 	token->str = free_ptr(token->str);
 	token->str = ft_strtrim(str, " ");
-	free(str);
-	
+	free(str);	
 	tokenize_group_tokens(token);
 }
 

@@ -3,8 +3,15 @@
 
 int32_t	execve_cmd(t_cmd *cmd)
 {	
-	if (execve(cmd->full_path_name, cmd->args, get_env()) == -1)
+	char **env;
+
+	env = get_env();
+	if (execve(cmd->full_path_name, cmd->args, env) == -1)
+	{
+		if (env)
+			free(env);
 		free_all_and_exit2(errno, "execve error");
+	}		
 	return (errno);
 }
 
@@ -23,12 +30,14 @@ int32_t	exec_pipes_cmds(t_cmd *pipe_group)
 	t_cmd	*cmd;
 
 	cmd = pipe_group->child;
-	start = cmd;
+	start = cmd;	
 	pipe_cmd(cmd);
 	cmd = cmd->next;
-	while (cmd)
+	while (cmd && cmd->next)
 	{
 		pipe_cmd(cmd);
+		if (!cmd->next)
+			break;
 		cmd = cmd->next;
 	}
 	return (fork_pipes(start));
@@ -54,22 +63,23 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	ret = 0;
 	proc = get_process();
 	redir = cmd->next;
-	build_token_environement(cmd->token);
-	cmd = parse_at_execution(cmd);
-	if (cmd->has_redirection)
-		create_fd_redir(cmd, redir->child);
+	if (!cmd)
+		return (proc->errnum);
 	pid = fork();
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = proc->env_cpy;
-		file_redirection(cmd);		
-		ret = exec(cmd);
+		if (cmd->has_redirection)
+			create_fd_redir(cmd, redir->child);
+		if (has_error())
+			return (proc->errnum);
+		file_redirection(cmd);
 		close_files_redirections(cmd);
-		exit(ret);
+		get_process()->env_cpy = proc->env_cpy;		
+		ret = exec(cmd);	
+		return(ret);
 	}
-	close_files_redirections(cmd);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		ret = WEXITSTATUS(status);
@@ -88,6 +98,8 @@ int32_t	execute_command(t_cmd *cmd, bool should_exec_in_child)
 	{
 		build_token_environement(cmd->token);
 		cmd = parse_at_execution(cmd);
+		if (!cmd)
+			return (proc->errnum);
 	}
 	if (proc->errnum > 0)
 		return (proc->errnum);
@@ -144,6 +156,8 @@ t_cmd	*create_cmds_tree(t_token *token)
 t_cmd	*parse_at_execution(t_cmd *cmd)
 {
 	cmd = parse_cmd(cmd);
+	if (!cmd)
+		return (NULL);
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else

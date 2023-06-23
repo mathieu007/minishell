@@ -97,8 +97,6 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 		free(path);
 		paths++;
 	}
-	if (path)
-		free(path);
 	return (free_2d_char_array(dup_paths), NULL);
 }
 

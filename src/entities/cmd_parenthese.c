@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/21 15:09:10 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/23 08:30:21 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	create_redirection(t_token *token, t_cmd *cmd)
 	if (token && is_token_redir(token->type))
 	{
 		cmd->has_redirection = true;
+		cmd->in_redir = free_t_redirect(cmd->in_redir);
+		cmd->out_redir = free_t_redirect(cmd->out_redir);
 		cmd->in_redir = new_redirect();
 		cmd->out_redir = new_redirect();
 	}

@@ -6,6 +6,7 @@ t_token	*add_tk_malloc(char *token_str, t_token_type type, int32_t i, t_token *p
 
 	token = add_token(i, type, parent);
 	token->token_len = ft_strlen(token_str);
+	// token->token_str = free_ptr(token->token_str);
 	token->token_str = token_str;
 	token->end = i + token->token_len;
 	return (token);
@@ -17,6 +18,7 @@ t_token	*add_tk(char *token_str, t_token_type type, int32_t i, t_token *parent)
 
 	token = add_token(i, type, parent);
 	token->token_len = ft_strlen(token_str);
+	token->token_str = free_ptr(token->token_str);
 	token->token_str = ft_strdup(token_str);
 	token->end = i + token->token_len;
 	return (token);

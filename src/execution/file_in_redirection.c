@@ -24,27 +24,28 @@ static void	open_temp_file(t_cmd *cmd)
 	redir->fd_is_temp = true;
 }
 
-/// @brief TODO
-/// @param cmd 
-/// @return 
 int32_t	open_redir_heredoc(t_cmd *cmd)
 {
 	int32_t		flags;
 	t_redirect	*redir;
+	char		*f_name;
 
 	flags = O_RDONLY;
+	f_name = ft_strjoin(get_cwd(cmd), cmd->name);
+	if (!f_name)
+		free_all_and_exit2(errno, "malloc error");
 	if (!cmd->in_redir)
 		cmd->in_redir = ft_calloc(1, sizeof(t_redirect));
 	if (cmd->in_redir == NULL)
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
 	redir = cmd->in_redir;
-	redir->file = ft_strdup(cmd->name);
+	redir->file = f_name;
 	redir->input_file = ft_strdup(redir->file);
 	redir->fd = open(redir->file, flags, 0777);
 	if (redir->fd == -1)
 		open_temp_file(cmd);
 	if (redir->fd == -1)
-		free_all_and_exit2(errno, "Failed to open fd");
+		write_err2(1, cmd->name, ": No such file or directory\n");
 	return (redir->fd);
 }
 
@@ -52,19 +53,21 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 {
 	int32_t		flags;
 	t_redirect	*redir;
+	char		*f_name;
 
 	flags = O_RDONLY;
+	f_name = ft_strjoin(get_cwd(cmd), cmd->name);
+	if (!f_name)
+		free_all_and_exit2(errno, "malloc error");
 	if (!cmd->in_redir)
 		cmd->in_redir = ft_calloc(1, sizeof(t_redirect));
 	if (cmd->in_redir == NULL)
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
 	redir = cmd->in_redir;
-	redir->file = ft_strdup(cmd->name);
+	redir->file = f_name;
 	redir->input_file = ft_strdup(redir->file);
 	redir->fd = open(redir->file, flags, 0777);
 	if (redir->fd == -1)
-		open_temp_file(cmd);
-	if (redir->fd == -1)
-		free_all_and_exit2(errno, "Failed to open fd");
+		write_err2(1, cmd->name, ": No such file or directory\n");
 	return (redir->fd);
 }

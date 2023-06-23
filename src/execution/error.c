@@ -42,7 +42,6 @@ void	write_err3(int32_t error, char *msg, char *msg2, char *msg3)
 	err_msg = ft_strjoinfree(err_msg, msg3);
 	if (!err_msg)
 		free_all_and_exit2(errno, "malloc error");
-	free(err_msg);
 	write(2, err_msg, ft_strlen(err_msg));
 	proc = get_process();
 	if (proc->last_error)

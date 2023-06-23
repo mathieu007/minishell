@@ -33,10 +33,8 @@ void	copy_redirection(t_redirect *dest, t_redirect *src)
 {
 	dest->fd = src->fd;
 	dest->fd_is_temp = src->fd_is_temp;
-	if (dest->file)
-		free(dest->file);
-	if (dest->input_file)
-		free(dest->input_file);
+	dest->file = free_ptr(dest->file);
+	dest->input_file = free_ptr(dest->input_file);
 	dest->file = ft_strdup(src->file);
 	dest->input_file = ft_strdup(src->input_file);
 }
@@ -51,7 +49,10 @@ t_cmd	*create_redir_out(t_cmd *main, t_cmd *redir)
 	if (proc->errnum > 0)
 		return (redir->next);
 	redir = parse_redirect_out(main, redir);
+	if (!redir)
+		return (NULL);
 	open_out_redir_fd(redir);
+	main->out_redir = free_t_redirect(main->out_redir);
 	main->out_redir = new_redirect();
 	copy_redirection(main->out_redir, redir->out_redir);
 	return (redir);
@@ -67,6 +68,8 @@ t_cmd	*create_redir_append_out(t_cmd *main, t_cmd *redir)
 	if (proc->errnum > 0)
 		return (redir->next);
 	redir = parse_redirect_out(main, redir);
+	if (!redir)
+		return (NULL);
 	open_out_append_redir_fd(redir);
 	copy_redirection(main->out_redir, redir->out_redir);
 	return (redir);
@@ -82,7 +85,10 @@ t_cmd	*create_redir_in(t_cmd *main, t_cmd *redir)
 	if (proc->errnum > 0)
 		return (redir->next);
 	redir = parse_redirect_in(main, redir);
+	if (!redir)
+		return (NULL);
 	open_in_redir_fd(redir);
+	main->in_redir = free_t_redirect(main->in_redir);
 	main->in_redir = new_redirect();
 	copy_redirection(main->in_redir, redir->in_redir);
 	return (redir);
@@ -98,6 +104,8 @@ t_cmd	*create_redir_heredoc(t_cmd *main, t_cmd *redir)
 	if (proc->errnum > 0)
 		return (redir->next);
 	redir = parse_redirect_in(main, redir);
+	if (!redir)
+		return (NULL);
 	open_in_redir_fd(redir);
 	copy_redirection(main->in_redir, redir->in_redir);
 	return (redir);
@@ -193,9 +201,15 @@ void	close_files_redirections(t_cmd *cmd)
 	if (!cmd)
 		return ;
 	if (cmd->in_redir && cmd->in_redir->fd > 0)
+	{
 		close(cmd->in_redir->fd);
+		cmd->in_redir->fd = -1;
+	}		
 	if (cmd->out_redir && cmd->out_redir->fd > 0)
+	{
+		cmd->out_redir->fd = -1;
 		close(cmd->out_redir->fd);
+	}
 }
 
 void	redirect_input(t_cmd *cmd)
@@ -209,6 +223,7 @@ void	redirect_input(t_cmd *cmd)
 	{
 		if (close(cmd->in_redir->fd) == -1)
 			free_all_and_exit2(errno, "Could not close the fd");
+		cmd->in_redir->fd = -1;
 	}
 }
 
@@ -223,5 +238,6 @@ void	redirect_output(t_cmd *cmd)
 	{
 		if (close(cmd->out_redir->fd) == -1)
 			free_all_and_exit2(errno, "Could not close the fd");
+		cmd->out_redir->fd = -1;
 	}
 }

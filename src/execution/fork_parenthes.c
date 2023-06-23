@@ -28,6 +28,8 @@ static int32_t	fork_subshell(t_cmd *cmd)
 	build_token_environement(cmd->token);
 	if (cmd->has_redirection)
 		create_fd_redir(cmd, redir->child);
+	if (has_error())
+		return (proc->errnum);
 	pid = fork();
 	ret = 0;
 	if (pid == -1)

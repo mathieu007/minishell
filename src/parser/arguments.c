@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/21 13:57:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/23 09:34:40 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,7 @@ int32_t	get_args_len(t_token *token)
 		return (0);
 	while (token)
 	{
-		if (token->type == TK_SPACE)
-			args_len++;
-		else if (token->type == TK_END)
+		if (token->str && token->str[0] != '\0')
 			args_len++;
 		token = token->next;
 	}
@@ -178,6 +176,8 @@ char	**parse_args(t_token *token)
 
 	i = 0;
 	args_len = get_args_len(token);
+	if (args_len == 0)
+		return (NULL);
 	split = malloc((args_len + 1) * sizeof(char *));
 	if (!split)
 		free_all_and_exit2(errno, "malloc error");
@@ -186,8 +186,6 @@ char	**parse_args(t_token *token)
 		split[i] = NULL;
 		i++;
 	}
-	if (!split)
-		return (NULL);
 	split[args_len] = NULL;
 	set_args(token, split);
 	return (split);

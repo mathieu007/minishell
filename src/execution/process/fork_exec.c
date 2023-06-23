@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/05/11 08:54:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/23 08:38:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ void	*fork_exec(t_cmd *cmd, void *(*child)(t_cmd *cmd),
 
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("Fork error:");
-		return (free_all_and_exit(EXIT_FAILURE), NULL);
-	}
+		free_all_and_exit2(errno, "fork error");
 	if (pid == 0)
 		child(cmd);
 	else
