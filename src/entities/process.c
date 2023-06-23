@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/21 15:53:38 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/06/22 20:17:02 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,3 @@ void	init_data(int32_t argc, char **argv, char **env)
 	proc->env = env;
 	proc->env_cpy = init_env(proc);
 }
-

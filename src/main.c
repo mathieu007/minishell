@@ -25,7 +25,6 @@ int32_t	main(int32_t argc, char **argv, char **env)
 	proc->program = &ft_strchrlast(argv[0], '/')[1];
 	proc->full_program_name = argv[0];
 	init_data(argc, argv, env);
-	(void)env;
 	if (argc >= 2)
 		return (subshell(&argv[1]));
 	while (1)

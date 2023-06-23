@@ -39,10 +39,7 @@ int32_t	count_arr(char **arr)
 	if (!arr)
 		return (0);
 	while (arr[i])
-	{
 		i++;
-	}
-		
 	return (i);
 }
 

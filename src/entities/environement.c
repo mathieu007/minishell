@@ -130,13 +130,14 @@ char	**get_env()
 
 	i = 0;
 	count = count_env();
-	data = malloc(count + 1);
+	data = malloc(sizeof(char *) * (count + 1));
 	data[count] = NULL;
 	head = get_process()->env_cpy;
 	current = head;
 	while (current)
 	{
-		data[i] = ft_strdup(current->value);
+		data[i] = ft_strjoin(current->variable, "=");
+		data[i] = ft_strjoinfree(data[i], current->value);
 		current = current->next;
 		i++;
 	}
