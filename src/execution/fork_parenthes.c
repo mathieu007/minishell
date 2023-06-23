@@ -36,8 +36,8 @@ static int32_t	fork_subshell(t_cmd *cmd)
 	{
 		get_process()->env_cpy = proc->env_cpy;
 		file_redirection(cmd);
-		ret = execve_subshell(cmd);
 		close_files_redirections(cmd);
+		ret = execve_subshell(cmd);		
 		exit(ret);
 	}
 	close_files_redirections(cmd);
