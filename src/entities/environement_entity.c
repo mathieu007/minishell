@@ -19,6 +19,8 @@ int32_t	count_splits(char **split)
 	int32_t	i;
 
 	i = 0;
+	if (!split)
+		return (0);
 	while (*split)
 	{
 		split++;
@@ -78,8 +80,7 @@ t_env_cpy	*init_env(t_process *data)
 			free(tmp_str);
 	}		
 	else
-		current = new_env(split_on_equal[0],
-							split_on_equal[1]);
+		current = new_env(split_on_equal[0], split_on_equal[1]);
 	if (split_on_equal)
 		free_2d_char_array(split_on_equal);
 	i++;
@@ -179,13 +180,11 @@ t_env_cpy	*copy_env(void)
 	current = head;
 	if (current)
 	{
-		new_current = new_env(current->variable,
-								current->value);
+		new_current = new_env(current->variable, current->value);
 		new_head = new_current;
 		while (current)
 		{
-			new_current->next = new_env(current->variable,
-										current->value);
+			new_current->next = new_env(current->variable, current->value);
 			new_current->next->prev = new_current;
 			new_current = new_current->next;
 			current = current->next;
@@ -206,12 +205,11 @@ t_env_cpy	*copy_env_from(t_process *proc)
 	current = head;
 	if (current)
 	{
-		new_current = new_env(current->variable,
-								current->value);
+		new_current = new_env(current->variable, current->value);
 		new_head = new_current;
 		while (current)
 		{
-			new_current->next = new_env(current->variable,	current->value);
+			new_current->next = new_env(current->variable, current->value);
 			new_current->next->prev = new_current;
 			new_current = new_current->next;
 			current = current->next;

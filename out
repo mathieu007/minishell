@@ -1,1 +1,40 @@
-1
+total 152
+drwxr-xr-x 14 math math  4096 Jun 25 14:53 .
+drwxr-xr-x 12 math math  4096 Jun 19 21:31 ..
+-rw-r--r--  1 math math  6148 Jun 22 18:55 .DS_Store
+drwxr-xr-x  8 math math  4096 Jun 23 19:18 .git
+-rw-r--r--  1 math math   872 May 21 13:12 .gitignore
+drwxr-xr-x  2 math math  4096 May 25 07:42 .vscode
+-rwxr-xr-x  1 math math     0 Jun 23 19:18 159365424020
+-rw-r--r--  1 math math  3663 Jun 21 19:38 Makefile
+-rw-r--r--  1 math math   131 Jun 22 18:55 VALGRIND TEST COMMAND
+-rwxr-xr-x  1 math math 16360 Jun 19 11:37 a.out
+-rw-r--r--  1 math math  1053 May 21 13:10 ansi_c_quoting.txt
+drwxr-xr-x  2 math math  4096 Jun 25 14:53 bin
+-rwxr-xr-x  1 math math     0 Jun 21 19:38 binoutfile1
+-rwxr-xr-x  1 math math   838 Jun 21 19:38 binoutfile2
+-rw-r--r--  1 math math   698 Apr 28 08:10 builtin_cmd.txt
+-rwxr-xr-x  1 math math     2 Jun 25 14:41 cat
+-rw-r--r--  1 math math   306 Jun 23 19:18 fewferwfew
+-rwxr-xr-x  1 math math  2594 Jun 15 17:55 in2
+-rwxr-xr-x  1 math math   786 Jun 15 17:55 in3
+drwxr-xr-x  2 math math  4096 Jun 23 19:18 include
+drwxr-xr-x  8 math math  4096 Jun 25 14:53 libft
+-rw-r--r--  1 math math  3562 Apr 28 07:38 method_desc.txt
+-rw-r--r--  1 math math  3515 May  2 20:29 methods.txt
+-rw-r--r--  1 math math  2663 Jun 23 19:18 minishell.sup
+-rw-r--r--  1 math math   645 Jun 23 19:18 minishellcopy.sup
+drwxr-xr-x  7 math math  4096 Jun 25 14:53 obj
+-rw-r--r--  1 math math     0 Jun 25 14:55 out
+-rw-r--r--  1 math math     0 Jun 20 15:06 out1
+-rw-r--r--  1 math math     2 Jun 25 14:50 out2
+-rw-r--r--  1 math math     2 Jun 20 06:54 out3
+-rw-r--r--  1 math math     0 Jun 22 07:30 outfile1
+-rw-r--r--  1 math math  1260 Jun 22 07:17 outfile2
+drwxr-xr-x  2 math math  4096 Jun 15 17:55 printf_stderr
+drwxr-xr-x  7 math math  4096 May 21 13:10 readline-master
+drwxr-xr-x  7 math math  4096 Jun 22 18:55 src
+-rwxr-xr-x  1 math math     5 Jun 22 18:55 test1
+drwxrwxrwx  2 math math  4096 Jun 15 17:55 tests
+drwxr-xr-x  2 math math  4096 Jun 15 17:55 tests_redir
+drwxr-xr-x  2 math math  4096 Jun 21 19:38 tests_valgrind

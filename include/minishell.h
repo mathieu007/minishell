@@ -1,7 +1,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
 # include "errno.h"
 # include "history.h"
 # include "minishell.h"
@@ -12,6 +11,7 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stdint.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -161,9 +161,9 @@ typedef enum e_cmd_seq
 	CMD_PIPE = TK_PIPE,                             // |
 	CMD_PARENTHESES = TK_PARENTHESE_OPEN,           // (
 	CMD_SUBSTITUTION = TK_COMMANDSUBSTITUTION_OPEN, // (
-	CMD_LOG_AND = TK_AND, // &&
-	CMD_LOG_OR = TK_OR,                 // ||
-	CMD_BACKGROUND_EXEC = TK_AMPERSAND, // &
+	CMD_LOG_AND = TK_AND,                           // &&
+	CMD_LOG_OR = TK_OR,                             // ||
+	CMD_BACKGROUND_EXEC = TK_AMPERSAND,             // &
 	CMD_FILEOUT_APPPEND = TK_GREATGREAT,
 	CMD_HEREDOC = TK_LESSLESS,
 	CMD_FILEOUT = TK_GREAT,
@@ -266,8 +266,11 @@ typedef struct s_process
 }						t_process;
 
 /// @brief The entities functions
-char					**get_env();
-t_token					*add_tk_malloc(char *token_str, t_token_type type, int32_t i, t_token *parent);
+void					*find_double_free(t_token *token);
+void					*free_t_token(t_token *token);
+char					**get_env(void);
+t_token					*add_tk_malloc(char *token_str, t_token_type type,
+							int32_t i, t_token *parent);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
 void					create_redirection(t_token *token, t_cmd *cmd);
@@ -304,13 +307,13 @@ int32_t					open_out_redir_fd(t_cmd *cmd);
 int32_t					open_out_append_redir_fd(t_cmd *cmd);
 int32_t					*reset_token_counter(void);
 t_env_cpy				*copy_env_from(t_process *proc);
-int32_t					fork_pipes(t_cmd *cmd);
+int32_t					exec_pipes_cmds(t_cmd *pipe_group);
 void					pipe_cmd(t_cmd *proc);
 void					close_pipe_fds(t_cmd *cmd);
 t_env_cpy				*new_env(char *variable, char *value);
 char					*replace_env_value(char *variable, char *value);
 char					*get_cmd_env_value(char *variable, t_cmd *cmd);
-t_redirect				*new_redirect();
+t_redirect				*new_redirect(void);
 t_process				*get_process(void);
 t_token					*get_first_token(void);
 t_token					*get_last_token(void);

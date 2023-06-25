@@ -88,10 +88,7 @@ char	*get_cwd(t_cmd *cmd)
 	{
 		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
 		if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
-		{
-			proc->cwd = free_ptr(proc->cwd);
 			proc->cwd = ft_strjoinfree(proc->cwd, "/");
-		}			
 		return (proc->cwd);
 	}
 	if (stat(proc->cwd, &file_stat) != 0)

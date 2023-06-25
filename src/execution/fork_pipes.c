@@ -26,13 +26,11 @@ void	close_pipes(t_pipe *pipe)
 {
 	if (pipe->fd_in != -1)
 	{
-		pipe->fd_in = -1;
 		close(pipe->fd_in);
 	}
 	if (pipe->fd_out != -1)
 	{
 		close(pipe->fd_out);
-		pipe->fd_out = -1;
 	}
 }
 
@@ -91,34 +89,31 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	t_cmd		*redir;
 
 	cmd = pipe->child;
+	pipe_cmd(pipe);
 	redir = cmd->next;
 	proc = get_process();
 	build_token_environement(cmd->token);
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (pipe->next);
-	if (cmd->has_redirection)
-		create_fd_redir(cmd, redir->child);
-	if (has_error())
-		return (close_files_redirections(cmd), pipe->next);
 	pid = fork();
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = proc->env_cpy;
+		if (cmd->has_redirection)
+			create_fd_redir(cmd, redir->child);
 		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
-		file_redirection(cmd);
 		close(pipe->pipe->fd_out);
+		close(pipe->pipe->fd_in);
+		file_redirection(cmd);
 		close_files_redirections(cmd);
-		proc->errnum = exec_commands(cmd, false);		
+		proc->errnum = exec_commands(cmd, false);
 		exit(proc->errnum);
 	}
-	close_files_redirections(cmd);
 	pipe->pid = pid;
 	return (pipe->next);
 }
-
 
 t_cmd	*fork_last_child(t_cmd *pipe)
 {
@@ -134,26 +129,43 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (pipe->next);
-	if (cmd->has_redirection)
-		create_fd_redir(cmd, redir->child);
-	if (has_error())
-		return (close_files_redirections(cmd), pipe->next);
 	pid = fork();
 	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");	
+		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = proc->env_cpy;
+		if (cmd->has_redirection)
+			create_fd_redir(cmd, redir->child);
 		dup2(pipe->prev->pipe->fd_in, STDIN_FILENO);
-		file_redirection(cmd);
 		close_prev_pipes(pipe);
+		file_redirection(cmd);
 		close_files_redirections(cmd);
-		proc->errnum = exec_commands(cmd, false);		
+		proc->errnum = exec_commands(cmd, false);
 		exit(proc->errnum);
 	}
 	pipe->pid = pid;
 	close_prev_pipes(pipe);
 	return (pipe->next);
+}
+
+void	dup_close_middle_pipes(t_cmd *cmd, t_cmd *pipe, t_cmd *redir)
+{
+	if (cmd->has_redirection)
+		create_fd_redir(cmd, redir->child);
+	dup2(pipe->prev->pipe->fd_in, STDIN_FILENO);
+	if (cmd->has_redirection)
+	{
+		close(pipe->prev->pipe->fd_in);
+		close(pipe->prev->pipe->fd_out);
+		close_pipes(pipe->pipe);
+	}
+	else
+	{
+		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
+		close_prev_pipes(pipe);
+		close(pipe->pipe->fd_in);
+		close(pipe->pipe->fd_out);
+	}
 }
 
 t_cmd	*fork_middle_child(t_cmd *pipe)
@@ -164,52 +176,37 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	t_cmd		*redir;
 
 	cmd = pipe->child;
+	pipe_cmd(pipe);
 	redir = cmd->next;
 	proc = get_process();
 	build_token_environement(cmd->token);
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (pipe->next);
-	if (cmd->has_redirection)
-		create_fd_redir(cmd, redir->child);
-	if (has_error())
-		return (close_files_redirections(cmd), pipe->next);
 	pid = fork();
 	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");	
+		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = proc->env_cpy;
-		dup2(pipe->prev->pipe->fd_in, STDIN_FILENO);
-		if (cmd->has_redirection)
-		{
-			close(prev_pipe(pipe)->fd_in);
-			file_redirection(cmd);
-		}
-		else
-		{
-			dup2(pipe->pipe->fd_out, STDOUT_FILENO);
-			close_prev_pipes(pipe);
-			close(pipe->pipe->fd_out);
-		}
+		dup_close_middle_pipes(cmd, pipe, redir);
+		file_redirection(cmd);
 		close_files_redirections(cmd);
 		proc->errnum = exec_commands(cmd, false);
 		exit(proc->errnum);
 	}
 	pipe->pid = pid;
-	close_files_redirections(cmd);
 	close(pipe->pipe->fd_out);
 	close_prev_pipes(pipe);
 	return (pipe->next);
 }
 
-int32_t	fork_pipes(t_cmd *cmd)
+int32_t	exec_pipes_cmds(t_cmd *pipe_group)
 {
 	t_cmd		*start;
 	t_process	*proc;
 	t_cmd		*pipe;
 
-	pipe = cmd;
+	pipe = pipe_group->child;
 	proc = get_process();
 	start = pipe;
 	pipe = fork_first_child(pipe);
@@ -218,6 +215,5 @@ int32_t	fork_pipes(t_cmd *cmd)
 	if (pipe)
 		pipe = fork_last_child(pipe);
 	wait_childs(start);
-
 	return (proc->errnum);
 }

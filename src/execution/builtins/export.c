@@ -39,6 +39,7 @@ bool	update_env_variable(t_env_cpy *current, char *variable, char *value,
 	{
 		if (ft_strncmp(variable, current->variable, len) == 0)
 		{
+			current->value = free_ptr(current->value);
 			current->value = ft_strdup(value);
 			swap = true;
 			break ;

@@ -31,12 +31,16 @@ int32_t	open_out_redir_fd(t_cmd *cmd)
 	if (!cmd->out_redir)
 		cmd->out_redir = ft_calloc(1, sizeof(t_redirect));
 	if (cmd->out_redir == NULL)
+	{
+		free(f_name);
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
+	}
 	redir = cmd->out_redir;
+	redir->file = free_ptr(redir->file);
 	redir->file = f_name;
 	redir->fd = open(redir->file, out_flags, 0777);
 	if (redir->fd == -1)
-		write_err2(1, cmd->name, "Failed to open fd\n");
+		write_err2(1, redir->file, ": Failed to open fd\n");
 	return (redir->fd);
 }
 
@@ -63,6 +67,6 @@ int32_t	open_out_append_redir_fd(t_cmd *cmd)
 	redir->file = f_name;
 	redir->fd = open(redir->file, out_flags, 0777);
 	if (redir->fd == -1)
-		write_err2(1, cmd->name, "Failed to open fd\n");
+		write_err2(1, cmd->name, ": Failed to open fd\n");
 	return (redir->fd);
 }

@@ -27,10 +27,12 @@ extern "C" {
 #endif
 
 // #if defined (READLINE_LIBRARY)
+# include <stdio.h>
 #  include "rlstdc.h"
 #  include "rltypedefs.h"
 #  include "keymaps.h"
 #  include "tilde.h"
+
 // #else
 // #  include <readline/rlstdc.h>
 // #  include <readline/rltypedefs.h>

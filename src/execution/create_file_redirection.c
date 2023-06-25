@@ -16,19 +16,6 @@ bool	is_token_redir(t_token_type type)
 			|| type == TK_LESSLESS));
 }
 
-// int32_t count_args2(char **args)
-// {
-// 	int32_t count;
-
-// 	count = 0;
-// 	if (args)
-// 	{
-// 		while (args[count])
-// 			count++;
-// 	}
-// 	return (count);
-// }
-
 void	copy_redirection(t_redirect *dest, t_redirect *src)
 {
 	dest->fd = src->fd;
@@ -153,6 +140,9 @@ void	close_unnecessary_in_fd(t_cmd *redir)
 /// @return
 t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 {
+	t_process	*proc;
+	
+	proc = get_process();
 	if (!redir)
 		return (NULL);
 	if (redir && redir->type == CMD_FILEOUT)
@@ -163,7 +153,12 @@ t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 		create_redir_in(main, redir);
 	else if (redir && redir->type == CMD_HEREDOC)
 		create_redir_heredoc(main, redir);
-	if (redir && redir->next)
+	if (has_error())
+	{
+		close_files_redirections(main);
+		exit(proc->errnum);
+	}
+	else if (redir && redir->next)
 		redir = create_fd_redir(main, redir->next);
 	else if (redir && !redir->next)
 	{
