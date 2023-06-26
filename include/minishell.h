@@ -226,12 +226,10 @@ typedef struct s_cmd
 	struct s_cmd		*prev;
 	struct s_cmd		*parent;
 	struct s_cmd		*child;
-	char *name;           /// the name of the command: cat, ls, echo ect...
-	char *full_path_name; /// only for execve,
+	char				*name;
+	char				*full_path_name;
 	char				**args;
-	/// a terminating NULL list of string containing options and arguments
 	char				**options;
-	/// a terminating NULL list of string containing only options
 	bool				is_builtin;
 	bool				has_redirection;
 	t_token				*token;
