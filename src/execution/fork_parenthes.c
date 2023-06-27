@@ -36,7 +36,6 @@ static int32_t	fork_subshell(t_cmd *cmd)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = proc->env_cpy;
 		file_redirection(cmd);
 		close_files_redirections(cmd);
 		ret = execve_subshell(cmd);		

@@ -4,6 +4,7 @@
 # include "errno.h"
 # include "history.h"
 # include "minishell.h"
+# include "get_next_line.h"
 # include "readline.h"
 # include <dirent.h>
 # include <libft.h>
@@ -16,6 +17,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/ioctl.h>
 # include <unistd.h>
 
 # define BUILTINS_EXPORT "export"
@@ -177,6 +179,7 @@ typedef struct s_redirect
 	char				*input_file;
 	char				*file;
 	bool				fd_is_temp;
+	bool				is_here_doc;
 }						t_redirect;
 
 typedef struct s_pipe
@@ -260,6 +263,7 @@ typedef struct s_process
 	t_env_cpy			*env_cpy;
 	t_token				*tokens;
 	t_cmd				*cmds;
+	bool				is_here_doc;
 	t_cmd				*last_cmd;
 }						t_process;
 
@@ -300,6 +304,7 @@ t_cmd					*create_redir_append_out(t_cmd *main, t_cmd *cmd);
 void					exec_redirection(t_cmd *main, t_cmd *cmd);
 void					redirect_input(t_cmd *cmd);
 void					redirect_output(t_cmd *cmd);
+int32_t					open_redir_heredoc(t_cmd *cmd);
 int32_t					open_in_redir_fd(t_cmd *cmd);
 int32_t					open_out_redir_fd(t_cmd *cmd);
 int32_t					open_out_append_redir_fd(t_cmd *cmd);
@@ -515,7 +520,8 @@ void					add_env_node(t_process *data, char *variable,
 void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
 
 //signal
-void					setup_signal_handlers(void);
+void 					setup_here_doc_signal_handlers();
+void					setup_signal_handlers();
 void					disable_ctrl_c_output(void);
 
 //redirection

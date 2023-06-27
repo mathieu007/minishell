@@ -53,15 +53,20 @@ void	pipe_cmd(t_cmd *cmd)
 	init_pipes(fds, cmd);
 }
 
+
+
 static void	wait_childs(t_cmd *cmd)
 {
 	int32_t	i;
 	int32_t	status;
+	pid_t	exited_pid;
 
 	i = 0;
 	while (cmd && cmd->pid)
 	{
-		waitpid(cmd->pid, &status, 0);
+		exited_pid = waitpid(cmd->pid, &status, 0);
+		if (exited_pid == -1)
+			free_all_and_exit2(errno, "waitpid error");
 		cmd = cmd->next;
 		i++;
 	}

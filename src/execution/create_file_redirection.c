@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_status;
+
 bool	is_redirection(t_cmd_seq seq)
 {
 	return (seq && (seq == CMD_FILEIN
@@ -58,6 +60,8 @@ t_cmd	*create_redir_append_out(t_cmd *main, t_cmd *redir)
 	if (!redir)
 		return (NULL);
 	open_out_append_redir_fd(redir);
+	main->out_redir = free_t_redirect(main->out_redir);
+	main->out_redir = new_redirect();
 	copy_redirection(main->out_redir, redir->out_redir);
 	return (redir);
 }
@@ -81,6 +85,46 @@ t_cmd	*create_redir_in(t_cmd *main, t_cmd *redir)
 	return (redir);
 }
 
+
+int32_t	write_here_document(const char* delimiter, t_cmd *main) 
+{
+	char*		line;
+	pid_t		pid;
+	int32_t		status;
+	int32_t		delimiter_len = strlen(delimiter);
+	t_process	*proc;
+
+	proc = get_process();	
+	pid = fork();
+	if (pid == -1)
+		free_all_and_exit2(errno, "fork error");
+	else if (pid == 0)
+	{
+		proc = get_process();
+		proc->is_here_doc = true;
+		line = readline("> ");
+		while (line)
+		{
+			if (ft_strncmp(line, delimiter, delimiter_len) == 0)
+			{
+				free(line);
+				close(main->in_redir->fd);
+				exit(0);
+			}
+			write(main->in_redir->fd, line, ft_strlen(line));
+			free(line);
+			line = readline("> ");
+		}
+		close(main->in_redir->fd);
+		exit(0);
+	}
+	if (waitpid(pid, &status, 0) == -1)
+		free_all_and_exit2(errno, "waitpid error");
+	if (WIFEXITED(status)) 
+		proc->errnum = WEXITSTATUS(status);
+	return (proc->errnum);
+}
+
 t_cmd	*create_redir_heredoc(t_cmd *main, t_cmd *redir)
 {
 	t_process	*proc;
@@ -93,8 +137,12 @@ t_cmd	*create_redir_heredoc(t_cmd *main, t_cmd *redir)
 	redir = parse_redirect_in(main, redir);
 	if (!redir)
 		return (NULL);
-	open_in_redir_fd(redir);
+	open_redir_heredoc(redir);
+	main->in_redir = free_t_redirect(main->in_redir);
+	main->in_redir = new_redirect();
+	main->in_redir->is_here_doc = true;
 	copy_redirection(main->in_redir, redir->in_redir);
+	proc->errnum = write_here_document(redir->name, main);
 	return (redir);
 }
 
@@ -134,14 +182,17 @@ void	close_unnecessary_in_fd(t_cmd *redir)
 	}
 }
 
+
 /// @brief at first main == cmd
 /// @param main 
 /// @param cmd 
 /// @return
 t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 {
+    int			status;
 	t_process	*proc;
-	
+
+    status = 0;
 	proc = get_process();
 	if (!redir)
 		return (NULL);
@@ -156,7 +207,7 @@ t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 	if (has_error())
 	{
 		close_files_redirections(main);
-		exit(proc->errnum);
+		free_all_and_exit(proc->errnum);
 	}
 	else if (redir && redir->next)
 		redir = create_fd_redir(main, redir->next);
@@ -211,7 +262,7 @@ void	redirect_input(t_cmd *cmd)
 {
 	if (!cmd || !cmd->in_redir)
 		return ;
-
+	printf("redir_in: %d\n", cmd->in_redir->fd);
 	if (dup2(cmd->in_redir->fd, STDIN_FILENO) == -1)
 		free_all_and_exit2(errno, "Could not redirect input");
 	if (cmd->type == CMD)
@@ -226,7 +277,8 @@ void	redirect_output(t_cmd *cmd)
 {
 	if (!cmd || !cmd->out_redir)
 		return ;
-
+		
+	printf("redir_out: %d\n", cmd->out_redir->fd);
 	if (dup2(cmd->out_redir->fd, STDOUT_FILENO) == -1)
 		free_all_and_exit2(errno, "Could not redirect output");
 	if (cmd->type == CMD)

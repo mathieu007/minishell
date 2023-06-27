@@ -82,11 +82,15 @@ char	*get_cwd(t_cmd *cmd)
 	struct stat		file_stat;
 	char			*home;
 	t_process		*proc;
+	char			*cur_dir;
 
 	proc = get_process();
 	if (cmd == NULL || proc->cwd == NULL)
 	{
-		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
+		cur_dir = getcwd(&buffer[0], PATH_MAX + 1);
+		if (!cur_dir)
+			free_all_and_exit2(1, "An error occur while trying to get the current working dir.");
+		proc->cwd = ft_strdup(cur_dir);
 		if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
 			proc->cwd = ft_strjoinfree(proc->cwd, "/");
 		return (proc->cwd);
@@ -101,7 +105,12 @@ char	*get_cwd(t_cmd *cmd)
 	if (home)
 		proc->cwd = recursive_search_dir(ft_strdup(home), file_stat.st_ino);
 	if (!proc->cwd)
-		proc->cwd = ft_strdup(getcwd(&buffer[0], PATH_MAX + 1));
+	{
+		cur_dir = getcwd(&buffer[0], PATH_MAX + 1);
+		if (!cur_dir)
+			free_all_and_exit2(1, "An error occur while trying to get the current working dir.");
+		proc->cwd = ft_strdup(cur_dir);
+	}		
 	if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
 		proc->cwd = ft_strjoinfree(proc->cwd, "/");
 	return (proc->cwd);

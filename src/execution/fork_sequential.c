@@ -55,21 +55,19 @@ static int32_t	fork_exec(t_cmd	*cmd)
 	cmd = parse_at_execution(cmd);
 	if (!cmd)
 		return (proc->errnum);
-	if (cmd->has_redirection)
-		create_fd_redir(cmd, redir);
 	if (has_error())
 		return (proc->errnum);
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
 	{
-		get_process()->env_cpy = proc->env_cpy;
+		if (cmd->has_redirection)
+			create_fd_redir(cmd, redir);
 		file_redirection(cmd);
 		close_files_redirections(cmd);
 		ret = exec_commands(cmd, false);
 		exit(ret);
 	}
-	close_files_redirections(cmd);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		ret = WEXITSTATUS(status);
