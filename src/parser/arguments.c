@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/23 09:34:40 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/28 12:15:09 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int32_t	get_args_len(t_token *token)
 		return (0);
 	while (token)
 	{
-		if (token->str && token->str[0] != '\0')
+		if (token->str)
 			args_len++;
 		token = token->next;
 	}
@@ -154,10 +154,10 @@ void	set_args(t_token *token, char **split)
 	{
 		if (token->type == TK_SPACE)
 			split[++i] = ft_strdup(token->str);
-		else if (token->type == TK_DASH)
-			split[i] = ft_strjoin(split[i], token->token_str);
-		else if (token->type == TK_DASHDASH)
-			split[i] = ft_strjoin(split[i], token->token_str);
+		// else if (token->type == TK_DASH)
+		// 	split[i] = ft_strjoin(split[i], token->token_str);
+		// else if (token->type == TK_DASHDASH)
+		// 	split[i] = ft_strjoin(split[i], token->token_str);
 		else
 		{
 			cpy = split[i];

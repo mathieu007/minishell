@@ -27,10 +27,8 @@ static int32_t	exec(t_cmd *cmd)
 	t_process	*proc;
 
 	proc = get_process();
-	// if (cmd->has_redirection)
-	// 	create_fd_redir(cmd, redir->child);
-	// if (has_error())
-	// 	return (close_files_redirections(cmd), pipe->next);
+	file_redirection(cmd);
+	close_files_redirections(cmd);
 	proc->errnum = cmd->func(cmd);
 	return (proc->errnum);
 }
@@ -52,12 +50,7 @@ static int32_t	fork_exec(t_cmd *cmd)
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
 	else if (pid == 0)
-	{
-		file_redirection(cmd);
-		close_files_redirections(cmd);
-		ret = exec(cmd);
-		return (ret);
-	}
+		return (exec(cmd));
 	close_files_redirections(cmd);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
@@ -76,10 +69,10 @@ int32_t	execute_command(t_cmd *cmd, bool should_exec_in_child)
 	{
 		build_token_environement(cmd->token);
 		cmd = parse_at_execution(cmd);
-		if (cmd->has_redirection)
-			create_fd_redir(cmd, cmd->next->child);
-		if (!cmd)
+		if (proc->errnum > 0)
 			return (proc->errnum);
+		if (cmd->has_redirection)
+			create_fd_redir(cmd, cmd->next->child);		
 	}
 	if (proc->errnum > 0)
 		return (proc->errnum);

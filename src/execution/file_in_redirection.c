@@ -21,7 +21,7 @@ static char	*get_temp_dir(t_cmd *cmd)
 
 	tmp_dir = get_env_value("TMPDIR");
 	if (!tmp_dir)
-	tmp_dir = get_cwd(cmd);
+		tmp_dir = get_cwd(cmd);
 	if (!tmp_dir)
 		free_all_and_exit2(1, "An error occur while trying to get temporary dir.");
 	return (tmp_dir);
@@ -33,8 +33,13 @@ int32_t	open_redir_heredoc(t_cmd *cmd)
 	char		*f_name;
 	char		*tmp_dir;
 
-	tmp_dir = get_temp_dir(cmd);
-	f_name = ft_strjoin(tmp_dir, "temp_here_doc");
+	if (!cmd->in_redir || !cmd->in_redir->file)
+	{
+		tmp_dir = get_temp_dir(cmd);
+		f_name = ft_strjoinfree(tmp_dir, "temp_here_doc");
+	}
+	else
+		f_name = ft_strdup(cmd->in_redir->file);
 	if (!f_name)
 		free_all_and_exit2(errno, "malloc error");
 	if (!cmd->in_redir)
@@ -42,6 +47,7 @@ int32_t	open_redir_heredoc(t_cmd *cmd)
 	if (!cmd->in_redir)
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
 	redir = cmd->in_redir;
+	redir->file = free_ptr(redir->file);
 	redir->file = f_name;
 	redir->input_file = ft_strdup(redir->file);
 	create_temp_file(cmd);
@@ -57,7 +63,10 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 	char		*f_name;
 
 	flags = O_RDONLY;
-	f_name = ft_strjoin(get_cwd(cmd), cmd->name);
+	if (!cmd->in_redir || !cmd->in_redir->file)
+		f_name = ft_strjoin(get_cwd(cmd), cmd->name);
+	else
+		f_name = ft_strdup(cmd->in_redir->file);
 	if (!f_name)
 		free_all_and_exit2(errno, "malloc error");
 	if (!cmd->in_redir)
@@ -65,6 +74,7 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 	if (cmd->in_redir == NULL)
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
 	redir = cmd->in_redir;
+	redir->file = free_ptr(redir->file);
 	redir->file = f_name;
 	redir->input_file = ft_strdup(redir->file);
 	redir->fd = open(redir->file, flags, 0777);

@@ -33,13 +33,6 @@ t_cmd	*create_redir_out(t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	proc->errnum = 0;
-	build_redir_token_environement(redir->token, redir->type);
-	if (proc->errnum > 0)
-		return (redir->next);
-	redir = parse_redirect_out(main, redir);
-	if (!redir)
-		return (NULL);
 	open_out_redir_fd(redir);
 	main->out_redir = free_t_redirect(main->out_redir);
 	main->out_redir = new_redirect();
@@ -52,13 +45,6 @@ t_cmd	*create_redir_append_out(t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	proc->errnum = 0;
-	build_redir_token_environement(redir->token, redir->type);
-	if (proc->errnum > 0)
-		return (redir->next);
-	redir = parse_redirect_out(main, redir);
-	if (!redir)
-		return (NULL);
 	open_out_append_redir_fd(redir);
 	main->out_redir = free_t_redirect(main->out_redir);
 	main->out_redir = new_redirect();
@@ -71,20 +57,12 @@ t_cmd	*create_redir_in(t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	proc->errnum = 0;
-	build_redir_token_environement(redir->token, redir->type);
-	if (proc->errnum > 0)
-		return (redir->next);
-	redir = parse_redirect_in(main, redir);
-	if (!redir)
-		return (NULL);
 	open_in_redir_fd(redir);
 	main->in_redir = free_t_redirect(main->in_redir);
 	main->in_redir = new_redirect();
 	copy_redirection(main->in_redir, redir->in_redir);
 	return (redir);
 }
-
 
 int32_t	write_here_document(const char* delimiter, t_cmd *main) 
 {
@@ -108,16 +86,17 @@ int32_t	write_here_document(const char* delimiter, t_cmd *main)
 			if (ft_strncmp(line, delimiter, delimiter_len) == 0)
 			{
 				free(line);
-				close(main->in_redir->fd);
+				close_files_redirections(main);
 				exit(0);
 			}
 			write(main->in_redir->fd, line, ft_strlen(line));
 			free(line);
 			line = readline("> ");
 		}
-		close(main->in_redir->fd);
+		close_files_redirections(main);
 		exit(0);
 	}
+	close_files_redirections(main);
 	if (waitpid(pid, &status, 0) == -1)
 		free_all_and_exit2(errno, "waitpid error");
 	if (WIFEXITED(status)) 
@@ -130,23 +109,15 @@ t_cmd	*create_redir_heredoc(t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	proc->errnum = 0;
-	build_redir_token_environement(redir->token, redir->type);
-	if (proc->errnum > 0)
-		return (redir->next);
-	redir = parse_redirect_in(main, redir);
-	if (!redir)
-		return (NULL);
 	open_redir_heredoc(redir);
 	main->in_redir = free_t_redirect(main->in_redir);
 	main->in_redir = new_redirect();
 	main->in_redir->is_here_doc = true;
-	copy_redirection(main->in_redir, redir->in_redir);
-	proc->errnum = write_here_document(redir->name, main);
+	copy_redirection(main->in_redir, redir->in_redir);	
 	return (redir);
 }
 
-void	close_unnecessary_out_fd(t_cmd *redir)
+void	close_out_fds(t_cmd *redir)
 {
 	int32_t	count;
 
@@ -154,8 +125,6 @@ void	close_unnecessary_out_fd(t_cmd *redir)
 	while (redir)
 	{
 		if (redir->out_redir && redir->out_redir->fd > 0)
-			count++;
-		if (count > 1 && redir->out_redir)
 		{
 			close(redir->out_redir->fd);
 			redir->out_redir->fd = -1;
@@ -164,16 +133,14 @@ void	close_unnecessary_out_fd(t_cmd *redir)
 	}
 }
 
-void	close_unnecessary_in_fd(t_cmd *redir)
+void	close_in_fds(t_cmd *redir)
 {
 	int32_t	count;
 
 	count = 0;
 	while (redir)
 	{
-		if (redir->in_redir && redir->in_redir->fd > 0)
-			count++;
-		if (count > 1 && redir->in_redir)
+		if (redir->in_redir && redir->in_redir->fd > 0 && !redir->in_redir->is_here_doc)
 		{
 			close(redir->in_redir->fd);
 			redir->in_redir->fd = -1;
@@ -182,11 +149,43 @@ void	close_unnecessary_in_fd(t_cmd *redir)
 	}
 }
 
+void	close_unused_open_last_redirs(t_cmd *main, t_cmd *redir)
+{
+	close_out_fds(redir);
+	close_in_fds(redir);
+	if (main->in_redir && main->in_redir->file)
+		open_in_redir_fd(main);
+	if (main->out_redir && main->out_redir->file && main->out_redir->is_append)
+		open_out_append_redir_fd(main);
+	else if (main->out_redir && main->out_redir->file)
+		open_out_redir_fd(main);
+}
 
-/// @brief at first main == cmd
-/// @param main 
-/// @param cmd 
-/// @return
+void	build_redir_environement(t_cmd *main, t_cmd *redir)
+{
+	int			status;
+	t_process	*proc;
+
+    status = 0;
+	proc = get_process();
+	proc->errnum = 0;
+	build_redir_token(redir->token, redir->type);
+	if (proc->errnum > 0)
+		return ;
+	if (redir->type == CMD_FILEOUT || redir->type == CMD_FILEOUT_APPPEND)
+		redir = parse_redirect_out(main, redir);
+	else if (redir->type == CMD_HEREDOC || redir->type == CMD_FILEIN)
+		redir = parse_redirect_in(main, redir);
+	main->redir_processed = true;
+	if (has_error())
+	{
+		close_files_redirections(main);
+		// free_all_and_exit(proc->errnum);
+	}
+	if (redir->next)
+		build_redir_environement(main, redir->next);
+}
+
 t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 {
     int			status;
@@ -196,6 +195,8 @@ t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 	proc = get_process();
 	if (!redir)
 		return (NULL);
+	if (!main->redir_processed)
+		build_redir_environement(main, redir);
 	if (redir && redir->type == CMD_FILEOUT)
 		create_redir_out(main, redir);
 	else if (redir && redir->type == CMD_FILEOUT_APPPEND)
@@ -203,43 +204,14 @@ t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 	else if (redir && redir->type == CMD_FILEIN)
 		create_redir_in(main, redir);
 	else if (redir && redir->type == CMD_HEREDOC)
+	{
 		create_redir_heredoc(main, redir);
-	if (has_error())
-	{
-		close_files_redirections(main);
-		free_all_and_exit(proc->errnum);
+		proc->errnum = write_here_document(redir->name, main);
 	}
-	else if (redir && redir->next)
-		redir = create_fd_redir(main, redir->next);
-	else if (redir && !redir->next)
-	{
-		close_unnecessary_out_fd(redir);
-		close_unnecessary_in_fd(redir);
-	}
+	if (redir && !redir->next)
+		close_unused_open_last_redirs(main, redir);
+	redir = create_fd_redir(main, redir->next);
 	return (redir);
-}
-
-void	close_redirections(t_cmd *cmd)
-{
-	if (!cmd->next || (!cmd->next->out_redir && !cmd->next->in_redir))
-		return ;
-	// if (is_redirection(cmd->next->cmd_seq_type))
-	// {
-	// 	while (cmd && (cmd->out_redir || cmd->in_redir))
-	// 	{
-	// 		if (cmd->out_redir)
-	// 		{
-	// 			if (close(cmd->out_redir->fd) == -1)
-	// 				free_all_and_exit2(errno, "Could not close the fd");
-	// 		}
-	// 		else if (cmd->in_redir)
-	// 		{
-	// 			if (close(cmd->in_redir->fd) == -1)
-	// 				free_all_and_exit2(errno, "Could not close the fd");
-	// 		}
-	// 		cmd = cmd->next;
-	// 	}
-	// }
 }
 
 void	close_files_redirections(t_cmd *cmd)
@@ -252,9 +224,9 @@ void	close_files_redirections(t_cmd *cmd)
 		cmd->in_redir->fd = -1;
 	}		
 	if (cmd->out_redir && cmd->out_redir->fd > 0)
-	{
-		cmd->out_redir->fd = -1;
+	{		
 		close(cmd->out_redir->fd);
+		cmd->out_redir->fd = -1;
 	}
 }
 
@@ -262,7 +234,6 @@ void	redirect_input(t_cmd *cmd)
 {
 	if (!cmd || !cmd->in_redir)
 		return ;
-	printf("redir_in: %d\n", cmd->in_redir->fd);
 	if (dup2(cmd->in_redir->fd, STDIN_FILENO) == -1)
 		free_all_and_exit2(errno, "Could not redirect input");
 	if (cmd->type == CMD)
@@ -277,8 +248,6 @@ void	redirect_output(t_cmd *cmd)
 {
 	if (!cmd || !cmd->out_redir)
 		return ;
-		
-	printf("redir_out: %d\n", cmd->out_redir->fd);
 	if (dup2(cmd->out_redir->fd, STDOUT_FILENO) == -1)
 		free_all_and_exit2(errno, "Could not redirect output");
 	if (cmd->type == CMD)

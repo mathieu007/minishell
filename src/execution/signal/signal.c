@@ -26,7 +26,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 
 	proc = get_process();
 	if (siginfo->si_signo == SIGINT && proc->is_here_doc)
-		exit(0);	
+		exit(0);
 	else if (siginfo->si_signo == SIGINT)
 	{
 		write(1, "\n", 1);

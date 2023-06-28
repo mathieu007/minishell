@@ -3,10 +3,14 @@
 int	count_args(t_cmd *cmd)
 {
 	int	i;
+	char *arg;
 
 	i = 0;
-	while (cmd->args && cmd->args[i])
+	while (cmd->args && cmd->args[i] && cmd->args[i][0] != '\0')
+	{
+		arg = cmd->args[i];
 		i++;
+	}
 	return (i);
 }
 

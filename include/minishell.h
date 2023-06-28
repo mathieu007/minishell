@@ -180,6 +180,7 @@ typedef struct s_redirect
 	char				*file;
 	bool				fd_is_temp;
 	bool				is_here_doc;
+	bool				is_append;
 }						t_redirect;
 
 typedef struct s_pipe
@@ -235,6 +236,7 @@ typedef struct s_cmd
 	char				**options;
 	bool				is_builtin;
 	bool				has_redirection;
+	bool				redir_processed;
 	t_token				*token;
 	t_cmd_seq			type;
 	t_pipe				*pipe;
@@ -407,7 +409,7 @@ t_token					*add_cmd_parenthese(t_token *token, t_cmd *parent);
 t_cmd_seq				get_sequence_type(t_token *token);
 void					split_tokens(t_token *parent);
 t_token					*tokenize_dbl_quotes_tokens(t_token *parent);
-void	*build_redir_token_environement(t_token *token,
+void	*build_redir_token(t_token *token,
 										t_cmd_seq cmd_type);
 void					build_token_environement(t_token *parent);
 void					split_token_sequence(t_token *parent);

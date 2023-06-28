@@ -10,6 +10,7 @@ void	*free_2d_array(void **tab)
 	while (tab[i])
 	{
 		free(tab[i]);
+		tab[i] = NULL;
 		i++;
 	}
 	free(tab);
@@ -27,6 +28,7 @@ void	*free_2d_char_array(char **tab)
 	while (tab[i] != NULL)
 	{
 		free(tab[i]);
+		tab[i] = NULL;
 		i++;
 	}
 	free(tab);

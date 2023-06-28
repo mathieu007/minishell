@@ -76,11 +76,20 @@ void	file_redirection(t_cmd *cmd)
 {
 	if (!cmd)
 		return ;
+	if (cmd->has_redirection)
+	{
+		printf("file in redir %s %d\n", cmd->in_redir->file, cmd->in_redir->fd);
+		printf("file out redir %s %d\n", cmd->out_redir->file, cmd->out_redir->fd);
+	}		
 	if (cmd->has_redirection && cmd->in_redir && cmd->in_redir->fd > 0)
 	{
+		printf("file in redir: %s fd: %d\n", cmd->in_redir->file, cmd->in_redir->fd);
 		redirect_input(cmd);
 		if (cmd->out_redir && cmd->out_redir->fd > 0)
+		{
+			printf("file out redir: %s fd: %d\n", cmd->out_redir->file, cmd->out_redir->fd);
 			redirect_output(cmd);
+		}			
 	}
 	else if (cmd->has_redirection && cmd->out_redir && cmd->out_redir->fd > 0)
 		redirect_output(cmd);
