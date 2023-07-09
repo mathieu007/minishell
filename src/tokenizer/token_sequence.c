@@ -1,237 +1,96 @@
 #include "minishell.h"
 
-/// @brief sequence token are tokens that separate the commands
-/// @param str
-/// @param i
-/// @param type
-/// @param parent
-/// @return
-int32_t	add_token_sequence(char *str, int32_t i, t_token_type type,
-		t_token *parent)
+void	split_token_sequence(t_token *parent)
 {
+	char	*str;
+	int32_t	start;
 	int32_t	len;
+	t_token	*token;
 
-	len = get_token_len(str, type, false);
-	add_tk_malloc(ft_substr(&str[i], 0, len), type, i, parent);
-	i += get_token_len(&str[i], type, false);
-	while (str[i] && str[i] == ' ')
-		i++;
-	return (i);
+	token = parent->child;
+	str = parent->str;
+	while (token && token->next)
+	{
+		len = token->next->start - token->end;
+		start = token->start + token->token_len;
+		token->str = free_ptr(token->str);
+		token->str = ft_substr(str, start, len);
+		token->child = dispatch_tokenizer(token);
+		token = token->next;
+	}
 }
 
-int32_t	add_token_redirection(char *str, int32_t i, t_token_type type,
+bool	is_continuation(char *str)
+{
+	int32_t	i;
+
+	i = 0;
+	while (str[i] && str[i] == ' ')
+		i++;
+	if (!str[i])
+		return (true);
+	return (false);
+}
+
+int32_t	add_sequence_token(int32_t i, char *tk_str, t_token_type type,
 		t_token *parent)
 {
-	t_token	*token;
 	int32_t	len;
+	char	*str;
 
-	len = get_token_len(str, type, false);
-	token = add_tk_malloc(ft_substr(&str[i], 0, len), type, i, parent);
-	if (token->prev->type == TK_START)
-		token->prev->type = TK_CMD;
+	len = ft_strlen(tk_str);
+	str = &parent->str[i + len];
+	check_syntax_error_near(str, "|&;)}!");
+	if (is_continuation(str))
+	{
+		exec_continuation(parent);
+		return (add_sequence_token(i, tk_str, type, parent));
+	}
+	add_tk(tk_str, type, i, parent);
 	i += len;
 	return (i);
 }
 
-inline bool	is_token_group(t_token_type type)
-{
-	return (type == TK_DOUBLEQUOTE || type == TK_SINGLEQUOTE
-		|| type == TK_ENVIRONEMENT_VAR || type == TK_PARENTHESE_OPEN
-		|| type == TK_LAST_PIPE_EXIT);
-}
-
-/// @brief token group are token that may contains other tokens
-/// we skip them and will process them on next level.
-/// @param str
-/// @param type
-/// @param i
-/// @return
-static int32_t	skip_token_group(char *str, t_token_type type, int32_t i)
-{
-	if (type == TK_DOUBLEQUOTE)
-		i = goto_closing_double_quote(str, i + 1) + 1;
-	else if (type == TK_SINGLEQUOTE)
-		i = goto_closing_single_quote(str, i + 1) + 1;
-	else if (type == TK_COMMANDSUBSTITUTION_OPEN)
-		i = goto_closing_parenthese(str, i + 1) + 1;
-	else if (type == TK_ENVIRONEMENT_VAR)
-		i = goto_closing_environement(str, i + 1);
-	else if (type == TK_LAST_PIPE_EXIT)
-		i += 2;
-	else if (type == TK_PARENTHESE_OPEN)
-		i = goto_closing_parenthese(str, i + 1) + 1;
-	return (i);
-}
-
-/// @brief cmd sequence tokens are tokens that separate commands
-/// we add a "false token" at the end and start of the tokenization
-/// it is just a way identify and split tokens easily.
-/// @param parent
-/// @return
-t_token	*tokenize_cmd_redirection(t_token *parent)
+t_token	*sequence_tokenizer(char *tk, t_token *parent)
 {
 	int32_t			i;
 	t_token_type	type;
 	int32_t			t_len;
-	char			*str;
-	t_token			*token;
+	t_token_type	tk_type;
 
 	i = 0;
-	str = ft_strtrim(parent->str, " ");
-	token = add_tk("", TK_START, 0, parent);
-	while (str[i])
+	tk_type = get_token_type(tk);
+	if (!has_token_sequence(parent))
+		return (NULL);
+	add_sequence_token(i, "", TK_START, parent);
+	while (parent->str[i])
 	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (is_token_group(type))
-			i = skip_token_group(str, type, i);
-		else if (is_token_redir(type))
-			i = add_token_redirection(str, i, type, parent);
+		type = get_token_type(&parent->str[i]);
+		t_len = get_token_len(&parent->str[i], type, false);
+		if (tk_type != type && is_token_delimiter(type))
+			i = skip_token_delimiter(type, i, parent);
+		else if (type == tk_type)
+			i = add_sequence_token(i, tk, type, parent);
 		else
 			i += t_len;
-	}
-	add_tk("", TK_END, i, parent);
-	split_token_redirection(parent);
-	return (token);
-}
-
-bool has_semicolon_token(char *str)
-{
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-
-	i = 0;
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (is_token_group(type))
-			i = skip_token_group(str, type, i);
-		else if (is_semicolon(type))
-			return (true);
-		else
-			i += t_len;
-	}
-	return (false);
-}
-
-/// @brief cmd sequence tokens are tokens that separate commands
-/// we add a "false token" at the end and start of the tokenization
-/// it is just a way identify and split tokens easily.
-/// @param parent
-/// @return
-t_token	*tokenize_semicolon(t_token *parent)
-{
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-	char			*str;
-
-	i = 0;
-	str = parent->str;
-	if (!has_semicolon_token(str))
-		return (tokenize_cmd_sequence(parent));
-	add_tk("", TK_START, 0, parent);
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (is_token_group(type))
-			i = skip_token_group(str, type, i);
-		else if (is_semicolon(type))
-			i = add_token_sequence(str, i, type, parent);
-		else
-			i += t_len;
-	}
-	add_tk("", TK_END, i, parent);
-	split_token_semicolon(parent);
-	return (parent->child);
-}
-
-bool has_sequence_token(char *str)
-{
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-
-	i = 0;
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (is_token_group(type))
-			i = skip_token_group(str, type, i);
-		else if (is_end_of_seq(type))
-			return (true);
-		else
-			i += t_len;
-	}
-	return (false);
-}
-
-/// @brief cmd sequence tokens are tokens that separate commands
-/// we add a "false token" at the end and start of the tokenization
-/// it is just a way identify and split tokens easily.
-/// @param parent
-/// @return
-t_token	*tokenize_cmd_sequence(t_token *parent)
-{
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-	char			*str;
-
-	i = 0;
-	str = parent->str;
-	if (!has_sequence_token(str))
-		return (tokenize_cmd(parent));
-	add_tk("", TK_START, 0, parent);
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (is_token_group(type))
-			i = skip_token_group(str, type, i);
-		else if (is_end_of_seq(type))
-			i = add_token_sequence(str, i, type, parent);
-		else
-			i += t_len;
-		if (has_error())
-			return (NULL);
 	}
 	add_tk("", TK_END, i, parent);
 	split_token_sequence(parent);
 	return (parent->child);
 }
 
-t_token	*tokenize_cmd(t_token *parent)
+t_token	*sequences_tokenizer(t_token *parent)
 {
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-	char			*str;
-	t_token			*token;
+	t_token	*child;
 
-	i = 0;
-	str = parent->str;
-	add_tk("", TK_START, 0, parent);
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (type == TK_PARENTHESE_OPEN)
-			i = add_token_parenthese(str, i, parent);
-		else if (is_token_redir(type))
-			i = add_token_redirection(str, i, type, parent);
-		else
-			i += t_len;
-		if (has_error())
-			return (NULL);
-	}
-	token = add_tk("", TK_END, i, parent);
-	if (token->prev->type == TK_START)
-		token->prev->type = TK_CMD;
-	split_token_cmd(parent);
-	return (parent->child);
+	child = NULL;
+	if (has_token(";", parent))
+		child = sequence_tokenizer(";", parent);
+	else if (has_token("||", parent))
+		child = sequence_tokenizer("||", parent);
+	else if (has_token("&&", parent))
+		child = sequence_tokenizer("&&", parent);
+	else if (has_token("|", parent))
+		child = sequence_tokenizer("|", parent);
+	return (child);
 }

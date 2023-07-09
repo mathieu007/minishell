@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/20 10:55:22 by math             ###   ########.fr       */
+/*   Updated: 2023/07/07 12:47:24 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,25 @@ static t_cmd	*create_cmd_redirection(t_token *token, t_cmd *parent)
 	return (cmd);
 }
 
-t_token	*add_cmds_redirections(t_token *token, t_cmd *parent)
+void	create_by_type(t_token *token, t_cmd *parent, t_token_type type)
 {
-	t_cmd	*group;
-
-	if (!parent || !token)
-		return (NULL);
-	group = new_cmd(parent);
-	group->type = CMD_GROUP_REDIRECTION;
-	group->token = token;
-	create_cmd_redirection(token, group);
-	token = token->next;
-	while (is_token_redir(token->type))
+	while (token)
 	{
-		create_cmd_redirection(token, group);
+		if (token->type == type)
+			create_cmd_redirection(token, parent);
 		token = token->next;
 	}
+}
+
+t_token	*add_cmds_redirections(t_token *token, t_cmd *parent)
+{
+	if (!parent || !token)
+		return (NULL);
+	while (token && !is_token_redirection(token->type))
+		token = token->next;
+	create_by_type(token, parent, TK_LESSLESS);
+	create_by_type(token, parent, TK_LESS);
+	create_by_type(token, parent, TK_GREATGREAT);
+	create_by_type(token, parent, TK_GREAT);
 	return (token);
 }

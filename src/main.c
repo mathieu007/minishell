@@ -32,10 +32,8 @@ char	*get_prompt_input()
 int32_t	main(int32_t argc, char **argv, char **env)
 {
 	char			*input;
-	t_process		*proc;
-	
+
 	init_data(argc, argv, env);
-	proc = get_process();
 	if (argc >= 2)
 		return (subshell(&argv[1]));
 	disable_ctrl_c_output();

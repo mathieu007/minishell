@@ -32,7 +32,7 @@ int	cd_cmd(t_cmd *cmd)
 		return(printf("Error: No directory specified.\n"),1);
 	if (path_to_change[0] != '/')
 	{
-		path = get_cwd(cmd);
+		path = get_cwd();
 		if (!path)
 		{
 			printf("minishell: cd: %s: No such file or directory\n",

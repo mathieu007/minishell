@@ -6,13 +6,11 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/06/16 11:53:26 by math             ###   ########.fr       */
+/*   Updated: 2023/07/09 09:12:10 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 bool	is_builtins(char *str)
 {
@@ -33,8 +31,8 @@ bool	is_builtins(char *str)
 }
 
 /// @brief determine the end of a sequence...
-/// @param token 
-/// @return 
+/// @param token
+/// @return
 inline bool	is_token_sequence(t_token *token)
 {
 	t_token_type	type;
@@ -44,5 +42,25 @@ inline bool	is_token_sequence(t_token *token)
 		|| type == TK_GREATGREAT || type == TK_GREAT || type == TK_PIPE
 		|| type == TK_LESS || type == TK_LESSLESS)
 		return (true);
+	return (false);
+}
+
+/// @brief determine the end of a sequence...
+/// @param token
+/// @return
+inline bool	has_token_expansion(t_token *token)
+{
+	t_token_type	type;
+
+	token = token->child;
+	while (token)
+	{
+		type = token->type;
+		if (type == TK_COMMANDSUBSTITUTION_OPEN
+			|| type == TK_LAST_CMD_EXIT
+			|| type == TK_ENVIRONEMENT_VAR)
+			return (true);
+		token = token->next;
+	}
 	return (false);
 }

@@ -1,6 +1,7 @@
 #include "minishell.h"
 
-t_token	*add_tk_malloc(char *token_str, t_token_type type, int32_t i, t_token *parent)
+t_token	*add_tk_malloc(char *token_str, t_token_type type, int32_t i,
+		t_token *parent)
 {
 	t_token	*token;
 
@@ -38,6 +39,6 @@ t_token	*tokenize(char *str)
 	root = add_tk("", TK_START, 0, NULL);
 	root->str = str;
 	proc->tokens = root;
-	tokenize_semicolon(root);
+	dispatch_tokenizer(root);
 	return (proc->tokens);
 }

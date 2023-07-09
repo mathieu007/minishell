@@ -22,7 +22,7 @@ int32_t	open_out_redir_fd(t_cmd *cmd)
 
 	out_flags = O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC;
 	if (!cmd->out_redir || !cmd->out_redir->file)
-		f_name = ft_strjoin(get_cwd(cmd), cmd->name);
+		f_name = ft_strjoin(get_cwd(), cmd->name);
 	else
 		f_name = ft_strdup(cmd->out_redir->file);
 	if (is_a_directory(f_name))
@@ -57,7 +57,7 @@ int32_t	open_out_append_redir_fd(t_cmd *cmd)
 
 	out_flags = O_RDWR | O_CREAT | O_APPEND | O_CLOEXEC;
 	if (!cmd->out_redir || !cmd->out_redir->file)
-		f_name = ft_strjoin(get_cwd(cmd), cmd->name);
+		f_name = ft_strjoin(get_cwd(), cmd->name);
 	else
 		f_name = ft_strdup(cmd->out_redir->file);
 	if (is_a_directory(f_name))

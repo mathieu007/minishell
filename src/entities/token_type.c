@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/06/17 08:58:31 by math             ###   ########.fr       */
+/*   Updated: 2023/07/01 09:12:33 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static inline t_token_type	*get_tokens_lookup_table(void)
 	static int32_t		i;
 	t_token_type		*tk_type;
 
-	tk_type = &token_types[8];
+	tk_type = &token_types[10];
 	if (i == 0)
 	{
 		while (i < (255 * 255) + (255 * 2))
@@ -44,7 +44,7 @@ static inline t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_GREATGREAT] = TK_GREATGREAT;
 		tk_type[TK_LESS] = TK_LESS;
 		tk_type[TK_LESSLESS] = TK_LESSLESS;
-		tk_type[TK_LAST_PIPE_EXIT] = TK_LAST_PIPE_EXIT;
+		tk_type[TK_LAST_CMD_EXIT] = TK_LAST_CMD_EXIT;
 		tk_type[TK_PIPE] = TK_PIPE;
 		tk_type[TK_SINGLEQUOTE] = TK_SINGLEQUOTE;
 		tk_type[TK_WILDCARD] = TK_WILDCARD;
@@ -57,6 +57,8 @@ static inline t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_COMMANDSUBSTITUTION_CLOSE] = TK_COMMANDSUBSTITUTION_CLOSE;
 		tk_type[TK_PARENTHESE_OPEN] = TK_PARENTHESE_OPEN;
 		tk_type[TK_PARENTHESE_CLOSE] = TK_PARENTHESE_CLOSE;
+		tk_type[TK_GROUP_REDIRECTIONS] = TK_GROUP_REDIRECTIONS;
+		tk_type[TK_CLOSING_CURLYBRACE] = TK_CLOSING_CURLYBRACE;
 	}
 	return (tk_type);
 }

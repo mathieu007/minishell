@@ -37,7 +37,7 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token *parent)
 		last->next = new;
 		new->prev = last;
 	}
-	increment_counter(type);
+	// increment_counter(type);
 	new->start = pos;
 	new->type = type;
 	new->is_redirection = false;

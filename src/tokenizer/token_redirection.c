@@ -3,63 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/22 15:47:15 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/09 08:02:55 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	redirect_has_syntax_error(char *str)
+bool	check_newline_syntax_error(char *str)
 {
-	static char	illegal_token[100] = "syntax error near unexpected token \0";
-	static char	token_err[100] = "<>|&;()#\0";
-	int32_t		i;
-	
-	i = 0;
-	while (str[i] == ' ')
+	char	*syntax_error;
+	int32_t	i;
+
+	syntax_error = "syntax error near unexpected token: newline";
+	while (str[i] && str[i] == ' ')
 		i++;
-	str = &str[i];
-	i = 0;
-	while (illegal_token[i])
-	{
-		if (str[0] == illegal_token[i])
-		{
-			token_err[36] = str[0];
-			token_err[37] = '\0';
-			i = 0;
-			while (illegal_token[i])
-			{
-				if (str[1] == illegal_token[i])
-				{
-					token_err[37] = str[1];
-					token_err[38] = '\0';
-					return (write_err(2, &token_err[0]), true);
-				}
-				i++;
-			}
-			return (write_err(2, &token_err[0]), true);
-		}
-		i++;
-	}
+	if (str[i] == '\0')
+		free_exit_no_perr(2, syntax_error);
 	return (false);
 }
 
-int32_t	add_token_redir(char *str, int32_t i, t_token_type type,
+void	check_syntax_error_near(char *str, char *token_err)
+{
+	int32_t	i;
+	char	*illegal_token;
+
+	illegal_token = "syntax error near unexpected token: \0";
+	i = 0;
+	while (str[i] && str[i] == ' ')
+		i++;
+	while (*token_err)
+	{
+		if (*token_err == str[i])
+			free_exit_no_perr2(2, illegal_token, &str[i]);
+		token_err++;
+	}
+}
+
+int32_t	add_token_redirection(char *str, int32_t i, t_token_type type,
 		t_token *parent)
 {
 	t_token	*token;
 	int32_t	len;
 
 	len = get_token_len(&str[i], type, false);
-	if (redirect_has_syntax_error(&str[i + len]))
-		return (-1);
+	check_newline_syntax_error(&str[i + len]);
+	check_syntax_error_near(&str[i + len], "<>|&;()#");
 	token = add_token(i, type, parent);
-	token->is_redirection = true;
-	token->token_len = get_token_len(&str[i], type, false);
-	token->token_str = ft_substr(&str[i], 0, token->token_len);
+	token->token_len = len;
+	token->token_str = ft_substr(str, i, token->token_len);
 	if (!token->token_str)
 		free_all_and_exit2(errno, "malloc error");
 	token->end = i + token->token_len;
@@ -69,36 +63,48 @@ int32_t	add_token_redir(char *str, int32_t i, t_token_type type,
 	return (i);
 }
 
-/// @brief this is the second level of tokenization
-/// this level of tokenization will tokenize all
-/// the double quotes, single quotes, parentheses, substitution
-/// and curlybrace but also spaces.
-/// @param high
-/// @return
-t_token	*tokenize_redirection(t_token *parent)
+void	split_token_redirections(t_token *parent)
+{
+	char	*str;
+	int32_t	start;
+	int32_t	len;
+	t_token	*token;
+
+	token = parent->child;
+	str = parent->str;
+	while (token && token->next)
+	{
+		len = token->next->start - token->end;
+		start = token->start + token->token_len;
+		token->str = free_ptr(token->str);
+		token->str = ft_substr(str, start, len);
+		token->child = expansion_tokenizer(parent);
+		token = token->next;
+	}
+}
+
+t_token	*redirection_tokenizer(t_token *parent)
 {
 	int32_t			i;
 	t_token_type	type;
 	int32_t			t_len;
-	char			*str;
-	t_token			*token;
 
 	i = 0;
-	str = parent->str;
-	token = add_tk_malloc(ft_strdup(parent->token_str), parent->type, i, parent);
-	while (str[i])
+	if (!has_token_redirection(parent))
+		return (NULL);
+	add_tk("", TK_START, i, parent);
+	while (parent->str[i])
 	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
-		if (is_token_redir(type))
-			i = add_token_redir(str, i, type, parent);
+		type = get_token_type(&parent->str[i]);
+		t_len = get_token_len(&parent->str[i], type, false);
+		if (is_token_delimiter(type))
+			i = skip_token_delimiter(type, i, parent);
+		else if (is_token_redirection(type))
+			i = add_token_redirection(parent->str, i, type, parent);
 		else
 			i += t_len;
-		if (has_error())
-			return (NULL);
 	}
 	add_tk("", TK_END, i, parent);
-	parent->child = token;
-	split_token_redirection(parent);
+	split_token_redirections(parent);
 	return (parent->child);
 }

@@ -23,9 +23,9 @@ char	*get_home(void)
 // }
 
 /// @brief All path must have been malloced
-/// @param path1 
-/// @param path2 
-/// @return 
+/// @param path1
+/// @param path2
+/// @return
 char	*join_path(char *path1, char *path2)
 {
 	char	*path;
@@ -72,20 +72,20 @@ char	*recursive_search_dir(char *path, ino_t ino)
 
 /// @brief this function automatically get the updated current working directory
 /// even if an other process modify the current working directory location
-/// ex: rename, move, or delete the current workin dir. 
+/// ex: rename, move, or delete the current workin dir.
 /// There is multiple fall back layer, don't know if bash do it that way.
-/// @param cmd 
-/// @return 
-char	*get_cwd(t_cmd *cmd)
+/// @param cmd
+/// @return
+char	*get_cwd()
 {
-	static char		buffer[PATH_MAX + 1];
-	struct stat		file_stat;
-	char			*home;
-	t_process		*proc;
-	char			*cur_dir;
+	static char	buffer[PATH_MAX + 1];
+	struct stat	file_stat;
+	char		*home;
+	t_process	*proc;
+	char		*cur_dir;
 
 	proc = get_process();
-	if (cmd == NULL || proc->cwd == NULL)
+	if (proc->cwd == NULL)
 	{
 		cur_dir = getcwd(&buffer[0], PATH_MAX + 1);
 		if (!cur_dir)
@@ -108,9 +108,10 @@ char	*get_cwd(t_cmd *cmd)
 	{
 		cur_dir = getcwd(&buffer[0], PATH_MAX + 1);
 		if (!cur_dir)
-			free_all_and_exit2(1, "An error occur while trying to get the current working dir.");
+			free_all_and_exit2(1,
+					"An error occur while trying to get the current working dir.");
 		proc->cwd = ft_strdup(cur_dir);
-	}		
+	}
 	if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
 		proc->cwd = ft_strjoinfree(proc->cwd, "/");
 	return (proc->cwd);

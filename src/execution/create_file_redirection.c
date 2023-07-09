@@ -1,21 +1,15 @@
 #include "minishell.h"
 
-extern int	g_status;
-
 bool	is_redirection(t_cmd_seq seq)
 {
-	return (seq && (seq == CMD_FILEIN
-			|| seq == CMD_FILEOUT
-			|| seq == CMD_FILEOUT_APPPEND
-			|| seq == CMD_HEREDOC));
+	return (seq && (seq == CMD_FILEIN || seq == CMD_FILEOUT
+			|| seq == CMD_FILEOUT_APPPEND || seq == CMD_HEREDOC));
 }
 
-bool	is_token_redir(t_token_type type)
+inline bool	is_token_redirection(t_token_type type)
 {
-	return (type && (type == TK_GREAT
-			|| type == TK_GREATGREAT
-			|| type == TK_LESS
-			|| type == TK_LESSLESS));
+	return (type && (type == TK_GREAT || type == TK_GREATGREAT
+			|| type == TK_LESS || type == TK_LESSLESS));
 }
 
 void	copy_redirection(t_redirect *dest, t_redirect *src)
@@ -30,9 +24,6 @@ void	copy_redirection(t_redirect *dest, t_redirect *src)
 
 t_cmd	*create_redir_out(t_cmd *main, t_cmd *redir)
 {
-	t_process	*proc;
-
-	proc = get_process();
 	open_out_redir_fd(redir);
 	main->out_redir = free_t_redirect(main->out_redir);
 	main->out_redir = new_redirect();
@@ -42,9 +33,6 @@ t_cmd	*create_redir_out(t_cmd *main, t_cmd *redir)
 
 t_cmd	*create_redir_append_out(t_cmd *main, t_cmd *redir)
 {
-	t_process	*proc;
-
-	proc = get_process();
 	open_out_append_redir_fd(redir);
 	main->out_redir = free_t_redirect(main->out_redir);
 	main->out_redir = new_redirect();
@@ -54,9 +42,6 @@ t_cmd	*create_redir_append_out(t_cmd *main, t_cmd *redir)
 
 t_cmd	*create_redir_in(t_cmd *main, t_cmd *redir)
 {
-	t_process	*proc;
-
-	proc = get_process();
 	open_in_redir_fd(redir);
 	main->in_redir = free_t_redirect(main->in_redir);
 	main->in_redir = new_redirect();
@@ -64,15 +49,16 @@ t_cmd	*create_redir_in(t_cmd *main, t_cmd *redir)
 	return (redir);
 }
 
-int32_t	write_here_document(const char* delimiter, t_cmd *main) 
+int32_t	write_here_document(const char *delimiter, t_cmd *main)
 {
-	char*		line;
+	char		*line;
 	pid_t		pid;
 	int32_t		status;
-	int32_t		delimiter_len = strlen(delimiter);
+	int32_t		delimiter_len;
 	t_process	*proc;
 
-	proc = get_process();	
+	delimiter_len = strlen(delimiter);
+	proc = get_process();
 	pid = fork();
 	if (pid == -1)
 		free_all_and_exit2(errno, "fork error");
@@ -99,29 +85,23 @@ int32_t	write_here_document(const char* delimiter, t_cmd *main)
 	close_files_redirections(main);
 	if (waitpid(pid, &status, 0) == -1)
 		free_all_and_exit2(errno, "waitpid error");
-	if (WIFEXITED(status)) 
+	if (WIFEXITED(status))
 		proc->errnum = WEXITSTATUS(status);
 	return (proc->errnum);
 }
 
 t_cmd	*create_redir_heredoc(t_cmd *main, t_cmd *redir)
 {
-	t_process	*proc;
-
-	proc = get_process();
 	open_redir_heredoc(redir);
 	main->in_redir = free_t_redirect(main->in_redir);
 	main->in_redir = new_redirect();
 	main->in_redir->is_here_doc = true;
-	copy_redirection(main->in_redir, redir->in_redir);	
+	copy_redirection(main->in_redir, redir->in_redir);
 	return (redir);
 }
 
 void	close_out_fds(t_cmd *redir)
 {
-	int32_t	count;
-
-	count = 0;
 	while (redir)
 	{
 		if (redir->out_redir && redir->out_redir->fd > 0)
@@ -135,12 +115,10 @@ void	close_out_fds(t_cmd *redir)
 
 void	close_in_fds(t_cmd *redir)
 {
-	int32_t	count;
-
-	count = 0;
 	while (redir)
 	{
-		if (redir->in_redir && redir->in_redir->fd > 0 && !redir->in_redir->is_here_doc)
+		if (redir->in_redir && redir->in_redir->fd > 0
+			&& !redir->in_redir->is_here_doc)
 		{
 			close(redir->in_redir->fd);
 			redir->in_redir->fd = -1;
@@ -163,13 +141,11 @@ void	close_unused_open_last_redirs(t_cmd *main, t_cmd *redir)
 
 void	build_redir_environement(t_cmd *main, t_cmd *redir)
 {
-	int			status;
 	t_process	*proc;
 
-    status = 0;
 	proc = get_process();
 	proc->errnum = 0;
-	build_redir_token(redir->token, redir->type);
+	build_token_environement(redir->token);
 	if (proc->errnum > 0)
 		return ;
 	if (redir->type == CMD_FILEOUT || redir->type == CMD_FILEOUT_APPPEND)
@@ -188,10 +164,8 @@ void	build_redir_environement(t_cmd *main, t_cmd *redir)
 
 t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 {
-    int			status;
 	t_process	*proc;
 
-    status = 0;
 	proc = get_process();
 	if (!redir)
 		return (NULL);
@@ -222,9 +196,9 @@ void	close_files_redirections(t_cmd *cmd)
 	{
 		close(cmd->in_redir->fd);
 		cmd->in_redir->fd = -1;
-	}		
+	}
 	if (cmd->out_redir && cmd->out_redir->fd > 0)
-	{		
+	{
 		close(cmd->out_redir->fd);
 		cmd->out_redir->fd = -1;
 	}
