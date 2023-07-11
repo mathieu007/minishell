@@ -91,10 +91,13 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 	while (*paths)
 	{
 		path = ft_strjoin(*paths, "/");
+		path_free1 = path;
 		path = ft_strjoinfree(path, cmd->name);
 		if (access(path, F_OK | X_OK) == 0)
-			return (free_2d_char_array(dup_paths), path);
+			return (free_split(dup_paths), path);
 		free(path);
+	if (path_free1)
+		free(path_free1);
 		paths++;
 	}
 	return (free_2d_char_array(dup_paths), NULL);
