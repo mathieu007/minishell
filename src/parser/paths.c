@@ -94,10 +94,22 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 		path_free1 = path;
 		path = ft_strjoinfree(path, cmd->name);
 		if (access(path, F_OK | X_OK) == 0)
+<<<<<<< HEAD
 			return (free_split(dup_paths), path);
 		free(path);
 	if (path_free1)
 		free(path_free1);
+=======
+<<<<<<< HEAD
+			return (free_split(dup_paths), path);
+		free(path);
+	if (path_free1)
+		free(path_free1);
+=======
+			return (free_2d_char_array(dup_paths), path);
+		free(path);
+>>>>>>> origin/master
+>>>>>>> fe00f380bf593da82794a620bcfb1d233c6b1043
 		paths++;
 	}
 	return (free_2d_char_array(dup_paths), NULL);
