@@ -20,9 +20,14 @@ void	disable_ctrl_c_output(void)
 
 void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 {
+	t_process	*proc;
 	(void)context;
 	(void)sig;
-	if (siginfo->si_signo == SIGINT)
+
+	proc = get_process();
+	if (siginfo->si_signo == SIGINT && proc->is_here_doc)
+		exit(0);
+	else if (siginfo->si_signo == SIGINT)
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();

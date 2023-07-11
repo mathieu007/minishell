@@ -50,8 +50,8 @@ char	*parse_env_var_value(t_token *token)
 
 char	**get_env_path(void)
 {
-	char			**split_env;
-	char			*env_value;
+	char	**split_env;
+	char	*env_value;
 
 	split_env = NULL;
 	env_value = get_env_value("PATH");

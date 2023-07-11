@@ -47,7 +47,7 @@ static char	*try_get_relative_dir(t_cmd *cmd)
 {
 	char	*path;
 
-	path = get_cwd(cmd);
+	path = get_cwd();
 	if (path == NULL)
 		perror("An error occur while triying to get the current working dir.");
 	path = ft_strjoin(path, cmd->name);
@@ -69,7 +69,7 @@ static char	*try_get_relative_dir2(t_cmd *cmd)
 	count = count_prev_dir(cmd->name);
 	if (count == 0)
 		return (NULL);
-	path = get_cwd(cmd);
+	path = get_cwd();
 	path = join(path, cmd->name);
 	path = remove_dir(path, count);
 	if (access(path, F_OK | X_OK) == 0)
@@ -77,31 +77,14 @@ static char	*try_get_relative_dir2(t_cmd *cmd)
 	return (NULL);
 }
 
-void	*free_split(char **split)
-{
-	char	**dup;
-
-	if (!split)
-		return (NULL);
-	dup = split;
-	while (*split)
-	{
-		free(*split);
-		split++;
-	}
-	return (free(dup), NULL);
-}
-
 char	*try_get_full_path_from_env_path(t_cmd *cmd)
 {
 	char	*path;
 	char	**paths;
 	char	**dup_paths;
-	char	*path_free1;
-
 
 	paths = get_env_path();
-	path = ft_strdup("");
+	path = NULL;
 	dup_paths = paths;
 	if (!paths)
 		return (NULL);
@@ -111,15 +94,18 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 		path_free1 = path;
 		path = ft_strjoinfree(path, cmd->name);
 		if (access(path, F_OK | X_OK) == 0)
+<<<<<<< HEAD
 			return (free_split(dup_paths), path);
 		free(path);
 	if (path_free1)
 		free(path_free1);
+=======
+			return (free_2d_char_array(dup_paths), path);
+		free(path);
+>>>>>>> origin/master
 		paths++;
 	}
-	if (path)
-		free(path);
-	return (free_split(dup_paths), NULL);
+	return (free_2d_char_array(dup_paths), NULL);
 }
 
 /// @brief handling ./path/to/file and ../../path/to/file

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_parenthese.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/21 15:09:10 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/07 12:47:24 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,16 @@ t_cmd	*create_cmd_parenthese(t_token *token, t_cmd *parent)
 	return (cmd);
 }
 
-void	create_redirection(t_token *token, t_cmd *cmd)
+void	create_cmd_redirections(t_token *token, t_cmd *cmd)
 {
-	while (token && !is_token_redir(token->type))
+	while (token && !is_token_redirection(token->type))
 		token = token->next;
-	if (token && is_token_redir(token->type))
+	if (token && is_token_redirection(token->type))
 	{
+		add_cmds_redirections(token, cmd);
 		cmd->has_redirection = true;
+		cmd->in_redir = free_t_redirect(cmd->in_redir);
+		cmd->out_redir = free_t_redirect(cmd->out_redir);
 		cmd->in_redir = new_redirect();
 		cmd->out_redir = new_redirect();
 	}
@@ -38,11 +41,9 @@ void	create_redirection(t_token *token, t_cmd *cmd)
 
 t_token	*add_cmd_parenthese(t_token *token, t_cmd *parent)
 {
-	t_cmd	*cmd;
-
 	if (!parent || !token)
 		return (NULL);
-	cmd = create_cmd_parenthese(token, parent);
-	create_redirection(token, cmd);
-	return (token->next->next);
+	create_cmd_parenthese(token, parent);
+	create_cmd_redirections(token, parent);
+	return (token);
 }

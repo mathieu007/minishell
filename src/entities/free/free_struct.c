@@ -22,7 +22,7 @@ void	*free_t_env_cpy(t_env_cpy *env_cpy)
 		current->variable = free_ptr(current->variable);
 		current->value = free_ptr(current->value);
 		current->next = NULL;
-		free(current);	
+		free(current);
 		current = next;
 	}
 	return (NULL);

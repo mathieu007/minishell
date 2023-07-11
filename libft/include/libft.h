@@ -22,6 +22,9 @@
 # define LARGE_POOL_SIZE 134215680
 # define TEMP_BUFFER 1000000
 # define BUFF_SIZE 4096
+# define INITIAL_HASH_CAPACITY 16
+# define FNV_OFFSET 14695981039346656037UL
+# define FNV_PRIME 1099511628211UL
 # include "lst.h"
 # include <fcntl.h>
 # include <stdbool.h>
@@ -29,6 +32,28 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+
+// typedef struct s_hash_table_entry
+// {
+// 	const char			*key;
+// 	void				*value;
+// }						t_hash_table_entry;
+
+// typedef struct s_hash_iterator
+// {
+// 	const char			*key;
+// 	void				*value;
+
+// 	t_hash_table		*_table;
+// 	size_t				_index;
+// }						t_hash_iterator;
+
+// typedef struct s_hash_table
+// {
+// 	hash_table_entry	*entries;
+// 	size_t				capacity;
+// 	size_t				length;
+// }						t_hash_table;
 
 typedef struct s_data_pool
 {
@@ -57,6 +82,14 @@ typedef struct s_file
 	char			buf[BUFF_SIZE + 1];
 	int				i;
 }					t_file;
+
+// t_hash_table		*hash_new(void);
+// void				hash_destroy(ht *table);
+// void				*hash_get(ht *table, const char *key);
+// const char			*hash_set(ht *table, const char *key, void *value);
+// size_t				hash_length(ht *table);
+// t_hash_iterator		*hash_iterator(ht *table);
+// bool				hash_next(hti *it);
 
 int32_t				ft_min(int32_t nbr, int32_t nbr2);
 int32_t				ft_max(int32_t nbr, int32_t nbr2);

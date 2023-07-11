@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/20 21:16:12 by math             ###   ########.fr       */
+/*   Updated: 2023/07/04 08:35:53 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,13 @@ t_cmd	*create_cmd_or(t_token *token, t_cmd *parent)
 
 t_token	*add_cmds_or(t_token *token, t_cmd *parent)
 {
-	t_cmd	*group;
-
 	if (!parent || !token)
 		return (NULL);
-	group = new_cmd(parent);
-	group->type = CMD_GROUP_OR;
-	group->token = token;
-	create_cmd_or(token, group);
+	create_cmd_or(token, parent);
 	token = token->next;
 	while (token->type == TK_OR)
 	{
-		create_cmd_or(token, group);
+		create_cmd_or(token, parent);
 		token = token->next;
 	}
 	return (token);
@@ -59,18 +54,13 @@ t_cmd	*create_cmd_and(t_token *token, t_cmd *parent)
 
 t_token	*add_cmds_and(t_token *token, t_cmd *parent)
 {
-	t_cmd	*group;
-
 	if (!parent || !token)
 		return (NULL);
-	group = new_cmd(parent);
-	group->type = CMD_GROUP_AND;
-	group->token = token;
-	create_cmd_and(token, group);
+	create_cmd_and(token, parent);
 	token = token->next;
 	while (token->type == TK_AND)
 	{
-		create_cmd_and(token, group);
+		create_cmd_and(token, parent);
 		token = token->next;
 	}
 	return (token);

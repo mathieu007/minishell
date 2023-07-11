@@ -47,7 +47,7 @@ static char	*get_print_token_type(t_token_type type)
 		tk_type[TK_GREATGREAT] = "TK_GREATGREAT";
 		tk_type[TK_LESS] = "TK_LESS";
 		tk_type[TK_LESSLESS] = "TK_LESSLESS";
-		tk_type[TK_LAST_PIPE_EXIT] = "TK_LAST_PIPE_EXIT";
+		tk_type[TK_LAST_CMD_EXIT] = "TK_LAST_PIPE_EXIT";
 		tk_type[TK_PIPE] = "TK_PIPE";
 		tk_type[TK_SINGLEQUOTE] = "TK_SINGLEQUOTE";
 		tk_type[TK_WILDCARD] = "TK_WILDCARD";

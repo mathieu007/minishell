@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/21 13:57:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/06/28 12:15:09 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,7 @@ int32_t	get_args_len(t_token *token)
 		return (0);
 	while (token)
 	{
-		if (token->type == TK_SPACE)
-			args_len++;
-		else if (token->type == TK_END)
+		if (token->str)
 			args_len++;
 		token = token->next;
 	}
@@ -156,10 +154,10 @@ void	set_args(t_token *token, char **split)
 	{
 		if (token->type == TK_SPACE)
 			split[++i] = ft_strdup(token->str);
-		else if (token->type == TK_DASH)
-			split[i] = ft_strjoin(split[i], token->token_str);
-		else if (token->type == TK_DASHDASH)
-			split[i] = ft_strjoin(split[i], token->token_str);
+		// else if (token->type == TK_DASH)
+		// 	split[i] = ft_strjoin(split[i], token->token_str);
+		// else if (token->type == TK_DASHDASH)
+		// 	split[i] = ft_strjoin(split[i], token->token_str);
 		else
 		{
 			cpy = split[i];
@@ -178,6 +176,8 @@ char	**parse_args(t_token *token)
 
 	i = 0;
 	args_len = get_args_len(token);
+	if (args_len == 0)
+		return (NULL);
 	split = malloc((args_len + 1) * sizeof(char *));
 	if (!split)
 		free_all_and_exit2(errno, "malloc error");
@@ -186,8 +186,6 @@ char	**parse_args(t_token *token)
 		split[i] = NULL;
 		i++;
 	}
-	if (!split)
-		return (NULL);
 	split[args_len] = NULL;
 	set_args(token, split);
 	return (split);

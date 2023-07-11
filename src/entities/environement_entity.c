@@ -7,8 +7,8 @@ t_env_cpy	*new_env(char *variable, char *value)
 	node = ft_calloc(1, sizeof(t_env_cpy));
 	if (node == NULL)
 		return (NULL);
-	node->value = value;
-	node->variable = variable;
+	node->value = ft_strdup(value);
+	node->variable = ft_strdup(variable);
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);
@@ -19,6 +19,8 @@ int32_t	count_splits(char **split)
 	int32_t	i;
 
 	i = 0;
+	if (!split)
+		return (0);
 	while (*split)
 	{
 		split++;
@@ -71,11 +73,14 @@ t_env_cpy	*init_env(t_process *data)
 	split_on_equal = ft_split(data->env[i], '=');
 	count = count_splits(split_on_equal);
 	if (count > 2)
-		current = new_env(ft_strdup(split_on_equal[0]),
-							join_splits(&split_on_equal[1], "="));
+	{
+		tmp_str = join_splits(&split_on_equal[1], "=");
+		current = new_env(split_on_equal[0], tmp_str);
+		if (tmp_str)
+			free(tmp_str);
+	}		
 	else
-		current = new_env(ft_strdup(split_on_equal[0]),
-							ft_strdup(split_on_equal[1]));
+		current = new_env(split_on_equal[0], split_on_equal[1]);
 	if (split_on_equal)
 		free_2d_char_array(split_on_equal);
 	i++;
@@ -86,11 +91,9 @@ t_env_cpy	*init_env(t_process *data)
 		count = count_splits(split_on_equal);
 		tmp_str = join_splits(&split_on_equal[1], "=");
 		if (count > 2)
-			current->next = new_env(ft_strdup(split_on_equal[0]),
-									ft_strdup(tmp_str));
+			current->next = new_env(split_on_equal[0], tmp_str);
 		else
-			current->next = new_env(ft_strdup(split_on_equal[0]),
-									ft_strdup(split_on_equal[1]));
+			current->next = new_env(split_on_equal[0], split_on_equal[1]);
 		if (tmp_str)
 			free(tmp_str);
 		if (current->next)
@@ -102,6 +105,50 @@ t_env_cpy	*init_env(t_process *data)
 	}
 	return (head);
 }
+
+int32_t	count_env()
+{
+	t_env_cpy	*head;
+	t_env_cpy	*current;
+	int32_t		count;
+
+	count = 0;
+	head = get_process()->env_cpy;
+	current = head;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+char	**get_env()
+{
+	t_env_cpy	*head;
+	t_env_cpy	*current;
+	int32_t		count;
+	char		**data;
+	int32_t		i;
+
+	i = 0;
+	count = count_env();
+	data = malloc(sizeof(char *) * (count + 1));
+	if (!data)
+		free_all_and_exit2(errno, "malloc error");
+	data[count] = NULL;
+	head = get_process()->env_cpy;
+	current = head;
+	while (current)
+	{
+		data[i] = ft_strjoin(current->variable, "=");
+		data[i] = ft_strjoinfree(data[i], current->value);
+		current = current->next;
+		i++;
+	}
+	return (data);
+}
+
 
 //take a variable and return the value
 char	*get_env_value(char *variable)
@@ -133,13 +180,11 @@ t_env_cpy	*copy_env(void)
 	current = head;
 	if (current)
 	{
-		new_current = new_env(ft_strdup(current->variable),
-								ft_strdup(current->value));
+		new_current = new_env(current->variable, current->value);
 		new_head = new_current;
 		while (current)
 		{
-			new_current->next = new_env(ft_strdup(current->variable),
-										ft_strdup(current->value));
+			new_current->next = new_env(current->variable, current->value);
 			new_current->next->prev = new_current;
 			new_current = new_current->next;
 			current = current->next;
@@ -160,13 +205,11 @@ t_env_cpy	*copy_env_from(t_process *proc)
 	current = head;
 	if (current)
 	{
-		new_current = new_env(ft_strdup(current->variable),
-								ft_strdup(current->value));
+		new_current = new_env(current->variable, current->value);
 		new_head = new_current;
 		while (current)
 		{
-			new_current->next = new_env(ft_strdup(current->variable),
-										ft_strdup(current->value));
+			new_current->next = new_env(current->variable, current->value);
 			new_current->next->prev = new_current;
 			new_current = new_current->next;
 			current = current->next;

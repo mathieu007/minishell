@@ -1,19 +1,88 @@
 #include "minishell.h"
 
-void	*free_t_tokens(t_token *token)
+void	*free_t_token(t_token *token)
 {
 	t_token	*current;
 	t_token	*next;
 
+	if (!token)
+		return (NULL);
 	current = token;
 	while (current != NULL)
 	{
 		next = current->next;
 		current->str = free_ptr(current->str);
 		current->token_str = free_ptr(current->token_str);
+		current->child = NULL;
+		current->parent = NULL;
+		current->last = NULL;
+		current->prev = NULL;
+		current->next = NULL;
+		current = next;
+	}
+	return (NULL);
+}
+
+void	*find_double_free(t_token *token)
+{
+	t_token	*start;
+	t_token	*current;
+
+	if (!token)
+		return (NULL);
+	start = token;
+	while (start != NULL)
+	{
+		if (!start->next)
+			current = start->child;
+		else
+			current = start->next;
+		while (current != NULL)
+		{
+			if (current == start)
+			{
+				while (current)
+				{
+					printf("rev path: %s\n", current->str);
+					current = current->parent;
+				}
+				return (NULL);
+			}
+			if (!current->next)
+				current = current->child;
+			else
+				current = current->next;
+		}
+		if (!start->next)
+			start = start->child;
+		else
+			start = start->next;
+	}
+	return (NULL);
+}
+
+void	*free_t_tokens(t_token *token)
+{
+	t_token	*current;
+	t_token	*next;
+	t_token	*child;
+
+	if (!token)
+		return (NULL);
+	current = token;
+	while (current)
+	{
+		next = current->next;
+		current->str = free_ptr(current->str);
+		current->token_str = free_ptr(current->token_str);
+		child = current->child;
 		current->child = free_t_tokens(current->child);
 		current->next = NULL;
-		free(current);
+		current->parent = NULL;
+		current->last = NULL;
+		current->prev = NULL;
+		if (child != current)
+			free(current);
 		current = next;
 	}
 	return (NULL);
@@ -24,6 +93,8 @@ void	*free_t_cmd(t_cmd *cmd)
 	t_cmd	*current;
 	t_cmd	*next;
 
+	if (!cmd)
+		return (NULL);
 	current = cmd;
 	while (current != NULL)
 	{

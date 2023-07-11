@@ -39,6 +39,7 @@ bool	update_env_variable(t_env_cpy *current, char *variable, char *value,
 	{
 		if (ft_strncmp(variable, current->variable, len) == 0)
 		{
+			current->value = free_ptr(current->value);
 			current->value = ft_strdup(value);
 			swap = true;
 			break ;
@@ -88,6 +89,7 @@ int	export_cmd(t_cmd *cmd)
 {
 	t_process	*data;
 	int			i;
+	char		*arg;
 
 	data = get_process();
 	if (cmd->args[1] == NULL)
@@ -103,7 +105,8 @@ int	export_cmd(t_cmd *cmd)
 	i = 1;
 	while (cmd->args[i])
 	{
-		handle_export(data, cmd->args[i]);
+		arg = cmd->args[i];
+		handle_export(data, arg);
 		i++;
 	}
 	return (0);

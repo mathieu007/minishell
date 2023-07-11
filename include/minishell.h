@@ -1,8 +1,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
 # include "errno.h"
+# include "get_next_line.h"
 # include "history.h"
 # include "minishell.h"
 # include "readline.h"
@@ -12,7 +12,9 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stdint.h>
+# include <stdio.h>
 # include <stdlib.h>
+# include <sys/ioctl.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -67,6 +69,7 @@ typedef enum e_token_type
 	TK_ENVIRONEMENT_VAR = -6,
 	TK_COMMANDSUBSTITUTION_CLOSE = -7,
 	TK_CMD = -8,
+	TK_GROUP_REDIRECTIONS = -9,
 	TK_GREAT = (int32_t)'>',
 	TK_LESS = (int32_t)'<',
 	TK_PIPE = (int32_t)'|',
@@ -82,7 +85,8 @@ typedef enum e_token_type
 	TK_SINGLEQUOTE = (int32_t)'\'',
 	TK_DOLLAR_SIGN = (int32_t)'$',
 	TK_DOLLAR_SIGN_CURLYBRACE = (TK_DOLLAR_SIGN * 255) + (int32_t)'{',
-	TK_LAST_PIPE_EXIT = TK_DOLLAR_SIGN * 255 + '?',
+	TK_CLOSING_CURLYBRACE = (int32_t)'}',
+	TK_LAST_CMD_EXIT = TK_DOLLAR_SIGN * 255 + '?',
 	TK_SEMICOLON = (int32_t)';',
 	TK_BACKSLASH = (int32_t)'\\',
 	TK_BACKSLASHBACKSLASH = TK_BACKSLASH * 255 + TK_BACKSLASH,
@@ -161,9 +165,9 @@ typedef enum e_cmd_seq
 	CMD_PIPE = TK_PIPE,                             // |
 	CMD_PARENTHESES = TK_PARENTHESE_OPEN,           // (
 	CMD_SUBSTITUTION = TK_COMMANDSUBSTITUTION_OPEN, // (
-	CMD_LOG_AND = TK_AND, // &&
-	CMD_LOG_OR = TK_OR,                 // ||
-	CMD_BACKGROUND_EXEC = TK_AMPERSAND, // &
+	CMD_LOG_AND = TK_AND,                           // &&
+	CMD_LOG_OR = TK_OR,                             // ||
+	CMD_BACKGROUND_EXEC = TK_AMPERSAND,             // &
 	CMD_FILEOUT_APPPEND = TK_GREATGREAT,
 	CMD_HEREDOC = TK_LESSLESS,
 	CMD_FILEOUT = TK_GREAT,
@@ -177,6 +181,8 @@ typedef struct s_redirect
 	char				*input_file;
 	char				*file;
 	bool				fd_is_temp;
+	bool				is_here_doc;
+	bool				is_append;
 }						t_redirect;
 
 typedef struct s_pipe
@@ -226,14 +232,13 @@ typedef struct s_cmd
 	struct s_cmd		*prev;
 	struct s_cmd		*parent;
 	struct s_cmd		*child;
-	char *name;           /// the name of the command: cat, ls, echo ect...
-	char *full_path_name; /// only for execve,
+	char				*name;
+	char				*full_path_name;
 	char				**args;
-	/// a terminating NULL list of string containing options and arguments
 	char				**options;
-	/// a terminating NULL list of string containing only options
 	bool				is_builtin;
 	bool				has_redirection;
+	bool				redir_processed;
 	t_token				*token;
 	t_cmd_seq			type;
 	t_pipe				*pipe;
@@ -262,13 +267,47 @@ typedef struct s_process
 	t_env_cpy			*env_cpy;
 	t_token				*tokens;
 	t_cmd				*cmds;
+	bool				is_here_doc;
 	t_cmd				*last_cmd;
 }						t_process;
 
 /// @brief The entities functions
+void					check_syntax_error_near(char *str, char *token_err);
+void	exec_delimiter_continuation(char *delimiter,
+									t_token *parent);
+void					exec_continuation(t_token *parent);
+void					create_temp_file(t_redirect *redir);
+char					*get_temp_dir(void);
+int32_t					goto_token(char *str, char *tk);
+void					free_exit_no_perr(int32_t status, char *msg);
+int32_t					skip_token_single_quote(char *str, t_token_type type,
+							int32_t i);
+bool					has_token(char *tk, t_token *parent);
+t_token					*sequences_tokenizer(t_token *parent);
+bool					has_token_sequence(t_token *parent);
+bool					has_token_redirection(t_token *parent);
+t_token					*redirection_tokenizer(t_token *parent);
+bool					is_token_quotes(t_token_type type);
+bool					has_token_expansion(t_token *token);
+bool					has_token_expansion_str(char *str);
+int32_t					skip_token_delimiter(t_token_type type, int32_t i,
+							t_token *parent);
+int32_t					add_token_redirection(char *str, int32_t i,
+							t_token_type type, t_token *parent);
+t_token					*cmd_tokenizer(t_token *parent);
+t_token					*expansion_tokenizer(t_token *parent);
+t_token					*space_quotes_tokenizer(t_token *parent);
+t_token					*dispatch_tokenizer(t_token *parent);
+t_token					*parentheses_tokenizer(t_token *parent);
+bool					is_token_delimiter(t_token_type type);
+void					*find_double_free(t_token *token);
+void					*free_t_token(t_token *token);
+char					**get_env(void);
+t_token					*add_tk_malloc(char *token_str, t_token_type type,
+							int32_t i, t_token *parent);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
-void					create_redirection(t_token *token, t_cmd *cmd);
+void					create_cmd_redirections(t_token *token, t_cmd *cmd);
 t_token					*add_cmd_execution(t_token *token, t_cmd *parent);
 t_token					*add_cmds_redirections(t_token *token, t_cmd *parent);
 t_token					*add_cmds_or(t_token *token, t_cmd *parent);
@@ -297,18 +336,19 @@ t_cmd					*create_redir_append_out(t_cmd *main, t_cmd *cmd);
 void					exec_redirection(t_cmd *main, t_cmd *cmd);
 void					redirect_input(t_cmd *cmd);
 void					redirect_output(t_cmd *cmd);
+int32_t					open_redir_heredoc(t_cmd *cmd);
 int32_t					open_in_redir_fd(t_cmd *cmd);
 int32_t					open_out_redir_fd(t_cmd *cmd);
 int32_t					open_out_append_redir_fd(t_cmd *cmd);
 int32_t					*reset_token_counter(void);
 t_env_cpy				*copy_env_from(t_process *proc);
-int32_t					fork_pipes(t_cmd *cmd);
+int32_t					exec_pipes_cmds(t_cmd *pipe_group);
 void					pipe_cmd(t_cmd *proc);
 void					close_pipe_fds(t_cmd *cmd);
 t_env_cpy				*new_env(char *variable, char *value);
 char					*replace_env_value(char *variable, char *value);
 char					*get_cmd_env_value(char *variable, t_cmd *cmd);
-t_redirect				*new_redirect();
+t_redirect				*new_redirect(void);
 t_process				*get_process(void);
 t_token					*get_first_token(void);
 t_token					*get_last_token(void);
@@ -322,7 +362,7 @@ t_token					*add_token(int32_t char_pos, t_token_type type,
 							t_token *parent);
 
 int32_t					count_args(t_cmd *cmd);
-t_cmd					*parse_at_execution(t_cmd *cmd);
+t_cmd					*re_parse_at_execution(t_cmd *cmd);
 t_token					*tokenize_root(char *str);
 int32_t					add_token_group(char *str, int32_t i, t_token_type type,
 							t_token *parent);
@@ -338,7 +378,7 @@ t_cmd					*new_cmd(t_cmd *parent);
 t_cmd					*last_in_redir(t_cmd *cmd);
 t_cmd					*last_out_redir(t_cmd *cmd);
 bool					is_redirection(t_cmd_seq seq);
-bool					is_token_redir(t_token_type type);
+bool					is_token_redirection(t_token_type type);
 t_token					*contains_parentheses(t_token *token);
 int32_t					goto_closing_environement(char *str, int32_t i);
 int32_t					goto_closing_single_quote(char *str, int32_t i);
@@ -391,7 +431,7 @@ bool					file_is_exec(char *absolute_path_to_file);
 
 /// get full path from relative path, absolute or env path.
 char					*get_full_path(t_cmd *cmd);
-char					*get_cwd(t_cmd *cmd);
+char					*get_cwd(void);
 
 /// tokenizer functions
 
@@ -399,9 +439,9 @@ t_token					*add_cmd_parenthese(t_token *token, t_cmd *parent);
 t_cmd_seq				get_sequence_type(t_token *token);
 void					split_tokens(t_token *parent);
 t_token					*tokenize_dbl_quotes_tokens(t_token *parent);
-void	*build_redir_token_environement(t_token *token,
-										t_cmd_seq cmd_type);
-void					build_token_environement(t_token *parent);
+void	*build_redir_token(t_token *token,
+						t_cmd_seq cmd_type);
+void					*build_token_environement(t_token *parent);
 void					split_token_sequence(t_token *parent);
 void					split_token_groups(t_token *parent);
 t_token					*tokenize_group_tokens(t_token *parent);
@@ -479,6 +519,7 @@ void					add_env_node(t_process *data, char *variable,
 							char *value);
 
 /// execution
+bool					is_a_directory(char *path_to_dir);
 t_cmd					*create_fd_redir(t_cmd *main, t_cmd *cmd);
 int32_t					exec_sequential(t_cmd *cmd);
 int32_t					exec_logical_or(t_cmd *cmd);
@@ -511,6 +552,7 @@ void					add_env_node(t_process *data, char *variable,
 void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
 
 //signal
+void					setup_here_doc_signal_handlers(void);
 void					setup_signal_handlers(void);
 void					disable_ctrl_c_output(void);
 

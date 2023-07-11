@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/20 11:59:42 by math             ###   ########.fr       */
+/*   Updated: 2023/07/04 08:38:23 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,13 @@ t_cmd	*create_cmd_pipe(t_token *token, t_cmd *parent)
 
 t_token	*add_cmds_pipes(t_token *token, t_cmd *parent)
 {
-	t_cmd	*group;
-
 	if (!parent || !token)
 		return (NULL);
-	group = new_cmd(parent);
-	group->type = CMD_GROUP_PIPE;
-	group->token = token;
-	create_cmd_pipe(token, group);
+	create_cmd_pipe(token, parent);
 	token = token->next;
 	while (token->type == TK_PIPE)
 	{
-		create_cmd_pipe(token, group);
+		create_cmd_pipe(token, parent);
 		token = token->next;
 	}
 	return (token);
