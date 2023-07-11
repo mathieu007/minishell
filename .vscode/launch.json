@@ -1,0 +1,20 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+
+		{
+			"name": "minishell",
+			"type": "cppdbg",
+			"request": "launch",
+			"targetArchitecture": "x86_64",
+			"program": "${workspaceFolder}/bin/minishell",
+			"args": [],
+			"environment": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"preLaunchTask": "minishell",
+			"MIMode": "lldb",
+			"externalConsole": true
+		  }
+	]
+}
