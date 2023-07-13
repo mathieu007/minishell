@@ -21,9 +21,9 @@ void	disable_ctrl_c_output(void)
 void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	t_process	*proc;
+
 	(void)context;
 	(void)sig;
-
 	proc = get_process();
 	if (siginfo->si_signo == SIGINT && proc->is_here_doc)
 		exit(0);

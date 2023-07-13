@@ -27,4 +27,3 @@ void	*free_t_env_cpy(t_env_cpy *env_cpy)
 	}
 	return (NULL);
 }
-

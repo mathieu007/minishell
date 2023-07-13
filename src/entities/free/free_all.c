@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 void	*free_ptr(void *ptr)
@@ -40,17 +39,6 @@ void	free_exit_no_perr2(int32_t status, char *msg, char *msg2)
 
 	proc = get_process();
 	write_err2(status, msg, msg2);
-	proc->errnum = status;
-	free_all();
-	exit(status);
-}
-
-void	free_exit_no_perr(int32_t status, char *msg)
-{
-	t_process	*proc;
-
-	proc = get_process();
-	write_err(status, msg);
 	proc->errnum = status;
 	free_all();
 	exit(status);

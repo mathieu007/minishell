@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/09 08:02:55 by math             ###   ########.fr       */
+/*   Updated: 2023/07/11 17:13:59 by bmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ bool	check_newline_syntax_error(char *str)
 	int32_t	i;
 
 	syntax_error = "syntax error near unexpected token: newline";
+	i = 0;
 	while (str[i] && str[i] == ' ')
 		i++;
 	if (str[i] == '\0')

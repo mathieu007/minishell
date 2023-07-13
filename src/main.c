@@ -23,7 +23,7 @@ char	*get_prompt_input()
 	add_history(input);
 	if (input == NULL)
 	{
-		printf("\x1B[u\x1B[Aexit\n");
+		printf("exit\n");
 		free_all_and_exit(0);
 	}	
 	return (input);

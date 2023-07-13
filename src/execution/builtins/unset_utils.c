@@ -45,8 +45,8 @@ int	is_valid_identifier(char *identifier)
 
 int	is_valid_identifier_unset(char *identifier)
 {
-	int res;
-	int i;
+	int	res;
+	int	i;
 
 	i = 0;
 	res = 0;

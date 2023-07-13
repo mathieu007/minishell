@@ -2,15 +2,15 @@
 
 int32_t	env_cmd(t_cmd *cmd)
 {
-	(void)cmd;
-	t_process *data;
-	t_env_cpy *current;
+	t_process	*data;
+	t_env_cpy	*current;
 
+	(void)cmd;
 	data = get_process();
 	if (!data->env_cpy)
 	{
 		data->env_cpy = init_env(data);
-	}		
+	}
 	current = data->env_cpy;
 	while (current && current->value != NULL)
 	{

@@ -23,44 +23,6 @@ void	*free_t_token(t_token *token)
 	return (NULL);
 }
 
-void	*find_double_free(t_token *token)
-{
-	t_token	*start;
-	t_token	*current;
-
-	if (!token)
-		return (NULL);
-	start = token;
-	while (start != NULL)
-	{
-		if (!start->next)
-			current = start->child;
-		else
-			current = start->next;
-		while (current != NULL)
-		{
-			if (current == start)
-			{
-				while (current)
-				{
-					printf("rev path: %s\n", current->str);
-					current = current->parent;
-				}
-				return (NULL);
-			}
-			if (!current->next)
-				current = current->child;
-			else
-				current = current->next;
-		}
-		if (!start->next)
-			start = start->child;
-		else
-			start = start->next;
-	}
-	return (NULL);
-}
-
 void	*free_t_tokens(t_token *token)
 {
 	t_token	*current;
@@ -125,4 +87,15 @@ void	*free_t_process(t_process *proc)
 		proc->last_error = free_ptr(proc->last_error);
 	}
 	return (NULL);
+}
+
+void	free_exit_no_perr(int32_t status, char *msg)
+{
+	t_process	*proc;
+
+	proc = get_process();
+	write_err(status, msg);
+	proc->errnum = status;
+	free_all();
+	exit(status);
 }
