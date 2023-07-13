@@ -20,6 +20,7 @@ int	add_built_in_func(t_cmd *cmd)
 	else if (ft_strnstr(cmd->name, "unset", len) == cmd->name)
 		return (cmd->func = &unset_cmd, 1);
 	else if (ft_strnstr(cmd->name, "exit", len) == cmd->name)
-		return (cmd->func = &exit_cmd, 1);
+		free_all_and_exit(1);
+		//return (cmd->func = &exit_cmd, 1);
 	return (0);
 }
