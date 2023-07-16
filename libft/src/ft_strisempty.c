@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strisempty.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/16 13:06:25 by math             ###   ########.fr       */
+/*   Created: 2022/09/20 12:57:53 by mroy              #+#    #+#             */
+/*   Updated: 2023/07/11 09:50:08 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	exit_cmd(t_cmd *cmd)
+bool	ft_strisempty(char *str)
 {
-	char	args[32];
+	if (!str)
+		return (true);
+	if (str[0] == '\0')
+		return (true);
+	return (false);
+}
 
-	if (!cmd->args || cmd->args[0] == NULL)
-	{
-		free_all();
-		exit(0);
-	}
-	else if (cmd->args && cmd->args[0] != NULL)
-	{
-		ft_strlcpy(&args[0], cmd->args[0], 32);
-		free_all();
-		exit(ft_atoi(args));
-	}
-	else
-	{
-		printf("exit: too many arguments");
-		exit(1);
-	}
+bool	ft_striswhitespace(char *str)
+{
+	if (!str)
+		return (true);
+	while (*str == ' ')
+		str++;
+	if (*str == '\0')
+		return (true);
+	return (false);
 }

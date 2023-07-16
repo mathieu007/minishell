@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/28 12:15:09 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/13 12:48:18 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 
 void	set_args(t_token *token, char **split)
 {
-	char	*cpy;
 	int32_t	i;
 
 	i = 0;
@@ -154,16 +153,8 @@ void	set_args(t_token *token, char **split)
 	{
 		if (token->type == TK_SPACE)
 			split[++i] = ft_strdup(token->str);
-		// else if (token->type == TK_DASH)
-		// 	split[i] = ft_strjoin(split[i], token->token_str);
-		// else if (token->type == TK_DASHDASH)
-		// 	split[i] = ft_strjoin(split[i], token->token_str);
 		else
-		{
-			cpy = split[i];
-			split[i] = ft_strjoin(split[i], token->str);
-			free(cpy);
-		}
+			split[i] = ft_strjoinfree(split[i], token->str);
 		token = token->next;
 	}
 }

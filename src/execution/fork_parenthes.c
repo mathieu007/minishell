@@ -4,14 +4,21 @@ static int32_t	execve_subshell(t_cmd *cmd)
 {
 	t_process	*proc;
 	char		**subshell_args;
+	char		**env;
 
 	proc = get_process();
+	env = get_env();
 	subshell_args = malloc(3 * sizeof(char *));
 	subshell_args[2] = NULL;
 	subshell_args[1] = cmd->token->str;
 	subshell_args[0] = proc->full_program_name;
+	file_redirection(cmd, true);
+	close_files_redirections(cmd);
 	if (execve(proc->full_program_name, subshell_args, get_env()) == -1)
+	{
+		free_2d_char_array(env);
 		free_all_and_exit2(errno, "execve error");
+	}
 	return (errno);
 }
 
@@ -19,30 +26,19 @@ static int32_t	fork_subshell(t_cmd *cmd)
 {
 	pid_t		pid;
 	t_process	*proc;
-	int32_t		status;
-	t_cmd		*redirection;
 
-	redirection = cmd->next;
 	proc = get_process();
-	build_token_environement(cmd->token);
+	proc->errnum = build_cmd(cmd);
 	if (has_error())
 		return (proc->errnum);
-	pid = fork();
 	proc->errnum = 0;
-	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");
-	else if (pid == 0)
+	pid = ft_fork();
+	if (pid == 0)
 	{
-		if (cmd->has_redirection)
-			create_fd_redir(cmd, redirection);
-		file_redirection(cmd);
-		close_files_redirections(cmd);
 		proc->errnum = execve_subshell(cmd);
 		exit(proc->errnum);
 	}
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		proc->errnum = WEXITSTATUS(status);
+	proc->errnum = ft_waitpid(pid);
 	return (proc->errnum);
 }
 

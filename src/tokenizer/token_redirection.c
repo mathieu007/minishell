@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/09 08:02:55 by math             ###   ########.fr       */
+/*   Updated: 2023/07/11 10:13:02 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,47 @@ bool	check_newline_syntax_error(char *str)
 	char	*syntax_error;
 	int32_t	i;
 
+	i = 0;
 	syntax_error = "syntax error near unexpected token: newline";
 	while (str[i] && str[i] == ' ')
 		i++;
 	if (str[i] == '\0')
-		free_exit_no_perr(2, syntax_error);
+	{
+		get_process()->syntax_error = true;
+		write_err(2, syntax_error);
+		return (true);
+	}
 	return (false);
 }
 
-void	check_syntax_error_near(char *str, char *token_err)
+bool	check_syntax_error_near(char *str, char *token_err)
 {
 	int32_t	i;
 	char	*illegal_token;
 
-	illegal_token = "syntax error near unexpected token: \0";
+	illegal_token = "syntax error near unexpected token: ";
 	i = 0;
 	while (str[i] && str[i] == ' ')
 		i++;
 	while (*token_err)
 	{
 		if (*token_err == str[i])
-			free_exit_no_perr2(2, illegal_token, &str[i]);
+		{
+			get_process()->syntax_error = true;
+			write_err2(2, illegal_token, &str[i]);
+			return (true);
+		}
 		token_err++;
 	}
+	return (false);
+}
+
+bool	has_syntax_errors(char *str, int32_t i, int32_t len)
+{
+	if (check_newline_syntax_error(&str[i + len])
+		|| check_syntax_error_near(&str[i + len], "<>|&;()#"))
+		return (true);
+	return (false);
 }
 
 int32_t	add_token_redirection(char *str, int32_t i, t_token_type type,
@@ -49,8 +67,8 @@ int32_t	add_token_redirection(char *str, int32_t i, t_token_type type,
 	int32_t	len;
 
 	len = get_token_len(&str[i], type, false);
-	check_newline_syntax_error(&str[i + len]);
-	check_syntax_error_near(&str[i + len], "<>|&;()#");
+	if (has_syntax_errors(str, i, len))
+		return (i);
 	token = add_token(i, type, parent);
 	token->token_len = len;
 	token->token_str = ft_substr(str, i, token->token_len);
@@ -95,6 +113,8 @@ t_token	*redirection_tokenizer(t_token *parent)
 	add_tk("", TK_START, i, parent);
 	while (parent->str[i])
 	{
+		if (has_error())
+			return (parent->child);
 		type = get_token_type(&parent->str[i]);
 		t_len = get_token_len(&parent->str[i], type, false);
 		if (is_token_delimiter(type))

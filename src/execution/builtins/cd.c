@@ -24,7 +24,8 @@ int	cd_cmd(t_cmd *cmd)
 {
 	char *path;
 	char *path_to_change;
-
+	
+	path = NULL;
 	path_to_change = cmd->args[1];
 	if (cmd->options != NULL)
 		return(printf("Error: Option \"%s\" not supported.\n", cmd->options[0]),1);
@@ -39,11 +40,13 @@ int	cd_cmd(t_cmd *cmd)
 					cmd->args[1]);
 			return (1);
 		}
-		ft_strcat(path, "/");
-		ft_strcat(path, path_to_change);
+		path = ft_strjoinfree(path, "/");
+		path = ft_strjoinfree(path, path_to_change);
 		path_to_change = path;
 	}
 	int result = chdir(path_to_change);
+	if (path)
+		free(path);
 	if (result != 0)
 		return(printf("minishell: cd: %s: No such file or directory\n", cmd->args[1]),1);
 	return (0);

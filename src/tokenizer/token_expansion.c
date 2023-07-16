@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/09 09:33:29 by math             ###   ########.fr       */
+/*   Updated: 2023/07/10 08:48:19 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ t_token	*expansion_tokenizer(t_token *parent)
 	add_tk("", type, i, parent);
 	while (str[i])
 	{
+		if (has_error())
+			return (parent->child);
 		type = get_token_type(&str[i]);
 		t_len = get_token_len(&str[i], type, false);
 		if (type == TK_SINGLEQUOTE)

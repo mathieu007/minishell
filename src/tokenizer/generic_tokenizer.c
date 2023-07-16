@@ -36,7 +36,7 @@ inline int32_t	goto_token(char *str, char *tk)
 	int32_t	tk_len;
 
 	i = 0;
-	tk_len = ft_strlen(str);
+	tk_len = ft_strlen(tk);
 	while (str[i])
 	{
 		i2 = 0;
@@ -140,6 +140,8 @@ bool	has_token_redirection(t_token *parent)
 	t_token_type	type;
 	int32_t			t_len;
 
+	if (get_process()->syntax_error)
+		return (false);
 	i = 0;
 	while (parent->str[i])
 	{
@@ -157,12 +159,14 @@ bool	has_token_redirection(t_token *parent)
 	return (false);
 }
 
-bool	has_token_sequence(t_token *parent)
+bool	has_token_semicolon_sequence(t_token *parent)
 {
 	int32_t			i;
 	t_token_type	type;
 	int32_t			t_len;
 
+	if (get_process()->syntax_error)
+		return (false);
 	i = 0;
 	while (parent->str[i])
 	{
@@ -170,8 +174,30 @@ bool	has_token_sequence(t_token *parent)
 		t_len = get_token_len(&parent->str[i], type, false);
 		if (is_token_delimiter(type))
 			i = skip_token_delimiter(type, i, parent);
-		else if (type == TK_SEMICOLON || type == TK_OR || type == TK_AND
-				|| type == TK_PIPE)
+		else if (type == TK_SEMICOLON)
+			return (true);
+		else
+			i += t_len;
+	}
+	return (false);
+}
+
+bool	has_token_sequence(t_token *parent)
+{
+	int32_t			i;
+	t_token_type	type;
+	int32_t			t_len;
+
+	if (get_process()->syntax_error)
+		return (false);
+	i = 0;
+	while (parent->str[i])
+	{
+		type = get_token_type(&parent->str[i]);
+		t_len = get_token_len(&parent->str[i], type, false);
+		if (is_token_delimiter(type))
+			i = skip_token_delimiter(type, i, parent);
+		else if (type == TK_OR || type == TK_AND || type == TK_PIPE)
 			return (true);
 		else
 			i += t_len;
@@ -186,6 +212,8 @@ bool	has_token(char *tk, t_token *parent)
 	int32_t			t_len;
 	t_token_type	type;
 
+	if (get_process()->syntax_error)
+		return (false);
 	i = 0;
 	type = get_token_type(tk);
 	while (parent->str[i])
@@ -206,6 +234,8 @@ t_token	*dispatch_tokenizer(t_token *parent)
 {
 	t_token	*child;
 
+	if (has_error())
+		return (NULL);
 	child = sequences_tokenizer(parent);
 	if (!child)
 		child = parentheses_tokenizer(parent);

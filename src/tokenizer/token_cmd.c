@@ -30,6 +30,8 @@ t_token	*cmd_tokenizer(t_token *parent)
 	add_tk("", TK_CMD, i, parent);
 	while (parent->str[i])
 	{
+		if (has_error())
+			return (parent->child);
 		type = get_token_type(&parent->str[i]);
 		t_len = get_token_len(&parent->str[i], type, false);
 		if (is_token_delimiter(type))

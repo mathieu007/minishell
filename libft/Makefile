@@ -3,6 +3,7 @@ NAME = libft.a
 SRC	=	src/alloc_pool/data_pool.c	\
 		src/ft_atoi.c	\
 		src/ft_strfill.c	\
+		src/ft_strisempty.c	\
 		src/ft_atoi_long.c	\
 		src/ft_bzero.c	\
 		src/ft_calloc.c	\
@@ -150,7 +151,7 @@ LST_OBJS	= $(patsubst $(LST_SRCDIR)/%,$(BUILDDIR_LST)/%,$(SRC_LST:.$(SRCEXT)=.$(
 
 CC		= gcc
 INCDEP	= -I$(INCDIR)
-CFLAGS	= -Wall -Werror -Wextra
+CFLAGS	= -Wall -Werror -Wextra -g
 RM		= rm -rf
 AR		= ar crs
 

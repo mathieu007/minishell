@@ -120,6 +120,8 @@ void	*build_token_environement(t_token *token)
 
 	proc = get_process();
 	str = NULL;
+	if (token->type == TK_PARENTHESE_OPEN)
+		return (token);
 	if (!has_token_expansion(token))
 		return (space_quotes_tokenizer(token));
 	child = token->child;

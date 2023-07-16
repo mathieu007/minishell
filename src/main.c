@@ -8,16 +8,16 @@ int32_t	subshell(char **inputs)
 
 	proc = get_process();
 	ret = exec_cmds(*inputs);
-	inputs++;
-	while (*inputs)
-		ret = exec_cmds(*inputs);
+	// inputs++;
+	// while (*inputs)
+	// 	ret = exec_cmds(*inputs);
 	free_all_and_exit(proc->errnum);
 	return (ret);
 }
 
-char	*get_prompt_input()
+char	*get_prompt_input(void)
 {
-	char		*input;
+	char	*input;
 
 	input = readline("MiniShell> ");
 	add_history(input);
@@ -25,22 +25,21 @@ char	*get_prompt_input()
 	{
 		printf("\x1B[u\x1B[Aexit\n");
 		free_all_and_exit(0);
-	}	
+	}
 	return (input);
 }
 
 int32_t	main(int32_t argc, char **argv, char **env)
 {
-	char			*input;
+	char	*input;
 
 	init_data(argc, argv, env);
 	if (argc >= 2)
 		return (subshell(&argv[1]));
-	disable_ctrl_c_output();
-	setup_signal_handlers();
 	while (1)
-	{	
-		// disable_ctrl_c_output();		
+	{
+		disable_ctrl_c_output();
+		setup_signal_handlers();
 		input = get_prompt_input();
 		exec_cmds(input);
 		free(input);

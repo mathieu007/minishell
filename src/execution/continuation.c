@@ -1,85 +1,98 @@
 #include "minishell.h"
 
-int32_t	write_continuation(const char *delimiter, t_redirect *redir)
+void	write_delimiter_line(t_redirect *redir, const char *delimiter)
 {
-	char		*line;
-	pid_t		pid;
-	int32_t		status;
-	int32_t		delimiter_len;
-	t_process	*proc;
+	char	*line;
+	int32_t	delimiter_len;
+	int32_t	len;
+	int32_t	i;
 
 	delimiter_len = ft_strlen(delimiter);
+	line = "";
+	if (write(redir->fd, "\n", 1) == -1)
+		free_all_and_exit2(errno, "write error");
+	while (line)
+	{
+		line = readline("> ");
+		if (write(redir->fd, line, ft_strlen(line)) == -1)
+			free_all_and_exit2(errno, "write error");
+		i = 0;
+		len = ft_strlen(line);
+		while (i < len)
+		{
+			if (ft_strncmp(&line[i], delimiter, delimiter_len) == 0)
+				return (free(line));
+			i++;
+		}
+		if (write(redir->fd, "\n", 1) == -1)
+			free_all_and_exit2(errno, "write error");
+		free(line);
+	}
+}
+
+int32_t	write_continuation(const char *delimiter, t_redirect *redir)
+{
+	pid_t		pid;
+	t_process	*proc;
+
 	proc = get_process();
-	pid = fork();
-	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");
-	else if (pid == 0)
+	pid = ft_fork();
+	if (pid == 0)
 	{
 		proc = get_process();
-		line = "";
-		while (line)
+		proc->is_here_doc = true;
+		write_delimiter_line(redir, delimiter);
+		close(redir->fd);
+		free_t_redirect(redir);
+		free_all_and_exit(0);
+	}
+	proc->errnum = ft_waitpid(pid);
+	return (proc->errnum);
+}
+
+void	write_line(t_redirect *redir)
+{
+	int32_t	i;
+	char	*line;
+
+	line = "";
+	while (line)
+	{
+		line = readline("> ");
+		i = 0;
+		while (line[i] && line[i] == ' ')
+			i++;
+		if (line[i])
 		{
-			line = readline("> ");
-			if (ft_strncmp(line, delimiter, delimiter_len) == 0)
-			{
-				free(line);
-				close(redir->fd);
-				exit(0);
-			}
 			write(redir->fd, line, ft_strlen(line));
 			free(line);
+			break ;
 		}
-		close(redir->fd);
-		exit(0);
+		free(line);
 	}
-	if (waitpid(pid, &status, 0) == -1)
-		free_all_and_exit2(errno, "waitpid error");
-	if (WIFEXITED(status))
-		proc->errnum = WEXITSTATUS(status);
-	return (proc->errnum);
+	close(redir->fd);
 }
 
 int32_t	write_non_empty_continuation(t_redirect *redir)
 {
-	char		*line;
 	pid_t		pid;
-	int32_t		status;
 	t_process	*proc;
-	int32_t		i;
 
 	proc = get_process();
-	pid = fork();
-	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");
-	else if (pid == 0)
+	pid = ft_fork();
+	if (pid == 0)
 	{
 		proc = get_process();
-		line = "";
-		while (line)
-		{
-			line = readline("> ");
-			i = 0;
-			while (line[i] && line[i] == ' ')
-				i++;
-			if (line[i])
-			{
-				write(redir->fd, line, ft_strlen(line));
-				free(line);
-				exit(0);
-			}
-			free(line);
-		}
-		close(redir->fd);
-		exit(0);
+		proc->is_here_doc = true;
+		write_line(redir);
+		free_t_redirect(redir);
+		free_all_and_exit(0);
 	}
-	if (waitpid(pid, &status, 0) == -1)
-		free_all_and_exit2(errno, "waitpid error");
-	if (WIFEXITED(status))
-		proc->errnum = WEXITSTATUS(status);
+	proc->errnum = ft_waitpid(pid);
 	return (proc->errnum);
 }
 
-t_redirect	*open_continuation(void)
+t_redirect	*open_write_continuation(void)
 {
 	t_redirect	*redir;
 	char		*f_name;
@@ -88,10 +101,18 @@ t_redirect	*open_continuation(void)
 	tmp_dir = get_temp_dir();
 	f_name = ft_strjoinfree(tmp_dir, "temp_continuation");
 	if (!f_name)
+	{
+		free(tmp_dir);
 		free_all_and_exit2(errno, "malloc error");
+	}
 	redir = ft_calloc(1, sizeof(t_redirect));
 	if (!redir)
+	{
+		free(tmp_dir);
+		free(f_name);
 		free_all_and_exit2(errno, "Failed to create t_redirect obj");
+	}
+	redir->file = free_ptr(redir->file);
 	redir->file = f_name;
 	create_temp_file(redir);
 	if (redir->fd == -1)
@@ -100,52 +121,76 @@ t_redirect	*open_continuation(void)
 	return (redir);
 }
 
+t_redirect	*open_read_continuation(t_redirect *redir)
+{
+	open_read_temp_file(redir);
+	if (redir->fd == -1)
+		write_err(errno, ": Unable open temporary file or directory\n");
+	return (redir);
+}
+
 void	exec_delimiter_continuation(char *delimiter, t_token *parent)
 {
 	t_redirect	*redir;
-	static char	data[128];
+	static char	buffer[128];
 	char		*str;
 	size_t		size;
 
-	data[0] = '\0';
-	redir = open_continuation();
+	buffer[0] = '\0';
+	redir = open_write_continuation();
 	write_continuation(delimiter, redir);
+	open_read_temp_file(redir);
 	size = 1;
-	str = " ";
+	str = NULL;
 	while (size > 0)
 	{
-		ft_strjoinfree(str, &data[0]);
-		size = read(redir->fd, &data[0], 127);
+		size = read(redir->fd, buffer, 127);
+		buffer[size] = '\0';
+		str = ft_strjoinfree(str, &buffer[0]);
 		if (size == (size_t)-1)
+		{
+			free(str);
+			close(redir->fd);
+			free_t_redirect(redir);
 			free_all_and_exit2(errno, "read error");
-		data[size] = '\0';
+		}
 	}
 	parent->str = ft_strjoinfree(parent->str, str);
+	free(str);
 	close(redir->fd);
 	free_t_redirect(redir);
 }
 
-void	exec_continuation(t_token *parent)
+t_redirect	*exec_continuation(t_token *parent)
 {
 	t_redirect	*redir;
-	static char	data[128];
+	char		buffer[128];
 	char		*str;
 	size_t		size;
 
-	data[0] = '\0';
-	redir = open_continuation();
-	write_non_empty_continuation(redir);
 	size = 1;
-	str = " ";
+	redir = open_write_continuation();
+	write_non_empty_continuation(redir);
+	open_read_temp_file(redir);
+	str = malloc(2);
+	if (!str)
+		return (free_all_and_exit2(errno, "malloc error"), NULL);
+	str[0] = ' ';
+	str[1] = '\0';
 	while (size > 0)
 	{
-		ft_strjoinfree(str, &data[0]);
-		size = read(redir->fd, &data[0], 127);
+		size = read(redir->fd, buffer, 127);
+		buffer[size] = '\0';
+		str = ft_strjoinfree(str, &buffer[0]);
 		if (size == (size_t)-1)
+		{
+			free(str);
+			close(redir->fd);
 			free_all_and_exit2(errno, "read error");
-		data[size] = '\0';
+		}
 	}
 	parent->str = ft_strjoinfree(parent->str, str);
+	free(str);
 	close(redir->fd);
-	free_t_redirect(redir);
+	return (redir);
 }
