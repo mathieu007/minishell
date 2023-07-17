@@ -7,8 +7,8 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 	cmd->args = free_2d_char_array(cmd->args);
 	cmd->name = free_ptr(cmd->name);
 	cmd->args = parse_args(cmd->token);
-	if (cmd->args == NULL || ft_strisempty(cmd->args[0])
-		|| ft_striswhitespace(cmd->args[0]))
+	if (cmd->args == NULL || ((ft_strisempty(cmd->args[0])
+		|| ft_striswhitespace(cmd->args[0])) && !cmd->has_redirection))
 		return (NULL);
 	cmd->name = ft_strdup(cmd->args[0]);
 	if (!cmd->name)
