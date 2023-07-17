@@ -87,7 +87,7 @@ int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 	proc->errnum = build_cmd(cmd);
 	if (proc->errnum == -1)
 		return (0);
-	if (proc->errnum > 0)
+	if (proc->errnum > 0 || ft_strisempty(cmd->name))
 		return (proc->errnum);
 	if (cmd->is_builtin && is_in_child_process)
 		proc->errnum = exec_from_child_process(cmd);
@@ -98,6 +98,7 @@ int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 	else
 		proc->errnum = fork_exec(cmd);
 	unlink_files_redirections(cmd->in_redir);
+	fflush(stdout);
 	return (proc->errnum);
 }
 
@@ -125,14 +126,21 @@ int32_t	exec_commands(t_cmd *cmd, bool is_in_child_process)
 	return (proc->errnum);
 }
 
-t_cmd	*create_cmds_tree(t_token *token)
+t_cmd	*create_cmds_tree(t_token *root_token)
 {
 	t_cmd	*root_cmd;
+	t_process	*proc;
+	t_token		*token;
 
+	if (has_error() || !root_token)
+		return (NULL);
+	token = root_token->child;	
 	if (!token)
 		return (NULL);
+	proc = get_process();
 	root_cmd = new_cmd(NULL);
 	create_cmds(token, root_cmd);
+	proc->cmds = root_cmd;
 	return (root_cmd);
 }
 
@@ -143,8 +151,6 @@ t_cmd	*re_parse_at_execution(t_cmd *cmd)
 		return (NULL);
 	if (cmd->next && is_token_redirection(cmd->next->token->type))
 		cmd->has_redirection = true;
-	if (!cmd)
-		return (NULL);
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else
@@ -164,13 +170,10 @@ int32_t	exec_cmds(char *str)
 	proc->errnum = 0;
 	if (!ft_strisempty(str) && !ft_striswhitespace(str))
 		token = tokenize(str);
-	if (!has_error() && token)
-	{
-		root_cmd = create_cmds_tree(token->child);
-		proc->cmds = root_cmd;
+	root_cmd = create_cmds_tree(token);
+	if (root_cmd)		
 		exec_commands(root_cmd->child, false);
-	}
-	free_t_cmd(root_cmd);
+	free_t_cmd(proc->cmds);
 	free_t_tokens(proc->tokens);
 	proc->tokens = NULL;
 	proc->cmds = NULL;

@@ -8,17 +8,16 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 	cmd->name = free_ptr(cmd->name);
 	cmd->args = parse_args(cmd->token);
 	if (cmd->args == NULL || ((ft_strisempty(cmd->args[0])
-		|| ft_striswhitespace(cmd->args[0])) && !cmd->has_redirection))
+		|| ft_striswhitespace(cmd->args[0])) 
+		&& !is_token_redirection(cmd->token->next->type)))
 		return (NULL);
 	cmd->name = ft_strdup(cmd->args[0]);
 	if (!cmd->name)
 		free_all_and_exit2(errno, "malloc error");
 	cmd->is_builtin = is_builtins(cmd->name);
-	if (!cmd->is_builtin)
-	{
-		cmd->full_path_name = free_ptr(cmd->full_path_name);
+	cmd->full_path_name = free_ptr(cmd->full_path_name);
+	if (!cmd->is_builtin && !ft_strisempty(cmd->name))
 		cmd->full_path_name = get_full_path(cmd);
-	}
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }

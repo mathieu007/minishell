@@ -31,7 +31,7 @@ char	*get_temp_dir(void)
 
 	tmp_dir = get_env_value("TMPDIR");
 	if (!tmp_dir)
-		tmp_dir = get_cwd();
+		tmp_dir = get_cwd_with_backslash();
 	if (!tmp_dir)
 		free_all_and_exit2(1,
 							"An error occur while trying to get temporary dir.");

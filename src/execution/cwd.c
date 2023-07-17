@@ -64,7 +64,7 @@ char	*recursive_search_dir(char *path, ino_t ino)
 /// There is multiple fall back layer, don't know if bash do it that way.
 /// @param cmd
 /// @return
-char	*get_cwd(void)
+char	*get_cwd()
 {
 	static char	buffer[PATH_MAX + 1];
 	struct stat	file_stat;
@@ -80,8 +80,6 @@ char	*get_cwd(void)
 			free_all_and_exit2(1,
 				"An error occur while trying to get the current working dir.");
 		proc->cwd = ft_strdup(cur_dir);
-		if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
-			proc->cwd = ft_strjoinfree(proc->cwd, "/");
 		return (ft_strdup(proc->cwd));
 	}
 	if (stat(proc->cwd, &file_stat) != 0)
@@ -101,7 +99,15 @@ char	*get_cwd(void)
 				"An error occur while trying to get the current working dir.");
 		proc->cwd = ft_strdup(cur_dir);
 	}
-	if (proc->cwd[ft_strlen(proc->cwd) - 1] != '/')
-		proc->cwd = ft_strjoinfree(proc->cwd, "/");
 	return (ft_strdup(proc->cwd));
+}
+
+char	*get_cwd_with_backslash()
+{
+	char *cwd;
+
+	cwd = get_cwd();
+	if (!ft_strisempty(cwd) && cwd[ft_strlen(cwd) - 1] != '/')
+		cwd = ft_strjoinfree(cwd, "/");
+	return (cwd);
 }

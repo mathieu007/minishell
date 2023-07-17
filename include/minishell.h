@@ -275,6 +275,7 @@ typedef struct s_process
 }						t_process;
 
 /// @brief The entities functions
+char					*get_cwd_with_backslash();
 void					unlink_files_redirections(t_redirect *redir);
 int32_t					write_here_document(const char *delimiter, t_cmd *main);
 t_cmd					*create_redir_out(t_cmd *main, t_cmd *redir);

@@ -17,7 +17,7 @@ int32_t	exec_logical_or(t_cmd *or_cmd)
 			proc->errnum = exec_commands(child, false);
 		else if (proc->errnum > 0)
 			proc->errnum = exec_commands(child, false);
-		else if (proc->errnum == 0 && child->next)
+		else if (proc->errnum == 0 && child->next && child->type != CMD_PIPE)
 			proc->errnum = exec_commands(child->next, false);
 		or_cmd = or_cmd->next;
 	}

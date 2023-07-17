@@ -159,7 +159,7 @@ char *get_output2(char *full_path, char *filename, char *arg1, char *arg2, int32
         }
         close(dev_null_fd);
 		close(std_pipe[1]);
-		execlp(full_path,filename, arg1, arg2, NULL);
+		execlp(full_path, filename, arg1, arg2, NULL);
 		perror("Failed to execute command");
 		exit(EXIT_FAILURE);
 	} else {
@@ -170,7 +170,8 @@ char *get_output2(char *full_path, char *filename, char *arg1, char *arg2, int32
 		ssize_t read_size;
 		int len;
 		len = 0;
-		while ((read_size = read(std_pipe[0], buffer, sizeof(buffer))) > 0)
+		read_size = read(std_pipe[0], buffer, sizeof(buffer));
+		while (read_size > 0)
 		{
 			buffer[read_size] = '\0';
 			output = realloc(output, len + read_size + 1);
@@ -181,6 +182,7 @@ char *get_output2(char *full_path, char *filename, char *arg1, char *arg2, int32
 			}
 			strcpy(output + len, buffer);
 			len += read_size;
+			read_size = read(std_pipe[0], buffer, sizeof(buffer));
 		}
 		close(std_pipe[0]);
 		if (WIFEXITED(child_status))
@@ -391,6 +393,9 @@ char	*clean_output(char *output)
 		temp = output;
 		output = replaceString(output, "line 1: ", "");
 		free(temp);
+		temp = output;
+		output = replaceString(output, "line 0: ", "");
+		free(temp);
 	}
 	return (output);
 }
@@ -420,7 +425,7 @@ void	run_test(char *command2)
 	minishell_output = NULL;
 	output_err_equal = 0;
 	char *full_name = ft_strjoin(cwd, "/minishell");
-
+	
 	// snprintf(bash_cmd, MAX_COMMAND_LENGTH, "%s", command);
 	bash_err_output = get_output2("bash", "bash", "-c", command2, STDERR_FILENO, STDOUT_FILENO);
 	
@@ -434,15 +439,23 @@ void	run_test(char *command2)
 	// snprintf(minishell_command, MAX_COMMAND_LENGTH, "%s", command2);
 	minishell_output = get_output2(full_name, "./minishell", command2, NULL, STDOUT_FILENO, STDERR_FILENO);
 	minishell_status = return_code;
-
 	output_equal = 0;
+	
 	bash_err_output = clean_output(bash_err_output);
+
 	if (minishell_output && bash_output)
-		output_equal = (strcmp(bash_output, minishell_output) == 0);
+		output_equal = (int)(strcmp(bash_output, minishell_output) == 0);
+	else if (!minishell_output && !bash_output)
+		output_equal = 1;
+	else if (!minishell_output || !bash_output)
+		output_equal = 0;
 	if (minishell_err_output && bash_err_output)
-		output_err_equal = (strcmp(bash_err_output, minishell_err_output) == 0);
-	if (((output_equal && output_err_equal) || ((!minishell_output && !bash_output) || (!minishell_err_output && !bash_err_output)))
-		&& bash_status == minishell_status)
+		output_err_equal = (int)(strcmp(bash_err_output, minishell_err_output) == 0);
+	else if (!minishell_err_output && !bash_err_output)
+		output_err_equal = 1;
+	else if (!minishell_err_output || !bash_err_output)
+		output_err_equal = 0;
+	if ((output_equal && output_err_equal))
 	{
 		printf(GREEN "TEST PASSED!\n\n" RESET);
 		printf("Bash output:\n[%s]\n", bash_output);

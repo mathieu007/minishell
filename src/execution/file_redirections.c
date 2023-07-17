@@ -64,11 +64,11 @@ void	redirect_output(t_cmd *cmd, bool is_in_child_process)
 	if (!is_in_child_process)
 		cmd->out_redir->dup_fd = dup(STDOUT_FILENO);
 	if (dup2(cmd->out_redir->fd, STDOUT_FILENO) == -1)
-		free_all_and_exit2(errno, "Could not redirect output");
+		free_all_and_exit2(errno, "Could not redirect output");	
 	if ((cmd->type == CMD || cmd->type == CMD_PARENTHESES) && is_in_child_process)
 	{
 		if (close(cmd->out_redir->fd) == -1)
 			free_all_and_exit2(errno, "Could not close the fd");
 		cmd->out_redir->fd = -1;
-	}
+	}	
 }

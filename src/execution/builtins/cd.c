@@ -24,7 +24,10 @@ int	cd_cmd(t_cmd *cmd)
 {
 	char *path;
 	char *path_to_change;
+	t_process	*proc;
+	char		path_buff[1024];
 	
+	proc = get_process();
 	path = NULL;
 	path_to_change = cmd->args[1];
 	if (cmd->options != NULL)
@@ -45,6 +48,8 @@ int	cd_cmd(t_cmd *cmd)
 		path_to_change = path;
 	}
 	int result = chdir(path_to_change);
+	proc->cwd = free_ptr(proc->cwd);
+	proc->cwd = ft_strdup(getcwd(path_buff, 1024));
 	if (path)
 		free(path);
 	if (result != 0)

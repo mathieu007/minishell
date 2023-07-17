@@ -46,7 +46,7 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 	}
 	pipe->pid = pid;
 	close_prev_pipes(pipe);
-	return (pipe->next);
+	return (pipe);
 }
 
 void	dup_close_middle_pipes(t_cmd *cmd, t_cmd *pipe)

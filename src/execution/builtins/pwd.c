@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/07 16:25:01 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 int	pwd_cmd(t_cmd *cmd)
 {
-	char	cwd[1024];
-
+	char *cwd;
 	(void)cmd;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
+
+	cwd = get_cwd();
+	if (cwd)
 	{
 		printf("%s\n", cwd);
 		return (0);

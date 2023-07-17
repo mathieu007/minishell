@@ -56,7 +56,7 @@ static char	*try_get_relative_dir(t_cmd *cmd)
 {
 	char	*path;
 
-	path = get_cwd();
+	path = get_cwd_with_backslash();
 	if (path == NULL)
 		perror("An error occur while triying to get the current working dir.");
 	if (cmd->name && cmd->name[0] == '.' && cmd->name[1] == '/' && access(path,
@@ -81,12 +81,10 @@ static char	*try_get_relative_dir2(t_cmd *cmd)
 	count = count_prev_dir(cmd->name);
 	if (count == 0)
 		return (NULL);
-	path = get_cwd();
+	path = get_cwd_with_backslash();
 	path = remove_dir(path, count);
 	if (access(path, F_OK | X_OK) == 0)
 	{
-		if (ft_strlen(path) > 0 && path[ft_strlen(path) - 1] != '/')
-			path = ft_strjoinfree(path, "/");
 		path = ft_strjoinfree(path, &cmd->name[count * 3]);
 		if (access(path, F_OK | X_OK) == 0)
 			return (path);

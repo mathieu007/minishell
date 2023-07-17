@@ -14,9 +14,10 @@ static int32_t	execve_subshell(t_cmd *cmd)
 	subshell_args[0] = proc->full_program_name;
 	file_redirection(cmd, true);
 	close_files_redirections(cmd);
-	if (execve(proc->full_program_name, subshell_args, get_env()) == -1)
+	if (execve(proc->full_program_name, subshell_args, env) == -1)
 	{
 		free_2d_char_array(env);
+		free(subshell_args);
 		free_all_and_exit2(errno, "execve error");
 	}
 	return (errno);
