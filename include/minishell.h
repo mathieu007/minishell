@@ -555,6 +555,7 @@ void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
 void					setup_here_doc_signal_handlers(void);
 void					setup_signal_handlers(void);
 void					disable_ctrl_c_output(void);
+void	sig_handler2(int sig, siginfo_t *siginfo, void *context);
 
 //redirection
 

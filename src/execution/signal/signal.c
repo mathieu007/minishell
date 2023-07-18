@@ -38,6 +38,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 		free_all_and_exit(0);
 }
 
+
 void	setup_signal_handlers(void)
 {
 	struct sigaction	sa;
