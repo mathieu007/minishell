@@ -25,6 +25,169 @@ t_token	*add_tk(char *token_str, t_token_type type, int32_t i, t_token *parent)
 	return (token);
 }
 
+static bool	is_any_of(char c, char *values)
+{
+	while (*values)
+	{
+		if (*values == c)
+			return (true);
+		values++;
+	}
+	return (false);
+}
+
+static bool	check_newline_syntax_error(char *str, int32_t i)
+{
+	char	*syntax_error;
+
+	syntax_error = "syntax error near unexpected token: newline";
+	i++;
+	while (str[i] && str[i] == ' ')
+		i++;
+	if (!str[i])
+	{
+		get_process()->syntax_error = true;
+		write_err(2, syntax_error);
+		return (true);
+	}
+	return (false);
+}
+
+bool	check_syntax_error_before_near(char *str, int32_t i, char *token_err)
+{
+	int32_t	start;
+	char	*illegal_token;
+
+	start = i;
+	illegal_token = "syntax error near unexpected token: ";
+	if (i > 0)
+		i--;
+	while (str[i] && str[i] == ' ')
+		i--;
+	if (is_any_of(str[i], token_err))
+	{
+		get_process()->syntax_error = true;
+		write_err2(2, illegal_token, &str[start]);
+		return (true);
+	}
+	return (false);
+}
+
+bool	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
+{
+	char	*illegal_token;
+
+	illegal_token = "syntax error near unexpected token: ";
+	if (str[i])
+		i++;
+	while (str[i] && str[i] == ' ')
+		i++;
+	if (is_any_of(str[i], token_err))
+	{
+		get_process()->syntax_error = true;
+		write_err2(2, illegal_token, &str[i]);
+		return (true);
+	}
+	return (false);
+}
+
+static int32_t	check_redirection_syntax_errors(char *str, int32_t i)
+{
+	if (check_newline_syntax_error(str, i)
+		|| check_syntax_error_after_near(str, i, "<>|&;()#"))
+		return (-1);
+	return (i);
+}
+
+static bool	has_syntax_errors(int32_t i, int32_t tk_len, t_token *parent)
+{
+	if (tk_len != 0 && check_syntax_error_before_near(parent->str, i, "|&;(<>"))
+		return (true);
+	if (check_syntax_error_after_near(parent->str, i + tk_len, "|&;)<>"))
+		return (true);
+	return (false);
+}
+
+bool	is_continuation(char *str)
+{
+	int32_t	i;
+
+	i = 0;
+	while (str[i] && str[i] == ' ')
+		i++;
+	if (!str[i])
+		return (true);
+	return (false);
+}
+
+int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type, t_token *parent)
+{
+	int32_t	len;
+
+	len = get_token_len(&parent->str[i], type, false);
+	if (type == TK_SEMICOLON && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else if (type == TK_OR && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else if (type == TK_AND && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else if (type == TK_PIPE && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else if (len == 2)
+		i++;
+	return (i);
+}
+
+int32_t check_sequence_continuation(int32_t i, t_token_type	type, t_token *parent)
+{
+	int32_t			len;
+	char			*str;
+	t_redirect		*redir;
+
+	len = get_token_len(&parent->str[i], type, false);
+	str = &parent->str[i + len];
+	if (is_continuation(str))
+	{
+		redir = exec_continuation(parent);
+		unlink_files_redirections(redir);
+		free_t_redirect(redir);
+		return (check_sequence_continuation(i, type, parent));
+	}
+	return (i + len);
+}
+
+void	check_continuations_and_error(t_token *token)
+{
+	int32_t			i;
+	t_token_type	type;
+
+	i = 0;
+	while (token->str[i])
+	{
+		type = get_token_type(&token->str[i]);
+		if (type == TK_DOUBLEQUOTE)
+			i = check_dbl_quotes_continuation(i, token);
+		else if (type == TK_SINGLEQUOTE)
+			i = check_sgl_quotes_continuation(i, token);
+		else if (type == TK_COMMANDSUBSTITUTION_OPEN)
+			i = check_substitution_continuation(i, token);
+		else if (type == TK_PARENTHESE_OPEN)
+			i = check_parenthese_continuation(i, token);
+		else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
+			i = check_environement_continuation(i, token);
+		else if (is_token_redirection(type))
+			i = check_redirection_syntax_errors(token->str, i);
+		else if (is_sequence_type(type))
+			i = check_sequence_syntax_errors(i, type, token);
+		if (i == -1)
+			return ;
+		if (is_sequence_type(type))
+			i = check_sequence_continuation(i, type, token);
+		if (token->str[i])
+			i++;
+	}
+}
+
 /// @brief we add a root token that contains the full string
 /// it's no very usefull, but i just need a root node.
 /// @param str
@@ -39,6 +202,7 @@ t_token	*tokenize(char *str)
 	root = add_tk("", TK_START, 0, NULL);
 	root->str = str;
 	proc->tokens = root;
+	check_continuations_and_error(root);
 	dispatch_tokenizer(root);
 	return (proc->tokens);
 }

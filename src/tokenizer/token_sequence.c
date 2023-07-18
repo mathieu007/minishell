@@ -20,18 +20,6 @@ void	split_token_sequence(t_token *parent)
 	}
 }
 
-bool	is_continuation(char *str)
-{
-	int32_t	i;
-
-	i = 0;
-	while (str[i] && str[i] == ' ')
-		i++;
-	if (!str[i])
-		return (true);
-	return (false);
-}
-
 bool	is_any_of(char c, char *values)
 {
 	while (*values)
@@ -84,24 +72,24 @@ bool	has_syntax_error_after_near(char *str, int32_t i, char *token_err)
 int32_t	add_sequence_token(int32_t i, char *tk_str, t_token_type type,
 		t_token *parent)
 {
-	int32_t		len;
-	char		*str;
-	t_redirect	*redir;
+	int32_t	len;
 
+	// char		*str;
+	// t_redirect	*redir;
 	len = ft_strlen(tk_str);
-	str = &parent->str[i + len];
-	if (len != 0 && has_syntax_error_before_near(parent->str, i,
-			"|&;(<>"))
-		return (i + len);
-	if (has_syntax_error_after_near(parent->str, i + len, "|&;)<>"))
-		return (i + len);
-	if (is_continuation(str))
-	{
-		redir = exec_continuation(parent);
-		unlink_files_redirections(redir);
-		free_t_redirect(redir);
-		return (add_sequence_token(i, tk_str, type, parent));
-	}
+	// str = &parent->str[i + len];
+	// if (len != 0 && has_syntax_error_before_near(parent->str, i,
+	// 		"|&;(<>"))
+	// 	return (i + len);
+	// if (has_syntax_error_after_near(parent->str, i + len, "|&;)<>"))
+	// 	return (i + len);
+	// if (is_continuation(str))
+	// {
+	// 	redir = exec_continuation(parent);
+	// 	unlink_files_redirections(redir);
+	// 	free_t_redirect(redir);
+	// 	return (add_sequence_token(i, tk_str, type, parent));
+	// }
 	add_tk(tk_str, type, i, parent);
 	i += len;
 	return (i);
@@ -110,16 +98,8 @@ int32_t	add_sequence_token(int32_t i, char *tk_str, t_token_type type,
 int32_t	add_semicolon_sequence_token(int32_t i, t_token_type type,
 		t_token *parent)
 {
-	int32_t	len;
-
-	len = ft_strlen(";");
-	if (type != TK_START && has_syntax_error_before_near(parent->str, i,
-			"|&;(<>"))
-		return (i + len);
-	if (has_syntax_error_after_near(parent->str, i + len, "|&;)<>"))
-		return (i + len);
 	add_tk(";", type, i, parent);
-	i += len;
+	i++;
 	return (i);
 }
 

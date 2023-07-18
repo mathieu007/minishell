@@ -275,7 +275,18 @@ typedef struct s_process
 }						t_process;
 
 /// @brief The entities functions
-char					*get_cwd_with_backslash();
+bool					is_sequence_type(t_token_type type);
+int32_t	check_environement_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_dbl_quotes_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_substitution_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_sgl_quotes_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_parenthese_continuation(int32_t i,
+										t_token *parent);
+char					*get_cwd_with_backslash(void);
 void					unlink_files_redirections(t_redirect *redir);
 int32_t					write_here_document(const char *delimiter, t_cmd *main);
 t_cmd					*create_redir_out(t_cmd *main, t_cmd *redir);

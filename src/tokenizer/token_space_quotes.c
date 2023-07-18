@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/10 08:50:28 by math             ###   ########.fr       */
+/*   Updated: 2023/07/18 06:59:18 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,6 @@ int32_t	add_sgl_quote_token(char *str, int32_t i, t_token *parent)
 
 	i_open = i;
 	i = goto_closing_single_quote(str, i + 1);
-	if (str[i] != '\'')
-	{
-		exec_delimiter_continuation("'", parent);
-		return (add_sgl_quote_token(str, i_open, parent));
-	}
 	add_tk("'", TK_SINGLEQUOTE, i_open, parent);
 	add_tk("'", TK_CLOSINGSINGLEQUOTE, i, parent);
 	i++;
@@ -71,11 +66,6 @@ int32_t	add_dbl_quote_token(char *str, int32_t i, t_token *parent)
 
 	i_open = i;
 	i = goto_closing_double_quote(str, i + 1);
-	if (str[i] != '"')
-	{
-		exec_delimiter_continuation("\"", parent);
-		return (add_dbl_quote_token(str, i_open, parent));
-	}
 	add_tk("\"", TK_DOUBLEQUOTE, i_open, parent);
 	add_tk("\"", TK_CLOSINGDOUBLEQUOTE, i, parent);
 	i++;

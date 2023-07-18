@@ -171,7 +171,7 @@ int32_t	exec_cmds(char *str)
 	if (!ft_strisempty(str) && !ft_striswhitespace(str))
 		token = tokenize(str);
 	root_cmd = create_cmds_tree(token);
-	if (root_cmd)		
+	if (root_cmd)
 		exec_commands(root_cmd->child, false);
 	free_t_cmd(proc->cmds);
 	free_t_tokens(proc->tokens);
