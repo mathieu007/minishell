@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmartin <bmartin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/15 13:35:03 by bmartin          ###   ########.fr       */
+/*   Updated: 2023/07/16 13:06:25 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,22 @@
 
 int	exit_cmd(t_cmd *cmd)
 {
-	if (cmd->args[0] == NULL)
+	char	args[32];
+
+	if (!cmd->args || cmd->args[0] == NULL)
 	{
 		free_all();
 		exit(0);
 	}
-	else if (cmd->args[0] != NULL)
+	else if (cmd->args && cmd->args[0] != NULL)
 	{
+		ft_strlcpy(&args[0], cmd->args[0], 32);
 		free_all();
-		exit(ft_atoi(cmd->args[0]));
+		exit(ft_atoi(args));
 	}
 	else
 	{
 		printf("exit: too many arguments");
-		return (1);
+		exit(1);
 	}
 }

@@ -178,11 +178,13 @@ typedef enum e_cmd_seq
 typedef struct s_redirect
 {
 	int32_t				fd;
+	int32_t				dup_fd;
 	char				*input_file;
 	char				*file;
 	bool				fd_is_temp;
 	bool				is_here_doc;
 	bool				is_append;
+	int32_t				flags;
 }						t_redirect;
 
 typedef struct s_pipe
@@ -268,14 +270,48 @@ typedef struct s_process
 	t_token				*tokens;
 	t_cmd				*cmds;
 	bool				is_here_doc;
+	bool				is_subshell;
+	int32_t				parent_in_fd;
+	int32_t				parent_out_fd;
+	bool				syntax_error;
 	t_cmd				*last_cmd;
 }						t_process;
 
 /// @brief The entities functions
-void					check_syntax_error_near(char *str, char *token_err);
+void 					close_all_fds(t_cmd *cmd);
+bool					is_sequence_type(t_token_type type);
+int32_t	check_environement_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_dbl_quotes_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_substitution_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_sgl_quotes_continuation(int32_t i,
+										t_token *parent);
+int32_t	check_parenthese_continuation(int32_t i,
+										t_token *parent);
+char					*get_cwd_with_backslash(void);
+void					unlink_files_redirections(t_redirect *redir);
+int32_t					write_here_document(const char *delimiter, t_cmd *main);
+t_cmd					*create_redir_out(t_cmd *main, t_cmd *redir);
+t_cmd					*create_redir_append_out(t_cmd *main, t_cmd *redir);
+t_cmd					*create_redir_in(t_cmd *main, t_cmd *redir);
+t_cmd					*create_redir_heredoc(t_cmd *main, t_cmd *redir);
+void					close_prev_pipes(t_cmd *cmd);
+t_pipe					*prev_pipe(t_cmd *cmd);
+void					close_pipes(t_pipe *pipe);
+t_pipe					*init_pipes(int32_t *fds, t_cmd *cmd);
+void					pipe_cmd(t_cmd *cmd);
+void					wait_childs(t_cmd *cmd);
+pid_t					ft_fork(void);
+int32_t					ft_waitpid(pid_t pid);
+int32_t					build_cmd(t_cmd *cmd);
+bool					has_token_sequence(t_token *parent);
+bool					has_token_semicolon_sequence(t_token *parent);
+bool					check_syntax_error_near(char *str, char *token_err);
 void	exec_delimiter_continuation(char *delimiter,
 									t_token *parent);
-void					exec_continuation(t_token *parent);
+t_redirect				*exec_continuation(t_token *parent);
 void					create_temp_file(t_redirect *redir);
 char					*get_temp_dir(void);
 int32_t					goto_token(char *str, char *tk);
@@ -303,8 +339,8 @@ bool					is_token_delimiter(t_token_type type);
 void					*find_double_free(t_token *token);
 void					*free_t_token(t_token *token);
 char					**get_env(void);
-t_token					*add_tk_malloc(char *token_str, t_token_type type,
-							int32_t i, t_token *parent);
+void					open_read_temp_file(t_redirect *redir);
+
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
 void					create_cmd_redirections(t_token *token, t_cmd *cmd);
@@ -324,7 +360,7 @@ void					split_token_redirection(t_token *parent);
 t_token					*tokenize_semicolon(t_token *parent);
 t_token					*tokenize_cmd(t_token *parent);
 void					split_token_cmd(t_token *parent);
-void					file_redirection(t_cmd *cmd);
+void					file_redirection(t_cmd *cmd, bool is_in_child_process);
 t_token					*tokenize_redirection(t_token *parent);
 void					split_token_redir(t_token *parent);
 void					exec_redirection(t_cmd *main, t_cmd *cmd);
@@ -334,8 +370,8 @@ t_cmd					*parse_redirect_out(t_cmd *main, t_cmd *redir);
 t_cmd					*create_redir_out(t_cmd *main, t_cmd *cmd);
 t_cmd					*create_redir_append_out(t_cmd *main, t_cmd *cmd);
 void					exec_redirection(t_cmd *main, t_cmd *cmd);
-void					redirect_input(t_cmd *cmd);
-void					redirect_output(t_cmd *cmd);
+void					redirect_input(t_cmd *cmd, bool is_in_child_process);
+void					redirect_output(t_cmd *cmd, bool is_in_child_process);
 int32_t					open_redir_heredoc(t_cmd *cmd);
 int32_t					open_in_redir_fd(t_cmd *cmd);
 int32_t					open_out_redir_fd(t_cmd *cmd);
@@ -554,11 +590,11 @@ void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
 //signal
 void					setup_here_doc_signal_handlers(void);
 void					setup_signal_handlers(void);
+void					setup_child_signal_handlers(void);
 void					disable_ctrl_c_output(void);
 void	sig_handler2(int sig, siginfo_t *siginfo, void *context);
 
 //redirection
-
 int						redirect_append(const char *output_file);
 int						redirect_overwrite(const char *output_file);
 

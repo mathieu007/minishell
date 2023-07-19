@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/06 08:22:59 by math             ###   ########.fr       */
+/*   Updated: 2023/07/11 09:53:12 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ t_token	*add_cmds_sequential(t_token *token, t_cmd *parent)
 		return (NULL);
 	create_cmd_sequential(token, parent);
 	token = token->next;
-	while (token->type != TK_END)
+	while (token->type != TK_END && !ft_strisempty(token->str)
+		&& !ft_striswhitespace(token->str))
 	{
 		create_cmd_sequential(token, parent);
 		token = token->next;

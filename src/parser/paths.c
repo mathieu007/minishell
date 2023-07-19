@@ -28,14 +28,23 @@ static char	*remove_dir(char *path, int32_t dir_count)
 	int32_t	last_index;
 	int32_t	len;
 
-	i = 0;
 	len = ft_strlen(path);
 	last_index = len - 1;
-	while (i < dir_count)
+	i = last_index;
+	if (path[i] == '/')
+		i--;
+	while (i >= 0 && path[i])
 	{
-		while (last_index >= 0)
-			last_index--;
-		i++;
+		if (path[i] == '/')
+		{
+			dir_count--;
+			if (dir_count == 0)
+			{
+				last_index = i;
+				break ;
+			}
+		}
+		i--;
 	}
 	new_path = ft_substr(path, 0, last_index + 1);
 	return (free(path), new_path);
@@ -47,13 +56,16 @@ static char	*try_get_relative_dir(t_cmd *cmd)
 {
 	char	*path;
 
-	path = get_cwd();
+	path = get_cwd_with_backslash();
 	if (path == NULL)
 		perror("An error occur while triying to get the current working dir.");
-	path = ft_strjoin(path, cmd->name);
 	if (cmd->name && cmd->name[0] == '.' && cmd->name[1] == '/' && access(path,
 			F_OK | X_OK) == 0)
-		return (path);
+	{
+		path = ft_strjoinfree(path, &cmd->name[2]);
+		if (access(path, F_OK | X_OK) == 0)
+			return (path);
+	}
 	free(path);
 	return (NULL);
 }
@@ -69,12 +81,15 @@ static char	*try_get_relative_dir2(t_cmd *cmd)
 	count = count_prev_dir(cmd->name);
 	if (count == 0)
 		return (NULL);
-	path = get_cwd();
-	path = join(path, cmd->name);
+	path = get_cwd_with_backslash();
 	path = remove_dir(path, count);
 	if (access(path, F_OK | X_OK) == 0)
-		return (path);
-	return (NULL);
+	{
+		path = ft_strjoinfree(path, &cmd->name[count * 3]);
+		if (access(path, F_OK | X_OK) == 0)
+			return (path);
+	}
+	return (free(path), NULL);
 }
 
 char	*try_get_full_path_from_env_path(t_cmd *cmd)
@@ -100,25 +115,38 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 	return (free_2d_char_array(dup_paths), NULL);
 }
 
+char	*check_dir(char *path, t_cmd *cmd)
+{
+	if (is_a_directory(path))
+	{
+		write_err2(126, cmd->name, ": Is a directory\n");
+		return (free(path), NULL);
+	}
+	return (path);
+}
+
 /// @brief handling ./path/to/file and ../../path/to/file
 /// @param cmd_name
 /// @return
 char	*get_full_path(t_cmd *cmd)
 {
-	char		*path;
-	t_process	*proc;
+	char	*path;
 
-	proc = get_process();
 	path = try_get_relative_dir(cmd);
+	if (!path)
+		path = try_get_relative_dir2(cmd);
+	if (!path)
+		path = try_get_full_path_from_env_path(cmd);
+	if (path && is_a_directory(path))
+	{
+		write_err2(126, cmd->name, ": Is a directory\n");
+		return (free(path), NULL);
+	}
 	if (path)
 		return (path);
-	path = try_get_relative_dir2(cmd);
-	if (path)
-		return (path);
-	path = try_get_full_path_from_env_path(cmd);
-	if (path)
-		return (path);
-	proc->errnum = 127;
-	write_err2(127, cmd->name, ": command not found\n");
+	if (ft_strchr(cmd->name, '/'))
+		write_err2(127, cmd->name, ":  No such file or directory\n");
+	else
+		write_err2(127, cmd->name, ": command not found\n");
 	return (NULL);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/06/28 12:15:09 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/18 19:12:35 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,19 @@ int32_t	get_args_len(t_token *token)
 		return (0);
 	while (token)
 	{
-		if (token->str)
-			args_len++;
+		if (token->str && token->str[0] && token->next)
+		{
+			while (token && token->next)
+			{
+				if (token->next->type == TK_SPACE
+					|| token->next->type == TK_END)
+				{
+					args_len++;
+					break ;
+				}
+				token = token->next;
+			}
+		}
 		token = token->next;
 	}
 	return (args_len);
@@ -145,24 +156,25 @@ t_token	*get_space_str(t_token *token, char *str, char **arg)
 
 void	set_args(t_token *token, char **split)
 {
-	char	*cpy;
 	int32_t	i;
 
 	i = 0;
 	token = token->child;
 	while (token)
 	{
-		if (token->type == TK_SPACE)
-			split[++i] = ft_strdup(token->str);
-		// else if (token->type == TK_DASH)
-		// 	split[i] = ft_strjoin(split[i], token->token_str);
-		// else if (token->type == TK_DASHDASH)
-		// 	split[i] = ft_strjoin(split[i], token->token_str);
-		else
+		if (token->str && token->str[0] && token->next)
 		{
-			cpy = split[i];
-			split[i] = ft_strjoin(split[i], token->str);
-			free(cpy);
+			while (token && token->next)
+			{
+				split[i] = ft_strjoinfree(split[i], token->str);
+				if (token->next->type == TK_SPACE
+					|| token->next->type == TK_END)
+				{
+					i++;
+					break ;
+				}
+				token = token->next;
+			}
 		}
 		token = token->next;
 	}

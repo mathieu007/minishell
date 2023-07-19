@@ -18,7 +18,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (mem);
 }
 
-char	*ft_strjoinfree(char *s1, char const *s2)
+char	*ft_strjoinfree(char *s1, char *s2)
 {
 	char	*mem;
 	size_t	s1_l;

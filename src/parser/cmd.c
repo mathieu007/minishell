@@ -2,20 +2,24 @@
 
 t_cmd	*parse_cmd(t_cmd *cmd)
 {
+	if (cmd->type == CMD_PARENTHESES)
+		return (cmd->name = ft_strdup(cmd->token->str), cmd);
 	cmd->args = free_2d_char_array(cmd->args);
 	cmd->name = free_ptr(cmd->name);
 	cmd->args = parse_args(cmd->token);
-	if (cmd->args == NULL)
+	if (cmd->args == NULL || ((ft_strisempty(cmd->args[0])
+				|| ft_striswhitespace(cmd->args[0]))
+			&& !is_token_redirection(cmd->token->next->type)))
 		return (NULL);
 	cmd->name = ft_strdup(cmd->args[0]);
 	if (!cmd->name)
 		free_all_and_exit2(errno, "malloc error");
 	cmd->is_builtin = is_builtins(cmd->name);
-	if (!cmd->is_builtin)
-	{
-		cmd->full_path_name = free_ptr(cmd->full_path_name);
+	cmd->full_path_name = free_ptr(cmd->full_path_name);
+	if (!cmd->is_builtin && !ft_strisempty(cmd->name))
 		cmd->full_path_name = get_full_path(cmd);
-	}		
+	if (!cmd->full_path_name && !cmd->is_builtin)
+		return (NULL);
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }
@@ -48,7 +52,7 @@ char	**resize_array(char **arr, int32_t add_count)
 	{
 		new[i] = ft_strdup(arr[i]);
 		i++;
-	}	
+	}
 	return (new);
 }
 
@@ -78,6 +82,11 @@ void	*add_cmd_arg_to_main(t_cmd *main, t_cmd *redir)
 
 	args = redir->args;
 	args_count = count_arr(args);
+	if (args_count > 1 && main->type == CMD_PARENTHESES)
+	{
+		return (write_err2(2, "syntax error near unexpected token: ",
+				redir->args[1]), NULL);
+	}		
 	main_args_count = count_arr(main->args);
 	if (args_count <= 1)
 		return (NULL);
@@ -90,11 +99,9 @@ void	*add_cmd_arg_to_main(t_cmd *main, t_cmd *redir)
 	if (!main->name)
 		free_all_and_exit2(errno, "malloc error");
 	main->is_builtin = is_builtins(main->name);
+	main->full_path_name = free_ptr(main->full_path_name);
 	if (!main->is_builtin)
-	{
-		main->full_path_name = free_ptr(main->full_path_name);
 		main->full_path_name = get_full_path(main);
-	}		
 	return (main);
 }
 
@@ -107,8 +114,7 @@ t_cmd	*parse_redirect_out(t_cmd *main, t_cmd *redir)
 		return (NULL);
 	redir->name = ft_strdup(redir->args[0]);
 	if (redir->name == NULL)
-		return (NULL);
-	//main->out_redir = free_t_redirect(main->out_redir);
+		free_all_and_exit2(errno, "malloc error");
 	add_cmd_arg_to_main(main, redir);
 	return (redir);
 }
@@ -123,7 +129,6 @@ t_cmd	*parse_redirect_in(t_cmd *main, t_cmd *redir)
 	redir->name = ft_strdup(redir->args[0]);
 	if (redir->name == NULL)
 		return (NULL);
-	//main->in_redir = free_t_redirect(main->in_redir);
 	add_cmd_arg_to_main(main, redir);
 	return (redir);
 }
@@ -136,11 +141,9 @@ t_cmd	*parse_cmd2(t_cmd *cmd)
 	if (cmd->name == NULL)
 		return (NULL);
 	cmd->is_builtin = is_builtins(cmd->name);
+	cmd->full_path_name = free_ptr(cmd->full_path_name);
 	if (!cmd->is_builtin)
-	{
-		cmd->full_path_name = free_ptr(cmd->full_path_name);
 		cmd->full_path_name = get_full_path(cmd);
-	}		
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }

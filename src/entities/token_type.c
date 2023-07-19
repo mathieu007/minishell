@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 14:39:24 by math              #+#    #+#             */
-/*   Updated: 2023/07/01 09:12:33 by math             ###   ########.fr       */
+/*   Updated: 2023/07/17 18:09:38 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static inline t_token_type	*get_tokens_lookup_table(void)
 		tk_type[TK_PARENTHESE_CLOSE] = TK_PARENTHESE_CLOSE;
 		tk_type[TK_GROUP_REDIRECTIONS] = TK_GROUP_REDIRECTIONS;
 		tk_type[TK_CLOSING_CURLYBRACE] = TK_CLOSING_CURLYBRACE;
+		tk_type[TK_DOLLAR_SIGN_CURLYBRACE] = TK_DOLLAR_SIGN_CURLYBRACE;
 	}
 	return (tk_type);
 }

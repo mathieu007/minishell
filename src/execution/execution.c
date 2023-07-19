@@ -8,9 +8,9 @@ int32_t	execve_cmd(t_cmd *cmd)
 	env = get_env();
 	if (execve(cmd->full_path_name, cmd->args, env) == -1)
 	{
-		if (env)
-			free(env);
+		free_2d_char_array(env);
 		free_all_and_exit2(errno, "execve error");
+		
 	}
 	return (errno);
 }
@@ -21,14 +21,40 @@ int32_t	add_execve_func(t_cmd *cmd)
 	return (1);
 }
 
-static int32_t	exec(t_cmd *cmd)
+static int32_t	exec_from_subshell_process(t_cmd *cmd)
 {
 	t_process	*proc;
 
 	proc = get_process();
-	file_redirection(cmd);
+	file_redirection(cmd, false);
+	proc->errnum = cmd->func(cmd);
+	fflush(stdout);
+	close_files_redirections(cmd);
+	return (proc->errnum);
+}
+
+static int32_t	exec_from_main_process(t_cmd *cmd)
+{
+	t_process	*proc;
+
+	proc = get_process();
+	file_redirection(cmd, false);
+	proc->errnum = cmd->func(cmd);
+	fflush(stdout);
+	close_files_redirections(cmd);
+	return (proc->errnum);
+}
+
+static int32_t	exec_from_child_process(t_cmd *cmd)
+{
+	t_process	*proc;
+
+	proc = get_process();
+	file_redirection(cmd, true);
 	close_files_redirections(cmd);
 	proc->errnum = cmd->func(cmd);
+	fflush(stdout);
+	free_all_and_exit(proc->errnum);
 	return (proc->errnum);
 }
 
@@ -36,21 +62,15 @@ static int32_t	fork_exec(t_cmd *cmd)
 {
 	pid_t		pid;
 	t_process	*proc;
-	int32_t		status;
 
 	signal(SIGQUIT, SIG_DFL);
 	proc = get_process();
 	if (!cmd)
 		return (proc->errnum);
-	pid = fork();
-	if (pid == -1)
-		free_all_and_exit2(errno, "fork error");
-	else if (pid == 0)
-		return (exec(cmd));
-	close_files_redirections(cmd);
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		proc->errnum = WEXITSTATUS(status);
+	pid = ft_fork();
+	if (pid == 0)
+		return (exec_from_child_process(cmd));
+	proc->errnum = ft_waitpid(pid);
 	return (proc->errnum);
 }
 
@@ -64,6 +84,8 @@ int32_t	build_cmd(t_cmd *cmd)
 	{
 		build_token_environement(cmd->token);
 		cmd = re_parse_at_execution(cmd);
+		if (!cmd)
+			return (-1);
 		if (proc->errnum > 0)
 			return (proc->errnum);
 		if (cmd->has_redirection)
@@ -73,22 +95,31 @@ int32_t	build_cmd(t_cmd *cmd)
 	return (proc->errnum);
 }
 
-int32_t	execute_command(t_cmd *cmd, bool should_exec_in_child)
+int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 {
 	t_process	*proc;
 
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
-	if (proc->errnum > 0)
+	if (proc->errnum == -1)
+		return (0);
+	if (proc->errnum > 0 || ft_strisempty(cmd->name))
 		return (proc->errnum);
-	if (cmd->is_builtin || !should_exec_in_child)
-		proc->errnum = exec(cmd);
+	if (cmd->is_builtin && is_in_child_process)
+		proc->errnum = exec_from_child_process(cmd);
+	else if (cmd->is_builtin && proc->is_subshell)
+		proc->errnum = exec_from_subshell_process(cmd);
+	else if (cmd->is_builtin && !is_in_child_process)
+		proc->errnum = exec_from_main_process(cmd);
+	else if (is_in_child_process)
+		proc->errnum = exec_from_child_process(cmd);
 	else
 		proc->errnum = fork_exec(cmd);
+	unlink_files_redirections(cmd->in_redir);
 	return (proc->errnum);
 }
 
-int32_t	exec_commands(t_cmd *cmd, bool should_exec_in_child)
+int32_t	exec_commands(t_cmd *cmd, bool is_in_child_process)
 {
 	t_process	*proc;
 
@@ -108,18 +139,25 @@ int32_t	exec_commands(t_cmd *cmd, bool should_exec_in_child)
 	else if (cmd->type == CMD_PARENTHESES)
 		proc->errnum = exec_subshell(cmd);
 	else if (cmd->type == CMD)
-		proc->errnum = execute_command(cmd, should_exec_in_child);
+		proc->errnum = execute_command(cmd, is_in_child_process);
 	return (proc->errnum);
 }
 
-t_cmd	*create_cmds_tree(t_token *token)
+t_cmd	*create_cmds_tree(t_token *root_token)
 {
-	t_cmd	*root_cmd;
+	t_cmd		*root_cmd;
+	t_process	*proc;
+	t_token		*token;
 
+	if (has_error() || !root_token)
+		return (NULL);
+	token = root_token->child;
 	if (!token)
 		return (NULL);
+	proc = get_process();
 	root_cmd = new_cmd(NULL);
 	create_cmds(token, root_cmd);
+	proc->cmds = root_cmd;
 	return (root_cmd);
 }
 
@@ -128,6 +166,8 @@ t_cmd	*re_parse_at_execution(t_cmd *cmd)
 	cmd = parse_cmd(cmd);
 	if (!cmd)
 		return (NULL);
+	if (cmd->next && is_token_redirection(cmd->next->token->type))
+		cmd->has_redirection = true;
 	if (cmd->is_builtin)
 		add_built_in_func(cmd);
 	else
@@ -141,22 +181,22 @@ int32_t	exec_cmds(char *str)
 	t_cmd		*root_cmd;
 	t_process	*proc;
 
+	token = NULL;
 	root_cmd = NULL;
 	proc = get_process();
 	proc->errnum = 0;
-	token = tokenize(str);
-	if (!has_error())
-	{
-		root_cmd = create_cmds_tree(token->child);
-		proc->cmds = root_cmd;
-		exec_commands(root_cmd->child, true);
-	}
-	free_t_cmd(root_cmd);
+	if (!ft_strisempty(str) && !ft_striswhitespace(str))
+		token = tokenize(str);
+	root_cmd = create_cmds_tree(token);
+	if (root_cmd)
+		exec_commands(root_cmd->child, false);
+	free_t_cmd(proc->cmds);
 	free_t_tokens(proc->tokens);
 	proc->tokens = NULL;
 	proc->cmds = NULL;
 	proc->last_cmd = NULL;
 	proc->tokens = NULL;
 	proc->last_errnum = proc->errnum;
+	proc->syntax_error = false;
 	return (proc->errnum);
 }
