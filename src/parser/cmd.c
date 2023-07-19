@@ -18,6 +18,8 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 	cmd->full_path_name = free_ptr(cmd->full_path_name);
 	if (!cmd->is_builtin && !ft_strisempty(cmd->name))
 		cmd->full_path_name = get_full_path(cmd);
+	if (!cmd->full_path_name && !cmd->is_builtin)
+		return (NULL);
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }
@@ -81,8 +83,10 @@ void	*add_cmd_arg_to_main(t_cmd *main, t_cmd *redir)
 	args = redir->args;
 	args_count = count_arr(args);
 	if (args_count > 1 && main->type == CMD_PARENTHESES)
+	{
 		return (write_err2(2, "syntax error near unexpected token: ",
 				redir->args[1]), NULL);
+	}		
 	main_args_count = count_arr(main->args);
 	if (args_count <= 1)
 		return (NULL);

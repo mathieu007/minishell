@@ -278,6 +278,7 @@ typedef struct s_process
 }						t_process;
 
 /// @brief The entities functions
+void 					close_all_fds(t_cmd *cmd);
 bool					is_sequence_type(t_token_type type);
 int32_t	check_environement_continuation(int32_t i,
 										t_token *parent);
@@ -589,10 +590,10 @@ void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
 //signal
 void					setup_here_doc_signal_handlers(void);
 void					setup_signal_handlers(void);
+void					setup_child_signal_handlers(void);
 void					disable_ctrl_c_output(void);
 
 //redirection
-
 int						redirect_append(const char *output_file);
 int						redirect_overwrite(const char *output_file);
 

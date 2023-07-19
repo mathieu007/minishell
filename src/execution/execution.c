@@ -10,6 +10,7 @@ int32_t	execve_cmd(t_cmd *cmd)
 	{
 		free_2d_char_array(env);
 		free_all_and_exit2(errno, "execve error");
+		
 	}
 	return (errno);
 }

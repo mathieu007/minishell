@@ -94,12 +94,21 @@ void copyFile(const char* sourcePath, const char* destinationPath) {
     fclose(destinationFile);
 }
 
-int truncate_file(const char* filename, off_t length) {
+int truncate_file(const char* filename, off_t length)
+{
+	int fd = open(filename, O_WRONLY);
+    if (fd == -1) {
+        perror("Error opening file");
+        return 1;
+    }
+
     int result = truncate(filename, length);
     if (result == -1) {
         perror("Failed to truncate file");
-        return -1;
+		close(fd);
+        return 1;
     }
+	close(fd);
     return 0;
 }
 
@@ -275,6 +284,8 @@ int	compare_files(const char *file1, const char *file2)
 	}
 	equal = 1;
 	int ch1, ch2;
+	ch1 = -1;
+	ch2 = -1;
 	while ((ch1 = fgetc(fp1)) != EOF && (ch2 = fgetc(fp2)) != EOF)
 	{
 		if (ch1 != ch2)
@@ -309,7 +320,32 @@ char	*clean_output(char *output)
 	return (output);
 }
 
-int	check_file_content_equality(void)
+void truncate_files(char *path)
+{
+	int		i;
+	char	*filename1;
+	char	*filename2;
+	char	*num;
+
+	i = 1;
+	while (i < 10)
+	{
+		num = ft_itoa(i);
+
+		filename1 = ft_strjoin(path, "/outfile_minishell");
+		filename1 = ft_strjoinfree(filename1, num);
+		
+		filename2 = ft_strjoin(path, "/outfile_bash");
+		filename2 = ft_strjoinfree(filename2, num);
+		truncate_file(filename1, 0);
+		truncate_file(filename2, 0);
+		free(filename1);
+		free(filename2);
+		i++;
+	}
+}
+
+int	check_file_content_equality(char *path)
 {
 	int		i;
 	char	*filename1;
@@ -326,8 +362,11 @@ int	check_file_content_equality(void)
 	while (i < 10)
 	{
 		num = ft_itoa(i);
-		filename1 = ft_strjoin("outfile_minishell", num);
-		filename2 = ft_strjoin("outfile_bash", num);
+		filename1 = ft_strjoin(path, "/outfile_minishell");
+		filename1 = ft_strjoinfree(filename1, num);
+		
+		filename2 = ft_strjoin(path, "/outfile_bash");
+		filename2 = ft_strjoinfree(filename2, num);
 		free(num);
 		if (files_content_equals == 1)
 		{
@@ -336,8 +375,8 @@ int	check_file_content_equality(void)
 				printf("file mismatch %s : %s\n", filename1, filename2);
 			files_content_equals = cur_files_content_equals;
 		}
-		truncate_file(filename1, new_size);
-		truncate_file(filename2, new_size);
+		// truncate_file(filename1, new_size);
+		// truncate_file(filename2, new_size);
 		free(filename1);
 		free(filename2);
 		i++;
@@ -361,13 +400,14 @@ void	run_test(char *command)
 	// char		bash_cmd[MAX_COMMAND_LENGTH];
 	// char		minishell_command[MAX_COMMAND_LENGTH];
 	// char		*command;
-	files_equals = 1;
 	char cwd[1024]; // Buffer to store the current directory path
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("getcwd() error");
 		exit(1);
 	}
+	files_equals = 1;
+	truncate_files(cwd);
 	bash_output = NULL;
 	minishell_output = NULL;
 	output_err_equal = 0;
@@ -388,7 +428,7 @@ void	run_test(char *command)
 	minishell_status = return_code;
 	output_equal = 0;
 	bash_err_output = clean_output(bash_err_output);
-	files_equals = check_file_content_equality();
+	files_equals = check_file_content_equality(cwd);
 	if (minishell_output && bash_output)
 		output_equal = (int)(strcmp(bash_output, minishell_output) == 0);
 	else if (!minishell_output && !bash_output)

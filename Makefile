@@ -64,7 +64,7 @@ re:	fclean all
 
 test: re 
 	cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
-test2: re 
+test2: all 
 	cd bin && chmod 777 ./* && chmod +x ./* && ./tests_redir
 mem: re 
 	cd bin && chmod 777 ./tests_valgrind && chmod +x ./tests_valgrind && ./tests_valgrind $(NUM_VALGRIND_CMDS)	

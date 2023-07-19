@@ -30,6 +30,8 @@ int32_t	write_here_document(const char *delimiter, t_cmd *main)
 	t_process	*proc;
 
 	proc = get_process();
+	disable_ctrl_c_output();
+	setup_child_signal_handlers();
 	pid = ft_fork();
 	if (pid == 0)
 	{
