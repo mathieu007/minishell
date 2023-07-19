@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/09 09:12:10 by math             ###   ########.fr       */
+/*   Updated: 2023/07/18 12:45:13 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,18 @@ inline bool	is_token_sequence(t_token *token)
 
 	type = token->type;
 	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
-		|| type == TK_GREATGREAT || type == TK_GREAT || type == TK_PIPE
-		|| type == TK_LESS || type == TK_LESSLESS)
+		|| type == TK_PIPE)
+		return (true);
+	return (false);
+}
+
+/// @brief determine the end of a sequence...
+/// @param token
+/// @return
+inline bool	is_sequence_type(t_token_type type)
+{
+	if (type == TK_SEMICOLON || type == TK_AND || type == TK_OR
+		|| type == TK_PIPE)
 		return (true);
 	return (false);
 }
@@ -56,9 +66,8 @@ inline bool	has_token_expansion(t_token *token)
 	while (token)
 	{
 		type = token->type;
-		if (type == TK_COMMANDSUBSTITUTION_OPEN
-			|| type == TK_LAST_CMD_EXIT
-			|| type == TK_ENVIRONEMENT_VAR)
+		if (type == TK_COMMANDSUBSTITUTION_OPEN || type == TK_LAST_CMD_EXIT
+			|| type == TK_ENVIRONEMENT_VAR || type == TK_DOLLAR_SIGN_CURLYBRACE)
 			return (true);
 		token = token->next;
 	}

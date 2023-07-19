@@ -20,6 +20,18 @@ int32_t	add_execve_func(t_cmd *cmd)
 	return (1);
 }
 
+static int32_t	exec_from_subshell_process(t_cmd *cmd)
+{
+	t_process	*proc;
+
+	proc = get_process();
+	file_redirection(cmd, false);
+	proc->errnum = cmd->func(cmd);
+	fflush(stdout);
+	close_files_redirections(cmd);
+	return (proc->errnum);
+}
+
 static int32_t	exec_from_main_process(t_cmd *cmd)
 {
 	t_process	*proc;
@@ -27,6 +39,7 @@ static int32_t	exec_from_main_process(t_cmd *cmd)
 	proc = get_process();
 	file_redirection(cmd, false);
 	proc->errnum = cmd->func(cmd);
+	fflush(stdout);
 	close_files_redirections(cmd);
 	return (proc->errnum);
 }
@@ -39,6 +52,7 @@ static int32_t	exec_from_child_process(t_cmd *cmd)
 	file_redirection(cmd, true);
 	close_files_redirections(cmd);
 	proc->errnum = cmd->func(cmd);
+	fflush(stdout);
 	free_all_and_exit(proc->errnum);
 	return (proc->errnum);
 }
@@ -91,6 +105,8 @@ int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 		return (proc->errnum);
 	if (cmd->is_builtin && is_in_child_process)
 		proc->errnum = exec_from_child_process(cmd);
+	else if (cmd->is_builtin && proc->is_subshell)
+		proc->errnum = exec_from_subshell_process(cmd);
 	else if (cmd->is_builtin && !is_in_child_process)
 		proc->errnum = exec_from_main_process(cmd);
 	else if (is_in_child_process)
@@ -98,7 +114,6 @@ int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 	else
 		proc->errnum = fork_exec(cmd);
 	unlink_files_redirections(cmd->in_redir);
-	fflush(stdout);
 	return (proc->errnum);
 }
 
@@ -128,13 +143,13 @@ int32_t	exec_commands(t_cmd *cmd, bool is_in_child_process)
 
 t_cmd	*create_cmds_tree(t_token *root_token)
 {
-	t_cmd	*root_cmd;
+	t_cmd		*root_cmd;
 	t_process	*proc;
 	t_token		*token;
 
 	if (has_error() || !root_token)
 		return (NULL);
-	token = root_token->child;	
+	token = root_token->child;
 	if (!token)
 		return (NULL);
 	proc = get_process();
@@ -171,7 +186,7 @@ int32_t	exec_cmds(char *str)
 	if (!ft_strisempty(str) && !ft_striswhitespace(str))
 		token = tokenize(str);
 	root_cmd = create_cmds_tree(token);
-	if (root_cmd)		
+	if (root_cmd)
 		exec_commands(root_cmd->child, false);
 	free_t_cmd(proc->cmds);
 	free_t_tokens(proc->tokens);

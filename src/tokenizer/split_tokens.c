@@ -129,7 +129,8 @@ void	*build_token_environement(t_token *token)
 	{
 		if (child->type == TK_COMMANDSUBSTITUTION_OPEN)
 			val = ft_strdup(child->str);
-		else if (child->type == TK_ENVIRONEMENT_VAR)
+		else if (child->type == TK_ENVIRONEMENT_VAR
+			|| child->type == TK_DOLLAR_SIGN_CURLYBRACE)
 			val = parse_env_var_value(child);
 		else if (child->type == TK_LAST_CMD_EXIT)
 			val = ft_itoa(proc->last_errnum);
@@ -142,7 +143,6 @@ void	*build_token_environement(t_token *token)
 	token->str = free_ptr(token->str);
 	token->str = str;
 	token->last = NULL;
-	// token->token_str = free_ptr(child->token_str);
 	return (space_quotes_tokenizer(token));
 }
 

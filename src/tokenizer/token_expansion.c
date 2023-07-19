@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/10 08:48:19 by math             ###   ########.fr       */
+/*   Updated: 2023/07/18 13:58:16 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static int32_t	goto_closing_expansion_token(char *str, t_token_type type,
 		i = goto_closing_parenthese(str, i + 2);
 	else if (type == TK_ENVIRONEMENT_VAR)
 		i = goto_closing_environement(str, i + 1);
+	else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
+		i = goto_closing_environement(str, i + 2);
 	else if (type == TK_LAST_CMD_EXIT)
 		i++;
 	return (i);
@@ -38,6 +40,7 @@ bool	has_token_expansion_str(char *str)
 		if (type == TK_SINGLEQUOTE)
 			i = skip_token_single_quote(str, type, i);
 		else if (type == TK_COMMANDSUBSTITUTION_OPEN
+				|| type == TK_DOLLAR_SIGN_CURLYBRACE
 				|| type == TK_ENVIRONEMENT_VAR || type == TK_LAST_CMD_EXIT)
 			return (true);
 		else
@@ -59,7 +62,7 @@ int32_t	add_expansion_token(char *str, int32_t i, char *tk_str, t_token *parent)
 	else if (str[i] == ')')
 		add_tk(")", type, i, parent);
 	else
-		add_tk("", type, i + 1, parent);
+		add_tk("", type, i, parent);
 	return (i + 1);
 }
 
@@ -108,7 +111,7 @@ t_token	*expansion_tokenizer(t_token *parent)
 			i = skip_token_single_quote(str, type, i);
 		else if (type == TK_COMMANDSUBSTITUTION_OPEN)
 			i = add_expansion_token(str, i, "$(", parent);
-		else if (type == TK_ENVIRONEMENT_VAR && str[i + 1] == '{')
+		else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
 			i = add_expansion_token(str, i, "${", parent);
 		else if (type == TK_ENVIRONEMENT_VAR)
 			i = add_expansion_token(str, i, "$", parent);

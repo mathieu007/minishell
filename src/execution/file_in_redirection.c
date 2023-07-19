@@ -79,7 +79,7 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 
 	flags = O_RDONLY;
 	if (!cmd->in_redir || !cmd->in_redir->file)
-		f_name = ft_strjoinfree(get_cwd(), cmd->name);
+		f_name = ft_strjoinfree(get_cwd_with_backslash(), cmd->name);
 	else
 		f_name = ft_strdup(cmd->in_redir->file);
 	if (!f_name)
