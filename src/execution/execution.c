@@ -63,7 +63,8 @@ static int32_t	fork_exec(t_cmd *cmd)
 	pid_t		pid;
 	t_process	*proc;
 
-	signal(SIGQUIT, SIG_DFL);
+	if (signal(SIGQUIT, sigquit_handler) == SIG_ERR) 
+        free_all_and_exit2(1,"Signal SIGQUIT error" );
 	proc = get_process();
 	if (!cmd)
 		return (proc->errnum);

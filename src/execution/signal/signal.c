@@ -50,6 +50,7 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 		close_all_fds(cmd);
 		free_all_and_exit(0);
 	}		
+	
 }
 
 void	sig_handler(int sig, siginfo_t *siginfo, void *context)
@@ -76,6 +77,23 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 		close_all_fds(cmd);
 		free_all_and_exit(0);
 	}		
+}
+
+void sigquit_handler(void) 
+{
+	t_process	*proc;
+	t_cmd		*cmd;
+
+
+	proc = get_process();
+	cmd = proc->cmds;
+	proc = get_process();
+
+	write(1, "QUIT : 3\n", 9);
+	close_all_fds(cmd);
+	proc->errnum = 131;
+	rl_on_new_line();
+	rl_replace_line("", 0);
 }
 
 

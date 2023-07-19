@@ -593,6 +593,7 @@ void					setup_signal_handlers(void);
 void					setup_child_signal_handlers(void);
 void					disable_ctrl_c_output(void);
 void	sig_handler2(int sig, siginfo_t *siginfo, void *context);
+void sigquit_handler(void) ;
 
 //redirection
 int						redirect_append(const char *output_file);
