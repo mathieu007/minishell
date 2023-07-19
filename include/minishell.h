@@ -270,6 +270,9 @@ typedef struct s_process
 	t_token				*tokens;
 	t_cmd				*cmds;
 	bool				is_here_doc;
+	bool				is_subshell;
+	int32_t				parent_in_fd;
+	int32_t				parent_out_fd;
 	bool				syntax_error;
 	t_cmd				*last_cmd;
 }						t_process;
@@ -335,8 +338,6 @@ bool					is_token_delimiter(t_token_type type);
 void					*find_double_free(t_token *token);
 void					*free_t_token(t_token *token);
 char					**get_env(void);
-t_token					*add_tk_malloc(char *token_str, t_token_type type,
-							int32_t i, t_token *parent);
 void					open_read_temp_file(t_redirect *redir);
 
 void					close_files_redirections(t_cmd *cmd);

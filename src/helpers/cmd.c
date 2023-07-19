@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/17 21:25:56 by math             ###   ########.fr       */
+/*   Updated: 2023/07/18 12:45:13 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ inline bool	has_token_expansion(t_token *token)
 	{
 		type = token->type;
 		if (type == TK_COMMANDSUBSTITUTION_OPEN || type == TK_LAST_CMD_EXIT
-			|| type == TK_ENVIRONEMENT_VAR)
+			|| type == TK_ENVIRONEMENT_VAR || type == TK_DOLLAR_SIGN_CURLYBRACE)
 			return (true);
 		token = token->next;
 	}

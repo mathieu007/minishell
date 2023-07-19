@@ -31,44 +31,6 @@ bool	is_any_of(char c, char *values)
 	return (false);
 }
 
-bool	has_syntax_error_before_near(char *str, int32_t i, char *token_err)
-{
-	int32_t	start;
-	char	*illegal_token;
-
-	start = i;
-	illegal_token = "syntax error near unexpected token: ";
-	if (i > 0)
-		i--;
-	while (str[i] && str[i] == ' ')
-		i--;
-	if (is_any_of(str[i], token_err))
-	{
-		get_process()->syntax_error = true;
-		write_err2(2, illegal_token, &str[start]);
-		return (true);
-	}
-	return (false);
-}
-
-bool	has_syntax_error_after_near(char *str, int32_t i, char *token_err)
-{
-	char	*illegal_token;
-
-	illegal_token = "syntax error near unexpected token: ";
-	if (str[i])
-		i++;
-	while (str[i] && str[i] == ' ')
-		i++;
-	if (is_any_of(str[i], token_err))
-	{
-		get_process()->syntax_error = true;
-		write_err2(2, illegal_token, &str[i]);
-		return (true);
-	}
-	return (false);
-}
-
 int32_t	add_sequence_token(int32_t i, char *tk_str, t_token_type type,
 		t_token *parent)
 {

@@ -33,24 +33,6 @@ void	split_token_parentheses(t_token *parent)
 	}
 }
 
-// int32_t	check_p_syntax_errors(t_token *parent)
-// {
-// 	int32_t	i;
-// 	int32_t	i2;
-
-// 	i = 0;
-// 	check_before_parenthese_syntax_error(parent->str);
-// 	i = goto_token(parent->str, "(");
-// 	i2 = goto_closing_parenthese(parent->str, i);
-// 	if (parent->str[i2] != ')')
-// 	{
-// 		exec_delimiter_continuation(")", parent);
-// 		return (check_p_syntax_errors(parent));
-// 	}
-// 	check_after_parenthese_syntax_error(&parent->str[i2 + 1]);
-// 	return (i);
-// }
-
 t_token	*parentheses_tokenizer(t_token *parent)
 {
 	int32_t			i;

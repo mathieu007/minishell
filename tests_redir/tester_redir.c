@@ -1,12 +1,73 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/stat.h>
-#include <string.h>
+#include <unistd.h>
 #include "../libft/include/libft.h"
+
+// char	*ft_strjoin(char const *s1, char const *s2)
+// {
+// 	char	*mem;
+// 	size_t	s1_l;
+// 	size_t	s2_l;
+
+// 	s1_l = strlen(s1);
+// 	s2_l = strlen(s2);
+// 	mem = (char *)malloc(sizeof(char) * (s1_l + s2_l + 1));
+// 	if (!mem)
+// 		return (NULL);
+// 	memcpy(mem, s1, s1_l);
+// 	memcpy(&mem[s1_l], s2, s2_l);
+// 	mem[s1_l + s2_l] = '\0';
+// 	return (mem);
+// }
+
+// char	*ft_strjoinfree(char *s1, char *s2)
+// {
+// 	char	*mem;
+// 	size_t	s1_l;
+// 	size_t	s2_l;
+
+// 	s1_l = strlen(s1);
+// 	s2_l = strlen(s2);
+// 	mem = (char *)malloc(sizeof(char) * (s1_l + s2_l + 1));
+// 	if (!mem)
+// 		return (free(s1), NULL);
+// 	memcpy(mem, s1, s1_l);
+// 	memcpy(&mem[s1_l], s2, s2_l);
+// 	mem[s1_l + s2_l] = '\0';
+// 	return (free(s1), mem);
+// }
+
+// char	*ft_strjoinfree2(char *s1, char *s2)
+// {
+// 	char	*mem;
+// 	size_t	s1_l;
+// 	size_t	s2_l;
+
+// 	s1_l = strlen(s1);
+// 	s2_l = strlen(s2);
+// 	mem = (char *)malloc(sizeof(char) * (s1_l + s2_l + 1));
+// 	if (!mem)
+// 	{
+// 		if (s1)
+// 			free(s1);
+// 		if (s2)
+// 			free(s2);
+// 		return (NULL);
+// 	}
+// 	memcpy(mem, s1, s1_l);
+// 	memcpy(&mem[s1_l], s2, s2_l);
+// 	mem[s1_l + s2_l] = '\0';
+// 	if (s1)
+// 		free(s1);
+// 	if (s2)
+// 		free(s2);
+// 	return (mem);
+// }
 
 void copyFile(const char* sourcePath, const char* destinationPath) {
     FILE* sourceFile = fopen(sourcePath, "rb");
@@ -42,92 +103,148 @@ int truncate_file(const char* filename, off_t length) {
     return 0;
 }
 
-int compare_files(const char* filename1, const char* filename2) {
-    FILE* file1 = fopen(filename1, "r");
-    FILE* file2 = fopen(filename2, "r");
+extern char	**environ;
+int			return_code;
 
-    if (file1 == NULL || file2 == NULL) {
-        perror("Failed to open files");
-		if (!file1)
-			printf("file: %s\n", filename1);
-		if (!file2)
-			printf("file: %s\n", filename2);	
-        return -1;
-    }
+char	*get_output(char *full_path, char *filename, char *arg1, char *arg2,
+		int32_t fileno, int32_t discard)
+{
+	int		std_pipe[2];
+	char	*output;
+	pid_t	child_pid;
+	int		dev_null_fd;
+	int		child_status;
+	char	buffer[256];
+	ssize_t	read_size;
+	int		len;
 
-    int equal = 1;
-    int ch1 = 0;
-	int ch2 = 0;
-
-    while ((ch1 = fgetc(file1)) && (ch2 = fgetc(file2))) {
-		if (ch1 == EOF || ch2 == EOF)
-			break;
-        if (ch1 != ch2) {
-			
-            equal = 0;
-            break;
-        }
-    }
-
-    if (ch1 != ch2) {
-        equal = 0;
-    }
-
-    fclose(file1);
-    fclose(file2);
-
-    return equal;
+	output = NULL;
+	if (pipe(std_pipe) == -1)
+	{
+		perror("Failed to create pipe");
+		exit(EXIT_FAILURE);
+	}
+	child_pid = fork();
+	if (child_pid == -1)
+	{
+		perror("Failed to fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (child_pid == 0)
+	{
+		if (dup2(std_pipe[1], fileno) == -1)
+		{
+			perror("Failed to redirect stderr");
+			exit(EXIT_FAILURE);
+		}
+		dev_null_fd = open("/dev/null", O_WRONLY);
+		if (dev_null_fd == -1)
+		{
+			perror("Failed to open /dev/null");
+			exit(EXIT_FAILURE);
+		}
+		if (dup2(dev_null_fd, discard) == -1)
+		{
+			perror("Failed to redirect");
+			exit(EXIT_FAILURE);
+		}
+		close(dev_null_fd);
+		close(std_pipe[1]);
+		execlp(full_path, filename, arg1, arg2, NULL);
+		perror("Failed to execute command");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		close(std_pipe[1]);
+		waitpid(child_pid, &child_status, 0);
+		len = 0;
+		fflush(stdout);
+		read_size = read(std_pipe[0], buffer, sizeof(buffer));
+		while (read_size > 0)
+		{
+			buffer[read_size] = '\0';
+			output = realloc(output, len + read_size + 1);
+			if (output == NULL)
+			{
+				perror("realloc failed");
+				exit(EXIT_FAILURE);
+			}
+			strcpy(output + len, buffer);
+			len += read_size;
+			fflush(stdout);
+			read_size = read(std_pipe[0], buffer, sizeof(buffer));
+		}
+		close(std_pipe[0]);
+		if (WIFEXITED(child_status))
+			return_code = WEXITSTATUS(child_status);
+		else if (WIFSIGNALED(child_status))
+			return_code = WTERMSIG(child_status);
+	}
+	return (output);
 }
 
-char* replaceString(const char* input, const char* search, const char* replace) {
-    // Calculate the length of the resulting string
-    size_t inputLen = strlen(input);
-    size_t searchLen = strlen(search);
-    size_t replaceLen = strlen(replace);
-    size_t resultLen = inputLen;
-    size_t count = 0;
+char	*replaceString(const char *input, const char *search,
+		const char *replace)
+{
+	size_t		inputLen;
+	size_t		searchLen;
+	size_t		replaceLen;
+	size_t		resultLen;
+	size_t		count;
+	const char	*p;
+	char		*result;
+	const char	*inputPtr;
+	char		*resultPtr;
+	const char	*match;
 
-    // Count the number of occurrences of the search string
-    const char* p = input;
-    while ((p = strstr(p, search)) != NULL) {
-        count++;
-        p += searchLen;
-    }
+	// Calculate the length of the resulting string
+	inputLen = strlen(input);
+	searchLen = strlen(search);
+	replaceLen = strlen(replace);
+	resultLen = inputLen;
+	count = 0;
+	// Count the number of occurrences of the search string
+	p = input;
+	while ((p = strstr(p, search)) != NULL)
+	{
+		count++;
+		p += searchLen;
+	}
+	// Calculate the length of the resulting string after replacement
+	resultLen += (replaceLen - searchLen) * count;
+	// Allocate memory for the resulting string
+	result = (char *)malloc((resultLen + 1) * sizeof(char));
+	if (result == NULL)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		return (NULL);
+	}
 
-    // Calculate the length of the resulting string after replacement
-    resultLen += (replaceLen - searchLen) * count;
-
-    // Allocate memory for the resulting string
-    char* result = (char*)malloc((resultLen + 1) * sizeof(char));
-    if (result == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return NULL;
-    }
-
-    // Copy the input string, replacing occurrences of the search string with the replace string
-    const char* inputPtr = input;
-    char* resultPtr = result;
-    while (count > 0) {
-        const char* match = strstr(inputPtr, search);
-        if (match == NULL) {
-            // No more occurrences, copy the remaining part of the input string
-            strcpy(resultPtr, inputPtr);
-            break;
-        }
-        // Copy the part before the match
-        strncpy(resultPtr, inputPtr, match - inputPtr);
-        resultPtr += match - inputPtr;
-        // Copy the replacement string
-        strcpy(resultPtr, replace);
-        resultPtr += replaceLen;
-        // Move the input pointer to the end of the matched search string
-        inputPtr = match + searchLen;
-        count--;
-    }
-    // Copy the remaining part of the input string
-    strcpy(resultPtr, inputPtr);
-
-    return result;
+	inputPtr = input;
+	resultPtr = result;
+	while (count > 0)
+	{
+		match = strstr(inputPtr, search);
+		if (match == NULL)
+		{
+			// No more occurrences, copy the remaining part of the input string
+			strcpy(resultPtr, inputPtr);
+			break ;
+		}
+		// Copy the part before the match
+		strncpy(resultPtr, inputPtr, match - inputPtr);
+		resultPtr += match - inputPtr;
+		// Copy the replacement string
+		strcpy(resultPtr, replace);
+		resultPtr += replaceLen;
+		// Move the input pointer to the end of the matched search string
+		inputPtr = match + searchLen;
+		count--;
+	}
+	// Copy the remaining part of the input string
+	strcpy(resultPtr, inputPtr);
+	return (result);
 }
 
 #define RED "\x1b[31m"
@@ -137,151 +254,208 @@ char* replaceString(const char* input, const char* search, const char* replace) 
 
 #define MAX_COMMAND_LENGTH 1000000
 
-void print_exit_status(int bash_status, int minishell_status)
+void	print_exit_status(int bash_status, int minishell_status)
 {
-    printf("Bash exit status: %d\n", bash_status);
-    printf("Minishell exit status: %d\n", minishell_status);
+	printf("Bash exit status: %d\n", bash_status);
+	printf("Minishell exit status: %d\n", minishell_status);
 }
 
-void run_test(const char *command2)
+int	compare_files(const char *file1, const char *file2)
 {
-		int i = 0;
-        char bash_cmd[MAX_COMMAND_LENGTH];
-		char minishell_command[MAX_COMMAND_LENGTH];
-		char *bash_output = NULL;
-		char *temp_bashoutput = NULL;
-		char *minishell_output = NULL;
-		char line[MAX_COMMAND_LENGTH];
-		size_t bash_output_len = 0;
-		size_t minishell_output_len = 0;
-		FILE *bash_pipe;
-		FILE *minishell_fd;
-		const char *command = replaceString(command2, "'", "'\\''");
-		char	*command_minishell = replaceString(command, "outfile", "outfile_minishell");
-		char	*command_bash = replaceString(command, "outfile", "outfile_bash");
+	FILE	*fp1;
+	FILE	*fp2;
+	int		equal;
 
-		snprintf(bash_cmd, MAX_COMMAND_LENGTH, "bash -c '%s' 2>&1", command_bash);
-		snprintf(minishell_command, MAX_COMMAND_LENGTH, "./minishell '%s' 2>&1", command_minishell);
+	fp1 = fopen(file1, "r");
+	fp2 = fopen(file2, "r");
+	if (fp1 == NULL || fp2 == NULL)
+	{
+		perror("Error opening files for comparison");
+		return (-1);
+	}
+	equal = 1;
+	int ch1, ch2;
+	while ((ch1 = fgetc(fp1)) != EOF && (ch2 = fgetc(fp2)) != EOF)
+	{
+		if (ch1 != ch2)
+		{
+			equal = 0;
+			break ;
+		}
+	}
+	if (ch1 != EOF || ch2 != EOF)
+		equal = 0;
+	fclose(fp1);
+	fclose(fp2);
+	return (equal);
+}
 
-		bash_pipe = popen(bash_cmd, "r");
-		if (bash_pipe == NULL)
-		{
-			perror("popen bash_command");
-			exit(EXIT_FAILURE);
-		}
-		while (fgets(line, sizeof(line), bash_pipe) != NULL)
-		{
-			bash_output = realloc(bash_output, bash_output_len + strlen(line) + 1);
-			if (bash_output == NULL)
-			{
-				perror("realloc bash_output");
-				exit(EXIT_FAILURE);
-			}
-			strcpy(bash_output + bash_output_len, line);
-			bash_output_len += strlen(line);
-		}
-		int bash_status = pclose(bash_pipe);
+char	*clean_output(char *output)
+{
+	char	*temp;
 
-		minishell_fd = popen(minishell_command, "r");
-		if (minishell_fd == NULL)
-		{
-			pclose(bash_pipe);
-			perror("popen minishell_command");
-			exit(EXIT_FAILURE);
-		}
-		while (fgets(line, sizeof(line), minishell_fd) != NULL)
-		{
-			size_t line_len = strlen(line);
-			minishell_output = realloc(minishell_output, minishell_output_len + line_len + 1);
-			if (minishell_output == NULL)
-			{
-				perror("realloc minishell_output");
-				exit(EXIT_FAILURE);
-			}
-			strcpy(minishell_output + minishell_output_len, line);
-			minishell_output_len += line_len;
-		}
-		int minishell_status = pclose(minishell_fd);
-		i = 1;
-		char *filename1;
-		char *filename2;
-		char *num;
-		int files_content_equals = 1;
-		int cur_files_content_equals = 1;
-		off_t new_size = 0;
+	temp = output;
+	if (output)
+	{
+		output = replaceString(output, "bash: ", "");
+		free(temp);
+		temp = output;
+		output = replaceString(output, "line 1: ", "");
+		free(temp);
+		temp = output;
+		output = replaceString(output, "line 0: ", "");
+		free(temp);
+	}
+	return (output);
+}
 
-		while (i < 10)
-		{	
-			num = ft_itoa(i);
-			filename1 = ft_strjoin("outfile_minishell", num);
-			filename2 = ft_strjoin("outfile_bash", num);
-			free(num);
-			if (files_content_equals == 1)
-			{
-				cur_files_content_equals = compare_files(filename1, filename2);
-				if (cur_files_content_equals == 0)
-					printf("file mismatch %s : %s\n", filename1, filename2);
-				files_content_equals = cur_files_content_equals;
-			}
-			truncate_file(filename1, new_size);
-			truncate_file(filename2, new_size);
-			free(filename1);
-			free(filename2);
-			i++;
-		}
-		int output_equal = 0;
-		temp_bashoutput = bash_output;
-		if (bash_output)
+int	check_file_content_equality(void)
+{
+	int		i;
+	char	*filename1;
+	char	*filename2;
+	char	*num;
+	int		files_content_equals;
+	int		cur_files_content_equals;
+	off_t	new_size;
+
+	i = 1;
+	files_content_equals = 1;
+	cur_files_content_equals = 1;
+	new_size = 0;
+	while (i < 10)
+	{
+		num = ft_itoa(i);
+		filename1 = ft_strjoin("outfile_minishell", num);
+		filename2 = ft_strjoin("outfile_bash", num);
+		free(num);
+		if (files_content_equals == 1)
 		{
-			bash_output = replaceString(bash_output, "bash: ", "");
-			bash_output = replaceString(bash_output, "line 1: ", "");
-			free(temp_bashoutput);
-		}			
-		if (minishell_output && bash_output)
-			output_equal = (strcmp(bash_output, minishell_output) == 0);
-			
-		// Print the test result
-		if (files_content_equals && (output_equal || (!minishell_output && !bash_output)) && WEXITSTATUS(bash_status) == WEXITSTATUS(minishell_status))
-		{
-			printf(GREEN "TEST PASSED!\n\n" RESET);
-			printf("Bash output:\n[%s]\n", bash_output);
-			printf("Bash exit status: %d\n", WEXITSTATUS(bash_status));
-			printf("Minishell output:\n[%s]\n", minishell_output);
-			printf("Minishell exit status: %d\n\n", WEXITSTATUS(minishell_status));
+			cur_files_content_equals = compare_files(filename1, filename2);
+			if (cur_files_content_equals == 0)
+				printf("file mismatch %s : %s\n", filename1, filename2);
+			files_content_equals = cur_files_content_equals;
 		}
+		truncate_file(filename1, new_size);
+		truncate_file(filename2, new_size);
+		free(filename1);
+		free(filename2);
+		i++;
+	}
+	return (files_content_equals);
+}
+
+void	run_test(char *command)
+{
+	char	*bash_output;
+	char	*bash_err_output;
+	char	*minishell_output;
+	char	*minishell_err_output;
+	int		bash_status;
+	int		minishell_status;
+	int		output_equal;
+	int		output_err_equal;
+	int		files_equals;
+	char	*full_name;
+
+	// char		bash_cmd[MAX_COMMAND_LENGTH];
+	// char		minishell_command[MAX_COMMAND_LENGTH];
+	// char		*command;
+	files_equals = 1;
+	char cwd[1024]; // Buffer to store the current directory path
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		perror("getcwd() error");
+		exit(1);
+	}
+	bash_output = NULL;
+	minishell_output = NULL;
+	output_err_equal = 0;
+	full_name = ft_strjoin(cwd, "/minishell");
+	// snprintf(bash_cmd, MAX_COMMAND_LENGTH, "%s", command);
+	bash_err_output = get_output("bash", "bash", "-c", command, STDERR_FILENO,
+			STDOUT_FILENO);
+	// snprintf(bash_cmd, MAX_COMMAND_LENGTH, "%s", command2);
+	bash_output = get_output("bash", "bash", "-c", command, STDOUT_FILENO,
+			STDERR_FILENO);
+	bash_status = return_code;
+	// snprintf(minishell_command, MAX_COMMAND_LENGTH, "%s", command2);
+	minishell_err_output = get_output(full_name, "./minishell", command, NULL,
+			STDERR_FILENO, STDOUT_FILENO);
+	// snprintf(minishell_command, MAX_COMMAND_LENGTH, "%s", command2);
+	minishell_output = get_output(full_name, "./minishell", command, NULL,
+			STDOUT_FILENO, STDERR_FILENO);
+	minishell_status = return_code;
+	output_equal = 0;
+	bash_err_output = clean_output(bash_err_output);
+	files_equals = check_file_content_equality();
+	if (minishell_output && bash_output)
+		output_equal = (int)(strcmp(bash_output, minishell_output) == 0);
+	else if (!minishell_output && !bash_output)
+		output_equal = 1;
+	else if (!minishell_output || !bash_output)
+		output_equal = 0;
+	if (minishell_err_output && bash_err_output)
+		output_err_equal = (int)(strcmp(bash_err_output,
+					minishell_err_output) == 0);
+	else if (!minishell_err_output && !bash_err_output)
+		output_err_equal = 1;
+	else if (!minishell_err_output || !bash_err_output)
+		output_err_equal = 0;
+	if ((output_equal && output_err_equal && files_equals))
+	{
+		printf(GREEN "TEST PASSED!\n\n" RESET);
+		printf("Bash output:\n[%s]\n", bash_output);
+		printf("Bash err output:\n[%s]\n", bash_err_output);
+		printf("Bash exit status: %d\n\n", bash_status);
+		printf("Minishell output:\n[%s]\n", minishell_output);
+		if (files_equals)
+			printf("Minishell out files are equals\n");
 		else
-		{
-			printf(RED "TEST FAILED!\n\n" RESET);
-			printf("Bash output:\n[%s]\n", bash_output);
-			printf("Bash exit status: %d\n\n", WEXITSTATUS(bash_status));
-			printf("Minishell output:\n[%s]\n", minishell_output);
-			if (files_content_equals != 1)
-				printf("Minishell out file differ\n");
-			printf("Minishell exit status: %d\n\n", WEXITSTATUS(minishell_status));
-		}
-		free(bash_output);
-		free(minishell_output);
+			printf("Minishell out files differ\n");
+		printf("Minishell err output:\n[%s]\n", minishell_err_output);
+		printf("Minishell exit status: %d\n\n", minishell_status);
+	}
+	else
+	{
+		printf(RED "TEST FAILED!\n\n" RESET);
+		printf("Bash output:\n[%s]\n", bash_output);
+		printf("Bash err output:\n[%s]\n", bash_err_output);
+		printf("Bash exit status: %d\n\n", bash_status);
+		if (files_equals)
+			printf("Minishell out files are equals\n");
+		else
+			printf("Minishell out files differ\n");
+		printf("Minishell output:\n[%s]\n", minishell_output);
+		printf("Minishell err output:\n[%s]\n", minishell_err_output);
+		printf("Minishell exit status: %d\n\n", minishell_status);
+	}
+	free(bash_output);
+	free(minishell_output);
+	free(bash_err_output);
+	free(minishell_err_output);
+	free(full_name);
 }
 
-int main(void)
+int	main(void)
 {
-    FILE *file;
-    char line[MAX_COMMAND_LENGTH];
+	FILE	*file;
+	char	line[MAX_COMMAND_LENGTH];
 
-    file = fopen("./tests_redir.txt", "r");
-    if (file == NULL)
-    {
-        perror("fopen");
-        return (EXIT_FAILURE);
-    }
-    while (fgets(line, sizeof(line), file) != NULL)
-    {
-        // Remove trailing newline character
-        line[strcspn(line, "\n")] = '\0';
-        printf("--------------------------------------------------------\n");
-        printf(VIOLET "TEST  %s\n" RESET, line);
-        run_test(line);
-    }
-    fclose(file);
-    return (EXIT_SUCCESS);
+	file = fopen("./tests_redir.txt", "r");
+	if (file == NULL)
+	{
+		perror("fopen");
+		return (EXIT_FAILURE);
+	}
+	while (fgets(line, sizeof(line), file) != NULL)
+	{
+		// Remove trailing newline character
+		line[strcspn(line, "\n")] = '\0';
+		printf("--------------------------------------------------------\n");
+		printf(VIOLET "TEST  %s\n" RESET, line);
+		run_test(line);
+	}
+	fclose(file);
+	return (EXIT_SUCCESS);
 }

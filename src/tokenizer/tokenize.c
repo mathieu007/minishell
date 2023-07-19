@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-t_token	*add_tk_malloc(char *token_str, t_token_type type, int32_t i,
-		t_token *parent)
-{
-	t_token	*token;
-
-	token = add_token(i, type, parent);
-	token->token_len = ft_strlen(token_str);
-	// token->token_str = free_ptr(token->token_str);
-	token->token_str = token_str;
-	token->end = i + token->token_len;
-	return (token);
-}
 
 t_token	*add_tk(char *token_str, t_token_type type, int32_t i, t_token *parent)
 {
@@ -91,10 +79,13 @@ bool	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
 	return (false);
 }
 
-static int32_t	check_redirection_syntax_errors(char *str, int32_t i)
+static int32_t	check_redirection_syntax_errors(char *str, t_token_type type, int32_t i)
 {
+	int32_t	len;
+
+	len = get_token_len(&str[i], type, false);
 	if (check_newline_syntax_error(str, i)
-		|| check_syntax_error_after_near(str, i, "<>|&;()#"))
+		|| check_syntax_error_after_near(str, i + len, "<>|&;()#"))
 		return (-1);
 	return (i);
 }
@@ -120,23 +111,6 @@ bool	is_continuation(char *str)
 	return (false);
 }
 
-int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type, t_token *parent)
-{
-	int32_t	len;
-
-	len = get_token_len(&parent->str[i], type, false);
-	if (type == TK_SEMICOLON && has_syntax_errors(i++, len, parent))
-		i = -1;
-	else if (type == TK_OR && has_syntax_errors(i++, len, parent))
-		i = -1;
-	else if (type == TK_AND && has_syntax_errors(i++, len, parent))
-		i = -1;
-	else if (type == TK_PIPE && has_syntax_errors(i++, len, parent))
-		i = -1;
-	else if (len == 2)
-		i++;
-	return (i);
-}
 
 int32_t check_sequence_continuation(int32_t i, t_token_type	type, t_token *parent)
 {
@@ -155,6 +129,27 @@ int32_t check_sequence_continuation(int32_t i, t_token_type	type, t_token *paren
 	}
 	return (i + len);
 }
+
+int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type, t_token *parent)
+{
+	int32_t	len;
+
+	len = get_token_len(&parent->str[i], type, false);
+	if (type == TK_SEMICOLON && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else if (type == TK_OR && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else if (type == TK_AND && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else if (type == TK_PIPE && has_syntax_errors(i++, len, parent))
+		i = -1;
+	else
+		check_sequence_continuation(i, type, parent);
+	if (len == 2)
+		i++;
+	return (i);
+}
+
 
 void	check_continuations_and_error(t_token *token)
 {
@@ -176,13 +171,11 @@ void	check_continuations_and_error(t_token *token)
 		else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
 			i = check_environement_continuation(i, token);
 		else if (is_token_redirection(type))
-			i = check_redirection_syntax_errors(token->str, i);
+			i = check_redirection_syntax_errors(token->str, type, i);
 		else if (is_sequence_type(type))
 			i = check_sequence_syntax_errors(i, type, token);
 		if (i == -1)
 			return ;
-		if (is_sequence_type(type))
-			i = check_sequence_continuation(i, type, token);
 		if (token->str[i])
 			i++;
 	}

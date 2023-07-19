@@ -60,6 +60,11 @@ int32_t	skip_token_single_quote(char *str, t_token_type type, int32_t i)
 
 int32_t	check_dbl_quotes_continuation(int32_t i, t_token *parent)
 {
+	char	*str;
+
+	str = &parent->str[i];
+	if (!str)
+		return 2;
 	i = goto_closing_double_quote(parent->str, i + 1);
 	if (parent->str[i] != '\"')
 	{
@@ -102,50 +107,50 @@ int32_t	check_environement_continuation(int32_t i, t_token *parent)
 	return (i);
 }
 
-static bool	check_before_parenthese_syntax_error(char *str, int32_t i)
-{
-	i--;
-	while (i >= 0)
-	{
-		if (str[i] != ' ')
-		{
-			get_process()->syntax_error = true;
-			write_err2(2, "syntax error near unexpected token: ", &str[i]);
-			return (true);
-		}
-		i--;
-	}
-	return (false);
-}
+// static bool	check_before_parenthese_syntax_error(char *str, int32_t i)
+// {
+// 	i--;
+// 	while (i >= 0)
+// 	{
+// 		if (str[i] != ' ')
+// 		{
+// 			get_process()->syntax_error = true;
+// 			write_err2(2, "syntax error near unexpected token: ", &str[i]);
+// 			return (true);
+// 		}
+// 		i--;
+// 	}
+// 	return (false);
+// }
 
-static bool	check_after_parenthese_syntax_error(char *str, int32_t i)
-{
-	t_token_type	type;
+// static bool	check_after_parenthese_syntax_error(char *str, int32_t i)
+// {
+// 	t_token_type	type;
 
-	while (str[i] && str[i] == ' ')
-		i++;
-	if (!str[i])
-		return (false);
-	type = get_token_type(&str[i]);
-	if (!str[i] && !is_token_redirection(type))
-	{
-		get_process()->syntax_error = true;
-		write_err2(2, "syntax error near unexpected token: ", &str[i]);
-		return (true);
-	}
-	return (false);
-}
+// 	while (str[i] && str[i] == ' ')
+// 		i++;
+// 	if (!str[i])
+// 		return (false);
+// 	type = get_token_type(&str[i]);
+// 	if (!str[i] && !is_token_redirection(type))
+// 	{
+// 		get_process()->syntax_error = true;
+// 		write_err2(2, "syntax error near unexpected token: ", &str[i]);
+// 		return (true);
+// 	}
+// 	return (false);
+// }
 
 int32_t	check_parenthese_continuation(int32_t i, t_token *parent)
 {
-	check_before_parenthese_syntax_error(parent->str, i);
+	//check_before_parenthese_syntax_error(parent->str, i);
 	i = goto_closing_parenthese(parent->str, i + 1);
 	if (parent->str[i] != ')')
 	{
 		exec_delimiter_continuation(")", parent);
 		return (goto_closing_parenthese(parent->str, i));
 	}
-	check_after_parenthese_syntax_error(parent->str, i);
+	//check_after_parenthese_syntax_error(parent->str, i);
 	return (i);
 }
 

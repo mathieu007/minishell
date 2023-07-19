@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/17 15:48:04 by math             ###   ########.fr       */
+/*   Updated: 2023/07/18 17:38:58 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ inline int32_t	goto_closing_double_quote(char *str, int32_t i)
 	{
 		if (str[i] == '\\')
 			i += 2;
-		else if (str[i] == '$' && str[i + 1] && str[i + 1] == '{')
-			i = goto_closing_environement(str, i + 2) + 1;
 		else if (str[i] == '"')
 			return (i);
 		else
