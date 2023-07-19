@@ -28,7 +28,7 @@ int32_t	ft_waitpid(pid_t pid)
 		if (WIFEXITED(status))
 			proc->errnum = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			proc->errnum = WTERMSIG(status);	
+			proc->errnum = 128 + WTERMSIG(status);		
 		else
 			free_all_and_exit2(errno, "waitpid error");	
 		return (proc->errnum);	

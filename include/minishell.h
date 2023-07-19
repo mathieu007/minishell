@@ -586,8 +586,10 @@ int						is_valid_identifier_unset(char *identifier);
 void					add_env_node(t_process *data, char *variable,
 							char *value);
 void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
+void					reset_cmd();
 
 //signal
+void 					sigquit_handler(int);
 void					setup_here_doc_signal_handlers(void);
 void					setup_signal_handlers(void);
 void					setup_child_signal_handlers(void);

@@ -42,6 +42,8 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	if (siginfo->si_signo == SIGINT && proc->is_here_doc)
 	{
 		proc->is_here_doc = false;
+		write(1, "\n", 1);
+		rl_on_new_line();
 		close_all_fds(cmd);
 		free_all_and_exit(0);
 	}
@@ -100,4 +102,19 @@ void	setup_child_signal_handlers(void)
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	sigquit_handler(int val) 
+{
+	t_process	*proc;
+	t_cmd		*cmd;
+	(void)val;
+
+	proc = get_process();
+	cmd = proc->cmds;
+	write(1, "QUIT : 3\n", 9);	
+	close_all_fds(cmd);	
+	reset_cmd();
+	rl_on_new_line();
+	rl_replace_line("", 0);
 }

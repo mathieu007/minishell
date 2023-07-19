@@ -13,7 +13,6 @@ void	write_here_doc_line(t_cmd *main, const char *delimiter)
 			&& ft_strlen(line) == delimiter_len)
 		{
 			free(line);
-			write(main->in_redir->fd, "\n", 1);
 			break ;
 		}
 		write(main->in_redir->fd, line, ft_strlen(line));
@@ -31,12 +30,12 @@ int32_t	write_here_document(const char *delimiter, t_cmd *main)
 
 	proc = get_process();
 	disable_ctrl_c_output();
-	setup_child_signal_handlers();
+	setup_child_signal_handlers();	
 	pid = ft_fork();
 	if (pid == 0)
 	{
 		proc = get_process();
-		proc->is_here_doc = true;
+		proc->is_here_doc = true;	
 		write_here_doc_line(main, delimiter);
 		free_all_and_exit(0);
 	}
