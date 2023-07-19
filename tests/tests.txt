@@ -77,7 +77,6 @@ export VAR=" 111   222 " && echo "$VAR-123"
 export VAR=" 111   222 " && echo "$VAR '123'"
 export VAR=" 111   222 " && echo " $VAR-123"
 export VAR=" 111   222 " && echo " $VAR '123'"
-export 
 export 1
 export _1
 export al#
@@ -87,7 +86,7 @@ export a
 export A
 export allo
 export a=1 b=2 c=3 
-export a=1 b=2 c=3 && env
+export a=1 b=2 c=3
 export a=a=a && echo $a
 unset a=a=a && echo $a
 unset 1
@@ -98,9 +97,9 @@ unset a
 unset A
 unset allo
 unset al#
-export a=1 b=2 c=3 && unset a b c && env
-export a=1 b=2 c=3 && unset a b && env
-export a=1 b=2 c=3 && unset a  && env
+export a=1 b=2 c=3 && unset a b c
+export a=1 b=2 c=3 && unset a b
+export a=1 b=2 c=3 && unset a
 cd .
 cd ..
 cd .. && cd libft && pwd && cd .. && pwd

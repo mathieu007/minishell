@@ -137,11 +137,15 @@ char	*get_full_path(t_cmd *cmd)
 		path = try_get_relative_dir2(cmd);
 	if (!path)
 		path = try_get_full_path_from_env_path(cmd);
+	if(cmd->name && cmd->name[0] == '/')
+		path = ft_strdup(cmd->name);
 	if (path && is_a_directory(path))
 	{
 		write_err2(126, cmd->name, ": Is a directory\n");
 		return (free(path), NULL);
 	}
+	if (path && path[0] == '/' && access(path, F_OK | X_OK) != 0)
+		write_err2(127, cmd->name, ":  No such file or directory\n");
 	if (path)
 		return (path);
 	if (ft_strchr(cmd->name, '/'))
