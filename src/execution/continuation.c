@@ -36,6 +36,8 @@ int32_t	write_continuation(const char *delimiter, t_redirect *redir)
 	t_process	*proc;
 
 	proc = get_process();
+	disable_ctrl_c_output();
+	setup_child_signal_handlers();
 	pid = ft_fork();
 	if (pid == 0)
 	{
@@ -79,6 +81,8 @@ int32_t	write_non_empty_continuation(t_redirect *redir)
 	t_process	*proc;
 
 	proc = get_process();
+	disable_ctrl_c_output();
+	setup_child_signal_handlers();
 	pid = ft_fork();
 	if (pid == 0)
 	{

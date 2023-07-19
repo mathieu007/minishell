@@ -18,8 +18,8 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 	cmd->full_path_name = free_ptr(cmd->full_path_name);
 	if (!cmd->is_builtin && !ft_strisempty(cmd->name))
 		cmd->full_path_name = get_full_path(cmd);
-	if (!cmd->full_path_name && !cmd->is_builtin)
-		return (NULL);
+	// if (!cmd->full_path_name && !cmd->is_builtin)
+	// 	return (NULL);
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }

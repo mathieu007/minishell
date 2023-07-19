@@ -45,21 +45,6 @@ void	build_redir_environement(t_cmd *main, t_cmd *redir)
 		close_files_redirections(main);
 }
 
-// void	*close_parent_subshell_fds(t_cmd *cmd)
-// {
-// 	t_process	*proc;
-
-// 	proc = get_process();
-// 	if (proc->is_subshell && cmd->has_redirection)
-// 	{
-// 		if (proc->parent_in_fd >= 3 && cmd->in_redir->fd >= 3)
-// 			close(proc->parent_in_fd);
-// 		if (proc->parent_out_fd >= 3 && cmd->out_redir->fd >= 3)
-// 			close(proc->parent_out_fd);
-// 	}		
-// 	return (NULL);
-// }
-
 t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 {
 	t_process	*proc;

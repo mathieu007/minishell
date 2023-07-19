@@ -62,7 +62,9 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	proc = get_process();
 	cmd = proc->cmds;
 	proc = get_process();
-	if (siginfo->si_signo == SIGINT)
+	if (cmd && cmd->child && cmd->child->name && ft_strncmp(cmd->child->name, "cat", 3) == 0 && ft_strlen(cmd->child->name) == 3 && siginfo->si_signo == SIGINT)
+		write(1, "\n", 1);
+	else if (siginfo->si_signo == SIGINT)
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();
@@ -70,9 +72,10 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 		rl_redisplay();
 	}
 	else if (siginfo->si_signo == SIGTERM)
+	{
+		close_all_fds(cmd);
 		free_all_and_exit(0);
-	else if (siginfo->si_signo == SIGQUIT)
-		write(1, "QUIT : 3\n", 9);
+	}		
 }
 
 

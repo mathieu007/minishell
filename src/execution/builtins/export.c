@@ -59,7 +59,7 @@ char	*handle_export_value(char **split_on_equal)
 	return (value);
 }
 
-void	handle_export(t_process *data, char *arg)
+int32_t	handle_export(t_process *data, char *arg)
 {
 	t_env_cpy	*current;
 	char		**split_on_equal;
@@ -70,19 +70,20 @@ void	handle_export(t_process *data, char *arg)
 	current = data->env_cpy;
 	split_on_equal = ft_split(arg, '=');
 	if (!split_on_equal)
-		return ;
+		return (0);
 	value = handle_export_value(split_on_equal);
 	if (is_valid_identifier(split_on_equal[0]) == 0)
 	{
 		print_not_valid_identifier(0, split_on_equal[0]);
 		free_2d_array((void **)split_on_equal);
-		return ;
+		return (1);
 	}
 	len = ft_strlen(split_on_equal[0]);
 	swap = update_env_variable(current, split_on_equal[0], value, len);
 	if (!swap)
 		add_env_node(data, split_on_equal[0], value);
 	free_2d_array((void **)split_on_equal);
+	return (0);
 }
 
 int	export_cmd(t_cmd *cmd)
@@ -90,7 +91,9 @@ int	export_cmd(t_cmd *cmd)
 	t_process	*data;
 	int			i;
 	char		*arg;
+	int			ret;
 
+	ret = 0;
 	data = get_process();
 	if (cmd->args[1] == NULL)
 	{
@@ -106,8 +109,9 @@ int	export_cmd(t_cmd *cmd)
 	while (cmd->args[i])
 	{
 		arg = cmd->args[i];
-		handle_export(data, arg);
+		if (handle_export(data, arg) > 0)
+			ret = 1;
 		i++;
 	}
-	return (0);
+	return (ret);
 }
