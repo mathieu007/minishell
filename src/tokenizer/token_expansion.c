@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/18 13:58:16 by math             ###   ########.fr       */
+/*   Updated: 2023/07/19 13:08:55 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ int32_t	add_expansion_token(char *str, int32_t i, char *tk_str, t_token *parent)
 	else if (str[i] == ')')
 		add_tk(")", type, i, parent);
 	else
-		add_tk("", type, i, parent);
-	return (i + 1);
+		add_tk("", type, ++i, parent);
+	return (i);
 }
 
 void	split_token_expansion(t_token *parent)

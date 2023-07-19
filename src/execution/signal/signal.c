@@ -75,7 +75,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	{
 		close_all_fds(cmd);
 		free_all_and_exit(0);
-	}		
+	}
 }
 
 void	setup_signal_handlers(void)

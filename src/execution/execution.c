@@ -175,6 +175,21 @@ t_cmd	*re_parse_at_execution(t_cmd *cmd)
 	return (cmd);
 }
 
+void	reset_cmd()
+{
+	t_process	*proc;
+
+	proc = get_process();
+	free_t_cmd(proc->cmds);
+	free_t_tokens(proc->tokens);
+	proc->tokens = NULL;
+	proc->cmds = NULL;
+	proc->last_cmd = NULL;
+	proc->tokens = NULL;
+	proc->last_errnum = proc->errnum;
+	proc->syntax_error = false;
+}
+
 int32_t	exec_cmds(char *str)
 {
 	t_token		*token;
@@ -190,13 +205,5 @@ int32_t	exec_cmds(char *str)
 	root_cmd = create_cmds_tree(token);
 	if (root_cmd)
 		exec_commands(root_cmd->child, false);
-	free_t_cmd(proc->cmds);
-	free_t_tokens(proc->tokens);
-	proc->tokens = NULL;
-	proc->cmds = NULL;
-	proc->last_cmd = NULL;
-	proc->tokens = NULL;
-	proc->last_errnum = proc->errnum;
-	proc->syntax_error = false;
 	return (proc->errnum);
 }
