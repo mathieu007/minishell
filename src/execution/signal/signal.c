@@ -71,6 +71,8 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	}
 	else if (siginfo->si_signo == SIGTERM)
 		free_all_and_exit(0);
+	else if (siginfo->si_signo == SIGQUIT)
+		write(1, "QUIT : 3\n", 9);
 }
 
 

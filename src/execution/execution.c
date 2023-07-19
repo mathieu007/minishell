@@ -63,7 +63,7 @@ static int32_t	fork_exec(t_cmd *cmd)
 	pid_t		pid;
 	t_process	*proc;
 
-	//signal(SIGQUIT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	proc = get_process();
 	if (!cmd)
 		return (proc->errnum);
