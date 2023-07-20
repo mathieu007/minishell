@@ -18,7 +18,7 @@ void	disable_ctrl_c_output(void)
 	}
 }
 
-void 	close_all_fds(t_cmd *cmd)
+void	close_all_fds(t_cmd *cmd)
 {
 	while (cmd)
 	{
@@ -29,7 +29,7 @@ void 	close_all_fds(t_cmd *cmd)
 	}
 }
 
-void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
+void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	t_process	*proc;
 	t_cmd		*cmd;
@@ -38,12 +38,11 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)sig;
 	proc = get_process();
 	cmd = proc->cmds;
-	proc = get_process();
-	if (siginfo->si_signo == SIGINT && proc->is_here_doc)
-	{
-		proc->is_here_doc = false;
+	if (siginfo->si_signo == SIGINT && proc->in_here_doc)
+	{		
 		write(1, "\n", 1);
-		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 		close_all_fds(cmd);
 		free_all_and_exit(0);
 	}
@@ -51,7 +50,7 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	{
 		close_all_fds(cmd);
 		free_all_and_exit(0);
-	}		
+	}
 }
 
 void	sig_handler(int sig, siginfo_t *siginfo, void *context)
@@ -63,8 +62,13 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)sig;
 	proc = get_process();
 	cmd = proc->cmds;
-	proc = get_process();
-	if (cmd && cmd->child && cmd->child->name && ft_strncmp(cmd->child->name, "cat", 3) == 0 && ft_strlen(cmd->child->name) == 3 && siginfo->si_signo == SIGINT)
+	if (proc->in_here_doc)
+	{
+		proc->in_here_doc = false;
+		rl_replace_line("", 0);
+		return ;
+	}
+	if (proc->in_cat && siginfo->si_signo == SIGINT)
 		write(1, "\n", 1);
 	else if (siginfo->si_signo == SIGINT)
 	{
@@ -80,6 +84,18 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	}
 }
 
+void	setup_child_realine_signal_handlers(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_sigaction = sig_child_readline_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_SIGINFO;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 void	setup_signal_handlers(void)
 {
 	struct sigaction	sa;
@@ -92,28 +108,16 @@ void	setup_signal_handlers(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	setup_child_signal_handlers(void)
-{
-	struct sigaction	sa;
-
-	sa.sa_sigaction = sig_child_handler;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_SIGINFO;
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGTERM, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	sigquit_handler(int val) 
+void	sigquit_handler(int val)
 {
 	t_process	*proc;
 	t_cmd		*cmd;
-	(void)val;
 
+	(void)val;
 	proc = get_process();
 	cmd = proc->cmds;
-	write(1, "QUIT : 3\n", 9);	
-	close_all_fds(cmd);	
+	write(1, "QUIT : 3\n", 9);
+	close_all_fds(cmd);
 	reset_cmd();
 	rl_on_new_line();
 	rl_replace_line("", 0);

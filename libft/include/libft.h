@@ -182,4 +182,5 @@ char				*ft_strjoinfree(char *s1, char *s2);
 char				*ft_strjoinfree2(char *s1, char *s2);
 char				*ft_strchrlast(const char *s, char c);
 char				*ft_strtrimfree(char *s1, char *set);
+bool				ft_strequal(char *str, char *str2);
 #endif

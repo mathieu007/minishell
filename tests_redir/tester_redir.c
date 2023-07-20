@@ -353,12 +353,10 @@ int	check_file_content_equality(char *path)
 	char	*num;
 	int		files_content_equals;
 	int		cur_files_content_equals;
-	off_t	new_size;
-
+	
 	i = 1;
 	files_content_equals = 1;
 	cur_files_content_equals = 1;
-	new_size = 0;
 	while (i < 10)
 	{
 		num = ft_itoa(i);

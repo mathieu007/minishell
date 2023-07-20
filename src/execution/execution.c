@@ -10,7 +10,6 @@ int32_t	execve_cmd(t_cmd *cmd)
 	{
 		free_2d_char_array(env);
 		free_all_and_exit2(errno, "execve error");
-		
 	}
 	return (errno);
 }
@@ -64,14 +63,19 @@ static int32_t	fork_exec(t_cmd *cmd)
 	t_process	*proc;
 
 	if (signal(SIGQUIT, sigquit_handler) == SIG_ERR)
-        free_all_and_exit2(1,"Signal SIGQUIT error" );
+		free_all_and_exit2(1, "Signal SIGQUIT error");
 	proc = get_process();
 	if (!cmd)
 		return (proc->errnum);
 	pid = ft_fork();
 	if (pid == 0)
+	{
+		if (ft_strequal(cmd->name, "cat"))
+			proc->in_cat = true;
 		return (exec_from_child_process(cmd));
+	}
 	proc->errnum = ft_waitpid(pid);
+	proc->in_cat = false;
 	return (proc->errnum);
 }
 
@@ -116,7 +120,8 @@ int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 		proc->errnum = exec_from_child_process(cmd);
 	else
 		proc->errnum = fork_exec(cmd);
-	unlink_files_redirections(cmd->in_redir);
+	if (proc->errnum <= 128)
+		unlink_files_redirections(cmd->in_redir);
 	return (proc->errnum);
 }
 
@@ -176,7 +181,7 @@ t_cmd	*re_parse_at_execution(t_cmd *cmd)
 	return (cmd);
 }
 
-void	reset_cmd()
+void	reset_cmd(void)
 {
 	t_process	*proc;
 

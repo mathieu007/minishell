@@ -19,24 +19,24 @@ void	write_here_doc_line(t_cmd *main, const char *delimiter)
 		write(main->in_redir->fd, "\n", 1);
 		free(line);
 		line = readline("> ");
-	}
-	close_files_redirections(main);
+	}	
 }
 
-int32_t	write_here_document(const char *delimiter, t_cmd *main)
+int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)
 {
 	pid_t		pid;
 	t_process	*proc;
 
 	proc = get_process();
-	disable_ctrl_c_output();
-	setup_child_signal_handlers();	
+	proc->in_here_doc = true;
+	create_redir_heredoc(main, redir);
 	pid = ft_fork();
 	if (pid == 0)
 	{
 		proc = get_process();
-		proc->is_here_doc = true;	
+		setup_child_realine_signal_handlers();
 		write_here_doc_line(main, delimiter);
+		close_files_redirections(main);
 		free_all_and_exit(0);
 	}
 	proc->errnum = ft_waitpid(pid);

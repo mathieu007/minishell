@@ -36,19 +36,18 @@ int32_t	write_continuation(const char *delimiter, t_redirect *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	disable_ctrl_c_output();
-	setup_child_signal_handlers();
 	pid = ft_fork();
 	if (pid == 0)
 	{
 		proc = get_process();
-		proc->is_here_doc = true;
+		setup_child_realine_signal_handlers();
 		write_delimiter_line(redir, delimiter);
 		close(redir->fd);
 		free_t_redirect(redir);
 		free_all_and_exit(0);
 	}
 	proc->errnum = ft_waitpid(pid);
+	proc->in_continuation = false;
 	return (proc->errnum);
 }
 
@@ -81,18 +80,17 @@ int32_t	write_non_empty_continuation(t_redirect *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	disable_ctrl_c_output();
-	setup_child_signal_handlers();
 	pid = ft_fork();
 	if (pid == 0)
 	{
+		setup_child_realine_signal_handlers();
 		proc = get_process();
-		proc->is_here_doc = true;
 		write_line(redir);
 		free_t_redirect(redir);
 		free_all_and_exit(0);
 	}
 	proc->errnum = ft_waitpid(pid);
+	proc->in_continuation = false;
 	return (proc->errnum);
 }
 

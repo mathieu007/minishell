@@ -50,7 +50,7 @@ t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	if (!redir)
+	if (!redir || proc->errnum > 0)
 		return (NULL);
 	build_redir_environement(main, redir);
 	if (redir && redir->type == CMD_FILEOUT)
@@ -60,10 +60,7 @@ t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 	else if (redir && redir->type == CMD_FILEIN)
 		create_redir_in(main, redir);
 	else if (redir && redir->type == CMD_HEREDOC)
-	{
-		create_redir_heredoc(main, redir);
-		proc->errnum = write_here_document(redir->name, main);
-	}
+		proc->errnum = write_here_document(redir->name, main, redir);
 	if (redir->out_redir && redir->out_redir->fd > 0)
 		close(redir->out_redir->fd);
 	if (redir->in_redir && redir->in_redir->fd > 0)
