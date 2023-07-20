@@ -144,25 +144,6 @@ int32_t	skip_token_delimiter(t_token_type type, int32_t i, t_token *parent)
 	return (i + 1);
 }
 
-// static int32_t	goto_closing_token(char *str, t_token_type type, int32_t i)
-// {
-// 	if (type == TK_DOUBLEQUOTE)
-// 		i = goto_closing_double_quote(str, i + 1);
-// 	else if (type == TK_SINGLEQUOTE)
-// 		i = goto_closing_single_quote(str, i + 1);
-// 	else if (type == TK_COMMANDSUBSTITUTION_OPEN)
-// 		i = goto_closing_parenthese(str, i + 2);
-// 	else if (type == TK_DOLLAR_SIGN)
-// 		i = goto_closing_environement(str, i + 1);
-// 	else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
-// 		i = goto_closing_environement(str, i + 1);
-// 	else if (type == TK_LAST_CMD_EXIT)
-// 		i++;
-// 	else if (type == TK_PARENTHESE_OPEN)
-// 		i = goto_closing_parenthese(str, i + 1);
-// 	return (i);
-// }
-
 bool	has_token_redirection(t_token *parent)
 {
 	int32_t			i;

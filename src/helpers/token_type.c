@@ -6,25 +6,11 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/20 11:29:32 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/20 14:19:33 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-inline bool	is_semicolon(t_token_type type)
-{
-	if (type == TK_SEMICOLON)
-		return (true);
-	return (false);
-}
-
-inline bool	is_end_of_seq(t_token_type type)
-{
-	if (type == TK_AND || type == TK_OR || type == TK_PIPE)
-		return (true);
-	return (false);
-}
 
 inline int32_t	goto_closing_single_quote(char *str, int32_t i)
 {
@@ -105,15 +91,6 @@ inline int32_t	get_token_len(char *str, t_token_type type, bool in_quotes)
 	else if (type == TK_ENVIRONEMENT_VAR)
 		return (get_token_env_len(str));
 	if ((int32_t)type > 255 && type != TK_UNKNOWN)
-		return (2);
-	return (1);
-}
-
-inline int32_t	get_token_type_len2(t_token_type type)
-{
-	if (type == TK_UNKNOWN || type == TK_END || type == TK_START)
-		return (0);
-	if ((int32_t)type > 255)
 		return (2);
 	return (1);
 }

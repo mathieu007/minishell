@@ -352,7 +352,7 @@ t_token					*add_cmds_and(t_token *token, t_cmd *parent);
 t_token					*add_cmds_pipes(t_token *token, t_cmd *parent);
 t_token					*add_cmds_sequential(t_token *token, t_cmd *parent);
 void					split_token_semicolon(t_token *parent);
-bool					is_semicolon(t_token_type type);
+
 void					write_err(int32_t error, char *msg);
 bool					has_error(void);
 void					free_exit_no_perr2(int32_t status, char *msg,
@@ -433,19 +433,11 @@ int32_t					get_token_len(char *str, t_token_type type,
 
 char					*get_env_variable(char *str);
 char					*get_end_of_cmd(char *str);
-int32_t					get_token_type_len2(t_token_type type);
 
-t_cmd					*parse_cmd2(t_cmd *cmd);
 int32_t					exec_subshell(t_cmd *cmd);
 bool					is_end_of_seq(t_token_type type);
 bool					is_esc_env_var(char *str, int32_t i);
 bool					is_escaped_char(char *str, int32_t i);
-int32_t					skip_escaped_quotes(char *str, int32_t i);
-int32_t					skip_esc_single_quote(char *str, int32_t i);
-int32_t					skip_esc_double_quote(char *str, int32_t i);
-int32_t					skip_escaped_char(char *str, int32_t i);
-char					*skip_escaped_char2(char *str);
-t_token					*advance_to(t_token *token, t_token_type type);
 bool					is_builtins(char *str);
 bool					file_is_exec(char *absolute_path_to_file);
 
@@ -490,7 +482,6 @@ int32_t					tokenize_double_quote(char *str, int32_t i,
 							t_token *token);
 char					*cpy_single_quote_str(char *str, char *output,
 							int32_t *i);
-char					*cpy_esc_env_var(char *input, char *output, int32_t *i);
 char					*cpy_env_var_value(char *input, char *output,
 							int32_t *i);
 
@@ -509,8 +500,6 @@ int32_t					get_args_len(t_token *group);
 void					set_args(t_token *group, char **split);
 t_token					*get_quotes_str(t_token *token, char *str,
 							char **ouput);
-char					*get_single_quote_str(t_token *token, char *str);
-char					*get_double_quote_str(t_token *token, char *str);
 void					replace_env_name(char *input, char *output);
 char					**get_env_path(void);
 t_token					*get_token_at(int32_t index);

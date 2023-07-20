@@ -132,18 +132,3 @@ t_cmd	*parse_redirect_in(t_cmd *main, t_cmd *redir)
 	add_cmd_arg_to_main(main, redir);
 	return (redir);
 }
-
-t_cmd	*parse_cmd2(t_cmd *cmd)
-{
-	cmd->args = parse_args(cmd->token);
-	cmd->name = ft_strdup(cmd->args[0]);
-	cmd->has_redirection = cmd->token->is_redirection;
-	if (cmd->name == NULL)
-		return (NULL);
-	cmd->is_builtin = is_builtins(cmd->name);
-	cmd->full_path_name = free_ptr(cmd->full_path_name);
-	if (!cmd->is_builtin)
-		cmd->full_path_name = get_full_path(cmd);
-	cmd->options = get_options(cmd->token);
-	return (cmd);
-}

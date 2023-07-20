@@ -6,53 +6,11 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/20 13:56:01 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/20 14:17:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/// @brief get the single quote string without the quotes
-/// @param token
-/// @param str
-/// @return
-char	*get_single_quote_str(t_token *token, char *str)
-{
-	t_token	*closing_token;
-	char	*arg;
-	int32_t	len;
-
-	closing_token = advance_to(token, TK_CLOSINGSINGLEQUOTE);
-	if (closing_token != token)
-	{
-		len = closing_token->start - token->start - 2;
-		arg = malloc(len + 1);
-		arg = ft_substr(str, token->start + 1, len);
-		return (arg);
-	}
-	return (NULL);
-}
-
-/// @brief get the double quote string without the quotes
-/// @param token
-/// @param str
-/// @return
-char	*get_double_quote_str(t_token *token, char *str)
-{
-	t_token	*closing_token;
-	char	*arg;
-	int32_t	len;
-
-	closing_token = advance_to(token, TK_CLOSINGDOUBLEQUOTE);
-	if (closing_token != token)
-	{
-		len = closing_token->start - token->start - 2;
-		arg = malloc(len + 1);
-		arg = ft_substr(str, token->start + 1, len);
-		return (arg);
-	}
-	return (NULL);
-}
 
 char	**add_env_words(char *str, char **split)
 {
