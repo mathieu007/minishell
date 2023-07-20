@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environnement_parser.c                                              :+:  */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/// @brief this function assusme that preceding char is not an escaped char 
+/// @brief this function assusme that preceding char is not an escaped char
 /// an environement variable must start with a $[alpha]
-/// @param str 
-/// @param i 
-/// @return 
+/// @param str
+/// @param i
+/// @return
 int32_t	parse_env_var_name_len(char *env_start)
 {
 	size_t	len;

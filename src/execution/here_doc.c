@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	write_here_doc_lines(t_cmd *main, const char *delimiter)
@@ -19,7 +31,7 @@ void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 		write(main->in_redir->fd, "\n", 1);
 		free(line);
 		line = readline("> ");
-	}	
+	}
 }
 
 int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)
@@ -28,13 +40,12 @@ int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	
-	create_redir_heredoc(main, redir);	
+	create_redir_heredoc(main, redir);
 	proc->in_here_doc = true;
 	pid = ft_fork();
 	if (pid == 0)
-	{		
-		proc = get_process();		
+	{
+		proc = get_process();
 		setup_child_realine_signal_handlers();
 		write_here_doc_lines(main, delimiter);
 		close_files_redirections(main);

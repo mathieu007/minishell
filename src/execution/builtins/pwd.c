@@ -14,9 +14,9 @@
 
 int	pwd_cmd(t_cmd *cmd)
 {
-	char *cwd;
-	(void)cmd;
+	char	*cwd;
 
+	(void)cmd;
 	cwd = get_cwd();
 	if (cwd)
 	{

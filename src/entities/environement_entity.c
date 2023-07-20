@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environnement_entities.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
+/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_env_cpy	*new_env(char *variable, char *value)
@@ -78,7 +90,7 @@ t_env_cpy	*init_env(t_process *data)
 		current = new_env(split_on_equal[0], tmp_str);
 		if (tmp_str)
 			free(tmp_str);
-	}		
+	}
 	else
 		current = new_env(split_on_equal[0], split_on_equal[1]);
 	if (split_on_equal)
@@ -106,7 +118,7 @@ t_env_cpy	*init_env(t_process *data)
 	return (head);
 }
 
-int32_t	count_env()
+int32_t	count_env(void)
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
@@ -123,7 +135,7 @@ int32_t	count_env()
 	return (count);
 }
 
-char	**get_env()
+char	**get_env(void)
 {
 	t_env_cpy	*head;
 	t_env_cpy	*current;
@@ -149,7 +161,6 @@ char	**get_env()
 	return (data);
 }
 
-
 //take a variable and return the value
 char	*get_env_value(char *variable)
 {
@@ -168,6 +179,7 @@ char	*get_env_value(char *variable)
 	}
 	return (NULL);
 }
+
 //make a copy of the environement variable
 t_env_cpy	*copy_env(void)
 {
@@ -196,10 +208,10 @@ t_env_cpy	*copy_env(void)
 
 t_env_cpy	*copy_env_from(t_process *proc)
 {
-	t_env_cpy *head;
-	t_env_cpy *current;
-	t_env_cpy *new_head;
-	t_env_cpy *new_current;
+	t_env_cpy	*head;
+	t_env_cpy	*current;
+	t_env_cpy	*new_head;
+	t_env_cpy	*new_current;
 
 	head = proc->env_cpy;
 	current = head;

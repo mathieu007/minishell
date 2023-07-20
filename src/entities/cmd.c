@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
+/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_cmd	*goto_last_cmd(t_cmd *cmd)
@@ -64,7 +76,7 @@ t_cmd_seq	get_next_cmd_seq(t_token *token)
 	else if (token->next->type == TK_AND && token->type != TK_PIPE)
 		return (CMD_GROUP_AND);
 	else if (token->next->type == TK_OR && token->type != TK_PIPE
-			&& token->type != TK_AND)
+		&& token->type != TK_AND)
 		return (CMD_GROUP_OR);
 	else if (token->next->type == TK_SEMICOLON)
 		return (CMD_GROUP_SEQUENTIAL);

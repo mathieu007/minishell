@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fork_parenthes.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int32_t	execve_subshell(t_cmd *cmd)
@@ -10,8 +22,6 @@ static int32_t	execve_subshell(t_cmd *cmd)
 	env = get_env();
 	subshell_args = malloc(3 * sizeof(char *));
 	subshell_args[2] = NULL;
-	// subshell_args[3] = ft_itoa(cmd->out_redir->fd);
-	// subshell_args[2] = ft_itoa(cmd->in_redir->fd);
 	subshell_args[1] = cmd->token->str;
 	subshell_args[0] = proc->full_program_name;
 	if (execve(proc->full_program_name, subshell_args, env) == -1)

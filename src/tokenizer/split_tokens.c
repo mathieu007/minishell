@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_tokens.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -19,7 +30,8 @@ void	*build_token_environement(t_token *token)
 	{
 		if (child->type == TK_COMMANDSUBSTITUTION_OPEN)
 			val = ft_strdup(child->str);
-		else if (child->type == TK_ENVIRONEMENT_VAR && ft_strisempty(child->str))
+		else if (child->type == TK_ENVIRONEMENT_VAR && 
+			ft_strisempty(child->str))
 			val = ft_strdup("$");
 		else if (child->type == TK_ENVIRONEMENT_VAR
 			&& child->parent->type == TK_LESSLESS)
@@ -29,7 +41,7 @@ void	*build_token_environement(t_token *token)
 		{
 			val = ft_strjoin("${", child->str);
 			val = ft_strjoinfree(val, "}");
-		}			
+		}
 		else if (child->type == TK_ENVIRONEMENT_VAR
 			|| child->type == TK_DOLLAR_SIGN_CURLYBRACE)
 			val = parse_env_var_value(child);

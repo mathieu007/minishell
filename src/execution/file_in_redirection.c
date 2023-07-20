@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file_in_redirection.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	create_temp_file(t_redirect *redir)
@@ -34,7 +46,7 @@ char	*get_temp_dir(void)
 		tmp_dir = get_cwd_with_backslash();
 	if (!tmp_dir)
 		free_all_and_exit2(1,
-							"An error occur while trying to get temporary dir.");
+			"An error occur while trying to get temporary dir.");
 	return (tmp_dir);
 }
 
@@ -67,7 +79,7 @@ int32_t	open_redir_heredoc(t_cmd *cmd)
 	create_temp_file(redir);
 	if (redir->fd == -1)
 		write_err2(errno, cmd->name,
-				": Unable to create temporary file or directory\n");
+			": Unable to create temporary file or directory\n");
 	return (redir->fd);
 }
 

@@ -31,14 +31,14 @@ int32_t	add_token_cmd_substitution(char *str, int32_t pos, t_token *parent,
 {
 	t_token		*token;
 
-		token = add_tk("${", TK_ENVIRONEMENT_VAR, pos++, parent);
-		token->inside_dbl_quotes = inside_dbl_quotes;
-		while (str[pos] && str[pos] != '}')
-			pos++;
-		if (str[pos] != '}')
-			token->is_continuation = true;
-		else
-			add_tk(")", TK_ENVIRONEMENT_VAR_CLOSE, pos, parent);
+	token = add_tk("${", TK_ENVIRONEMENT_VAR, pos++, parent);
+	token->inside_dbl_quotes = inside_dbl_quotes;
+	while (str[pos] && str[pos] != '}')
+		pos++;
+	if (str[pos] != '}')
+		token->is_continuation = true;
+	else
+		add_tk(")", TK_ENVIRONEMENT_VAR_CLOSE, pos, parent);
 	return (token->end);
 }
 
