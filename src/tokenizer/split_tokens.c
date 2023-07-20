@@ -129,6 +129,17 @@ void	*build_token_environement(t_token *token)
 	{
 		if (child->type == TK_COMMANDSUBSTITUTION_OPEN)
 			val = ft_strdup(child->str);
+		else if (child->type == TK_ENVIRONEMENT_VAR && ft_strisempty(child->str))
+			val = ft_strdup("$");
+		else if (child->type == TK_ENVIRONEMENT_VAR
+			&& child->parent->type == TK_LESSLESS)
+			val = ft_strjoin("$", child->str);
+		else if (child->type == TK_DOLLAR_SIGN_CURLYBRACE
+			&& child->parent->type == TK_LESSLESS)
+		{
+			val = ft_strjoin("${", child->str);
+			val = ft_strjoinfree(val, "}");
+		}			
 		else if (child->type == TK_ENVIRONEMENT_VAR
 			|| child->type == TK_DOLLAR_SIGN_CURLYBRACE)
 			val = parse_env_var_value(child);

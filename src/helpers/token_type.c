@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/18 17:38:58 by math             ###   ########.fr       */
+/*   Updated: 2023/07/20 11:29:32 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ inline int32_t	goto_closing_environement(char *str, int32_t i)
 	}
 	while (ft_isalnum(str[i]) == 1 || str[i] == '_')
 		i++;
-	return (i);
+	if (str[i] == '}')
+		return (i);
+	return (i - 1);
 }
 
 inline int32_t	goto_closing_parenthese(char *str, int32_t i)

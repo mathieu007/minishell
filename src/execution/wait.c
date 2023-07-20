@@ -25,10 +25,10 @@ int32_t	ft_waitpid(pid_t pid)
 			else
 				free_all_and_exit2(errno, "waitpid error");
 		}
-		if (WIFEXITED(status))
-			proc->errnum = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
+		if (WIFSIGNALED(status))
 			proc->errnum = 128 + WTERMSIG(status);
+		else if (WIFEXITED(status))
+			proc->errnum = WEXITSTATUS(status);
 		else
 			free_all_and_exit2(errno, "waitpid error");
 		return (proc->errnum);

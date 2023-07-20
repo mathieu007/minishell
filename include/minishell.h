@@ -277,6 +277,8 @@ typedef struct s_process
 	int32_t				parent_in_fd;
 	int32_t				parent_out_fd;
 	bool				syntax_error;
+	bool				has_here_doc;
+	char				*delayed_syntax_error;
 	t_cmd				*last_cmd;
 }						t_process;
 

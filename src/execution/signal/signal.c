@@ -39,12 +39,12 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 	proc = get_process();
 	cmd = proc->cmds;
 	if (siginfo->si_signo == SIGINT && proc->in_here_doc)
-	{		
+	{	
 		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_redisplay();
+		// rl_on_new_line();
+		// rl_replace_line("", 0);
 		close_all_fds(cmd);
-		free_all_and_exit(0);
+		free_all_and_exit(1);
 	}
 	else if (siginfo->si_signo == SIGTERM)
 	{
@@ -62,17 +62,14 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)sig;
 	proc = get_process();
 	cmd = proc->cmds;
-	if (proc->in_here_doc)
-	{
-		proc->in_here_doc = false;
-		rl_replace_line("", 0);
+	if (siginfo->si_signo == SIGINT 
+	&& (proc->in_here_doc || proc->in_continuation))
 		return ;
-	}
-	if (proc->in_cat && siginfo->si_signo == SIGINT)
-		write(1, "\n", 1);
+	else if (proc->in_cat && siginfo->si_signo == SIGINT)
+		write(1, "\n", 2);
 	else if (siginfo->si_signo == SIGINT)
 	{
-		write(1, "\n", 1);
+		write(1, "\n", 2);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();

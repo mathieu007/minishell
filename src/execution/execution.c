@@ -67,13 +67,11 @@ static int32_t	fork_exec(t_cmd *cmd)
 	proc = get_process();
 	if (!cmd)
 		return (proc->errnum);
+	if (ft_strequal(cmd->name, "cat"))
+		proc->in_cat = true;
 	pid = ft_fork();
 	if (pid == 0)
-	{
-		if (ft_strequal(cmd->name, "cat"))
-			proc->in_cat = true;
 		return (exec_from_child_process(cmd));
-	}
 	proc->errnum = ft_waitpid(pid);
 	proc->in_cat = false;
 	return (proc->errnum);
@@ -107,7 +105,7 @@ int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
 	if (proc->errnum == -1)
-		return (0);
+		return (proc->errnum);
 	if (proc->errnum > 0 || ft_strisempty(cmd->name))
 		return (proc->errnum);
 	if (cmd->is_builtin && is_in_child_process)
@@ -192,6 +190,9 @@ void	reset_cmd(void)
 	proc->cmds = NULL;
 	proc->last_cmd = NULL;
 	proc->tokens = NULL;
+	proc->in_here_doc = false;
+	proc->in_continuation = false;
+	proc->in_cat = false;
 	proc->last_errnum = proc->errnum;
 	proc->syntax_error = false;
 }

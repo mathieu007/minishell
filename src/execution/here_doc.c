@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	write_here_doc_line(t_cmd *main, const char *delimiter)
+void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 {
 	char	*line;
 	size_t	delimiter_len;
@@ -28,17 +28,20 @@ int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
+	
+	create_redir_heredoc(main, redir);	
 	proc->in_here_doc = true;
-	create_redir_heredoc(main, redir);
 	pid = ft_fork();
 	if (pid == 0)
-	{
-		proc = get_process();
+	{		
+		proc = get_process();		
 		setup_child_realine_signal_handlers();
-		write_here_doc_line(main, delimiter);
+		write_here_doc_lines(main, delimiter);
 		close_files_redirections(main);
 		free_all_and_exit(0);
 	}
 	proc->errnum = ft_waitpid(pid);
+	proc->in_here_doc = true;
+	close_files_redirections(main);
 	return (proc->errnum);
 }
