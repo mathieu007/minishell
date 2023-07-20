@@ -19,7 +19,6 @@ char	*ft_strcat(char *dest, const char *src)
 	return (dest);
 }
 
-
 int	cd_cmd(t_cmd *cmd)
 {
 	char *path;

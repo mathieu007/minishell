@@ -1,32 +1,9 @@
 #include "minishell.h"
 
-int32_t	add_space_token(char *str, int32_t i, t_token *parent)
-{
-	t_token_type	type;
-
-	type = get_token_type(" ");
-	add_tk(" ", type, i, parent);
-	while (str[i] == ' ')
-		i++;
-	return (i);
-}
-
-inline bool	is_token_quotes(t_token_type type)
-{
-	return (type == TK_DOUBLEQUOTE || type == TK_SINGLEQUOTE);
-}
-
 inline bool	is_token_delimiter(t_token_type type)
 {
 	return (type == TK_DOUBLEQUOTE || type == TK_SINGLEQUOTE
 		|| type == TK_PARENTHESE_OPEN || type == TK_COMMANDSUBSTITUTION_OPEN);
-}
-
-inline bool	is_token_group(t_token_type type)
-{
-	return (type == TK_DOUBLEQUOTE || type == TK_SINGLEQUOTE
-		|| type == TK_ENVIRONEMENT_VAR || type == TK_PARENTHESE_OPEN
-		|| type == TK_LAST_CMD_EXIT || type == TK_COMMANDSUBSTITUTION_OPEN);
 }
 
 inline int32_t	goto_token(char *str, char *tk)
@@ -143,14 +120,12 @@ int32_t	check_environement_continuation(int32_t i, t_token *parent)
 
 int32_t	check_parenthese_continuation(int32_t i, t_token *parent)
 {
-	//check_before_parenthese_syntax_error(parent->str, i);
 	i = goto_closing_parenthese(parent->str, i + 1);
 	if (parent->str[i] != ')')
 	{
 		exec_delimiter_continuation(")", parent);
 		return (goto_closing_parenthese(parent->str, i));
 	}
-	//check_after_parenthese_syntax_error(parent->str, i);
 	return (i);
 }
 

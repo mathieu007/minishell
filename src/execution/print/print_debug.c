@@ -1,24 +1,4 @@
 #include "minishell.h"
-////////////delete me after /////////
-
-// void	print_groups_and_tokens(void)
-// {
-// 		*group;
-// 	t_token			*token;
-
-// 	data = get_process();
-// 	print_token_group(group);
-// 	while (group)
-// 	{
-// 		token = group->token;
-// 		if (token)
-// 		{
-// 			print_token(token);
-// 			token = token->next;
-// 		}
-// 		group = group->next;
-// 	}
-// }
 
 static char	*get_print_token_type(t_token_type type)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 21:00:09 by math             ###   ########.fr       */
+/*   Updated: 2023/07/20 13:51:59 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,3 @@ void	split_token_redirections(t_token *parent)
 	}
 }
 
-t_token	*redirection_tokenizer(t_token *parent)
-{
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-
-	i = 0;
-	if (!has_token_redirection(parent))
-		return (NULL);
-	add_tk("", TK_START, i, parent);
-	while (parent->str[i])
-	{
-		if (has_error())
-			return (parent->child);
-		type = get_token_type(&parent->str[i]);
-		t_len = get_token_len(&parent->str[i], type, false);
-		if (is_token_delimiter(type))
-			i = skip_token_delimiter(type, i, parent);
-		else if (is_token_redirection(type))
-			i = add_token_redirection(parent->str, i, type, parent);
-		else
-			i += t_len;
-	}
-	add_tk("", TK_END, i, parent);
-	split_token_redirections(parent);
-	return (parent->child);
-}

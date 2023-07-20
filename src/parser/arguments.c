@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/18 19:12:35 by math             ###   ########.fr       */
+/*   Updated: 2023/07/20 13:56:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,32 +126,6 @@ int32_t	get_args_len(t_token *token)
 		token = token->next;
 	}
 	return (args_len);
-}
-
-t_token	*get_space_str(t_token *token, char *str, char **arg)
-{
-	t_token	*start_token;
-	int32_t	arg_len;
-	int32_t	arg_start_pos;
-
-	token = token->next;
-	start_token = token;
-	while (token)
-	{
-		if (token->type == TK_SINGLEQUOTE || token->type == TK_DOUBLEQUOTE)
-			token = get_quotes_str(token, str, arg);
-		else if (token->type == TK_SPACE || token->type == TK_END)
-		{
-			arg_start_pos = start_token->start + start_token->token_len;
-			arg_len = token->start - start_token->start;
-			*arg = ft_substr(str, arg_start_pos, arg_len);
-			token = token->next;
-			return (token);
-		}
-		else
-			token = token->next;
-	}
-	return (token);
 }
 
 void	set_args(t_token *token, char **split)

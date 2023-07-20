@@ -327,9 +327,6 @@ int32_t					skip_token_single_quote(char *str, t_token_type type,
 bool					has_token(char *tk, t_token *parent);
 t_token					*sequences_tokenizer(t_token *parent);
 bool					has_token_sequence(t_token *parent);
-bool					has_token_redirection(t_token *parent);
-t_token					*redirection_tokenizer(t_token *parent);
-bool					is_token_quotes(t_token_type type);
 bool					has_token_expansion(t_token *token);
 bool					has_token_expansion_str(char *str);
 int32_t					skip_token_delimiter(t_token_type type, int32_t i,
@@ -342,8 +339,6 @@ t_token					*space_quotes_tokenizer(t_token *parent);
 t_token					*dispatch_tokenizer(t_token *parent);
 t_token					*parentheses_tokenizer(t_token *parent);
 bool					is_token_delimiter(t_token_type type);
-void					*find_double_free(t_token *token);
-void					*free_t_token(t_token *token);
 char					**get_env(void);
 void					open_read_temp_file(t_redirect *redir);
 
@@ -436,17 +431,13 @@ int32_t					get_token_single_quote_len(char *str);
 int32_t					get_token_len(char *str, t_token_type type,
 							bool in_quotes);
 
-int32_t					get_env_var_name_len(char *str);
 char					*get_env_variable(char *str);
 char					*get_end_of_cmd(char *str);
 int32_t					get_token_type_len2(t_token_type type);
 
 t_cmd					*parse_cmd2(t_cmd *cmd);
 int32_t					exec_subshell(t_cmd *cmd);
-bool					is_token_group(t_token_type type);
 bool					is_end_of_seq(t_token_type type);
-bool					is_env_variable(t_token *token);
-bool					str_is_env_variable(char *str);
 bool					is_esc_env_var(char *str, int32_t i);
 bool					is_escaped_char(char *str, int32_t i);
 int32_t					skip_escaped_quotes(char *str, int32_t i);
@@ -456,19 +447,6 @@ int32_t					skip_escaped_char(char *str, int32_t i);
 char					*skip_escaped_char2(char *str);
 t_token					*advance_to(t_token *token, t_token_type type);
 bool					is_builtins(char *str);
-bool					is_sibling_quote(t_token *token);
-bool					is_opening_single_quote(char *str, int32_t i);
-bool					is_closing_single_quote(char *str, int32_t i);
-bool					is_opening_double_quote(char *str, int32_t i);
-bool					is_closing_double_quote(char *str, int32_t i);
-bool					is_opening_parenthese(char *str, int32_t i);
-bool					is_closing_parenthese(char *str, int32_t i);
-bool					is_opening_curlybrace(char *str, int32_t i);
-bool					is_closing_curlybrace(char *str, int32_t i);
-char					*join_free2(const char *path, char *path2);
-char					*join_free1(char *path, const char *path2);
-char					*join(const char *path, const char *path2);
-char					*join_free(char *path, char *path2);
 bool					file_is_exec(char *absolute_path_to_file);
 
 /// get full path from relative path, absolute or env path.
@@ -546,9 +524,7 @@ void					write_msg(int32_t stderror, char *msg);
 void					write_err2(int32_t stderror, char *msg, char *msg2);
 t_env_cpy				*init_env(t_process *data);
 bool					is_token_sequence(t_token *token);
-t_pipe					*new_pipe(t_cmd *cmd);
-void					*free_pipe(t_cmd *cmd);
-void					*free_redirect(t_cmd *cmd);
+
 void					*free_cmd(t_cmd *cmd);
 void					init_data(int32_t argc, char **argv, char **env);
 int32_t					init_cwd_fd(char *cwd);
