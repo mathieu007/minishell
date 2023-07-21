@@ -1,7 +1,6 @@
 NAME = libft.a
 
-SRC	=	
-		src/printf/src/ft_printf.c	\
+SRC	=	src/printf/src/ft_printf.c	\
 		src/printf/src/ft_putchar.c	\
 		src/printf/src/ft_putnbr_base_l.c	\
 		src/printf/src/ft_putnbr_base_ui.c	\

@@ -1,12 +1,33 @@
-#Compiler and Linker
-CC          	= gcc
 
-#The Target Binary Program
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CC					= gcc
+
 NAME				= minishell
 NAME_TESTS			= tests
 NAME_REDIR_TESTS	= tests_redir
 NAME_VAL_TESTS		= tests_valgrind
-NUM_VALGRIND_CMDS  	= 2;
+NUM_VALGRIND_CMDS  	= 2
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR			= src
@@ -21,10 +42,8 @@ OBJEXT			= o
 
 CFLAGS				= -Wall -Wextra -Werror -g
 INCDEP				= -I$(INCDIR)
-PRINTF_DIR			= printf
 LIBFT_DIR			= libft
 LIBFT_FILE			= libft.a
-PRINTF_FILE			= libftprintf.a
 LIBREADLINE			= libreadline.a
 LIBREADLINEHISTORY	= libhistory.a
 LIBFT				= $(LIBFT_DIR)/$(LIBFT_FILE)
@@ -33,8 +52,6 @@ PRINTF				= $(LIBFT_DIR)/$(PRINTF_FILE)
 READLINE			= $(INCDIR)/$(LIBREADLINE)
 READLINEHISTORY		= $(INCDIR)/$(LIBREADLINEHISTORY)
 INCLIBFTDEP 		= -I$(LIBFT_DIR)/$(INCDIR)
-PRINTFDEP			= -I$(PRINTF_DIR)/$(INCDIR)
-INCPRINTFERRDEP 	= -I$(PRINTF_ERR_DIR)/$(INCDIR)
 
 POST_CFLAGS := -lreadline -lncurses $(READLINE) $(READLINEHISTORY)
 
@@ -75,11 +92,11 @@ exec: re
 
 $(TARGETDIR)/$(NAME): $(OBJECTS)
 	@$(MAKE) -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) $(PRINTFDEP) -o $(TARGETDIR)/$(NAME) $^ $(POST_CFLAGS) $(LIBFT) $(PRINTF)
+	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -o $(TARGETDIR)/$(NAME) $^ $(POST_CFLAGS) $(LIBFT)
 
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) $(PRINTFDEP) -c -o $@ $<
+	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
 
 $(TARGETDIR)/$(NAME_TESTS): $(OBJECT_TESTS)
 	cp $(TESTSDIR)/tests.txt $(TARGETDIR)/
