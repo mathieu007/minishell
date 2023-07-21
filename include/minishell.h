@@ -4,7 +4,7 @@
 # include "errno.h"
 # include "history.h"
 # include "minishell.h"
-# include "../printf/include/ft_printf.h"
+# include "ft_printf.h"
 # include "readline.h"
 # include <dirent.h>
 # include <libft.h>
