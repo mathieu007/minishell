@@ -31,7 +31,7 @@ int32_t	add_execve_func(t_cmd *cmd)
 	return (1);
 }
 
-static int32_t	exec_from_subshell_process(t_cmd *cmd)
+int32_t	exec_from_subshell_process(t_cmd *cmd)
 {
 	t_process	*proc;
 
@@ -43,7 +43,7 @@ static int32_t	exec_from_subshell_process(t_cmd *cmd)
 	return (proc->errnum);
 }
 
-static int32_t	exec_from_main_process(t_cmd *cmd)
+int32_t	exec_from_main_process(t_cmd *cmd)
 {
 	t_process	*proc;
 
@@ -55,7 +55,7 @@ static int32_t	exec_from_main_process(t_cmd *cmd)
 	return (proc->errnum);
 }
 
-static int32_t	exec_from_child_process(t_cmd *cmd)
+int32_t	exec_from_child_process(t_cmd *cmd)
 {
 	t_process	*proc;
 

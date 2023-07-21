@@ -35,7 +35,7 @@ static bool	is_any_of(char c, char *values)
 	return (false);
 }
 
-static int32_t	check_newline_syntax_error(char *str, int32_t len, int32_t i)
+int32_t	check_newline_syntax_error(char *str, int32_t len, int32_t i)
 {
 	char	*syntax_error;
 

@@ -409,7 +409,13 @@ t_cmd					*add_child_cmd(t_cmd *parent, t_token *token);
 void					dup_env(void);
 t_token					*new_token(void);
 t_cmd					*new_cmd(t_cmd *parent);
-
+bool					has_token_semicolon(t_token *token);
+bool					has_token_and(t_token *token);
+bool					has_token_or(t_token *token);
+bool					has_token_parenthese(t_token *token);
+t_redirect				*open_write_continuation(void);
+int32_t					write_continuation(const char *delimiter, t_redirect *redir);
+int32_t					write_non_empty_continuation(t_redirect *redir);
 /// @brief Simples and short helpers methods.
 
 t_cmd					*last_in_redir(t_cmd *cmd);
@@ -442,6 +448,25 @@ bool					is_esc_env_var(char *str, int32_t i);
 bool					is_escaped_char(char *str, int32_t i);
 bool					is_builtins(char *str);
 bool					file_is_exec(char *absolute_path_to_file);
+int32_t					exec_from_main_process(t_cmd *cmd);
+int32_t					exec_from_child_process(t_cmd *cmd);
+int32_t					exec_from_subshell_process(t_cmd *cmd);
+t_cmd					*re_parse_at_execution(t_cmd *cmd);
+t_cmd					*create_cmds_tree(t_token *root_token);
+void					sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context);
+void					*add_redir_arg_to_main(t_cmd *main, t_cmd *redir);
+char					*try_get_relative_dir2(t_cmd *cmd);
+char					*try_get_relative_dir(t_cmd *cmd);
+char					*try_get_full_path_from_env_path(t_cmd *cmd);
+int32_t					add_sequence_token(int32_t i, char *tk_str, t_token_type type,t_token *parent);
+t_token					*sequence_semicolon_tokenizer(t_token *parent);
+int32_t					add_sgl_quote_token(char *str, int32_t i, t_token *parent);
+int32_t					add_dbl_quote_token(char *str, int32_t i, t_token *parent);
+int32_t					check_newline_syntax_error(char *str, int32_t len, int32_t i);
+int32_t					check_syntax_error_after_near(char *str, int32_t i, char *token_err);
+int32_t					check_syntax_error_before_near(char *str, int32_t i, char *token_err);
+int32_t					check_redirection_syntax_errors(char *str, t_token_type type,int32_t i);
+int32_t					check_sequence_syntax_errors(int32_t i, t_token_type type,t_token *parent);
 
 /// get full path from relative path, absolute or env path.
 char					*get_full_path(t_cmd *cmd);
