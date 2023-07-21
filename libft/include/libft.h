@@ -26,6 +26,7 @@
 # define FNV_OFFSET 14695981039346656037UL
 # define FNV_PRIME 1099511628211UL
 # include "lst.h"
+# include "ft_printf.h"
 # include <fcntl.h>
 # include <stdbool.h>
 # include <stdint.h>

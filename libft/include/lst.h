@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 10:03:23 by math              #+#    #+#             */
-/*   Updated: 2023/03/05 16:20:54 by math             ###   ########.fr       */
+/*   Updated: 2023/07/21 14:22:15 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # define TEMP_MAX_GROUP_BY_CLAUSES 100
 
 # include "libft.h"
-# include "lst.h"
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>

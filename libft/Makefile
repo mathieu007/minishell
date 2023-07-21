@@ -1,11 +1,23 @@
 NAME = libft.a
 
-SRC	=	src/alloc_pool/data_pool.c	\
+SRC	=	
+		src/printf/src/ft_printf.c	\
+		src/printf/src/ft_putchar.c	\
+		src/printf/src/ft_putnbr_base_l.c	\
+		src/printf/src/ft_putnbr_base_ui.c	\
+		src/printf/src/ft_putnbr_base_ul.c	\
+		src/printf/src/ft_putnbr_base.c	\
+		src/printf/src/ft_putnbr_ui.c	\
+		src/printf/src/ft_putnbr.c	\
+		src/printf/src/ft_putstr.c	\
+		src/printf/src/ft_strlen.c	\
+		src/printf/src/ft_utils.c	\
+		src/printf/src/ft_utils2.c	\
+		src/alloc_pool/data_pool.c	\
 		src/ft_atoi.c	\
 		src/ft_strcpy.c	\
 		src/ft_strstartwith.c	\
 		src/ft_strendwith.c	\
-		src/ft_strcpy.c	\
 		src/ft_count2darray.c	\
 		src/ft_strcontains.c	\
 		src/ft_strfill.c	\
