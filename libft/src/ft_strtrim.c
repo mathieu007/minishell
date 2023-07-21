@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/18 11:47:31 by mroy              #+#    #+#             */
+/*   Updated: 2023/07/21 08:28:48 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
 static int	count_matching_chars(char const *s1, char const *set)
@@ -86,7 +98,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	return (mem);
 }
 
-char	*ft_strtrimfree(char  *s1, char  *set)
+char	*ft_strtrimfree(char *s1, char *set)
 {
 	char	*mem;
 	size_t	start_count;
@@ -99,7 +111,7 @@ char	*ft_strtrimfree(char  *s1, char  *set)
 	{
 		mem = (char *)malloc(sizeof(char) * 1);
 		if (!mem)
-			return (free(s1),NULL);
+			return (free(s1), NULL);
 		mem[0] = '\0';
 		return (free(s1), mem);
 	}

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -97,92 +97,4 @@ t_cmd_seq	get_cmd_seq(t_token *token)
 	else if (token->type == TK_CMD)
 		return (CMD);
 	return (next_seq);
-}
-
-bool	has_token_and(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == TK_AND)
-			return (true);
-		token = token->next;
-	}
-	return (false);
-}
-
-bool	has_token_or(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == TK_OR)
-			return (true);
-		token = token->next;
-	}
-	return (false);
-}
-
-bool	has_token_semicolon(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == TK_SEMICOLON)
-			return (true);
-		token = token->next;
-	}
-	return (false);
-}
-
-bool	has_token_redirs(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == TK_GREAT || token->type == TK_GREATGREAT
-			|| token->type == TK_LESS || token->type == TK_LESSLESS)
-			return (true);
-		token = token->next;
-	}
-	return (false);
-}
-
-bool	has_token_parenthese(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == TK_PARENTHESE_OPEN)
-			return (true);
-		token = token->next;
-	}
-	return (false);
-}
-
-bool	has_token_pipe(t_token *token)
-{
-	while (token)
-	{
-		if (token->type == TK_PIPE)
-			return (true);
-		token = token->next;
-	}
-	return (false);
-}
-
-t_token	*create_cmds(t_token *token, t_cmd *parent)
-{
-	if (!token)
-		return (NULL);
-	if (has_token_semicolon(token))
-		token = add_cmds_sequential(token, parent);
-	else if (has_token_or(token))
-		token = add_cmds_or(token, parent);
-	else if (has_token_and(token))
-		token = add_cmds_and(token, parent);
-	else if (has_token_pipe(token))
-		token = add_cmds_pipes(token, parent);
-	else if (has_token_parenthese(token))
-		token = add_cmd_parenthese(token, parent);
-	else if (token->type == TK_CMD)
-		token = add_cmd_execution(token, parent);
-	else
-		printf("Something wrong happen!\n");
-	return (token);
 }
