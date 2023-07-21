@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 08:22:27 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int32_t	main(int32_t argc, char **argv, char **env)
 		disable_ctrl_c_output();
 		setup_signal_handlers();
 		input = get_prompt_input();
+		printf("files: %s\n", get_cwd_files_as_string("*in*", "\n"));
 		exec_cmds(input);
 		free(input);
 	}

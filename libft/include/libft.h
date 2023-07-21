@@ -95,7 +95,7 @@ bool				ft_strisempty(char *str);
 bool				ft_striswhitespace(char *str);
 int32_t				ft_min(int32_t nbr, int32_t nbr2);
 int32_t				ft_max(int32_t nbr, int32_t nbr2);
-
+char				*ft_strcpy(char *dest, const char *src);
 size_t				ft_strlen(const char *str);
 size_t				ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize);

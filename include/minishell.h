@@ -2,7 +2,6 @@
 # define MINISHELL_H
 
 # include "errno.h"
-# include "get_next_line.h"
 # include "history.h"
 # include "minishell.h"
 # include "readline.h"
@@ -434,6 +433,8 @@ int32_t					get_token_len(char *str, t_token_type type,
 char					*get_env_variable(char *str);
 char					*get_end_of_cmd(char *str);
 
+char					*get_cwd_files_as_string(char *str_pattern,
+							char *separator);
 int32_t					exec_subshell(t_cmd *cmd);
 bool					is_end_of_seq(t_token_type type);
 bool					is_esc_env_var(char *str, int32_t i);
