@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 15:12:56 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ t_token	*create_cmds(t_token *token, t_cmd *parent)
 	else if (token->type == TK_CMD)
 		token = add_cmd_execution(token, parent);
 	else
-		printf("Something wrong happen!\n");
+		ft_printf("Something wrong happen!\n");
 	return (token);
 }

@@ -33,5 +33,5 @@ void	ft_putnbr2(int n, int *write_len)
 		ft_putnbr2(num / 10, write_len);
 		num %= 10;
 	}
-	ft_putchar(num + '0', write_len);
+	ft_putchar2(num + '0', write_len);
 }

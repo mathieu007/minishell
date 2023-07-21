@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 15:12:59 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int32_t	env_cmd(t_cmd *cmd)
 	current = data->env_cpy;
 	while (current && current->value != NULL)
 	{
-		printf("%s=%s\n", current->variable, current->value);
+		ft_printf("%s=%s\n", current->variable, current->value);
 		current = current->next;
 	}
 	return (1);

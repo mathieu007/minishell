@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 15:12:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,18 @@ int	echo_cmd(t_cmd *cmd)
 	has_option_n = false;
 	count = count_args(cmd);
 	if (count == 1)
-		return (printf("\n"), 0);
+		return (ft_printf("\n"), 0);
 	j = skip_options(cmd);
 	if (j > 1)
 		has_option_n = true;
 	while (j < count)
 	{
-		printf("%s", cmd->args[j]);
+		ft_printf("%s", cmd->args[j]);
 		if (cmd->args[j + 1])
-			printf(" ");
+			ft_printf(" ");
 		j++;
 	}
 	if (!has_option_n)
-		printf("\n");
+		ft_printf("\n");
 	return (0);
 }

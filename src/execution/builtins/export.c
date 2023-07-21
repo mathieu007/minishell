@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 15:13:07 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void	export_no_variable(void)
 	while (current)
 	{
 		if (current->value != NULL)
-			printf("declare -x %s=\"%s\"\n", current->variable, current->value);
+			ft_printf("declare -x %s=\"%s\"\n", current->variable, current->value);
 		else
-			printf("declare -x %s", current->variable);
+			ft_printf("declare -x %s", current->variable);
 		current = current->next;
 	}
 	free_t_env_cpy(head);
@@ -111,7 +111,7 @@ int	export_cmd(t_cmd *cmd)
 		return (export_no_variable(), 0);
 	if (cmd->options != NULL)
 	{
-		printf("Export option \"%s\" not handled\n", cmd->options[0]);
+		ft_printf("Export option \"%s\" not handled\n", cmd->options[0]);
 		return (1);
 	}
 	i = 1;

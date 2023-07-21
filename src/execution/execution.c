@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 13:35:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 15:16:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int32_t	exec_from_subshell_process(t_cmd *cmd)
 	proc = get_process();
 	file_redirection(cmd, false);
 	proc->errnum = cmd->func(cmd);
-	fflush(stdout);
 	close_files_redirections(cmd);
 	return (proc->errnum);
 }
@@ -50,7 +49,6 @@ int32_t	exec_from_main_process(t_cmd *cmd)
 	proc = get_process();
 	file_redirection(cmd, false);
 	proc->errnum = cmd->func(cmd);
-	fflush(stdout);
 	close_files_redirections(cmd);
 	return (proc->errnum);
 }
@@ -63,7 +61,6 @@ int32_t	exec_from_child_process(t_cmd *cmd)
 	file_redirection(cmd, true);
 	close_files_redirections(cmd);
 	proc->errnum = cmd->func(cmd);
-	fflush(stdout);
 	free_all_and_exit(proc->errnum);
 	return (proc->errnum);
 }

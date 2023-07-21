@@ -124,7 +124,6 @@ char	*get_output2(char *full_path, char *filename, char *arg1, char *arg2,
 		close(std_pipe[1]);
 		waitpid(child_pid, &child_status, 0);
 		len = 0;
-		fflush(stdout);
 		read_size = read(std_pipe[0], buffer, sizeof(buffer));
 		while (read_size > 0)
 		{
@@ -137,7 +136,6 @@ char	*get_output2(char *full_path, char *filename, char *arg1, char *arg2,
 			}
 			strcpy(output + len, buffer);
 			len += read_size;
-			fflush(stdout);
 			read_size = read(std_pipe[0], buffer, sizeof(buffer));
 		}
 		close(std_pipe[0]);

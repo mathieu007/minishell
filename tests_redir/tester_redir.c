@@ -181,7 +181,6 @@ char	*get_output(char *full_path, char *filename, char *arg1, char *arg2,
 			}
 			strcpy(output + len, buffer);
 			len += read_size;
-			fflush(stdout);
 			read_size = read(std_pipe[0], buffer, sizeof(buffer));
 		}
 		close(std_pipe[0]);

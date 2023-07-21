@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 15:12:34 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,16 @@ int	cd_cmd(t_cmd *cmd)
 	path = NULL;
 	path_to_change = cmd->args[1];
 	if (cmd->options != NULL)
-		return (printf("Error: Option \"%s\" not supported.\n",
+		return (ft_printf("Error: Option \"%s\" not supported.\n",
 				cmd->options[0]), 1);
 	if (cmd->args[1] == NULL)
-		return (printf("Error: No directory specified.\n"), 1);
+		return (ft_printf("Error: No directory specified.\n"), 1);
 	if (path_to_change[0] != '/')
 	{
 		path = get_cwd();
 		if (!path)
 		{
-			printf("minishell: cd: %s: No such file or directory\n",
+			ft_printf("minishell: cd: %s: No such file or directory\n",
 				cmd->args[1]);
 			return (1);
 		}
@@ -66,7 +66,7 @@ int	cd_cmd(t_cmd *cmd)
 	if (path)
 		free(path);
 	if (result != 0)
-		return (printf("minishell: cd: %s: No such file or directory\n",
+		return (ft_printf("minishell: cd: %s: No such file or directory\n",
 				cmd->args[1]), 1);
 	return (0);
 }
