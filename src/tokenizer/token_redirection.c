@@ -50,4 +50,3 @@ void	split_token_redirections(t_token *parent)
 		token = token->next;
 	}
 }
-

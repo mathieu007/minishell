@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   continuation.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	write_delimiter_line(t_redirect *redir, const char *delimiter)
@@ -119,7 +131,7 @@ t_redirect	*open_write_continuation(void)
 	create_temp_file(redir);
 	if (redir->fd == -1)
 		write_err2(errno, f_name,
-				": Unable to create temporary file or directory\n");
+			": Unable to create temporary file or directory\n");
 	return (redir);
 }
 
@@ -149,7 +161,7 @@ void	exec_delimiter_continuation(char *delimiter, t_token *parent)
 		size = read(redir->fd, buffer, 127);
 		buffer[size] = '\0';
 		str = ft_strjoinfree(str, &buffer[0]);
-		if (size == (size_t)-1)
+		if (size == (size_t) - 1)
 		{
 			free(str);
 			close(redir->fd);
@@ -184,7 +196,7 @@ t_redirect	*exec_continuation(t_token *parent)
 		size = read(redir->fd, buffer, 127);
 		buffer[size] = '\0';
 		str = ft_strjoinfree(str, &buffer[0]);
-		if (size == (size_t)-1)
+		if (size == (size_t) - 1)
 		{
 			free(str);
 			close(redir->fd);

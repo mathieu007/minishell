@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   paths.c                                              :+:      :+:    :+: */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -49,6 +60,7 @@ static char	*remove_dir(char *path, int32_t dir_count)
 	new_path = ft_substr(path, 0, last_index + 1);
 	return (free(path), new_path);
 }
+
 /// @brief try get the relative dir ex: ./mydir/mycmd
 /// @param cmd_name
 /// @return
@@ -137,7 +149,7 @@ char	*get_full_path(t_cmd *cmd)
 		path = try_get_relative_dir2(cmd);
 	if (!path)
 		path = try_get_full_path_from_env_path(cmd);
-	if(cmd->name && cmd->name[0] == '/')
+	if (cmd->name && cmd->name[0] == '/')
 		path = ft_strdup(cmd->name);
 	if (path && is_a_directory(path))
 	{

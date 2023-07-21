@@ -40,8 +40,8 @@ bool	has_token_expansion_str(char *str)
 		if (type == TK_SINGLEQUOTE)
 			i = skip_token_single_quote(str, type, i);
 		else if (type == TK_COMMANDSUBSTITUTION_OPEN
-				|| type == TK_DOLLAR_SIGN_CURLYBRACE
-				|| type == TK_ENVIRONEMENT_VAR || type == TK_LAST_CMD_EXIT)
+			|| type == TK_DOLLAR_SIGN_CURLYBRACE
+			|| type == TK_ENVIRONEMENT_VAR || type == TK_LAST_CMD_EXIT)
 			return (true);
 		else
 			i += t_len;

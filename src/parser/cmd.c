@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_cmd	*parse_cmd(t_cmd *cmd)
@@ -84,7 +96,7 @@ void	*add_redir_arg_to_main(t_cmd *main, t_cmd *redir)
 	{
 		return (write_err2(2, "syntax error near unexpected token: ",
 				redir->args[1]), NULL);
-	}		
+	}
 	main_args_count = count_arr(main->args);
 	if (args_count <= 1)
 		return (NULL);

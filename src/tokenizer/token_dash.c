@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 int32_t	add_token_dash(char *str, int32_t pos, t_token *token)
 {
 	token = add_token(pos, TK_DASH, token);

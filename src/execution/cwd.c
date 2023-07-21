@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*get_home(void)
@@ -64,7 +76,7 @@ char	*recursive_search_dir(char *path, ino_t ino)
 /// There is multiple fall back layer, don't know if bash do it that way.
 /// @param cmd
 /// @return
-char	*get_cwd()
+char	*get_cwd(void)
 {
 	static char	buffer[PATH_MAX + 1];
 	struct stat	file_stat;
@@ -102,9 +114,9 @@ char	*get_cwd()
 	return (ft_strdup(proc->cwd));
 }
 
-char	*get_cwd_with_backslash()
+char	*get_cwd_with_backslash(void)
 {
-	char *cwd;
+	char	*cwd;
 
 	cwd = get_cwd();
 	if (!ft_strisempty(cwd) && cwd[ft_strlen(cwd) - 1] != '/')

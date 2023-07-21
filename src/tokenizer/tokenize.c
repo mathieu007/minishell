@@ -1,5 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "minishell.h"
 
 t_token	*add_tk(char *token_str, t_token_type type, int32_t i, t_token *parent)
 {
@@ -66,9 +77,9 @@ int32_t	check_syntax_error_before_near(char *str, int32_t i, char *token_err)
 
 int32_t	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
 {
-	char	*illegal_token;
+	char		*illegal_token;
 	t_process	*proc;
-	char 	*c;
+	char		*c;
 
 	proc = get_process();
 	illegal_token = "syntax error near unexpected token `";
@@ -86,9 +97,10 @@ int32_t	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
 	return (i);
 }
 
-static int32_t	check_redirection_syntax_errors(char *str, t_token_type type, int32_t i)
+static int32_t	check_redirection_syntax_errors(char *str, t_token_type type, 
+	int32_t i)
 {
-	int32_t	len;
+	int32_t		len;
 	t_process	*proc;
 
 	proc = get_process();
@@ -97,13 +109,14 @@ static int32_t	check_redirection_syntax_errors(char *str, t_token_type type, int
 	len = get_token_len(&str[i], type, false);
 	i = check_newline_syntax_error(str, len, i);
 	if (i != -1)
-		i = check_syntax_error_after_near(str, i, "<>|&;()#");	
+		i = check_syntax_error_after_near(str, i, "<>|&;()#");
 	return (i);
 }
 
 static bool	has_syntax_errors(int32_t i, int32_t tk_len, t_token *parent)
 {
-	if (tk_len != 0 && check_syntax_error_before_near(parent->str, i, "|&;(<>") == -1)
+	if (tk_len != 0 && check_syntax_error_before_near(parent->str, i,
+			"|&;(<>") == -1)
 		return (true);
 	if (check_syntax_error_after_near(parent->str, i + tk_len, "|&;)<>") == -1)
 		return (true);
@@ -122,8 +135,8 @@ bool	is_continuation(char *str)
 	return (false);
 }
 
-
-int32_t check_sequence_continuation(int32_t i, t_token_type	type, t_token *parent)
+int32_t	check_sequence_continuation(int32_t i, t_token_type	type, 
+	t_token *parent)
 {
 	int32_t			len;
 	char			*str;
@@ -141,7 +154,8 @@ int32_t check_sequence_continuation(int32_t i, t_token_type	type, t_token *paren
 	return (i + len);
 }
 
-int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type, t_token *parent)
+int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type,
+		t_token *parent)
 {
 	int32_t	len;
 
@@ -160,7 +174,6 @@ int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type, t_token *pare
 		return (i + 1);
 	return (i);
 }
-
 
 void	check_continuations_and_error(t_token *token)
 {

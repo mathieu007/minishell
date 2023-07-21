@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
+/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -33,11 +44,10 @@ t_token	*add_token(int32_t pos, t_token_type type, t_token *parent)
 	if (!new)
 		return (NULL);
 	if (last)
-	{	
+	{
 		last->next = new;
 		new->prev = last;
 	}
-	// increment_counter(type);
 	new->start = pos;
 	new->type = type;
 	new->is_redirection = false;

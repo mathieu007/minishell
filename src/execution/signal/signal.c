@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <termios.h>
 
@@ -18,17 +30,6 @@ void	disable_ctrl_c_output(void)
 	}
 }
 
-void	close_all_fds(t_cmd *cmd)
-{
-	while (cmd)
-	{
-		close_files_redirections(cmd);
-		if (cmd->child)
-			close_all_fds(cmd->child);
-		cmd = cmd->next;
-	}
-}
-
 void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	t_process	*proc;
@@ -39,10 +40,8 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 	proc = get_process();
 	cmd = proc->cmds;
 	if (siginfo->si_signo == SIGINT && proc->in_here_doc)
-	{	
+	{
 		write(1, "\n", 1);
-		// rl_on_new_line();
-		// rl_replace_line("", 0);
 		close_all_fds(cmd);
 		free_all_and_exit(1);
 	}
@@ -62,8 +61,8 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)sig;
 	proc = get_process();
 	cmd = proc->cmds;
-	if (siginfo->si_signo == SIGINT 
-	&& (proc->in_here_doc || proc->in_continuation))
+	if (siginfo->si_signo == SIGINT && (proc->in_here_doc
+			|| proc->in_continuation))
 		return ;
 	else if (proc->in_cat && siginfo->si_signo == SIGINT)
 		write(1, "\n", 2);
@@ -103,19 +102,4 @@ void	setup_signal_handlers(void)
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
-}
-
-void	sigquit_handler(int val)
-{
-	t_process	*proc;
-	t_cmd		*cmd;
-
-	(void)val;
-	proc = get_process();
-	cmd = proc->cmds;
-	write(1, "QUIT : 3\n", 9);
-	close_all_fds(cmd);
-	reset_cmd();
-	rl_on_new_line();
-	rl_replace_line("", 0);
 }

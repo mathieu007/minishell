@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*get_print_token_type(t_token_type type)
@@ -98,7 +110,6 @@ void	print_token(t_token *token)
 		printf(" token in dbl quotes = %i\n", (int)cpy->inside_dbl_quotes);
 		printf(" pos = %i\n", cpy->start);
 		printf(" token type = %s\n", get_print_token_type(cpy->type));
-		// printf(" total len = %i\n", cpy->str_len);
 		printf("---------------------------------------------------------\n");
 		cpy = cpy->next;
 		j++;

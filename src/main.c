@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <sys/time.h>
 
@@ -12,19 +24,6 @@ int32_t	subshell(char **inputs)
 	proc->parent_in_fd = -1;
 	proc->parent_out_fd = -1;
 	proc->is_subshell = true;
-	// inputs++;
-	// if (*inputs)
-	// {
-	// 	if (!ft_isnum(*inputs))
-	// 		free_all_and_exit2(1, "error: Subshell second arg is not numeric");
-	// 	else
-	// 		proc->parent_in_fd = ft_atoi(*inputs);
-	// 	inputs++;
-	// 	if (!ft_isnum(*inputs))
-	// 		free_all_and_exit2(1, "error: Subshell third arg is not numeric");
-	// 	else
-	// 		proc->parent_out_fd = ft_atoi(*inputs);
-	// }
 	ret = exec_cmds(str);
 	free_all_and_exit(proc->errnum);
 	return (ret);

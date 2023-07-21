@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	print_not_valid_identifier(int export_or_unset, char *identifier)
@@ -45,8 +57,8 @@ int	is_valid_identifier(char *identifier)
 
 int	is_valid_identifier_unset(char *identifier)
 {
-	int res;
-	int i;
+	int	res;
+	int	i;
 
 	i = 0;
 	res = 0;

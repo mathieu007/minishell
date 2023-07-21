@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wait.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 pid_t	ft_fork(void)
@@ -32,7 +44,7 @@ int32_t	ft_waitpid(pid_t pid)
 		else
 			free_all_and_exit2(errno, "waitpid error");
 		return (proc->errnum);
-	}	
+	}
 }
 
 void	wait_childs(t_cmd *cmd)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   generic_tokenizer.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
+/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 inline bool	is_token_delimiter(t_token_type type)
@@ -41,7 +53,7 @@ int32_t	check_dbl_quotes_continuation(int32_t i, t_token *parent)
 
 	str = &parent->str[i];
 	if (!str)
-		return 2;
+		return (2);
 	i = goto_closing_double_quote(parent->str, i + 1);
 	if (parent->str[i] != '\"')
 	{
