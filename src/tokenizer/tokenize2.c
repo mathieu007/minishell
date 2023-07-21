@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int32_t	check_redirection_syntax_errors(char *str, t_token_type type, 
+int32_t	check_redirection_syntax_errors(char *str, t_token_type type, 
 	int32_t i)
 {
 	int32_t		len;

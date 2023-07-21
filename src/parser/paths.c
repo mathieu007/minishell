@@ -64,7 +64,7 @@ static char	*remove_dir(char *path, int32_t dir_count)
 /// @brief try get the relative dir ex: ./mydir/mycmd
 /// @param cmd_name
 /// @return
-static char	*try_get_relative_dir(t_cmd *cmd)
+char	*try_get_relative_dir(t_cmd *cmd)
 {
 	char	*path;
 
@@ -85,7 +85,7 @@ static char	*try_get_relative_dir(t_cmd *cmd)
 /// @brief try get the relative dir ex: ../../mydir/mycmd
 /// @param cmd_name
 /// @return
-static char	*try_get_relative_dir2(t_cmd *cmd)
+char	*try_get_relative_dir2(t_cmd *cmd)
 {
 	char	*path;
 	int32_t	count;
