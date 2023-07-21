@@ -91,6 +91,10 @@ typedef struct s_file
 // t_hash_iterator		*hash_iterator(ht *table);
 // bool				hash_next(hti *it);
 
+bool				ft_strstartwith(char *src, char *start_with);
+bool				ft_strendwith(char *src, char *end_with);
+size_t				ft_count2darray(const char **src);
+bool				ft_strcontains(char *src, char *to_search);
 bool				ft_strisempty(char *str);
 bool				ft_striswhitespace(char *str);
 int32_t				ft_min(int32_t nbr, int32_t nbr2);

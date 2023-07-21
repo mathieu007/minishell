@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 09:39:04 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int32_t	build_cmd(t_cmd *cmd)
 	if (!cmd->args)
 	{
 		build_token_environement(cmd->token);
-		cmd = re_parse_at_execution(cmd);
+		cmd = parse_before_execution(cmd);
 		if (!cmd)
 			return (-1);
 		if (proc->errnum > 0)
@@ -176,7 +176,7 @@ t_cmd	*create_cmds_tree(t_token *root_token)
 	return (root_cmd);
 }
 
-t_cmd	*re_parse_at_execution(t_cmd *cmd)
+t_cmd	*parse_before_execution(t_cmd *cmd)
 {
 	cmd = parse_cmd(cmd);
 	if (!cmd)
