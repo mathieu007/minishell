@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/20 14:17:41 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 13:16:06 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,21 @@ int32_t	count_env_words(char *str)
 	return (count);
 }
 
+int32_t	count_wildcards_matches(char *pattern)
+{
+	int32_t	count;
+	char	**patterns;
+	char	*start_with;
+
+	start_with = get_start_with(pattern);
+	patterns = get_patterns(pattern);
+	count = count_matches(patterns, 
+			start_with, 
+			get_end_with(pattern));
+	free_2d_char_array(patterns);
+	return (free(start_with), count);
+}
+
 int32_t	get_args_len(t_token *token)
 {
 	int32_t	args_len;
@@ -75,7 +90,10 @@ int32_t	get_args_len(t_token *token)
 				if (token->next->type == TK_SPACE
 					|| token->next->type == TK_END)
 				{
-					args_len++;
+					if (ft_strcontains(token->str, "*"))
+						args_len += count_wildcards_matches(token->str);
+					else
+						args_len++;
 					break ;
 				}
 				token = token->next;
@@ -84,6 +102,18 @@ int32_t	get_args_len(t_token *token)
 		token = token->next;
 	}
 	return (args_len);
+}
+
+int32_t		insert_files_as_args(char **split, int32_t i, char **files)
+{
+	if (!files)
+		return (i);
+	while (*files)
+	{
+		split[i++] = *files;
+		files++;
+	}
+	return (i);
 }
 
 void	set_args(t_token *token, char **split)
@@ -98,11 +128,15 @@ void	set_args(t_token *token, char **split)
 		{
 			while (token && token->next)
 			{
-				split[i] = ft_strjoinfree(split[i], token->str);
+				if (!ft_strcontains(token->str, "*"))
+					split[i] = ft_strjoinfree(split[i], token->str);
 				if (token->next->type == TK_SPACE
 					|| token->next->type == TK_END)
 				{
-					i++;
+					if (ft_strcontains(token->str, "*"))
+						i = insert_files_as_args(split, i, get_cwd_files_array(token->str, " "));
+					else
+						i++;
 					break ;
 				}
 				token = token->next;

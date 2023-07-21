@@ -398,7 +398,7 @@ t_token					*add_token(int32_t char_pos, t_token_type type,
 							t_token *parent);
 
 int32_t					count_args(t_cmd *cmd);
-t_cmd					*re_parse_at_execution(t_cmd *cmd);
+t_cmd					*parse_before_execution(t_cmd *cmd);
 t_token					*tokenize_root(char *str);
 int32_t					add_token_group(char *str, int32_t i, t_token_type type,
 							t_token *parent);
@@ -546,6 +546,11 @@ int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd *cmd);
 
 //built in utils
+char					*get_end_with(char *str_pattern);
+char					*get_start_with(char *str_pattern);
+char					**get_patterns(char *str);
+size_t					count_matches(char **patterns, char *start_with, char *end_with);
+char 					**get_cwd_files_array(char *str_pattern, char *separator);
 int						is_valid_identifier(char *identifier);
 void	print_not_valid_identifier(int export_or_unset,
 								char *identifier);
@@ -561,6 +566,7 @@ void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
 void					reset_cmd(void);
 
 //signal
+
 void					sigquit_handler(int);
 void					setup_signal_handlers(void);
 void					disable_ctrl_c_output(void);

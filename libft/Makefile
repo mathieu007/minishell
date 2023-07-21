@@ -3,6 +3,11 @@ NAME = libft.a
 SRC	=	src/alloc_pool/data_pool.c	\
 		src/ft_atoi.c	\
 		src/ft_strcpy.c	\
+		src/ft_strstartwith.c	\
+		src/ft_strendwith.c	\
+		src/ft_strcpy.c	\
+		src/ft_count2darray.c	\
+		src/ft_strcontains.c	\
 		src/ft_strfill.c	\
 		src/ft_strisempty.c	\
 		src/ft_strequal.c	\
