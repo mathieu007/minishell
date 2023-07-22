@@ -88,7 +88,9 @@ export allo
 export a=1 b=2 c=3 
 export a=1 b=2 c=3
 export a=a=a && echo $a
-unset a=a=a && echo $a
+export aaaa====bbb====ccc && echo $aaaa
+export aaaa=bbb====ccc && unset aaaa && echo $aaaa
+export aaaa=====bbb====ccc && unset aaaa && echo $aaaa
 unset 1
 unset _1
 unset _

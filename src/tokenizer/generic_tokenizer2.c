@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   generic_tokenizer.c                                :+:      :+:    :+:   */
+/*   generic_tokenizer2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:33:24 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ bool	has_token_redirection(t_token *parent)
 	while (parent->str[i])
 	{
 		type = get_token_type(&parent->str[i]);
-		t_len = get_token_len(&parent->str[i], type, false);
+		t_len = get_token_len(&parent->str[i], type);
 		if (is_token_delimiter(type))
 			i = skip_token_delimiter(type, i, parent);
 		else if (type == TK_GREAT || type == TK_GREATGREAT)

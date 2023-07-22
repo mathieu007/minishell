@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   generic_tokenizer.c                                :+:      :+:    :+:   */
+/*   generic_tokenizer3.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:34:09 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ bool	has_token_semicolon_sequence(t_token *parent)
 	while (parent->str[i])
 	{
 		type = get_token_type(&parent->str[i]);
-		t_len = get_token_len(&parent->str[i], type, false);
+		t_len = get_token_len(&parent->str[i], type);
 		if (is_token_delimiter(type))
 			i = skip_token_delimiter(type, i, parent);
 		else if (type == TK_SEMICOLON)
@@ -47,7 +47,7 @@ bool	has_token_sequence(t_token *parent)
 	while (parent->str[i])
 	{
 		type = get_token_type(&parent->str[i]);
-		t_len = get_token_len(&parent->str[i], type, false);
+		t_len = get_token_len(&parent->str[i], type);
 		if (is_token_delimiter(type))
 			i = skip_token_delimiter(type, i, parent);
 		else if (type == TK_OR || type == TK_AND || type == TK_PIPE)
@@ -72,7 +72,7 @@ bool	has_token(char *tk, t_token *parent)
 	while (parent->str[i])
 	{
 		cur_tk = get_token_type(&parent->str[i]);
-		t_len = get_token_len(&parent->str[i], cur_tk, false);
+		t_len = get_token_len(&parent->str[i], cur_tk);
 		if (type != cur_tk && is_token_delimiter(cur_tk))
 			i = skip_token_delimiter(cur_tk, i, parent);
 		else if (cur_tk == type)

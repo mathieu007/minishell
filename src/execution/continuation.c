@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:38:18 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int32_t	write_continuation(const char *delimiter, t_redirect *redir)
 		free_all_and_exit(0);
 	}
 	proc->errnum = ft_waitpid(pid);
+	close(redir->fd);
 	proc->in_continuation = false;
 	return (proc->errnum);
 }
@@ -101,6 +102,7 @@ int32_t	write_non_empty_continuation(t_redirect *redir)
 		free_t_redirect(redir);
 		free_all_and_exit(0);
 	}
+	close(redir->fd);
 	proc->errnum = ft_waitpid(pid);
 	proc->in_continuation = false;
 	return (proc->errnum);
@@ -131,6 +133,6 @@ t_redirect	*open_write_continuation(void)
 	create_temp_file(redir);
 	if (redir->fd == -1)
 		write_err2(errno, f_name,
-			": Unable to create temporary file or directory\n");
+				": Unable to create temporary file or directory\n");
 	return (redir);
 }

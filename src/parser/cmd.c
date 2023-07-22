@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/22 07:07:23 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 t_cmd	*parse_cmd(t_cmd *cmd)
 {
+	cmd->name = free_ptr(cmd->name);
 	if (cmd->type == CMD_PARENTHESES)
 		return (cmd->name = ft_strdup(cmd->token->str), cmd);
 	cmd->args = free_2d_char_array(cmd->args);
-	cmd->name = free_ptr(cmd->name);
 	cmd->args = parse_args(cmd->token);
 	if (cmd->args == NULL || ((ft_strisempty(cmd->args[0])
 				|| ft_striswhitespace(cmd->args[0]))

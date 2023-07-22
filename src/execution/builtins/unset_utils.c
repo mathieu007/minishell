@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   unset_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 20:42:05 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,46 +38,18 @@ int	is_valid_identifier(char *identifier)
 	int	res;
 	int	i;
 
-	i = 0;
 	res = 0;
 	if (!identifier)
 		return (res);
+	if (identifier[0])
+		if (!(ft_isalpha(identifier[0]) == 1 || identifier[0] == '_'))
+			return (0);
+	i = 1;
 	while (identifier[i])
 	{
-		if (identifier[0])
-			if (ft_isalpha(identifier[0]) == 1 || identifier[0] == '_')
-				res = 1;
-		if (ft_isalnum(identifier[i]) != 1 && identifier[i] != '_'
-			&& identifier[i] != '=' && identifier[i] != '\0')
-			res = 0;
+		if (!(ft_isalnum(identifier[i]) == 1 || identifier[i] == '_'))
+			return (0);
 		i++;
 	}
-	return (res);
-}
-
-int	is_valid_identifier_unset(char *identifier)
-{
-	int	res;
-	int	i;
-
-	i = 0;
-	res = 0;
-	if (!identifier)
-		return (res);
-	while (identifier[i])
-	{
-		if (identifier[0])
-			if (ft_isalpha(identifier[0]) == 1 || identifier[0] == '_')
-				res = 1;
-		if (ft_isalnum(identifier[i]) != 1 && identifier[i] != '_'
-			&& identifier[i] != '\0')
-			res = 0;
-		if (identifier[i] == '=')
-		{
-			res = 0;
-			break ;
-		}
-		i++;
-	}
-	return (res);
+	return (1);
 }

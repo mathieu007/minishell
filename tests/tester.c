@@ -325,7 +325,7 @@ void	run_test(char *command)
 		output_err_equal = 1;
 	else if (!minishell_err_output || !bash_err_output)
 		output_err_equal = 0;
-	if ((output_equal && output_err_equal))
+	if ((output_equal && output_err_equal && minishell_status == bash_status))
 	{
 		printf(GREEN "TEST PASSED!\n\n" RESET);
 		printf("Bash output:\n[%s]\n", bash_output);

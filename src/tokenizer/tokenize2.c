@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 19:35:08 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int32_t	check_redirection_syntax_errors(char *str, t_token_type type, 
+int32_t	check_redirection_syntax_errors(char *str, t_token_type type,
 	int32_t i)
 {
 	int32_t		len;
@@ -21,7 +21,7 @@ int32_t	check_redirection_syntax_errors(char *str, t_token_type type,
 	proc = get_process();
 	if (type == TK_LESSLESS)
 		proc->has_here_doc = true;
-	len = get_token_len(&str[i], type, false);
+	len = get_token_len(&str[i], type);
 	i = check_newline_syntax_error(str, len, i);
 	if (i != -1)
 		i = check_syntax_error_after_near(str, i, "<>|&;()#");
@@ -50,14 +50,14 @@ bool	is_continuation(char *str)
 	return (false);
 }
 
-int32_t	check_sequence_continuation(int32_t i, t_token_type	type, 
+int32_t	check_sequence_continuation(int32_t i, t_token_type	type,
 	t_token *parent)
 {
 	int32_t			len;
 	char			*str;
 	t_redirect		*redir;
 
-	len = get_token_len(&parent->str[i], type, false);
+	len = get_token_len(&parent->str[i], type);
 	str = &parent->str[i + len];
 	if (is_continuation(str))
 	{
@@ -74,7 +74,7 @@ int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type,
 {
 	int32_t	len;
 
-	len = get_token_len(&parent->str[i], type, false);
+	len = get_token_len(&parent->str[i], type);
 	if (type == TK_SEMICOLON && has_syntax_errors(i++, len, parent))
 		return (-1);
 	else if (type == TK_OR && has_syntax_errors(i++, len, parent))

@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/18 10:19:43 by math             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:33:36 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_token	*space_quotes_tokenizer(t_token *parent)
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
+		t_len = get_token_len(&str[i], type);
 		if (type == TK_SINGLEQUOTE)
 			i = add_sgl_quote_token(str, i, parent);
 		else if (type == TK_DOUBLEQUOTE)

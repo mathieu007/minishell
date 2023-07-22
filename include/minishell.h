@@ -434,8 +434,7 @@ int32_t					get_token_dash_len(char *str);
 int32_t					get_token_env_len(char *str);
 int32_t					get_token_space_len(char *str);
 int32_t					get_token_single_quote_len(char *str);
-int32_t					get_token_len(char *str, t_token_type type,
-							bool in_quotes);
+int32_t					get_token_len(char *str, t_token_type type);
 
 char					*get_env_variable(char *str);
 char					*get_end_of_cmd(char *str);
@@ -585,7 +584,6 @@ char					*join_splits(char **split, char *join);
 void	print_not_valid_identifier(int export_or_unset,
 								char *identifier);
 int						is_valid_identifier(char *identifier);
-int						is_valid_identifier_unset(char *identifier);
 void					add_env_node(t_process *data, char *variable,
 							char *value);
 void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
