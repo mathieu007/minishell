@@ -6,105 +6,69 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 17:38:18 by math             ###   ########.fr       */
+/*   Updated: 2023/07/23 10:17:09 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	write_delimiter_line(t_redirect *redir, const char *delimiter)
+static bool	is_valid_line(char *line)
 {
-	char	*line;
-	int32_t	delimiter_len;
-	int32_t	len;
-	int32_t	i;
-
-	delimiter_len = ft_strlen(delimiter);
-	line = "";
-	if (write(redir->fd, "\n", 1) == -1)
-		free_all_and_exit2(errno, "write error");
-	while (line)
-	{
-		line = readline("> ");
-		if (write(redir->fd, line, ft_strlen(line)) == -1)
-			free_all_and_exit2(errno, "write error");
-		i = 0;
-		len = ft_strlen(line);
-		while (i < len)
-		{
-			if (ft_strncmp(&line[i], delimiter, delimiter_len) == 0)
-				return (free(line));
-			i++;
-		}
-		if (write(redir->fd, "\n", 1) == -1)
-			free_all_and_exit2(errno, "write error");
-		free(line);
-	}
-}
-
-int32_t	write_continuation(const char *delimiter, t_redirect *redir)
-{
-	pid_t		pid;
 	t_process	*proc;
 
 	proc = get_process();
-	pid = ft_fork();
-	if (pid == 0)
+	if (line == NULL)
 	{
-		proc = get_process();
-		setup_child_realine_signal_handlers();
-		write_delimiter_line(redir, delimiter);
-		close(redir->fd);
-		free_t_redirect(redir);
-		free_all_and_exit(0);
+		proc->errnum = 2;
+		return (ft_printf("syntax error: unexpected end of file.\n"), false);
 	}
-	proc->errnum = ft_waitpid(pid);
-	close(redir->fd);
-	proc->in_continuation = false;
-	return (proc->errnum);
+	return (true);
 }
 
-void	write_line(t_redirect *redir)
+void	write_lines(t_redirect *redir)
 {
 	int32_t	i;
 	char	*line;
 
-	line = "";
-	while (line)
+	line = readline("> ");
+	while (is_valid_line(line))
 	{
-		line = readline("> ");
 		i = 0;
 		while (line[i] && line[i] == ' ')
 			i++;
 		if (line[i])
 		{
-			write(redir->fd, line, ft_strlen(line));
+			if (write(redir->fd, line, ft_strlen(line)) == -1)
+				free_all_and_exit2(errno, "malloc error");
 			free(line);
 			break ;
 		}
 		free(line);
+		line = readline("> ");
 	}
 	close(redir->fd);
 }
 
-int32_t	write_non_empty_continuation(t_redirect *redir)
+int32_t	write_non_empty_continuation(void)
 {
 	pid_t		pid;
 	t_process	*proc;
 
 	proc = get_process();
+	proc->execution = EXEC_CONTINUATION;
+	setup_child_realine_signal_handlers();
+	proc->errnum = 0;
 	pid = ft_fork();
 	if (pid == 0)
 	{
-		setup_child_realine_signal_handlers();
 		proc = get_process();
-		write_line(redir);
-		free_t_redirect(redir);
-		free_all_and_exit(0);
+		write_lines(proc->continuation);
+		free_all_and_exit(proc->errnum);
 	}
-	close(redir->fd);
+	reset_signal_handlers();
 	proc->errnum = ft_waitpid(pid);
-	proc->in_continuation = false;
+	close(proc->continuation->fd);
+	proc->execution = EXEC_END;
 	return (proc->errnum);
 }
 

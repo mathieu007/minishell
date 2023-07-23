@@ -6,14 +6,13 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 19:35:08 by math             ###   ########.fr       */
+/*   Updated: 2023/07/23 08:32:20 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int32_t	check_redirection_syntax_errors(char *str, t_token_type type,
-	int32_t i)
+int32_t	check_redirection_syntax_errors(char *str, t_token_type type, int32_t i)
 {
 	int32_t		len;
 	t_process	*proc;
@@ -50,23 +49,24 @@ bool	is_continuation(char *str)
 	return (false);
 }
 
-int32_t	check_sequence_continuation(int32_t i, t_token_type	type,
-	t_token *parent)
+int32_t	check_sequence_continuation(int32_t i, t_token_type type,
+		t_token *parent)
 {
-	int32_t			len;
-	char			*str;
-	t_redirect		*redir;
+	int32_t		len;
+	char		*str;
+	t_process	*proc;
 
+	proc = get_process();
 	len = get_token_len(&parent->str[i], type);
 	str = &parent->str[i + len];
 	if (is_continuation(str))
 	{
-		redir = exec_continuation(parent);
-		unlink_files_redirections(redir);
-		free_t_redirect(redir);
+		exec_continuation(parent);
+		if (proc->errnum)
+			return (-1);
 		return (check_sequence_continuation(i, type, parent));
 	}
-	return (i + len);
+	return (i);
 }
 
 int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type,
@@ -75,17 +75,15 @@ int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type,
 	int32_t	len;
 
 	len = get_token_len(&parent->str[i], type);
-	if (type == TK_SEMICOLON && has_syntax_errors(i++, len, parent))
+	if (type == TK_SEMICOLON && has_syntax_errors(i, len, parent))
 		return (-1);
-	else if (type == TK_OR && has_syntax_errors(i++, len, parent))
+	else if (type == TK_OR && has_syntax_errors(i, len, parent))
 		return (-1);
-	else if (type == TK_AND && has_syntax_errors(i++, len, parent))
+	else if (type == TK_AND && has_syntax_errors(i, len, parent))
 		return (-1);
-	else if (type == TK_PIPE && has_syntax_errors(i++, len, parent))
+	else if (type == TK_PIPE && has_syntax_errors(i, len, parent))
 		return (-1);
-	else
-		check_sequence_continuation(i, type, parent);
-	if (len == 2)
-		return (i + 1);
-	return (i);
+	else if (check_sequence_continuation(i, type, parent) == -1)
+		return (-1);
+	return (i + len);
 }

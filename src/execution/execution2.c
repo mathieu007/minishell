@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/23 09:29:04 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,19 @@ static int32_t	fork_exec(t_cmd *cmd)
 	pid_t		pid;
 	t_process	*proc;
 
-	if (signal(SIGQUIT, sigquit_handler) == SIG_ERR)
-		free_all_and_exit2(1, "Signal SIGQUIT error");
 	proc = get_process();
 	if (!cmd)
 		return (proc->errnum);
-	if (ft_strequal(cmd->name, "cat"))
-		proc->in_cat = true;
+	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
 	if (pid == 0)
+	{
+		enable_ctrl_c_output();
 		return (exec_from_child_process(cmd));
+	}
+	reset_signal_handlers();
 	proc->errnum = ft_waitpid(pid);
-	proc->in_cat = false;
+	proc->execution = EXEC_END;
 	return (proc->errnum);
 }
 
@@ -53,7 +54,7 @@ int32_t	build_cmd(t_cmd *cmd)
 	return (proc->errnum);
 }
 
-int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
+int32_t	exec_command(t_cmd *cmd, bool is_in_child_process)
 {
 	t_process	*proc;
 
@@ -78,7 +79,7 @@ int32_t	execute_command(t_cmd *cmd, bool is_in_child_process)
 	return (proc->errnum);
 }
 
-int32_t	exec_commands(t_cmd *cmd, bool is_in_child_process)
+int32_t	dispatch_command(t_cmd *cmd, bool is_in_child_process)
 {
 	t_process	*proc;
 
@@ -98,7 +99,7 @@ int32_t	exec_commands(t_cmd *cmd, bool is_in_child_process)
 	else if (cmd->type == CMD_PARENTHESES)
 		proc->errnum = exec_subshell(cmd);
 	else if (cmd->type == CMD)
-		proc->errnum = execute_command(cmd, is_in_child_process);
+		proc->errnum = exec_command(cmd, is_in_child_process);
 	return (proc->errnum);
 }
 

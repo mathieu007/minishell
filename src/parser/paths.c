@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   paths.c                                              :+:      :+:    :+: */
+/*   paths.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/23 18:12:50 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ char	*try_get_relative_dir(t_cmd *cmd)
 	char	*path;
 
 	path = get_cwd_with_backslash();
-	if (path == NULL)
-		perror("An error occur while triying to get the current working dir.");
+	if (!path)
+		free_all_and_exit2(errno, "could not get current working directory.");
 	if (cmd->name && cmd->name[0] == '.' && cmd->name[1] == '/' && access(path,
 			F_OK | X_OK) == 0)
 	{
@@ -78,7 +78,7 @@ char	*try_get_relative_dir(t_cmd *cmd)
 		if (access(path, F_OK | X_OK) == 0)
 			return (path);
 	}
-	free(path);
+	free_ptr(path);
 	return (NULL);
 }
 

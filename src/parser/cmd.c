@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/22 07:07:23 by math             ###   ########.fr       */
+/*   Updated: 2023/07/23 18:20:01 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 	cmd->is_builtin = is_builtins(cmd->name);
 	cmd->full_path_name = free_ptr(cmd->full_path_name);
 	if (!cmd->is_builtin && !ft_strisempty(cmd->name))
+	{
+		free_ptr(cmd->full_path_name);
 		cmd->full_path_name = get_full_path(cmd);
+	}
 	cmd->options = get_options(cmd->token);
 	return (cmd);
 }

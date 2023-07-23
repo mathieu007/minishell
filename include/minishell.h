@@ -2,9 +2,9 @@
 # define MINISHELL_H
 
 # include "errno.h"
+# include "ft_printf.h"
 # include "history.h"
 # include "minishell.h"
-# include "ft_printf.h"
 # include "readline.h"
 # include <dirent.h>
 # include <libft.h>
@@ -18,6 +18,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <termios.h>
 # include <unistd.h>
 
 # define BUILTINS_EXPORT "export"
@@ -35,29 +36,6 @@
 #  define PATH_MAX 1024
 # endif
 
-/// @brief
-/// TK_CMD ls, cd, grep...,
-/// TK_GREAT >,
-///	TK_LESS <,
-///	TK_GREATGREAT >>,
-///	TK_LESSLESS <<,
-///	TK_GREATAMPERSAND >&,
-///	TK_PIPE |,
-///	TK_AMPERSAND &,
-///	TK_DOUBLEQUOTE ",
-///	TK_SINGLEQUOTE ',
-/// TK_DOLLAR_SIGN $,
-///	TK_CMD_SUBS_START $(,
-///	TK_CMD_SUBS_END ),
-///	TK_CMD_SUBS_BACKTICK `,
-///	TK_SEMICOLON ;,
-///	TK_CURLYBRACES_OPEN {,
-///	TK_CURLYBRACES_CLOSE },
-///	TK_PARENTHESES_OPEN (,
-///	TK_PARENTHESES_CLOSE ),
-///	TK_COND_AND &&,
-///	TK_COND_OR ||,
-///	TK_BACKSLASH \,
 typedef enum e_token_type
 {
 	TK_UNKNOWN = -1,
@@ -101,58 +79,25 @@ typedef enum e_token_type
 	TK_WILDCARD = (int32_t)'*'
 }						t_token_type;
 
-/// @brief
-///	ESC_DOUBLEQUOTE ",
-///	ESC_BACKSLASH \,
-///	ESC_DOLLARSIGN $,
-///	ESC_NEWLINE n,
-///	ESC_TAB t,
-///	ESC_VTAB v,
-///	ESC_CARRIAGE_RETURN r,
-///	ESC_FORM_FEED f,
-///	ESC_HEX_DIGIT x
-///	ESC_BACKSPACE b
-typedef enum e_escaped_char
-{
-	ESC_DOUBLEQUOTE = '\"',
-	ESC_BACKSLASH = '\\',
-	ESC_DOLLARSIGN = '$',
-	ESC_NEWLINE = '\n',
-	ESC_TAB = '\t',
-	ESC_VTAB = '\v',
-	ESC_CARRIAGE_RETURN = '\r',
-	ESC_FORM_FEED = '\f',
-	ESC_HEX_DIGIT = '\x0',
-	ESC_BACKSPACE = '\b',
-	ESC_MINUS = '-',
-	ESC_PLUS = '+',
-	ESC_EXCLAMATION_MARK = '!',
-	ESC_QUESTION_MARK = '?',
-	ESC_PERCENT = '%'
-}						t_escaped_char;
-typedef enum e_continuation_char
-{
-	CONTC_BACKSLASH = '\\',
-	CONTC_PIPE = '|',
-	CONTC_AMPERSAND = '&',
-	CONTC_SEMICOLON = ';',
-	CONTC_DOUBLE_AMPERSAND = CONTC_AMPERSAND * CONTC_AMPERSAND +
-		CONTC_AMPERSAND,
-	CONTC_DOUBLE_PIPE = CONTC_PIPE * CONTC_PIPE + CONTC_PIPE
-}						t_continuation_char;
+// typedef enum e_escaped_char
+// {
+// 	ESC_DOUBLEQUOTE = '\"',
+// 	ESC_BACKSLASH = '\\',
+// 	ESC_DOLLARSIGN = '$',
+// 	ESC_NEWLINE = '\n',
+// 	ESC_TAB = '\t',
+// 	ESC_VTAB = '\v',
+// 	ESC_CARRIAGE_RETURN = '\r',
+// 	ESC_FORM_FEED = '\f',
+// 	ESC_HEX_DIGIT = '\x0',
+// 	ESC_BACKSPACE = '\b',
+// 	ESC_MINUS = '-',
+// 	ESC_PLUS = '+',
+// 	ESC_EXCLAMATION_MARK = '!',
+// 	ESC_QUESTION_MARK = '?',
+// 	ESC_PERCENT = '%'
+// }						t_escaped_char;
 
-/// @brief the type of "command sequences"
-/// CMD_PIPE = echo "|" | command2\n
-/// CMD_SEQUENTIAL = command1; command2;
-/// CMD_LOG_AND = command1 && command2
-/// CMD_LOG_OR = command1 || command2
-/// CMD_BACKGROUND_EXEC = command &
-/// CMD_SUBSTITUTION = $(command)
-/// CMD_INPUT_REDIRECT = command < input_file
-/// CMD_OUTPUT_REDIRECT = command > output_file
-/// CMD_APPEND_OUTPUT_REDIRECT = command >> output_file
-/// CMD_GROUPING_PARENTHESE = ( command1; command2 )
-/// CMD_GROUPING_CURLYBRACE = { command1; command2; }
 typedef enum e_cmd_seq
 {
 	CMD_NONE = 0,
@@ -162,18 +107,27 @@ typedef enum e_cmd_seq
 	CMD_GROUP_OR,
 	CMD_GROUP_REDIRECTION,
 	CMD_GROUP_SEQUENTIAL,
-	CMD_PIPE = TK_PIPE,                             // |
-	CMD_PARENTHESES = TK_PARENTHESE_OPEN,           // (
-	CMD_SUBSTITUTION = TK_COMMANDSUBSTITUTION_OPEN, // (
-	CMD_LOG_AND = TK_AND,                           // &&
-	CMD_LOG_OR = TK_OR,                             // ||
-	CMD_BACKGROUND_EXEC = TK_AMPERSAND,             // &
+	CMD_PIPE = TK_PIPE,
+	CMD_PARENTHESES = TK_PARENTHESE_OPEN,
+	CMD_SUBSTITUTION = TK_COMMANDSUBSTITUTION_OPEN,
+	CMD_LOG_AND = TK_AND,
+	CMD_LOG_OR = TK_OR,
+	CMD_BACKGROUND_EXEC = TK_AMPERSAND,
 	CMD_FILEOUT_APPPEND = TK_GREATGREAT,
 	CMD_HEREDOC = TK_LESSLESS,
 	CMD_FILEOUT = TK_GREAT,
 	CMD_FILEIN = TK_LESS,
 	CMD_SEQUENTIAL = TK_SEMICOLON
 }						t_cmd_seq;
+
+typedef enum e_cmd_execution
+{
+	EXEC_END,
+	EXEC_SLEEP,
+	EXEC_CAT,
+	EXEC_HEREDOC,
+	EXEC_CONTINUATION
+}						t_cmd_execution;
 
 typedef struct s_redirect
 {
@@ -269,11 +223,11 @@ typedef struct s_process
 	t_env_cpy			*env_cpy;
 	t_token				*tokens;
 	t_cmd				*cmds;
+	t_cmd_execution		execution;
 	bool				in_here_doc;
-	bool				in_cat;
-	bool				in_continuation;
-	bool				in_subshell;
 	bool				is_subshell;
+	pid_t				pid;
+	t_redirect			*continuation;
 	int32_t				parent_in_fd;
 	int32_t				parent_out_fd;
 	bool				syntax_error;
@@ -283,8 +237,18 @@ typedef struct s_process
 }						t_process;
 
 /// @brief The entities functions
+bool					set_cwd(char *cwd);
+bool					dir_exist(const char *path);
+int32_t	write_delimiter_continuation(const char *delimiter,
+										t_redirect *redir);
+void					disable_echoctl(struct termios *old_termios);
+void					re_enable_echoctl(struct termios *old_termios);
+void					setup_signal_handlers(void);
+void					enable_ctrl_c_output(void);
+void					reset_signal_handlers(void);
+void					setup_child_signal_handlers(t_cmd *cmd);
 void					setup_child_realine_signal_handlers(void);
-void					close_all_fds(t_cmd *cmd);
+void					close_all_fds(void);
 bool					is_sequence_type(t_token_type type);
 int32_t	check_environement_continuation(int32_t i,
 										t_token *parent);
@@ -298,7 +262,8 @@ int32_t	check_parenthese_continuation(int32_t i,
 										t_token *parent);
 char					*get_cwd_with_backslash(void);
 void					unlink_files_redirections(t_redirect *redir);
-int32_t					write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir);
+int32_t					write_here_document(const char *delimiter, t_cmd *main,
+							t_cmd *redir);
 t_cmd					*create_redir_out(t_cmd *main, t_cmd *redir);
 t_cmd					*create_redir_append_out(t_cmd *main, t_cmd *redir);
 t_cmd					*create_redir_in(t_cmd *main, t_cmd *redir);
@@ -317,7 +282,7 @@ bool					has_token_semicolon_sequence(t_token *parent);
 bool					check_syntax_error_near(char *str, char *token_err);
 void	exec_delimiter_continuation(char *delimiter,
 									t_token *parent);
-t_redirect				*exec_continuation(t_token *parent);
+void					exec_continuation(t_token *parent);
 void					create_temp_file(t_redirect *redir);
 char					*get_temp_dir(void);
 int32_t					goto_token(char *str, char *tk);
@@ -414,8 +379,9 @@ bool					has_token_and(t_token *token);
 bool					has_token_or(t_token *token);
 bool					has_token_parenthese(t_token *token);
 t_redirect				*open_write_continuation(void);
-int32_t					write_continuation(const char *delimiter, t_redirect *redir);
-int32_t					write_non_empty_continuation(t_redirect *redir);
+int32_t	write_delimiter_continuation(const char *delimiter,
+										t_redirect *redir);
+int32_t					write_non_empty_continuation(void);
 /// @brief Simples and short helpers methods.
 
 t_cmd					*last_in_redir(t_cmd *cmd);
@@ -439,8 +405,8 @@ int32_t					get_token_len(char *str, t_token_type type);
 char					*get_env_variable(char *str);
 char					*get_end_of_cmd(char *str);
 
-char					*get_cwd_files_as_string(char *str_pattern,
-							char *separator);
+char	*get_cwd_files_as_string(char *str_pattern,
+								char *separator);
 int32_t					exec_subshell(t_cmd *cmd);
 bool					is_end_of_seq(t_token_type type);
 bool					is_esc_env_var(char *str, int32_t i);
@@ -452,20 +418,31 @@ int32_t					exec_from_child_process(t_cmd *cmd);
 int32_t					exec_from_subshell_process(t_cmd *cmd);
 t_cmd					*re_parse_at_execution(t_cmd *cmd);
 t_cmd					*create_cmds_tree(t_token *root_token);
-void					sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context);
+void					sig_child_readline_handler(int sig, siginfo_t *siginfo,
+							void *context);
 void					*add_redir_arg_to_main(t_cmd *main, t_cmd *redir);
 char					*try_get_relative_dir2(t_cmd *cmd);
 char					*try_get_relative_dir(t_cmd *cmd);
 char					*try_get_full_path_from_env_path(t_cmd *cmd);
-int32_t					add_sequence_token(int32_t i, char *tk_str, t_token_type type,t_token *parent);
+int32_t					add_sequence_token(int32_t i, char *tk_str,
+							t_token_type type, t_token *parent);
 t_token					*sequence_semicolon_tokenizer(t_token *parent);
-int32_t					add_sgl_quote_token(char *str, int32_t i, t_token *parent);
-int32_t					add_dbl_quote_token(char *str, int32_t i, t_token *parent);
-int32_t					check_newline_syntax_error(char *str, int32_t len, int32_t i);
-int32_t					check_syntax_error_after_near(char *str, int32_t i, char *token_err);
-int32_t					check_syntax_error_before_near(char *str, int32_t i, char *token_err);
-int32_t					check_redirection_syntax_errors(char *str, t_token_type type,int32_t i);
-int32_t					check_sequence_syntax_errors(int32_t i, t_token_type type,t_token *parent);
+int32_t					add_sgl_quote_token(char *str, int32_t i,
+							t_token *parent);
+int32_t					add_dbl_quote_token(char *str, int32_t i,
+							t_token *parent);
+int32_t					check_newline_syntax_error(char *str, int32_t len,
+							int32_t i);
+int32_t					check_syntax_error_after_near(char *str, int32_t i,
+							char *token_err);
+int32_t					check_syntax_error_before_near(char *str, int32_t i,
+							char *token_err);
+int32_t	check_redirection_syntax_errors(char *str,
+										t_token_type type,
+										int32_t i);
+int32_t	check_sequence_syntax_errors(int32_t i,
+										t_token_type type,
+										t_token *parent);
 
 /// get full path from relative path, absolute or env path.
 char					*get_full_path(t_cmd *cmd);
@@ -515,7 +492,7 @@ int32_t					increment_counter(t_token_type type);
 int32_t					decrement_counter(t_token_type type);
 
 /// parsing
-int32_t					exec_commands(t_cmd *cmd, bool in_child_process);
+int32_t					dispatch_command(t_cmd *cmd, bool in_child_process);
 bool					token_count_is_odd(char *str);
 t_cmd					*parse_cmd(t_cmd *cmd);
 int32_t					count_env_words(char *str);
@@ -574,8 +551,10 @@ int						exit_cmd(t_cmd *cmd);
 char					*get_end_with(char *str_pattern);
 char					*get_start_with(char *str_pattern);
 char					**get_patterns(char *str);
-size_t					count_matches(char **patterns, char *start_with, char *end_with);
-char 					**get_cwd_files_array(char *str_pattern, char *separator);
+size_t					count_matches(char **patterns, char *start_with,
+							char *end_with);
+char	**get_cwd_files_array(char *str_pattern,
+							char *separator);
 int						is_valid_identifier(char *identifier);
 void	print_not_valid_identifier(int export_or_unset,
 								char *identifier);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/23 09:29:04 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ void	reset_cmd(void)
 	proc->cmds = NULL;
 	proc->last_cmd = NULL;
 	proc->tokens = NULL;
-	proc->in_here_doc = false;
-	proc->in_continuation = false;
-	proc->in_cat = false;
+	proc->execution = EXEC_END;
 	proc->last_errnum = proc->errnum;
 	proc->syntax_error = false;
 }
@@ -58,7 +56,7 @@ int32_t	exec_cmds(char *str)
 		token = tokenize(str);
 	root_cmd = create_cmds_tree(token);
 	if (root_cmd)
-		exec_commands(root_cmd->child, false);
+		dispatch_command(root_cmd->child, false);
 	reset_cmd();
 	return (proc->errnum);
 }

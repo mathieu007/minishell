@@ -3,15 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   signal2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 08:35:05 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/22 14:55:09 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <termios.h>
+
+
+void	close_all_child_fds(t_cmd *cmd)
+{
+	while (cmd)
+	{
+		close_files_redirections(cmd);
+		if (cmd->child)
+			close_all_child_fds(cmd->child);
+		cmd = cmd->next;
+	}
+}
+
+void	close_all_fds()
+{
+	t_process	*proc;
+	t_cmd		*cmd;
+
+	proc = get_process();
+	cmd = proc->cmds;
+	while (cmd)
+	{
+		close_files_redirections(cmd);
+		if (cmd->child)
+			close_all_child_fds(cmd->child);
+		cmd = cmd->next;
+	}
+	if (proc->continuation && proc->continuation->fd > 0)
+		close(proc->continuation->fd);
+}
+
+void	enable_ctrl_c_output(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) != 0)
+	{
+		perror("Error termios getting terminal attributes");
+		exit(EXIT_FAILURE);
+	}
+	term.c_lflag |= ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0)
+	{
+		perror("Error termios setting terminal attributes");
+		exit(EXIT_FAILURE);
+	}
+}
 
 void	disable_ctrl_c_output(void)
 {
@@ -27,27 +73,5 @@ void	disable_ctrl_c_output(void)
 	{
 		perror("Error termios setting terminal attributes");
 		exit(1);
-	}
-}
-
-void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
-{
-	t_process	*proc;
-	t_cmd		*cmd;
-
-	(void)context;
-	(void)sig;
-	proc = get_process();
-	cmd = proc->cmds;
-	if (siginfo->si_signo == SIGINT && proc->in_here_doc)
-	{
-		write(1, "\n", 1);
-		close_all_fds(cmd);
-		free_all_and_exit(1);
-	}
-	else if (siginfo->si_signo == SIGTERM)
-	{
-		close_all_fds(cmd);
-		free_all_and_exit(0);
 	}
 }
