@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 18:20:01 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 08:54:00 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	*add_redir_arg_to_main(t_cmd *main, t_cmd *redir)
 	args_count = count_arr(args);
 	if (args_count > 1 && main->type == CMD_PARENTHESES)
 	{
-		return (write_err2(2, "syntax error near unexpected token: ",
+		return (write_err2(258, "syntax error near unexpected token: ",
 				redir->args[1]), NULL);
 	}
 	main_args_count = count_arr(main->args);

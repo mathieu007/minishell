@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 16:45:31 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 13:21:45 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,25 @@ int	cd_cmd(t_cmd *cmd)
 	int		result;
 
 	path = NULL;
-	path_to_change = ft_strdup(cmd->args[1]);
+	path_to_change = NULL;
 	if (cmd->options != NULL)
 		return (ft_printf("Error: Option \"%s\" not supported.\n",
-							cmd->options[0]),
-				1);
-	if (path_to_change == NULL)
-		return (ft_printf("Error: No directory specified.\n"), 1);
-	if (path_to_change[0] != '/')
+				cmd->options[0]), 1);
+	if (cmd->args[1] == NULL || ft_strisempty(cmd->args[1]))
+		path_to_change = get_home();
+	else if (cmd->args[1][0] == '/')
+		path_to_change = ft_strdup(cmd->args[1]);
+	else
 	{
 		path = get_cwd();
 		if (!path)
 		{
 			ft_printf("minishell: cd: %s: No such file or directory\n",
-						path_to_change);
+				path_to_change);
 			return (1);
 		}
 		path = ft_strjoinfree(path, "/");
-		path_to_change = ft_strjoinfree2(path, path_to_change);
+		path_to_change = ft_strjoinfree(path, cmd->args[1]);
 		path = NULL;
 	}
 	result = chdir(path_to_change);

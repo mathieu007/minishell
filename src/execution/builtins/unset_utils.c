@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 20:42:05 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 10:35:45 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ void	print_not_valid_identifier(int export_or_unset, char *identifier)
 		write(2, "Minishell: export: `", 20);
 		while (identifier[++i])
 			write(2, &identifier[i], 1);
-		write(2, ": not a valid identifier\n", 25);
+		write(2, "': not a valid identifier\n", 27);
 	}
 	if (export_or_unset == 1)
 	{
-		write(2, "Minishell: unset: `", 19);
+		write(2, "Minishell: unset: `", 20);
 		while (identifier[++i])
 			write(2, &identifier[i], 1);
-		write(2, ": not a valid identifier\n", 25);
+		write(2, "': not a valid identifier'\n", 27);
 	}
 }
 

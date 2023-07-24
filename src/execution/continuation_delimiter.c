@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation_delimiter.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 10:20:44 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 12:45:26 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ static bool	is_not_end_line(char *line, const char *delimiter)
 	proc = get_process();
 	if (line == NULL)
 	{
-		proc->errnum = 2;
+		proc->errnum = 258;
 		ft_printf("unexpected EOF while looking for matching `%s'\n",
-				delimiter);
+			delimiter);
 		ft_printf("syntax error: unexpected end of file\n");
 		return (false);
 	}
@@ -30,9 +30,11 @@ static bool	is_not_end_line(char *line, const char *delimiter)
 
 void	write_delimiter_lines(t_redirect *redir, const char *delimiter)
 {
-	char	*line;
-	int32_t	i;
+	char		*line;
+	int32_t		i;
+	t_process	*proc;
 
+	proc = get_process();
 	line = readline("> ");
 	while (is_not_end_line(line, delimiter))
 	{
@@ -66,9 +68,9 @@ void	free_continuation(void)
 	t_process	*proc;
 
 	proc = get_process();
-	unlink_files_redirections(proc->continuation);
 	close_all_fds();
-	free_t_redirect(proc->continuation);
+	unlink_files_redirections(proc->continuation);
+	proc->continuation = free_t_redirect(proc->continuation);
 }
 
 void	exec_delimiter_continuation(char *delimiter, t_token *parent)

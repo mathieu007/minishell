@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize2.c                                        :+:      :+:    :+:   */
+/*   tokenize3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 11:51:13 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int32_t	substitution_syntax_error()
+{
+	char	*illegal_token;
+
+	illegal_token = "Command substitution not handled.";
+	write_err(258, illegal_token);
+	return (-1);
+}
 
 void	check_continuations_and_error(t_token *token)
 {
@@ -26,7 +35,7 @@ void	check_continuations_and_error(t_token *token)
 		else if (type == TK_SINGLEQUOTE)
 			i = check_sgl_quotes_continuation(i, token);
 		else if (type == TK_COMMANDSUBSTITUTION_OPEN)
-			i = check_substitution_continuation(i, token);
+			i = substitution_syntax_error();
 		else if (type == TK_PARENTHESE_OPEN)
 			i = check_parenthese_continuation(i, token);
 		else if (type == TK_DOLLAR_SIGN_CURLYBRACE)

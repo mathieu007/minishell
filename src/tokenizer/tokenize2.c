@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 08:18:42 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/24 08:18:45 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 11:44:53 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,5 @@ int32_t	check_sequence_syntax_errors(int32_t i, t_token_type type,
 		return (-1);
 	else if (check_sequence_continuation(i, type, parent) == -1)
 		return (-1);
-	return (i + len);
+	return (i + len - 1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_subshell.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 09:36:11 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 12:26:27 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ static int32_t	execve_subshell(t_cmd *cmd)
 	char		**env;
 
 	proc = get_process();
-	env = get_env();
+	env = get_env_path();
 	subshell_args = malloc(3 * sizeof(char *));
 	subshell_args[2] = NULL;
 	subshell_args[1] = cmd->token->str;
-	subshell_args[0] = proc->full_program_name;
+	subshell_args[0] = "./minishell";
 	if (execve(proc->full_program_name, subshell_args, env) == -1)
 	{
 		free_2d_char_array(env);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 17:32:54 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 08:54:21 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int32_t	check_newline_syntax_error(char *str, int32_t len, int32_t i)
 	if (!str[i])
 	{
 		get_process()->syntax_error = true;
-		write_err(2, syntax_error);
+		write_err(258, syntax_error);
 		return (-1);
 	}
 	return (i);
@@ -69,7 +69,7 @@ int32_t	check_syntax_error_before_near(char *str, int32_t i, char *token_err)
 		get_process()->syntax_error = true;
 		c = ft_substr(str, start, 1);
 		c = ft_strjoinfree(c, "'");
-		write_err2(2, illegal_token, c);
+		write_err2(258, illegal_token, c);
 		return (-1);
 	}
 	return (i);
@@ -88,7 +88,7 @@ int32_t	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
 		get_process()->syntax_error = true;
 		c = ft_substr(str, i, 1);
 		c = ft_strjoinfree(c, "'");
-		write_err2(2, illegal_token, c);
+		write_err2(258, illegal_token, c);
 		free(c);
 		return (-1);
 	}

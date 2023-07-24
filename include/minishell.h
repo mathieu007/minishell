@@ -237,6 +237,7 @@ typedef struct s_process
 }						t_process;
 
 /// @brief The entities functions
+char					*get_home(void);
 bool					set_cwd(char *cwd);
 bool					dir_exist(const char *path);
 int32_t	write_delimiter_continuation(const char *delimiter,
@@ -286,7 +287,7 @@ void					exec_continuation(t_token *parent);
 void					create_temp_file(t_redirect *redir);
 char					*get_temp_dir(void);
 int32_t					goto_token(char *str, char *tk);
-void					free_exit_no_perr(int32_t status, char *msg);
+void					free_exit_no_perr(int32_t status);
 int32_t					skip_token_single_quote(char *str, t_token_type type,
 							int32_t i);
 bool					has_token(char *tk, t_token *parent);
@@ -320,6 +321,7 @@ void					split_token_semicolon(t_token *parent);
 
 void					write_err(int32_t error, char *msg);
 bool					has_error(void);
+
 void					free_exit_no_perr2(int32_t status, char *msg,
 							char *msg2);
 void					split_token_redirection(t_token *parent);

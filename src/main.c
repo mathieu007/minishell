@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 15:12:46 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 10:19:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ char	*get_prompt_input(void)
 	char	*input;
 
 	input = readline("MiniShell> ");
-	add_history(input);
+	if (!ft_strisempty(input))
+		add_history(input);
 	if (input == NULL)
 	{
 		ft_printf("\x1B[u\x1B[Aexit\n");

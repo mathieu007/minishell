@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 17:31:13 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 12:03:25 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,13 @@ int32_t	add_expansion_token(char *str, int32_t i, char *tk_str, t_token *parent)
 {
 	t_token_type	type;
 
+	if (!str[i])
+		return (i);
 	type = get_token_type(tk_str);
 	add_tk(tk_str, type, i, parent);
 	i = goto_closing_expansion_token(str, type, i);
+	if (!str[i])
+		return (i);
 	type = get_token_type(&str[i]);
 	if (str[i] == '}')
 		add_tk("}", type, i, parent);

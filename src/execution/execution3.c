@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 09:29:04 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 12:33:40 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	reset_cmd(void)
 	proc->last_cmd = NULL;
 	proc->tokens = NULL;
 	proc->execution = EXEC_END;
+	proc->continuation = NULL;
 	proc->last_errnum = proc->errnum;
 	proc->syntax_error = false;
 }

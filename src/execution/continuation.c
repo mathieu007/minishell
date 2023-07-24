@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 10:17:09 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 09:39:12 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static bool	is_valid_line(char *line)
 	proc = get_process();
 	if (line == NULL)
 	{
-		proc->errnum = 2;
+		proc->errnum = 258;
 		return (ft_printf("syntax error: unexpected end of file.\n"), false);
 	}
 	return (true);
@@ -27,9 +27,12 @@ static bool	is_valid_line(char *line)
 
 void	write_lines(t_redirect *redir)
 {
-	int32_t	i;
-	char	*line;
+	int32_t		i;
+	char		*line;
+	t_process	*proc;
 
+	proc = get_process();
+	proc->errnum = 0;
 	line = readline("> ");
 	while (is_valid_line(line))
 	{
@@ -63,10 +66,12 @@ int32_t	write_non_empty_continuation(void)
 	{
 		proc = get_process();
 		write_lines(proc->continuation);
-		free_all_and_exit(proc->errnum);
+		free_exit_no_perr(proc->errnum);
 	}
 	reset_signal_handlers();
 	proc->errnum = ft_waitpid(pid);
+	if (proc->errnum == 2)
+		proc->errnum = 258;
 	close(proc->continuation->fd);
 	proc->execution = EXEC_END;
 	return (proc->errnum);

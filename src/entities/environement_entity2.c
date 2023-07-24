@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   environnement_entities2.c                          :+:      :+:    :+:   */
+/*   environement_entity2.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 13:09:59 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ char	*get_env_value(char *variable)
 	current = head;
 	while (current)
 	{
-		if (ft_strnstr(current->variable, variable, len) == current->variable)
+		if (ft_strequal(current->variable, variable) 
+			&& len == ft_strlen(current->variable))
 			return (ft_strdup(current->value));
 		current = current->next;
 	}

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/22 14:55:09 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 12:47:15 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	close_all_child_fds(t_cmd *cmd)
 {
@@ -39,7 +38,10 @@ void	close_all_fds()
 		cmd = cmd->next;
 	}
 	if (proc->continuation && proc->continuation->fd > 0)
+	{
 		close(proc->continuation->fd);
+		proc->continuation->fd = -1;
+	}
 }
 
 void	enable_ctrl_c_output(void)

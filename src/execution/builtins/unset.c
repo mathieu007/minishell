@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 20:37:49 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 10:31:29 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ int	unset_cmd(t_cmd *cmd)
 {
 	t_process	*data;
 	int			i;
+	int			ret;
 
+	ret = 0;
 	data = get_process();
 	if (cmd->options != NULL)
 	{
@@ -61,11 +63,12 @@ int	unset_cmd(t_cmd *cmd)
 		if (is_valid_identifier(cmd->args[i]) == 0)
 		{
 			print_not_valid_identifier(1, cmd->args[i]);
+			ret = 1;
 			i++;
 			continue ;
 		}
 		remove_env_var(data, cmd->args[i]);
 		i++;
 	}
-	return (0);
+	return (ret);
 }

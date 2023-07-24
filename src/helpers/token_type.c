@@ -32,6 +32,8 @@ inline int32_t	goto_closing_double_quote(char *str, int32_t i)
 
 inline int32_t	goto_closing_environement(char *str, int32_t i)
 {
+	if (!str[i])
+		return (i);
 	if (str[i] == '{')
 		i++;
 	if (ft_isnum(&str[i]))
@@ -80,9 +82,9 @@ inline int32_t	get_token_len(char *str, t_token_type type)
 		return (1);
 	else if (str[0] == '\0')
 		return (0);
-	else if (type == TK_DASH && !in_quotes)
+	else if (type == TK_DASH)
 		return (get_token_dash_len(str));
-	else if (type == TK_DASHDASH && !in_quotes)
+	else if (type == TK_DASHDASH)
 		return (get_token_dashdash_len(str));
 	else if (type == TK_ENVIRONEMENT_VAR)
 		return (get_token_env_len(str));

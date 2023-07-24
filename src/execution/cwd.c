@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 18:27:19 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 13:17:35 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,23 +98,57 @@ ino_t	get_dir_id(char *dir)
 	return (0);
 }
 
+bool	update_variable(t_env_cpy *current, char *variable, char *value,
+		size_t len)
+{
+	bool	swap;
+
+	swap = false;
+	while (current)
+	{
+		if (ft_strncmp(variable, current->variable, len) == 0)
+		{
+			current->value = free_ptr(current->value);
+			current->value = ft_strdup(value);
+			swap = true;
+			break ;
+		}
+		current = current->next;
+	}
+	return (swap);
+}
+
+int32_t	add_or_update_env(char *name, char *value)
+{
+	size_t		len;
+	bool		swap;
+	t_process	*proc;
+
+	proc = get_process();
+	if (!value)
+		return (0);
+	len = ft_strlen(name);
+	swap = update_variable(proc->env_cpy, name, value, len);
+	if (!swap)
+		add_env_node(proc, name, value);
+	return (1);
+}
+
 bool	set_cwd(char *cwd)
 {
 	t_process	*proc;
-	ino_t		dir_id;
+	char 		*oldpwd;
 
 	if (!cwd)
 		return (false);
 	proc = get_process();
-	dir_id = get_dir_id(cwd);
-	if (dir_id != 0)
-	{
-		proc->cwd = free_ptr(proc->cwd);
-		proc->dir_id = dir_id;
-		proc->cwd = cwd;
-		return (true);
-	}
-	return (free_ptr(cwd), false);
+	oldpwd = get_env_value("PWD");
+	add_or_update_env("OLDPWD", oldpwd);
+	proc->cwd = free_ptr(proc->cwd);
+	proc->cwd = cwd;
+	add_or_update_env("PWD", cwd);
+	free(oldpwd);
+	return (true);
 }
 
 /// @brief this function automatically get the updated current working directory
@@ -126,36 +160,16 @@ bool	set_cwd(char *cwd)
 char	*get_cwd(void)
 {
 	static char	buffer[PATH_MAX + 1];
-	ino_t		dir_id;
-	char		*home;
 	t_process	*proc;
 	char		*cur_dir;
 
 	proc = get_process();
-	if (!proc->cwd)
-	{
-		cur_dir = getcwd(&buffer[0], PATH_MAX + 1);
-		if (!cur_dir)
-			free_all_and_exit2(1,
-								"An error occur while trying to get the current working dir.");
-		set_cwd(ft_strdup(cur_dir));
-		return (ft_strdup(proc->cwd));
-	}
-	dir_id = get_dir_id(proc->cwd);
-	if (dir_id != 0 && proc->dir_id == dir_id)
-		return (ft_strdup(proc->cwd));
-	home = get_home();
-	if (!home)
-		free_all_and_exit2(1, "Could not find home dir.");
-	proc->cwd = free_ptr(proc->cwd);
-	proc->cwd = recursive_search_dir(ft_strdup(home), proc->dir_id);
-	if (!proc->cwd)
-	{
-		free(home);
-		free_all_and_exit2(1, "Could not find working dir.");
-	}
-	set_cwd(ft_strdup(proc->cwd));
-	return (free(home), ft_strdup(proc->cwd));
+	cur_dir = getcwd(&buffer[0], PATH_MAX + 1);
+	if (!cur_dir)
+		free_all_and_exit2(1,
+			"An error occur while trying to get the current working dir.");
+	set_cwd(ft_strdup(cur_dir));
+	return (ft_strdup(proc->cwd));
 }
 
 char	*get_cwd_with_backslash(void)
