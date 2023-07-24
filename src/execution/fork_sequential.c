@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_sequential.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/23 08:56:46 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int32_t	exec_sequential(t_cmd *seq)
 		return (proc->errnum);
 	while (seq)
 	{
-		proc->errnum = exec_commands(seq->child, false);
+		proc->errnum = dispatch_command(seq->child, false);
 		seq = seq->next;
 	}
 	return (proc->errnum);

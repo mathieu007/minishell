@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/23 09:38:44 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static bool	is_valid_line(char *line, const char *delimiter,
+		size_t delimiter_len)
+{
+	if (line == NULL)
+	{
+		ft_printf("warning: here-document delimited by"
+					" end-of-file (wanted `%s')\n",
+					delimiter);
+		return (false);
+	}
+	if (ft_strncmp(line, delimiter, delimiter_len) == 0
+		&& ft_strlen(line) == delimiter_len)
+	{
+		free(line);
+		return (false);
+	}
+	return (true);
+}
 
 void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 {
@@ -19,14 +38,8 @@ void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 
 	delimiter_len = ft_strlen(delimiter);
 	line = readline("> ");
-	while (line)
+	while (is_valid_line(line, delimiter, delimiter_len))
 	{
-		if (ft_strncmp(line, delimiter, delimiter_len) == 0
-			&& ft_strlen(line) == delimiter_len)
-		{
-			free(line);
-			break ;
-		}
 		write(main->in_redir->fd, line, ft_strlen(line));
 		write(main->in_redir->fd, "\n", 1);
 		free(line);
@@ -41,18 +54,18 @@ int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)
 
 	proc = get_process();
 	create_redir_heredoc(main, redir);
-	proc->in_here_doc = true;
+	proc->execution = EXEC_CONTINUATION;
+	setup_child_realine_signal_handlers();
 	pid = ft_fork();
 	if (pid == 0)
 	{
-		proc = get_process();
-		setup_child_realine_signal_handlers();
 		write_here_doc_lines(main, delimiter);
 		close_files_redirections(main);
 		free_all_and_exit(0);
 	}
+	reset_signal_handlers();
 	proc->errnum = ft_waitpid(pid);
-	proc->in_here_doc = true;
 	close_files_redirections(main);
+	proc->execution = EXEC_END;
 	return (proc->errnum);
 }

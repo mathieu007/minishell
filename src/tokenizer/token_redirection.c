@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/20 13:51:59 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:31:29 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int32_t	add_token_redirection(char *str, int32_t i, t_token_type type,
 	t_token	*token;
 	int32_t	len;
 
-	len = get_token_len(&str[i], type, false);
+	len = get_token_len(&str[i], type);
 	token = add_token(i, type, parent);
 	token->token_len = len;
 	token->token_str = ft_substr(str, i, token->token_len);

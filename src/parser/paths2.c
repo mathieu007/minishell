@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   paths2.c                                             :+:      :+:    :+: */
+/*   paths2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/23 18:10:02 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 char	*check_dir(char *path, t_cmd *cmd)
 {
@@ -36,7 +35,10 @@ char	*get_full_path(t_cmd *cmd)
 	if (!path)
 		path = try_get_full_path_from_env_path(cmd);
 	if (cmd->name && cmd->name[0] == '/')
+	{
+		free_ptr(path);
 		path = ft_strdup(cmd->name);
+	}
 	if (path && is_a_directory(path))
 	{
 		write_err2(126, cmd->name, ": Is a directory\n");

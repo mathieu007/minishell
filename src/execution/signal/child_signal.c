@@ -1,47 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   child_signal.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 09:26:36 by math             ###   ########.fr       */
+/*   Updated: 2023/07/23 09:30:18 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <termios.h>
 
-void	sig_handler(int sig, siginfo_t *siginfo, void *context)
+void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	t_process	*proc;
 
 	(void)context;
 	(void)sig;
 	proc = get_process();
-	if (siginfo->si_signo == SIGINT && proc->execution == EXEC_CONTINUATION)
-		return ;
-	else if (siginfo->si_signo == SIGINT && proc->execution == EXEC_HEREDOC)
-		return ;
-	else if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
-			|| proc->execution == EXEC_SLEEP))
-		write(1, "\n", 1);
-	else if (siginfo->si_signo == SIGINT)
+	if (siginfo->si_signo == SIGINT
+		&& proc->execution == EXEC_HEREDOC)
 	{
 		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		free_all_and_exit(1);
+	}
+	else if (siginfo->si_signo == SIGINT
+		&& proc->execution == EXEC_CONTINUATION)
+	{
+		write(1, "\n", 1);
+		free_all_and_exit(1);
 	}
 	else if (siginfo->si_signo == SIGTERM)
-		free_all_and_exit(0);
+	{
+		close_all_fds();
+		free_all();
+	}
 }
 
-void	setup_signal_handlers(void)
+void	setup_child_realine_signal_handlers(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_sigaction = sig_handler;
+	sa.sa_sigaction = sig_child_readline_handler;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &sa, NULL);
@@ -49,13 +51,37 @@ void	setup_signal_handlers(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	reset_signal_handlers(void)
+void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
+{
+	t_process	*proc;
+
+	(void)context;
+	(void)sig;
+	proc = get_process();
+	if (siginfo->si_signo == SIGINT
+		&& (proc->execution == EXEC_CAT || proc->execution == EXEC_SLEEP))
+	{
+		write(1, "\n", 1);
+		free_all_and_exit(1);
+	}
+	else if (siginfo->si_signo == SIGTERM)
+	{
+		close_all_fds();
+		free_all_and_exit(0);
+	}
+}
+
+void	setup_child_signal_handlers(t_cmd *cmd)
 {
 	struct sigaction	sa;
 	t_process			*proc;
 
 	proc = get_process();
-	sa.sa_sigaction = sig_handler;
+	if (ft_strequal(cmd->name, "cat"))
+		proc->execution = EXEC_CAT;
+	else if (ft_strequal(cmd->name, "sleep"))
+		proc->execution = EXEC_SLEEP;
+	sa.sa_sigaction = sig_child_handler;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &sa, NULL);
@@ -64,14 +90,4 @@ void	reset_signal_handlers(void)
 		signal(SIGQUIT, sigquit_handler);
 	else
 		signal(SIGQUIT, SIG_IGN);
-}
-
-void	sigquit_handler(int val)
-{
-	(void)val;
-	write(1, "QUIT : 3\n", 9);
-	close_all_fds();
-	reset_cmd();
-	rl_on_new_line();
-	rl_replace_line("", 0);
 }

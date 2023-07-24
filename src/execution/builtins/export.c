@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 15:13:07 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 21:05:40 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,27 +74,27 @@ char	*handle_export_value(char **split_on_equal)
 int32_t	handle_export(t_process *data, char *arg)
 {
 	t_env_cpy	*current;
-	char		**split_on_equal;
 	char		*value;
 	size_t		len;
 	bool		swap;
+	char		*name;
 
 	current = data->env_cpy;
-	split_on_equal = ft_split(arg, '=');
-	if (!split_on_equal)
-		return (0);
-	value = handle_export_value(split_on_equal);
-	if (is_valid_identifier(split_on_equal[0]) == 0)
+	value = ft_strchr(arg, '=');
+	name = ft_substr(arg, 0, value - arg);
+	if (value && value[0])
+		value = ft_strdup(&value[1]);
+	else
+		value = NULL;
+	if (is_valid_identifier(name) == 0)
 	{
-		print_not_valid_identifier(0, split_on_equal[0]);
-		free_2d_array((void **)split_on_equal);
+		print_not_valid_identifier(0, name);
 		return (1);
 	}
-	len = ft_strlen(split_on_equal[0]);
-	swap = update_env_variable(current, split_on_equal[0], value, len);
+	len = ft_strlen(name);
+	swap = update_env_variable(current, name, value, len);
 	if (!swap)
-		add_env_node(data, split_on_equal[0], value);
-	free_2d_array((void **)split_on_equal);
+		add_env_node(data, name, value);
 	return (0);
 }
 

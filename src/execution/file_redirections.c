@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/22 14:51:52 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ void	close_files_redirections(t_cmd *cmd)
 		return ;
 	if (cmd->in_redir && cmd->in_redir->fd > 0)
 	{
-		if (cmd->in_redir->dup_fd >= 0)
-			dup2(cmd->in_redir->dup_fd, STDIN_FILENO);
 		close(cmd->in_redir->fd);
 		cmd->in_redir->fd = -1;
 		cmd->in_redir->dup_fd = -1;
@@ -55,8 +53,6 @@ void	redirect_input(t_cmd *cmd, bool is_in_child_process)
 	if (!cmd || !cmd->in_redir)
 		return ;
 	cmd->in_redir->fd = open(cmd->in_redir->file, O_RDONLY, 0777);
-	if (!is_in_child_process)
-		cmd->in_redir->dup_fd = dup(STDIN_FILENO);
 	if (dup2(cmd->in_redir->fd, STDIN_FILENO) == -1)
 		free_all_and_exit2(errno, "Could not redirect input");
 	if (cmd->type == CMD && is_in_child_process)

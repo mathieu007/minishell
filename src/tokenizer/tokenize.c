@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:32:54 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,8 @@ int32_t	check_syntax_error_before_near(char *str, int32_t i, char *token_err)
 int32_t	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
 {
 	char		*illegal_token;
-	t_process	*proc;
 	char		*c;
 
-	proc = get_process();
 	illegal_token = "syntax error near unexpected token `";
 	while (str[i] && str[i] == ' ')
 		i++;

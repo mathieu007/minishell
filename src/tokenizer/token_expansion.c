@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/19 13:08:55 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:31:13 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	has_token_expansion_str(char *str)
 	while (str[i])
 	{
 		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
+		t_len = get_token_len(&str[i], type);
 		if (type == TK_SINGLEQUOTE)
 			i = skip_token_single_quote(str, type, i);
 		else if (type == TK_COMMANDSUBSTITUTION_OPEN
@@ -106,7 +106,7 @@ t_token	*expansion_tokenizer(t_token *parent)
 		if (has_error())
 			return (parent->child);
 		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type, false);
+		t_len = get_token_len(&str[i], type);
 		if (type == TK_SINGLEQUOTE)
 			i = skip_token_single_quote(str, type, i);
 		else if (type == TK_COMMANDSUBSTITUTION_OPEN)

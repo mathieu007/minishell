@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 15:13:45 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 20:37:49 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	unset_cmd(t_cmd *cmd)
 	i = 1;
 	while (cmd->args[i])
 	{
-		if (is_valid_identifier_unset(cmd->args[i]) == 0)
+		if (is_valid_identifier(cmd->args[i]) == 0)
 		{
 			print_not_valid_identifier(1, cmd->args[i]);
 			i++;

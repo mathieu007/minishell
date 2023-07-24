@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_sequence.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 17:31:35 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ t_token	*sequence_semicolon_tokenizer(t_token *parent)
 		if (has_error())
 			return (parent->child);
 		type = get_token_type(&parent->str[i]);
-		t_len = get_token_len(&parent->str[i], type, false);
+		t_len = get_token_len(&parent->str[i], type);
 		if (tk_type != type && is_token_delimiter(type))
 			i = skip_token_delimiter(type, i, parent);
 		else if (type == tk_type)

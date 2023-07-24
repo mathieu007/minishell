@@ -1,3 +1,4 @@
+mkdir -p dir1 && cd dir1 && mkdir -p dir2 && cd dir2 && touch file1.txt && mv ../dir2 ../../ && ls && pwd
 echo ' tata '
 echo "toto"
 echo '"'toto'"'
@@ -88,7 +89,9 @@ export allo
 export a=1 b=2 c=3 
 export a=1 b=2 c=3
 export a=a=a && echo $a
-unset a=a=a && echo $a
+export aaaa====bbb====ccc && echo $aaaa
+export aaaa=bbb====ccc && unset aaaa && echo $aaaa
+export aaaa=====bbb====ccc && unset aaaa && echo $aaaa
 unset 1
 unset _1
 unset _

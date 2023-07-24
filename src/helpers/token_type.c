@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   token_type.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/21 15:32:21 by mroy             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -80,9 +70,13 @@ inline int32_t	goto_closing_parenthese(char *str, int32_t i)
 	return (i);
 }
 
-inline int32_t	get_token_len(char *str, t_token_type type, bool in_quotes)
+inline int32_t	get_token_len(char *str, t_token_type type)
 {
-	if (type == TK_UNKNOWN)
+	if (str[0] == '\0')
+		return (0);
+	else if (str[1] == '\0')
+		return (1);
+	else if (type == TK_UNKNOWN)
 		return (1);
 	else if (str[0] == '\0')
 		return (0);
