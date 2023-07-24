@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 08:05:05 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/20 14:19:33 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/21 15:32:21 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ inline int32_t	get_token_len(char *str, t_token_type type, bool in_quotes)
 {
 	if (type == TK_UNKNOWN)
 		return (1);
+	else if (str[0] == '\0')
+		return (0);
 	else if (type == TK_DASH && !in_quotes)
 		return (get_token_dash_len(str));
 	else if (type == TK_DASHDASH && !in_quotes)
@@ -94,3 +96,4 @@ inline int32_t	get_token_len(char *str, t_token_type type, bool in_quotes)
 		return (2);
 	return (1);
 }
+ 
