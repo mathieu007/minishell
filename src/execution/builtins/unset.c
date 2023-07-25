@@ -19,7 +19,7 @@ void	remove_node_from_list(t_process *data, t_env_cpy *node, t_env_cpy *prev)
 	else
 		data->env_cpy = node->next;
 	if (node->next)
-		node->next->prev = prev;	
+		node->next->prev = prev;
 	node->value = free_ptr(node->value);
 	node->variable = free_ptr(node->variable);
 	node->next = NULL;
