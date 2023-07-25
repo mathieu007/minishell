@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 14:09:54 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@ void	close_prev_pipes(t_cmd *cmd)
 	cmd = cmd->prev;
 	if (cmd->pipe)
 	{
-		close(cmd->pipe->fd_in);
-		close(cmd->pipe->fd_out);
+		if (cmd->pipe->fd_in > 2)
+			close(cmd->pipe->fd_in);
+		if (cmd->pipe->fd_out > 2)
+			close(cmd->pipe->fd_out);
 	}
 }
 
@@ -36,14 +38,10 @@ t_pipe	*prev_pipe(t_cmd *cmd)
 
 void	close_pipes(t_pipe *pipe)
 {
-	if (pipe->fd_in != -1)
-	{
+	if (pipe->fd_in > 2)
 		close(pipe->fd_in);
-	}
-	if (pipe->fd_out != -1)
-	{
+	if (pipe->fd_out > 2)
 		close(pipe->fd_out);
-	}
 }
 
 t_pipe	*init_pipes(int32_t *fds, t_cmd *cmd)

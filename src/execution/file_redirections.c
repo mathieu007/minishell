@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/22 14:51:52 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 13:47:13 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ void	close_files_redirections(t_cmd *cmd)
 {
 	if (!cmd)
 		return ;
-	if (cmd->in_redir && cmd->in_redir->fd > 0)
+	if (cmd->in_redir && cmd->in_redir->fd > 2)
 	{
 		close(cmd->in_redir->fd);
 		cmd->in_redir->fd = -1;
 		cmd->in_redir->dup_fd = -1;
 	}
-	if (cmd->out_redir && cmd->out_redir->fd > 0)
+	if (cmd->out_redir && cmd->out_redir->fd > 2)
 	{
 		if (cmd->out_redir->dup_fd >= 0)
 			dup2(cmd->out_redir->dup_fd, STDOUT_FILENO);
