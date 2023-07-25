@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 t_token	*sequence_tokenizer(char *tk, t_token *parent)
 {
 	int32_t			i;

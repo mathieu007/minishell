@@ -18,8 +18,7 @@ static bool	is_valid_line(char *line, const char *delimiter,
 	if (line == NULL)
 	{
 		ft_printf("warning: here-document delimited by"
-					" end-of-file (wanted `%s')\n",
-					delimiter);
+			" end-of-file (wanted `%s')\n", delimiter);
 		return (false);
 	}
 	if (ft_strncmp(line, delimiter, delimiter_len) == 0
