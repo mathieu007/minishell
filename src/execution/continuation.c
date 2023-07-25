@@ -102,6 +102,6 @@ t_redirect	*open_write_continuation(void)
 	create_temp_file(redir);
 	if (redir->fd == -1)
 		write_err2(errno, f_name,
-				": Unable to create temporary file or directory\n");
+			": Unable to create temporary file or directory\n");
 	return (redir);
 }

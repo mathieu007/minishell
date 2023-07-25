@@ -23,7 +23,7 @@ void	close_all_child_fds(t_cmd *cmd)
 	}
 }
 
-void	close_all_fds()
+void	close_all_fds(void)
 {
 	t_process	*proc;
 	t_cmd		*cmd;

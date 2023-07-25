@@ -58,26 +58,3 @@ void	free_exit_no_perr2(int32_t status, char *msg)
 	free_all();
 	exit(status);
 }
-
-void	free_exit_no_perr3(int32_t status, char *msg, char *msg2)
-{
-	t_process	*proc;
-
-	proc = get_process();
-	write_err2(status, msg, msg2);
-	proc->errnum = status;
-	close_all_fds();
-	free_all();
-	exit(status);
-}
-
-void	free_exit_no_perr(int32_t status)
-{
-	t_process	*proc;
-
-	proc = get_process();
-	proc->errnum = status;
-	close_all_fds();
-	free_all();
-	exit(status);
-}

@@ -102,7 +102,6 @@ int32_t	dispatch_command(t_cmd *cmd, bool is_in_child_process)
 	{
 		proc->errnum = exec_command(cmd, is_in_child_process);
 		proc->last_errnum = proc->errnum;
-		// if (!ft_strequal(cmd->name, "exit"))
 	}
 	return (proc->errnum);
 }

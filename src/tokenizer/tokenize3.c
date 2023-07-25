@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int32_t	substitution_syntax_error()
+int32_t	substitution_syntax_error(void)
 {
 	char	*illegal_token;
 

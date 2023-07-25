@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 t_cmd	*parse_redirect_out(t_cmd *main, t_cmd *redir)
 {
 	redir->args = free_2d_char_array(redir->args);

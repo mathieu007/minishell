@@ -308,7 +308,14 @@ t_token					*parentheses_tokenizer(t_token *parent);
 bool					is_token_delimiter(t_token_type type);
 char					**get_env(void);
 void					open_read_temp_file(t_redirect *redir);
-
+void	free_continuation(void);
+void	write_delimiter_lines(t_redirect *redir, const char *delimiter);
+bool	match_patterns(char *file, char **patterns, char *start_with,
+		char *end_with);
+		char	**find_matching_files(char *cwd, char **patterns, char *start_with,
+		char *end_with);
+		char	*add_files_to_str(char **matching_files, char *separators);
+		int32_t	insert_files_as_args(char **split, int32_t i, char **files);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
 void					create_cmd_redirections(t_token *token, t_cmd *cmd);
