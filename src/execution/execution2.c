@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 10:02:09 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 21:03:49 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int32_t	exec_command(t_cmd *cmd, bool is_in_child_process)
 		return (proc->errnum);
 	if (cmd->is_builtin && is_in_child_process)
 		proc->errnum = exec_from_child_process(cmd);
-	else if (cmd->is_builtin && proc->is_subshell)
+	else if (cmd->is_builtin && proc->is_subshell && !is_in_child_process)
 		proc->errnum = exec_from_subshell_process(cmd);
 	else if (cmd->is_builtin && !is_in_child_process)
 		proc->errnum = exec_from_main_process(cmd);

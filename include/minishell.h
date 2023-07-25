@@ -224,6 +224,7 @@ typedef struct s_process
 	t_token				*tokens;
 	t_cmd				*cmds;
 	t_cmd_execution		execution;
+	int32_t				signal;
 	bool				in_here_doc;
 	bool				is_subshell;
 	pid_t				pid;

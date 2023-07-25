@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 09:38:44 by math             ###   ########.fr       */
+/*   Updated: 2023/07/24 18:41:15 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,21 @@ static bool	is_valid_line(char *line, const char *delimiter,
 
 void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 {
-	char	*line;
-	size_t	delimiter_len;
+	char		*line;
+	size_t		delimiter_len;
+	t_process	*proc;
 
+	proc = get_process();
 	delimiter_len = ft_strlen(delimiter);
 	line = readline("> ");
-	while (is_valid_line(line, delimiter, delimiter_len))
+	while (is_valid_line(line, delimiter, delimiter_len) && proc->signal == 0)
 	{
 		write(main->in_redir->fd, line, ft_strlen(line));
 		write(main->in_redir->fd, "\n", 1);
-		free(line);
+		line = free_ptr(line);
 		line = readline("> ");
 	}
+	line = free_ptr(line);
 }
 
 int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)

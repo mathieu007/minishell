@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation_delimiter.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 12:45:26 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 18:40:22 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ void	write_delimiter_lines(t_redirect *redir, const char *delimiter)
 {
 	char		*line;
 	int32_t		i;
-	t_process	*proc;
 
-	proc = get_process();
 	line = readline("> ");
 	while (is_not_end_line(line, delimiter))
 	{
@@ -49,10 +47,10 @@ void	write_delimiter_lines(t_redirect *redir, const char *delimiter)
 		}
 		if (write(redir->fd, "\n", 1) == -1)
 			free_all_and_exit2(errno, "write error");
-		free_ptr(line);
+		line = free_ptr(line);
 		line = readline("> ");
 	}
-	free_ptr(line);
+	line = free_ptr(line);
 }
 
 t_redirect	*open_read_continuation(t_redirect *redir)
