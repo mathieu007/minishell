@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wait.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 09:36:47 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 18:40:41 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ pid_t	ft_fork(void)
 	t_process	*proc;
 
 	proc = get_process();
+	proc->signal = 0;
 	pid = fork();
 	proc->pid = pid;
 	if (pid == -1)

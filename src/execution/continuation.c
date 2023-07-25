@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 09:39:12 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 18:12:44 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	write_lines(t_redirect *redir)
 	proc = get_process();
 	proc->errnum = 0;
 	line = readline("> ");
-	while (is_valid_line(line))
+	while (is_valid_line(line) && proc->signal == 0)
 	{
 		i = 0;
 		while (line[i] && line[i] == ' ')
@@ -43,12 +43,13 @@ void	write_lines(t_redirect *redir)
 		{
 			if (write(redir->fd, line, ft_strlen(line)) == -1)
 				free_all_and_exit2(errno, "malloc error");
-			free(line);
+			line = free_ptr(line);
 			break ;
 		}
-		free(line);
+		line = free_ptr(line);
 		line = readline("> ");
 	}
+	line = free_ptr(line);
 	close(redir->fd);
 }
 

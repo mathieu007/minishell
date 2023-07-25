@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_signal.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 13:35:30 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 21:05:22 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,14 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
-	if (siginfo->si_signo == SIGINT
-		&& proc->execution == EXEC_HEREDOC)
+	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_HEREDOC
+			|| proc->execution == EXEC_CONTINUATION))
 	{
-		write(1, "\n", 1);
-		free_all_and_exit(1);
-	}
-	else if (siginfo->si_signo == SIGINT
-		&& proc->execution == EXEC_CONTINUATION)
-	{
-		write(1, "\n", 1);
-		free_all_and_exit(1);
+		proc->signal = SIGINT;
+		proc->errnum = 1;
 	}
 	else if (siginfo->si_signo == SIGTERM)
-	{
-		close_all_fds();
-		free_all();
-	}
+		proc->signal = SIGTERM;
 }
 
 void	setup_child_realine_signal_handlers(void)
@@ -58,17 +49,14 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
-	if (siginfo->si_signo == SIGINT
-		&& (proc->execution == EXEC_CAT || proc->execution == EXEC_SLEEP))
+	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
+			|| proc->execution == EXEC_SLEEP))
 	{
-		write(1, "\n", 1);
-		free_all_and_exit(1);
+		proc->signal = SIGINT;
+		proc->errnum = 1;
 	}
 	else if (siginfo->si_signo == SIGTERM)
-	{
-		close_all_fds();
-		free_all_and_exit(0);
-	}
+		proc->signal = SIGTERM;
 }
 
 void	setup_child_signal_handlers(t_cmd *cmd)
@@ -86,8 +74,5 @@ void	setup_child_signal_handlers(t_cmd *cmd)
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
-	if (proc->execution == EXEC_CAT || proc->execution == EXEC_SLEEP)
-		signal(SIGQUIT, sigquit_handler);
-	else
-		signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, sigquit_handler);
 }
