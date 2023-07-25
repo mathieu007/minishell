@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 08:15:46 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 08:25:48 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ char	*try_get_relative_dir(t_cmd *cmd)
 	if (!path)
 		free_all_and_exit2(errno, "could not get current working directory.");
 	if (cmd->name && cmd->name[0] == '.' && cmd->name[1] == '/' && access(path,
-			F_OK | X_OK) == 0)
+			F_OK) == 0)
 	{
 		path = ft_strjoinfree(path, &cmd->name[2]);
-		if (access(path, F_OK | X_OK) == 0)
+		if (access(path, F_OK) == 0)
 			return (path);
 	}
 	free_ptr(path);
@@ -95,10 +95,10 @@ char	*try_get_relative_dir2(t_cmd *cmd)
 		return (NULL);
 	path = get_cwd_with_backslash();
 	path = remove_dir(path, count);
-	if (access(path, F_OK | X_OK) == 0)
+	if (access(path, F_OK) == 0)
 	{
 		path = ft_strjoinfree(path, &cmd->name[count * 3]);
-		if (access(path, F_OK | X_OK) == 0)
+		if (access(path, F_OK) == 0)
 			return (path);
 	}
 	return (free(path), NULL);
@@ -119,7 +119,7 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 	{
 		path = ft_strjoin(*paths, "/");
 		path = ft_strjoinfree(path, cmd->name);
-		if (access(path, F_OK | X_OK) == 0)
+		if (access(path, F_OK) == 0)
 			return (free_2d_char_array(dup_paths), path);
 		free(path);
 		paths++;
