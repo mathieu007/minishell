@@ -688,7 +688,8 @@ _rl_timeout_select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptf
       result = pselect (nfds, readfds, writefds, exceptfds, &ts, sigmask);
     }
   else
-    result = pselect (nfds, readfds, writefds, exceptfds, NULL, sigmask);
+		file_redirection(cmd, true);
+		close_files_redirections(cmd);    result = pselect (nfds, readfds, writefds, exceptfds, NULL, sigmask);
 #else
   if (sigmask)
     sigprocmask (SIG_SETMASK, sigmask, &origmask);

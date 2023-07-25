@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 18:12:44 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 10:22:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int32_t	write_non_empty_continuation(void)
 	proc = get_process();
 	proc->execution = EXEC_CONTINUATION;
 	setup_child_realine_signal_handlers();
-	proc->errnum = 0;
 	pid = ft_fork();
 	if (pid == 0)
 	{

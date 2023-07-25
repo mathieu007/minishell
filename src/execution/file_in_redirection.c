@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 08:51:56 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 09:47:08 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 	proc = get_process();
 	flags = O_RDONLY;
 	if (!cmd->in_redir || !cmd->in_redir->file)
-		f_name = get_full_path(cmd);
+		f_name = get_full_path(cmd->name);
 	else
 		f_name = ft_strdup(cmd->in_redir->file);
 	if (proc->errnum)

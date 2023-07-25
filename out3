@@ -13,6 +13,7 @@ minishellcopy.sup
 obj
 out
 out2
+out3
 readline-master
 src
 tests

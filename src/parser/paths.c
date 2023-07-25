@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 08:25:48 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 09:55:02 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,17 @@ static char	*remove_dir(char *path, int32_t dir_count)
 /// @brief try get the relative dir ex: ./mydir/mycmd
 /// @param cmd_name
 /// @return
-char	*try_get_relative_dir(t_cmd *cmd)
+char	*try_get_relative_dir(char *name)
 {
 	char	*path;
 
 	path = get_cwd_with_backslash();
 	if (!path)
 		free_all_and_exit2(errno, "could not get current working directory.");
-	if (cmd->name && cmd->name[0] == '.' && cmd->name[1] == '/' && access(path,
+	if (name && name[0] == '.' && name[1] == '/' && access(path,
 			F_OK) == 0)
 	{
-		path = ft_strjoinfree(path, &cmd->name[2]);
+		path = ft_strjoinfree(path, &name[2]);
 		if (access(path, F_OK) == 0)
 			return (path);
 	}
@@ -85,26 +85,26 @@ char	*try_get_relative_dir(t_cmd *cmd)
 /// @brief try get the relative dir ex: ../../mydir/mycmd
 /// @param cmd_name
 /// @return
-char	*try_get_relative_dir2(t_cmd *cmd)
+char	*try_get_relative_dir2(char *name)
 {
 	char	*path;
 	int32_t	count;
 
-	count = count_prev_dir(cmd->name);
+	count = count_prev_dir(name);
 	if (count == 0)
 		return (NULL);
 	path = get_cwd_with_backslash();
 	path = remove_dir(path, count);
 	if (access(path, F_OK) == 0)
 	{
-		path = ft_strjoinfree(path, &cmd->name[count * 3]);
+		path = ft_strjoinfree(path, &name[count * 3]);
 		if (access(path, F_OK) == 0)
 			return (path);
 	}
 	return (free(path), NULL);
 }
 
-char	*try_get_full_path_from_env_path(t_cmd *cmd)
+char	*try_get_full_path_from_env_path(char *name)
 {
 	char	*path;
 	char	**paths;
@@ -118,7 +118,7 @@ char	*try_get_full_path_from_env_path(t_cmd *cmd)
 	while (*paths)
 	{
 		path = ft_strjoin(*paths, "/");
-		path = ft_strjoinfree(path, cmd->name);
+		path = ft_strjoinfree(path, name);
 		if (access(path, F_OK) == 0)
 			return (free_2d_char_array(dup_paths), path);
 		free(path);

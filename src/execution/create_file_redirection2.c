@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 10:21:59 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	build_redir_environement(t_cmd *main, t_cmd *redir)
 	t_process	*proc;
 
 	proc = get_process();
-	proc->errnum = 0;
 	build_token_environement(redir->token);
 	if (proc->errnum > 0)
 		return ;

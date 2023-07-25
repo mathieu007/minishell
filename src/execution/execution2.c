@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 21:03:49 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 12:06:56 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int32_t	exec_command(t_cmd *cmd, bool is_in_child_process)
 		return (proc->errnum);
 	if (cmd->is_builtin && is_in_child_process)
 		proc->errnum = exec_from_child_process(cmd);
-	else if (cmd->is_builtin && proc->is_subshell && !is_in_child_process)
+	else if (cmd->is_builtin && proc->is_subshell)
 		proc->errnum = exec_from_subshell_process(cmd);
 	else if (cmd->is_builtin && !is_in_child_process)
 		proc->errnum = exec_from_main_process(cmd);
@@ -85,7 +85,7 @@ int32_t	dispatch_command(t_cmd *cmd, bool is_in_child_process)
 
 	proc = get_process();
 	if (cmd->type == CMD_LOG_OR && proc->errnum == 0)
-		proc->errnum = 1;
+		proc->errnum = -1;
 	if (cmd->type == CMD_LOG_AND && !cmd->prev)
 		proc->errnum = 0;
 	if (cmd->type == CMD_PIPE)
@@ -99,7 +99,11 @@ int32_t	dispatch_command(t_cmd *cmd, bool is_in_child_process)
 	else if (cmd->type == CMD_PARENTHESES)
 		proc->errnum = exec_subshell(cmd);
 	else if (cmd->type == CMD)
+	{
 		proc->errnum = exec_command(cmd, is_in_child_process);
+		proc->last_errnum = proc->errnum;
+		// if (!ft_strequal(cmd->name, "exit"))
+	}
 	return (proc->errnum);
 }
 

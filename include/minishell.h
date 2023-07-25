@@ -323,8 +323,8 @@ void					split_token_semicolon(t_token *parent);
 void					write_err(int32_t error, char *msg);
 bool					has_error(void);
 
-void					free_exit_no_perr2(int32_t status, char *msg,
-							char *msg2);
+void					free_exit_no_perr3(int32_t status, char *msg, char *msg2);
+void					free_exit_no_perr2(int32_t status, char *msg);
 void					split_token_redirection(t_token *parent);
 t_token					*tokenize_semicolon(t_token *parent);
 t_token					*tokenize_cmd(t_token *parent);
@@ -424,9 +424,9 @@ t_cmd					*create_cmds_tree(t_token *root_token);
 void					sig_child_readline_handler(int sig, siginfo_t *siginfo,
 							void *context);
 void					*add_redir_arg_to_main(t_cmd *main, t_cmd *redir);
-char					*try_get_relative_dir2(t_cmd *cmd);
-char					*try_get_relative_dir(t_cmd *cmd);
-char					*try_get_full_path_from_env_path(t_cmd *cmd);
+char					*try_get_relative_dir2(char *name);
+char					*try_get_relative_dir(char *name);
+char					*try_get_full_path_from_env_path(char *name);
 int32_t					add_sequence_token(int32_t i, char *tk_str,
 							t_token_type type, t_token *parent);
 t_token					*sequence_semicolon_tokenizer(t_token *parent);
@@ -448,7 +448,7 @@ int32_t	check_sequence_syntax_errors(int32_t i,
 										t_token *parent);
 
 /// get full path from relative path, absolute or env path.
-char					*get_full_path(t_cmd *cmd);
+char					*get_full_path(char *name);
 char					*get_cwd(void);
 
 /// tokenizer functions

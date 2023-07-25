@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 08:54:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 09:46:50 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_cmd	*parse_cmd(t_cmd *cmd)
 	if (!cmd->is_builtin && !ft_strisempty(cmd->name))
 	{
 		free_ptr(cmd->full_path_name);
-		cmd->full_path_name = get_full_path(cmd);
+		cmd->full_path_name = get_full_path(cmd->name);
 	}
 	cmd->options = get_options(cmd->token);
 	return (cmd);
@@ -114,6 +114,6 @@ void	*add_redir_arg_to_main(t_cmd *main, t_cmd *redir)
 	main->is_builtin = is_builtins(main->name);
 	main->full_path_name = free_ptr(main->full_path_name);
 	if (!main->is_builtin)
-		main->full_path_name = get_full_path(main);
+		main->full_path_name = get_full_path(main->name);
 	return (main);
 }

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 12:26:27 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:44 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@ static int32_t	execve_subshell(t_cmd *cmd)
 	char		**env;
 
 	proc = get_process();
-	env = get_env_path();
+	env = get_env();
 	subshell_args = malloc(3 * sizeof(char *));
 	subshell_args[2] = NULL;
 	subshell_args[1] = cmd->token->str;
-	subshell_args[0] = "./minishell";
+	subshell_args[0] = "./bin/minishell";
+	proc->full_program_name = get_full_path("./bin/minishell");
 	if (execve(proc->full_program_name, subshell_args, env) == -1)
 	{
 		free_2d_char_array(env);
 		free(subshell_args);
-		free_all_and_exit2(errno, "execve error");
+		free_all_and_exit2(errno, "execve subshell error");
 	}
 	return (errno);
 }
