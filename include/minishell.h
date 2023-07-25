@@ -316,10 +316,8 @@ t_token					*add_cmds_and(t_token *token, t_cmd *parent);
 t_token					*add_cmds_pipes(t_token *token, t_cmd *parent);
 t_token					*add_cmds_sequential(t_token *token, t_cmd *parent);
 void					split_token_semicolon(t_token *parent);
-
 void					write_err(int32_t error, char *msg);
 bool					has_error(void);
-
 void					free_exit_no_perr3(int32_t status, char *msg,
 							char *msg2);
 void					free_exit_no_perr2(int32_t status, char *msg);
@@ -473,7 +471,6 @@ t_token					*tokenize_cmd_sequence(t_token *parent);
 t_token					*tokenize(char *str);
 t_token					*tokenize_environement_tokens(t_token *parent);
 char					*parse_env_var_value(t_token *token);
-
 t_token					*tokenize_space_tokens(t_token *parent);
 int32_t					tokenize_curlybrace(char *str, int32_t i);
 int32_t					tokenize_double_quote(char *str, int32_t i,
@@ -482,7 +479,6 @@ char					*cpy_single_quote_str(char *str, char *output,
 							int32_t *i);
 char					*cpy_env_var_value(char *input, char *output,
 							int32_t *i);
-
 int32_t					increment_counter(t_token_type type);
 int32_t					decrement_counter(t_token_type type);
 
@@ -491,7 +487,6 @@ int32_t					dispatch_command(t_cmd *cmd, bool in_child_process);
 bool					token_count_is_odd(char *str);
 t_cmd					*parse_cmd(t_cmd *cmd);
 int32_t					count_env_words(char *str);
-
 char					**parse_args(t_token *group);
 char					**get_options(t_token *group);
 int32_t					get_args_len(t_token *group);
@@ -504,20 +499,18 @@ t_token					*get_token_at(int32_t index);
 t_token					*get_closing_double_quote_token(t_token *token);
 t_token					*get_closing_single_quote_token(t_token *token);
 t_cmd_seq				_type(t_token *token);
-
 void					write_err3(int32_t stderror, char *msg, char *msg2,
 							char *msg3);
 void					write_msg(int32_t stderror, char *msg);
 void					write_err2(int32_t stderror, char *msg, char *msg2);
 t_env_cpy				*init_env(t_process *data);
 bool					is_token_sequence(t_token *token);
-
 void					*free_cmd(t_cmd *cmd);
 void					init_data(int32_t argc, char **argv, char **env);
 int32_t					init_cwd_fd(char *cwd);
 char					*join_splits(char **split, char *join);
-
 t_env_cpy				*copy_env(void);
+
 //link list section
 char					*get_env_value(char *variable);
 void					add_env_node(t_process *data, char *variable,
@@ -564,7 +557,6 @@ void					swap_node_value(t_env_cpy *a, t_env_cpy *b);
 void					reset_cmd(void);
 
 //signal
-
 void					sigquit_handler(int val);
 void					setup_signal_handlers(void);
 void					disable_ctrl_c_output(void);
@@ -588,7 +580,7 @@ void					*free_ptr(void *ptr);
 void					*free_t_env_cpy(t_env_cpy *env_cpy);
 char					*ft_strcat(char *dest, const char *src);
 
-void					close_all_pipes();
+void					close_all_pipes(void);
 void					print_token(t_token *token);
 void					print_groups_and_tokens(void);
 void					print_cmd(t_cmd *command);
