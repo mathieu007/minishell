@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 18:10:02 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 08:21:59 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ char	*get_full_path(t_cmd *cmd)
 		write_err2(126, cmd->name, ": Is a directory\n");
 		return (free(path), NULL);
 	}
-	if (path && path[0] == '/' && access(path, F_OK | X_OK) != 0)
+	if (path && path[0] == '/' && access(path, F_OK) != 0)
 		write_err2(127, cmd->name, ":  No such file or directory\n");
+	else if (path && path[0] == '/' && access(path, X_OK) != 0)
+		write_err2(126, cmd->name, ":  Permission denied\n");
 	if (path)
 		return (path);
 	if (ft_strchr(cmd->name, '/'))

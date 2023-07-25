@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 13:21:45 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 08:12:56 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,11 @@ int	cd_cmd(t_cmd *cmd)
 		return (ft_printf("Error: Option \"%s\" not supported.\n",
 				cmd->options[0]), 1);
 	if (cmd->args[1] == NULL || ft_strisempty(cmd->args[1]))
+	{
 		path_to_change = get_home();
+		if (!path_to_change)
+			write_err(1, "cd: HOME not set");
+	}
 	else if (cmd->args[1][0] == '/')
 		path_to_change = ft_strdup(cmd->args[1]);
 	else
@@ -67,7 +71,6 @@ int	cd_cmd(t_cmd *cmd)
 	free_ptr(path_to_change);
 	if (result != 0)
 		return (ft_printf("minishell: cd: %s: No such file or directory\n",
-							cmd->args[1]),
-				1);
+				cmd->args[1]), 1);
 	return (0);
 }
