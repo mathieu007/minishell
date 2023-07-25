@@ -308,14 +308,20 @@ t_token					*parentheses_tokenizer(t_token *parent);
 bool					is_token_delimiter(t_token_type type);
 char					**get_env(void);
 void					open_read_temp_file(t_redirect *redir);
-void	free_continuation(void);
-void	write_delimiter_lines(t_redirect *redir, const char *delimiter);
-bool	match_patterns(char *file, char **patterns, char *start_with,
-		char *end_with);
-		char	**find_matching_files(char *cwd, char **patterns, char *start_with,
-		char *end_with);
-		char	*add_files_to_str(char **matching_files, char *separators);
-		int32_t	insert_files_as_args(char **split, int32_t i, char **files);
+void					free_continuation(void);
+char					**copy_args(char **dest, int32_t i, char **src);
+int32_t					count_arr(char **arr);
+char					**resize_array(char **arr, int32_t add_count);
+void	write_delimiter_lines(t_redirect *redir,
+							const char *delimiter);
+bool					match_patterns(char *file, char **patterns,
+							char *start_with, char *end_with);
+char					**find_matching_files(char *cwd, char **patterns,
+							char *start_with, char *end_with);
+char	*add_files_to_str(char **matching_files,
+						char *separators);
+int32_t					insert_files_as_args(char **split, int32_t i,
+							char **files);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
 void					create_cmd_redirections(t_token *token, t_cmd *cmd);
@@ -330,7 +336,8 @@ void					split_token_semicolon(t_token *parent);
 void					write_err(int32_t error, char *msg);
 bool					has_error(void);
 
-void					free_exit_no_perr3(int32_t status, char *msg, char *msg2);
+void					free_exit_no_perr3(int32_t status, char *msg,
+							char *msg2);
 void					free_exit_no_perr2(int32_t status, char *msg);
 void					split_token_redirection(t_token *parent);
 t_token					*tokenize_semicolon(t_token *parent);
