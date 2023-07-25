@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 09:35:07 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 14:15:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,20 @@ void	dup_close_middle_pipes(t_cmd *cmd, t_cmd *pipe)
 	dup2(pipe->prev->pipe->fd_in, STDIN_FILENO);
 	if (cmd->has_redirection)
 	{
-		close(pipe->prev->pipe->fd_in);
-		close(pipe->prev->pipe->fd_out);
+		if (pipe->prev->pipe->fd_in > 2)
+			close(pipe->prev->pipe->fd_in);
+		if (pipe->prev->pipe->fd_out > 2)
+			close(pipe->prev->pipe->fd_out);
 		close_pipes(pipe->pipe);
 	}
 	else
 	{
 		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
 		close_prev_pipes(pipe);
-		close(pipe->pipe->fd_in);
-		close(pipe->pipe->fd_out);
+		if (pipe->pipe->fd_in > 2)
+			close(pipe->pipe->fd_in);
+		if (pipe->pipe->fd_out > 2)
+			close(pipe->pipe->fd_out);
 	}
 }
 
@@ -105,7 +109,6 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	}
 	reset_signal_handlers();
 	pipe->pid = pid;
-	close(pipe->pipe->fd_out);
 	close_prev_pipes(pipe);
 	return (pipe->next);
 }
