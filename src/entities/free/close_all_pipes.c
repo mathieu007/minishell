@@ -30,7 +30,7 @@ void	close_child_pipes(t_cmd *cmd)
 	}
 }
 
-void	close_all_pipes()
+void	close_all_pipes(void)
 {
 	t_cmd		*cmd;
 	t_process	*proc;
