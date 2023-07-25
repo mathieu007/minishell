@@ -26,29 +26,6 @@ static int32_t	goto_closing_expansion_token(char *str, t_token_type type,
 	return (i);
 }
 
-bool	has_token_expansion_str(char *str)
-{
-	int32_t			i;
-	t_token_type	type;
-	int32_t			t_len;
-
-	i = 0;
-	while (str[i])
-	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type);
-		if (type == TK_SINGLEQUOTE)
-			i = skip_token_single_quote(str, type, i);
-		else if (type == TK_COMMANDSUBSTITUTION_OPEN
-			|| type == TK_DOLLAR_SIGN_CURLYBRACE
-			|| type == TK_ENVIRONEMENT_VAR || type == TK_LAST_CMD_EXIT)
-			return (true);
-		else
-			i += t_len;
-	}
-	return (false);
-}
-
 int32_t	add_expansion_token(char *str, int32_t i, char *tk_str, t_token *parent)
 {
 	t_token_type	type;
@@ -90,15 +67,35 @@ void	split_token_expansion(t_token *parent)
 	}
 }
 
+int32_t	process_expansion_token(int32_t i, char *str, t_token *parent)
+{
+	t_token_type	type;
+	int32_t			t_len;
+
+	type = get_token_type(&str[i]);
+	t_len = get_token_len(&str[i], type);
+	if (type == TK_SINGLEQUOTE)
+		return (skip_token_single_quote(str, type, i));
+	else if (type == TK_COMMANDSUBSTITUTION_OPEN)
+		return (add_expansion_token(str, i, "$(", parent));
+	else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
+		return (add_expansion_token(str, i, "${", parent));
+	else if (type == TK_ENVIRONEMENT_VAR)
+		return (add_expansion_token(str, i, "$", parent));
+	else if (type == TK_LAST_CMD_EXIT)
+		return (add_expansion_token(str, i, "$?", parent));
+	else
+		return (i + t_len);
+}
+
 t_token	*expansion_tokenizer(t_token *parent)
 {
 	int32_t			i;
 	t_token_type	type;
-	int32_t			t_len;
 	char			*str;
 
-	str = parent->str;
 	i = 0;
+	str = parent->str;
 	if (!has_token_expansion_str(str))
 		return (NULL);
 	type = TK_START;
@@ -109,22 +106,50 @@ t_token	*expansion_tokenizer(t_token *parent)
 	{
 		if (has_error())
 			return (parent->child);
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type);
-		if (type == TK_SINGLEQUOTE)
-			i = skip_token_single_quote(str, type, i);
-		else if (type == TK_COMMANDSUBSTITUTION_OPEN)
-			i = add_expansion_token(str, i, "$(", parent);
-		else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
-			i = add_expansion_token(str, i, "${", parent);
-		else if (type == TK_ENVIRONEMENT_VAR)
-			i = add_expansion_token(str, i, "$", parent);
-		else if (type == TK_LAST_CMD_EXIT)
-			i = add_expansion_token(str, i, "$?", parent);
-		else
-			i += t_len;
+		i = process_expansion_token(i, str, parent);
+		if (i == -1)
+			return (parent->child);
 	}
 	add_tk("", TK_END, i, parent);
 	split_token_expansion(parent);
 	return (parent->child);
 }
+
+// t_token	*expansion_tokenizer(t_token *parent)
+// {
+// 	int32_t			i;
+// 	t_token_type	type;
+// 	int32_t			t_len;
+// 	char			*str;
+
+// 	str = parent->str;
+// 	i = 0;
+// 	if (!has_token_expansion_str(str))
+// 		return (NULL);
+// 	type = TK_START;
+// 	if (!is_token_redirection(parent->type))
+// 		type = TK_CMD;
+// 	add_tk("", type, i, parent);
+// 	while (str[i])
+// 	{
+// 		if (has_error())
+// 			return (parent->child);
+// 		type = get_token_type(&str[i]);
+// 		t_len = get_token_len(&str[i], type);
+// 		if (type == TK_SINGLEQUOTE)
+// 			i = skip_token_single_quote(str, type, i);
+// 		else if (type == TK_COMMANDSUBSTITUTION_OPEN)
+// 			i = add_expansion_token(str, i, "$(", parent);
+// 		else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
+// 			i = add_expansion_token(str, i, "${", parent);
+// 		else if (type == TK_ENVIRONEMENT_VAR)
+// 			i = add_expansion_token(str, i, "$", parent);
+// 		else if (type == TK_LAST_CMD_EXIT)
+// 			i = add_expansion_token(str, i, "$?", parent);
+// 		else
+// 			i += t_len;
+// 	}
+// 	add_tk("", TK_END, i, parent);
+// 	split_token_expansion(parent);
+// 	return (parent->child);
+// }

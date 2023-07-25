@@ -1,26 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file_out_redirection.c                             :+:      :+:    :+:   */
+/*   token_expansion2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/24 12:03:25 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_a_directory(char *path_to_dir)
+bool	has_token_expansion_str(char *str)
 {
-	DIR	*dir;
+	int32_t			i;
+	t_token_type	type;
+	int32_t			t_len;
 
-	dir = opendir(path_to_dir);
-	if (dir)
+	i = 0;
+	while (str[i])
 	{
-		closedir(dir);
-		return (true);
+		type = get_token_type(&str[i]);
+		t_len = get_token_len(&str[i], type);
+		if (type == TK_SINGLEQUOTE)
+			i = skip_token_single_quote(str, type, i);
+		else if (type == TK_COMMANDSUBSTITUTION_OPEN
+			|| type == TK_DOLLAR_SIGN_CURLYBRACE
+			|| type == TK_ENVIRONEMENT_VAR || type == TK_LAST_CMD_EXIT)
+			return (true);
+		else
+			i += t_len;
 	}
 	return (false);
 }

@@ -72,45 +72,70 @@ int32_t	count_wildcards_matches(char *pattern)
 	return (free(start_with), count);
 }
 
+int32_t	calculate_args_len(t_token **token)
+{
+	int32_t	args_len;
+
+	args_len = 0;
+	while (*token && (*token)->next)
+	{
+		if ((*token)->next->type == TK_SPACE || (*token)->next->type == TK_END)
+		{
+			if (ft_strcontains((*token)->str, "*"))
+				args_len += count_wildcards_matches((*token)->str);
+			else
+				args_len++;
+			break ;
+		}
+		*token = (*token)->next;
+	}
+	return (args_len);
+}
+
 int32_t	get_args_len(t_token *token)
 {
 	int32_t	args_len;
 
-	token = token->child;
 	args_len = 0;
+	token = token->child;
 	if (!token)
 		return (0);
 	while (token)
 	{
 		if (token->str && token->str[0] && token->next)
-		{
-			while (token && token->next)
-			{
-				if (token->next->type == TK_SPACE
-					|| token->next->type == TK_END)
-				{
-					if (ft_strcontains(token->str, "*"))
-						args_len += count_wildcards_matches(token->str);
-					else
-						args_len++;
-					break ;
-				}
-				token = token->next;
-			}
-		}
+			args_len += calculate_args_len(&token);
 		token = token->next;
 	}
 	return (args_len);
 }
 
-int32_t	insert_files_as_args(char **split, int32_t i, char **files)
-{
-	if (!files)
-		return (i);
-	while (*files)
-	{
-		split[i++] = *files;
-		files++;
-	}
-	return (i);
-}
+// int32_t	get_args_len(t_token *token)
+// {
+// 	int32_t	args_len;
+
+// 	token = token->child;
+// 	args_len = 0;
+// 	if (!token)
+// 		return (0);
+// 	while (token)
+// 	{
+// 		if (token->str && token->str[0] && token->next)
+// 		{
+// 			while (token && token->next)
+// 			{
+// 				if (token->next->type == TK_SPACE
+// 					|| token->next->type == TK_END)
+// 				{
+// 					if (ft_strcontains(token->str, "*"))
+// 						args_len += count_wildcards_matches(token->str);
+// 					else
+// 						args_len++;
+// 					break ;
+// 				}
+// 				token = token->next;
+// 			}
+// 		}
+// 		token = token->next;
+// 	}
+// 	return (args_len);
+// }
