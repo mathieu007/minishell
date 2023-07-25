@@ -31,18 +31,13 @@ char	*ft_strcat(char *dest, const char *src)
 	return (dest);
 }
 
-int	cd_cmd(t_cmd *cmd)
+char	*get_path_to_change(t_cmd *cmd)
 {
 	char	*path;
 	char	*path_to_change;
-	char	buffer[1024];
-	int		result;
 
 	path = NULL;
 	path_to_change = NULL;
-	if (cmd->options != NULL)
-		return (ft_printf("Error: Option \"%s\" not supported.\n",
-				cmd->options[0]), 1);
 	if (cmd->args[1] == NULL || ft_strisempty(cmd->args[1]))
 	{
 		path_to_change = get_home();
@@ -55,22 +50,80 @@ int	cd_cmd(t_cmd *cmd)
 	{
 		path = get_cwd();
 		if (!path)
-		{
-			ft_printf("minishell: cd: %s: No such file or directory\n",
-				path_to_change);
-			return (1);
-		}
+			return (ft_printf("minishell: cd: %s: No such file or directory\n",
+					path_to_change), NULL);
 		path = ft_strjoinfree(path, "/");
 		path_to_change = ft_strjoinfree(path, cmd->args[1]);
 		path = NULL;
 	}
+	return (path_to_change);
+}
+
+int	cd_cmd(t_cmd *cmd)
+{
+	char	buffer[1024];
+	int		result;
+	char	*path_to_change;
+
+	if (cmd->options != NULL)
+		return (ft_printf("Error: Option \"%s\" not supported.\n",
+				cmd->options[0]), 1);
+	path_to_change = get_path_to_change(cmd);
+	if (!path_to_change)
+		return (1);
 	result = chdir(path_to_change);
 	if (result == 0)
 		set_cwd(ft_strdup(getcwd(buffer, 1024)));
-	free_ptr(path);
 	free_ptr(path_to_change);
 	if (result != 0)
-		return (ft_printf("minishell: cd: %s: No such file or directory\n",
-				cmd->args[1]), 1);
+	{
+		ft_printf("minishell: cd: %s: No such file or directory\n",
+			cmd->args[1]);
+		return (1);
+	}
 	return (0);
 }
+
+// int	cd_cmd(t_cmd *cmd)
+// {
+// 	char	*path;
+// 	char	*path_to_change;
+// 	char	buffer[1024];
+// 	int		result;
+
+// 	path = NULL;
+// 	path_to_change = NULL;
+// 	if (cmd->options != NULL)
+// 		return (ft_printf("Error: Option \"%s\" not supported.\n",
+// 				cmd->options[0]), 1);
+// 	if (cmd->args[1] == NULL || ft_strisempty(cmd->args[1]))
+// 	{
+// 		path_to_change = get_home();
+// 		if (!path_to_change)
+// 			write_err(1, "cd: HOME not set");
+// 	}
+// 	else if (cmd->args[1][0] == '/')
+// 		path_to_change = ft_strdup(cmd->args[1]);
+// 	else
+// 	{
+// 		path = get_cwd();
+// 		if (!path)
+// 		{
+// 			ft_printf("minishell: cd: %s: No such file or directory\n",
+// 				path_to_change);
+// 			return (1);
+// 		}
+// 		path = ft_strjoinfree(path, "/");
+// 		path_to_change = ft_strjoinfree(path, cmd->args[1]);
+// 		path = NULL;
+// 	}
+// 	result = chdir(path_to_change);
+// 	if (result == 0)
+// 		set_cwd(ft_strdup(getcwd(buffer, 1024)));
+// 	free_ptr(path);
+// 	free_ptr(path_to_change);
+// 	if (result != 0)
+// 		return (ft_printf("minishell: cd: %s: No such file or directory\n",
+// 				cmd->args[1]), 1);
+// 	return (0);
+// }
