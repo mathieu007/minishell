@@ -12,6 +12,27 @@
 
 #include "minishell.h"
 
+void	process_token(t_token **token, char **split, int32_t *i)
+{
+	if (!ft_strcontains((*token)->str, "*"))
+	{
+		split[*i] = ft_strjoinfree(split[*i], (*token)->str);
+	}
+	if ((*token)->next->type == TK_SPACE || (*token)->next->type == TK_END)
+	{
+		if (ft_strcontains((*token)->str, "*"))
+		{
+			*i = insert_files_as_args(split, *i,
+					get_cwd_files_array((*token)->str, " "));
+		}
+		else
+		{
+			(*i)++;
+		}
+	}
+	*token = (*token)->next;
+}
+
 void	set_args(t_token *token, char **split)
 {
 	int32_t	i;
@@ -24,24 +45,55 @@ void	set_args(t_token *token, char **split)
 		{
 			while (token && token->next)
 			{
-				if (!ft_strcontains(token->str, "*"))
-					split[i] = ft_strjoinfree(split[i], token->str);
-				if (token->next->type == TK_SPACE
-					|| token->next->type == TK_END)
-				{
-					if (ft_strcontains(token->str, "*"))
-						i = insert_files_as_args(split, i,
-								get_cwd_files_array(token->str, " "));
-					else
-						i++;
-					break ;
-				}
-				token = token->next;
+				process_token(&token, split, &i);
 			}
 		}
 		token = token->next;
 	}
 }
+
+int32_t	insert_files_as_args(char **split, int32_t i, char **files)
+{
+	if (!files)
+		return (i);
+	while (*files)
+	{
+		split[i++] = *files;
+		files++;
+	}
+	return (i);
+}
+
+// void	set_args(t_token *token, char **split)
+// {
+// 	int32_t	i;
+
+// 	i = 0;
+// 	token = token->child;
+// 	while (token)
+// 	{
+// 		if (token->str && token->str[0] && token->next)
+// 		{
+// 			while (token && token->next)
+// 			{
+// 				if (!ft_strcontains(token->str, "*"))
+// 					split[i] = ft_strjoinfree(split[i], token->str);
+// 				if (token->next->type == TK_SPACE
+// 					|| token->next->type == TK_END)
+// 				{
+// 					if (ft_strcontains(token->str, "*"))
+// 						i = insert_files_as_args(split, i,
+// 								get_cwd_files_array(token->str, " "));
+// 					else
+// 						i++;
+// 					break ;
+// 				}
+// 				token = token->next;
+// 			}
+// 		}
+// 		token = token->next;
+// 	}
+// }
 
 char	**parse_args(t_token *token)
 {
