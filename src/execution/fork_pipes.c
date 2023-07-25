@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 16:28:29 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 17:02:54 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
 	if (proc->errnum > 0 || proc->errnum == -1)
-		return (pipe->next);
+		return (close_pipes(pipe->pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
 	if (pid == 0)
@@ -49,7 +49,7 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
 	if (proc->errnum > 0 || proc->errnum == -1)
-		return (pipe->next);
+		return (close_pipes(pipe->pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
 	if (pid == 0)
@@ -100,7 +100,7 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
 	if (proc->errnum > 0 || proc->errnum == -1)
-		return (pipe->next);
+		return (close_pipes(pipe->pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
 	if (pid == 0)
