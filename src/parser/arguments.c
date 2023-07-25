@@ -67,7 +67,7 @@ int32_t	count_wildcards_matches(char *pattern)
 	start_with = get_start_with(pattern);
 	patterns = get_patterns(pattern);
 	count = count_matches(patterns,
-	start_with, get_end_with(pattern));
+			start_with, get_end_with(pattern));
 	free_2d_char_array(patterns);
 	return (free(start_with), count);
 }
