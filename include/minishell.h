@@ -588,6 +588,7 @@ void					*free_ptr(void *ptr);
 void					*free_t_env_cpy(t_env_cpy *env_cpy);
 char					*ft_strcat(char *dest, const char *src);
 
+void					close_all_pipes();
 void					print_token(t_token *token);
 void					print_groups_and_tokens(void);
 void					print_cmd(t_cmd *command);

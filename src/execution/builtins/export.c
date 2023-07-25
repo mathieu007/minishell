@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 10:50:54 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 15:48:15 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ int32_t	handle_export(t_process *data, char *arg)
 
 	current = data->env_cpy;
 	value = ft_strchr(arg, '=');
+	if (value == NULL)
+		return (0);
 	name = ft_substr(arg, 0, value - arg);
 	if (value && value[0])
 		value = ft_strdup(&value[1]);

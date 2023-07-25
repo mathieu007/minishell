@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 10:31:29 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 15:21:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ void	remove_node_from_list(t_process *data, t_env_cpy *node, t_env_cpy *prev)
 	else
 		data->env_cpy = node->next;
 	if (node->next)
-		node->next->prev = prev;
+		node->next->prev = prev;	
+	node->value = free_ptr(node->value);
+	node->variable = free_ptr(node->variable);
+	node->next = NULL;
+	node->prev = NULL;
 	free(node);
 }
 
@@ -34,7 +38,8 @@ void	remove_env_var(t_process *data, char *variable)
 	while (current)
 	{
 		len = ft_strlen(variable);
-		if (ft_strncmp(variable, current->variable, len) == 0)
+		if (ft_strncmp(variable, current->variable, len) == 0 
+			&& len == ft_strlen(current->variable))
 		{
 			remove_node_from_list(data, current, prev);
 			break ;

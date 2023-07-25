@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_logical.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/23 08:56:46 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 14:56:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int32_t	exec_logical_and(t_cmd *and_cmd)
 
 	proc = get_process();
 	proc->errnum = 0;
-	proc->stop_exec = false;
 	while (and_cmd && proc->errnum == 0)
 	{
 		proc->errnum = dispatch_command(and_cmd->child, false);
