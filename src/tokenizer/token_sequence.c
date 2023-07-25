@@ -32,17 +32,6 @@ void	split_token_sequence(t_token *parent)
 	}
 }
 
-bool	is_any_of(char c, char *values)
-{
-	while (*values)
-	{
-		if (*values == c)
-			return (true);
-		values++;
-	}
-	return (false);
-}
-
 int32_t	add_sequence_token(int32_t i, char *tk_str, t_token_type type,
 		t_token *parent)
 {
@@ -102,7 +91,6 @@ t_token	*sequence_semicolon_tokenizer(t_token *parent)
 	split_token_sequence(parent);
 	return (parent->child);
 }
-
 
 // t_token	*sequence_semicolon_tokenizer(t_token *parent)
 // {

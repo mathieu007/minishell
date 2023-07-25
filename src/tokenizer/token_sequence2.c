@@ -53,6 +53,17 @@ t_token	*sequence_tokenizer(char *tk, t_token *parent)
 	return (parent->child);
 }
 
+bool	is_any_of(char c, char *values)
+{
+	while (*values)
+	{
+		if (*values == c)
+			return (true);
+		values++;
+	}
+	return (false);
+}
+
 // t_token	*sequence_tokenizer(char *tk, t_token *parent)
 // {
 // 	int32_t			i;
