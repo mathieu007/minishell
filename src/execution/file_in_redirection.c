@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 08:51:56 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,11 @@ int32_t	open_redir_heredoc(t_cmd *cmd)
 {
 	t_redirect	*redir;
 	char		*f_name;
-	char		*tmp_dir;
 	int32_t		flags;
 
 	flags = O_RDWR | O_CREAT | O_TRUNC;
 	if (!cmd->in_redir || !cmd->in_redir->file)
-	{
-		tmp_dir = get_temp_dir();
-		f_name = ft_strjoinfree(tmp_dir, "temp_here_doc");
-	}
+		f_name = ft_strjoinfree(get_temp_dir(), "temp_here_doc");
 	else
 		f_name = ft_strdup(cmd->in_redir->file);
 	if (!f_name)
@@ -88,12 +84,16 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 	int32_t		flags;
 	t_redirect	*redir;
 	char		*f_name;
+	t_process	*proc;
 
+	proc = get_process();
 	flags = O_RDONLY;
 	if (!cmd->in_redir || !cmd->in_redir->file)
-		f_name = ft_strjoinfree(get_cwd_with_backslash(), cmd->name);
+		f_name = get_full_path(cmd);
 	else
 		f_name = ft_strdup(cmd->in_redir->file);
+	if (proc->errnum)
+		return (-1);
 	if (!f_name)
 		free_all_and_exit2(errno, "malloc error");
 	if (!cmd->in_redir)
