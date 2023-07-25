@@ -78,35 +78,3 @@ int32_t	open_redir_heredoc(t_cmd *cmd)
 			": Unable to create temporary file or directory\n");
 	return (redir->fd);
 }
-
-int32_t	open_in_redir_fd(t_cmd *cmd)
-{
-	int32_t		flags;
-	t_redirect	*redir;
-	char		*f_name;
-	t_process	*proc;
-
-	proc = get_process();
-	flags = O_RDONLY;
-	if (!cmd->in_redir || !cmd->in_redir->file)
-		f_name = get_full_path(cmd->name);
-	else
-		f_name = ft_strdup(cmd->in_redir->file);
-	if (proc->errnum)
-		return (-1);
-	if (!f_name)
-		free_all_and_exit2(errno, "malloc error");
-	if (!cmd->in_redir)
-		cmd->in_redir = ft_calloc(1, sizeof(t_redirect));
-	if (cmd->in_redir == NULL)
-		free_all_and_exit2(errno, "Failed to create t_redirect obj");
-	redir = cmd->in_redir;
-	redir->file = free_ptr(redir->file);
-	redir->file = f_name;
-	redir->input_file = ft_strdup(redir->file);
-	redir->fd = open(redir->file, flags, 0777);
-	redir->flags = flags;
-	if (redir->fd == -1)
-		write_err2(1, cmd->name, ": No such file or directory\n");
-	return (redir->fd);
-}

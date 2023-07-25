@@ -24,4 +24,3 @@ bool	is_a_directory(char *path_to_dir)
 	}
 	return (false);
 }
-

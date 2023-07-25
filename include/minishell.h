@@ -312,6 +312,7 @@ void					free_continuation(void);
 char					**copy_args(char **dest, int32_t i, char **src);
 int32_t					count_arr(char **arr);
 char					**resize_array(char **arr, int32_t add_count);
+char					*join_path(char *path1, char *path2);
 void	write_delimiter_lines(t_redirect *redir,
 							const char *delimiter);
 bool					match_patterns(char *file, char **patterns,
