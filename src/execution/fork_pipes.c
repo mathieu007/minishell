@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 14:15:49 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 16:02:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 
 	cmd = pipe->child;
 	pipe_cmd(pipe);
+	ft_printf("pipe in: %d\n", pipe->pipe->fd_in);
+	ft_printf("pipe out: %d\n", pipe->pipe->fd_out);
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
 	if (proc->errnum > 0 || proc->errnum == -1)
