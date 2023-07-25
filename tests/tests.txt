@@ -1,4 +1,5 @@
-mkdir -p dir1 && cd dir1 && mkdir -p dir2 && cd dir2 && touch file1.txt && mv ../dir2 ../../ && ls && pwd
+ech1 || echo $?
+unset HOME && cd && echo $?
 echo ' tata '
 echo "toto"
 echo '"'toto'"'

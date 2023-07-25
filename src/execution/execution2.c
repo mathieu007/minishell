@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 14:18:21 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 14:29:39 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int32_t	dispatch_command(t_cmd *cmd, bool is_in_child_process)
 
 	proc = get_process();
 	if (cmd->type == CMD_LOG_OR && proc->errnum == 0)
-		proc->errnum = -1;
+		proc->errnum = 1;
 	if (cmd->type == CMD_LOG_AND && !cmd->prev)
 		proc->errnum = 0;
 	if (cmd->type == CMD_PIPE)
