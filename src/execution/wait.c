@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 13:03:50 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 18:04:58 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ void	wait_childs(t_cmd *cmd)
 	t_process	*proc;
 
 	proc = get_process();
-	while (cmd && cmd->pid)
+	while (cmd)
 	{
-		proc->errnum = ft_waitpid(cmd->pid);
+		if (cmd->pid)
+			proc->errnum = ft_waitpid(cmd->pid);
 		cmd = cmd->next;
 	}
 }
