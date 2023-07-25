@@ -21,23 +21,6 @@ int32_t	substitution_syntax_error(void)
 	return (-1);
 }
 
-void	check_continuations_and_error(t_token *token)
-{
-	int32_t			i;
-	t_token_type	type;
-
-	i = 0;
-	while (token->str[i])
-	{
-		type = get_token_type(&token->str[i]);
-		i = process_token_type(token, type, i);
-		if (i == -1)
-			return ;
-		if (token->str[i])
-			i++;
-	}
-}
-
 int32_t	process_token_type(t_token *token, t_token_type type, int32_t i)
 {
 	if (type == TK_DOUBLEQUOTE)
@@ -55,6 +38,23 @@ int32_t	process_token_type(t_token *token, t_token_type type, int32_t i)
 	else if (is_sequence_type(type))
 		return (check_sequence_syntax_errors(i, type, token));
 	return (i);
+}
+
+void	check_continuations_and_error(t_token *token)
+{
+	int32_t			i;
+	t_token_type	type;
+
+	i = 0;
+	while (token->str[i])
+	{
+		type = get_token_type(&token->str[i]);
+		i = process_token_type(token, type, i);
+		if (i == -1)
+			return ;
+		if (token->str[i])
+			i++;
+	}
 }
 
 // void	check_continuations_and_error(t_token *token)
