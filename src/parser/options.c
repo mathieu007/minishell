@@ -12,35 +12,76 @@
 
 #include "minishell.h"
 
+int32_t	count_options(t_token *token, bool *table)
+{
+	int32_t	count;
+	char	*str;
+
+	count = 0;
+	if (token->type == TK_DASH)
+	{
+		str = &(token->str[1]);
+		while (*str)
+		{
+			if (!table[(int32_t)(*str)])
+			{
+				table[(int32_t)(*str)] = true;
+				count++;
+			}
+			str++;
+		}
+	}
+	else if (token->type == TK_DASHDASH)
+	{
+		count++;
+	}
+	return (count);
+}
+
 static int32_t	options_count(t_token *token, bool *table)
 {
-	int32_t		count;
-	char		*str;
+	int32_t	count;
 
 	count = 0;
 	token = token->child;
 	token = token->next;
 	while (token)
 	{
-		if (token->type == TK_DASH)
-		{
-			str = &(token->str[1]);
-			while (*str)
-			{
-				if (!table[(int32_t)(*str)])
-				{
-					table[(int32_t)(*str)] = true;
-					count++;
-				}
-				str++;
-			}
-		}
-		else if (token->type == TK_DASHDASH)
-			count++;
+		count += count_options(token, table);
 		token = token->next;
 	}
 	return (count);
 }
+
+// static int32_t	options_count(t_token *token, bool *table)
+// {
+// 	int32_t		count;
+// 	char		*str;
+
+// 	count = 0;
+// 	token = token->child;
+// 	token = token->next;
+// 	while (token)
+// 	{
+// 		if (token->type == TK_DASH)
+// 		{
+// 			str = &(token->str[1]);
+// 			while (*str)
+// 			{
+// 				if (!table[(int32_t)(*str)])
+// 				{
+// 					table[(int32_t)(*str)] = true;
+// 					count++;
+// 				}
+// 				str++;
+// 			}
+// 		}
+// 		else if (token->type == TK_DASHDASH)
+// 			count++;
+// 		token = token->next;
+// 	}
+// 	return (count);
+// }
 
 char	**get_malloc_opts(t_token *token, bool *table)
 {
@@ -57,7 +98,7 @@ char	**get_malloc_opts(t_token *token, bool *table)
 	return (options);
 }
 
-int32_t	add_single_dash_option(char	**options, bool *table)
+int32_t	add_single_dash_option(char **options, bool *table)
 {
 	int32_t	i;
 	int32_t	opt_i;
@@ -79,8 +120,8 @@ int32_t	add_single_dash_option(char	**options, bool *table)
 }
 
 /// @brief TODO not WORKING
-/// @param group 
-/// @return 
+/// @param group
+/// @return
 char	**get_options(t_token *token)
 {
 	int32_t	opt_i;
