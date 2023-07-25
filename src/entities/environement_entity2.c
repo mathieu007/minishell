@@ -55,7 +55,6 @@ char	**get_env(void)
 	return (data);
 }
 
-//take a variable and return the value
 char	*get_env_value(char *variable)
 {
 	t_env_cpy	*head;
@@ -75,7 +74,6 @@ char	*get_env_value(char *variable)
 	return (NULL);
 }
 
-//make a copy of the environement variable
 t_env_cpy	*copy_env(void)
 {
 	t_env_cpy	*head;
