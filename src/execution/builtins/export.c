@@ -34,7 +34,7 @@ void	export_no_variable(void)
 	{
 		if (current->value != NULL)
 			ft_printf("declare -x %s=\"%s\"\n", current->variable,
-					current->value);
+				current->value);
 		else
 			ft_printf("declare -x %s", current->variable);
 		current = current->next;
@@ -89,10 +89,7 @@ int32_t	handle_export(t_process *data, char *arg)
 	if (value && value[0])
 		value = ft_strdup(&value[1]);
 	if (name && is_valid_identifier(name) == 0)
-	{
-		print_not_valid_identifier(0, name);
-		return (1);
-	}
+		return (print_not_valid_identifier(0, name), 1);
 	if (!value)
 		return (0);
 	len = ft_strlen(name);

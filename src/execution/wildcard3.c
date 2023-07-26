@@ -63,3 +63,31 @@ char	*get_cwd_files_as_string(char *str_pattern, char *separator)
 	return (free(cwd), free_ptr(start_with), free_2d_char_array(patterns),
 		add_files_to_str(matching_files, separator));
 }
+
+char	*add_files_to_str(char **matching_files, char *separators)
+{
+	char	*str;
+	int32_t	i;
+	size_t	size;
+	int32_t	sep_size;
+	char	**start;
+
+	start = matching_files;
+	sep_size = ft_strlen(separators);
+	size = count_entries_size(matching_files);
+	size += size * sep_size;
+	str = malloc(size + 1);
+	if (!str)
+		free_all_and_exit2(errno, "malloc error");
+	str[size] = '\0';
+	i = 0;
+	while (*matching_files)
+	{
+		ft_strcpy(&str[i], *matching_files);
+		i += ft_strlen(*matching_files);
+		ft_strcpy(&str[i], separators);
+		i += sep_size;
+		matching_files++;
+	}
+	return (free_2d_char_array(start), str);
+}

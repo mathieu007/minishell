@@ -107,31 +107,3 @@ size_t	count_entries_size(char **entries)
 	}
 	return (size);
 }
-
-char	*add_files_to_str(char **matching_files, char *separators)
-{
-	char	*str;
-	int32_t	i;
-	size_t	size;
-	int32_t	sep_size;
-	char	**start;
-
-	start = matching_files;
-	sep_size = ft_strlen(separators);
-	size = count_entries_size(matching_files);
-	size += size * sep_size;
-	str = malloc(size + 1);
-	if (!str)
-		free_all_and_exit2(errno, "malloc error");
-	str[size] = '\0';
-	i = 0;
-	while (*matching_files)
-	{
-		ft_strcpy(&str[i], *matching_files);
-		i += ft_strlen(*matching_files);
-		ft_strcpy(&str[i], separators);
-		i += sep_size;
-		matching_files++;
-	}
-	return (free_2d_char_array(start), str);
-}
