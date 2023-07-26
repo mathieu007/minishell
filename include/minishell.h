@@ -534,7 +534,7 @@ int						pwd_cmd(t_cmd *cmd);
 int						export_cmd(t_cmd *cmd);
 int						unset_cmd(t_cmd *cmd);
 int						exit_cmd(t_cmd *cmd);
-size_t					count_entries_size(char **entries);
+
 //built in utils
 char					*get_end_with(char *str_pattern);
 char					*get_start_with(char *str_pattern);
