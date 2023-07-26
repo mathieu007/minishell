@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 09:37:23 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 18:37:52 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	print_not_valid_identifier(int export_or_unset, char *identifier)
 			write(2, &identifier[i++], 1);
 		write_err(1, "': not a valid identifier\n");
 	}
+	free(identifier);
 }
 
 int	is_valid_identifier(char *identifier)

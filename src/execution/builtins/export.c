@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 08:19:10 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 18:38:37 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,16 @@ int32_t	handle_export(t_process *data, char *arg)
 	else
 		name = arg;
 	if (value && value[0])
-		value = ft_strdup(&value[1]);
+		value = &value[1];
 	if (name && is_valid_identifier(name) == 0)
 		return (print_not_valid_identifier(0, name), 1);
 	if (!value)
-		return (0);
+		return (free(name), 0);
 	len = ft_strlen(name);
 	swap = update_env_variable(current, name, value, len);
 	if (!swap)
 		add_env_node(data, name, value);
-	return (0);
+	return (free(name), 0);
 }
 
 int	export_cmd(t_cmd *cmd)
