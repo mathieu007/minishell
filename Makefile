@@ -2,15 +2,11 @@ CC					= gcc
 
 NAME				= minishell
 NAME_TESTS			= tests
-NAME_REDIR_TESTS	= tests_redir
-NAME_VAL_TESTS		= tests_valgrind
 NUM_VALGRIND_CMDS  	= 2
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR			= src
 TESTSDIR		= tests
-TESTS_VAL_DIR	= tests_valgrind
-TESTS_REDIR_DIR	= tests_redir
 INCDIR			= include
 BUILDDIR		= obj
 TARGETDIR		= bin
@@ -32,17 +28,106 @@ INCLIBFTDEP 		= -I$(LIBFT_DIR)/$(INCDIR)
 
 POST_CFLAGS := -lreadline -lncurses $(READLINE) $(READLINEHISTORY)
 
-SOURCES     = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-TESTS       = $(shell find $(TESTSDIR) -type f -name *.$(SRCEXT))
-TESTS_VAL   = $(shell find $(TESTS_VAL_DIR) -type f -name *.$(SRCEXT))
-TESTS_REDIR = $(shell find $(TESTS_REDIR_DIR) -type f -name *.$(SRCEXT))
+SOURCES      = src/cmd2.c	\
+src/cmd3.c	\
+src/entities/builtins.c	\
+src/entities/cmd.c	\
+src/entities/cmd_exec.c	\
+src/entities/cmd_logical.c	\
+src/entities/cmd_parenthese.c	\
+src/entities/cmd_pipe.c	\
+src/entities/cmd_redirection.c	\
+src/entities/cmd_sequential.c	\
+src/entities/environement_entity.c	\
+src/entities/environement_entity2.c	\
+src/entities/environement_entity3.c	\
+src/entities/free/close_all_pipes.c	\
+src/entities/free/free_all.c	\
+src/entities/free/free_all2.c	\
+src/entities/free/free_cmds.c	\
+src/entities/free/free_struct.c	\
+src/entities/free/free_utils.c	\
+src/entities/process.c	\
+src/entities/redirect.c	\
+src/entities/token_type.c	\
+src/entities/tokens2.c	\
+src/execution/builtins/built_in_funcs.c	\
+src/execution/builtins/cd.c	\
+src/execution/builtins/echo.c	\
+src/execution/builtins/env.c	\
+src/execution/builtins/exit.c	\
+src/execution/builtins/export.c	\
+src/execution/builtins/export_utils.c	\
+src/execution/builtins/pwd.c	\
+src/execution/builtins/unset.c	\
+src/execution/builtins/unset_utils.c	\
+src/execution/continuation.c	\
+src/execution/continuation_delimiter.c	\
+src/execution/continuation_delimiter2.c	\
+src/execution/create_file_redirection.c	\
+src/execution/create_file_redirection2.c	\
+src/execution/cwd.c	\
+src/execution/cwd2.c	\
+src/execution/cwd3.c	\
+src/execution/error.c	\
+src/execution/execution.c	\
+src/execution/execution2.c	\
+src/execution/execution3.c	\
+src/execution/file_in_redirection.c	\
+src/execution/file_in_redirection2.c	\
+src/execution/file_out_redirection.c	\
+src/execution/file_out_redirection2.c	\
+src/execution/file_out_redirection3.c	\
+src/execution/file_redirections.c	\
+src/execution/fork_logical.c	\
+src/execution/fork_pipes.c	\
+src/execution/fork_sequential.c	\
+src/execution/fork_subshell.c	\
+src/execution/here_doc.c	\
+src/execution/pipes.c	\
+src/execution/process/fork_exec.c	\
+src/execution/signal/child_signal.c	\
+src/execution/signal/signal.c	\
+src/execution/signal/signal2.c	\
+src/execution/wait.c	\
+src/execution/wildcard.c	\
+src/execution/wildcard2.c	\
+src/execution/wildcard3.c	\
+src/helpers/cmd.c	\
+src/helpers/redirection_helpers.c	\
+src/helpers/token_type.c	\
+src/main.c	\
+src/parser/arguments.c	\
+src/parser/arguments2.c	\
+src/parser/cmd.c	\
+src/parser/cmd2.c	\
+src/parser/cmd3.c	\
+src/parser/environements_parser.c	\
+src/parser/options.c	\
+src/parser/paths.c	\
+src/parser/paths2.c	\
+src/tokenizer/generic_tokenizer.c	\
+src/tokenizer/generic_tokenizer2.c	\
+src/tokenizer/generic_tokenizer3.c	\
+src/tokenizer/split_tokens.c	\
+src/tokenizer/token_cmd.c	\
+src/tokenizer/token_dash.c	\
+src/tokenizer/token_environement.c	\
+src/tokenizer/token_expansion.c	\
+src/tokenizer/token_expansion2.c	\
+src/tokenizer/token_parenthese.c	\
+src/tokenizer/token_redirection.c	\
+src/tokenizer/token_sequence.c	\
+src/tokenizer/token_sequence2.c	\
+src/tokenizer/token_space_quotes.c	\
+src/tokenizer/token_space_quotes2.c	\
+src/tokenizer/tokenize.c	\
+src/tokenizer/tokenize2.c	\
+src/tokenizer/tokenize3.c	\
 
 OBJECTS		 = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-OBJECT_TESTS = $(patsubst $(TESTSDIR)/%,$(BUILDDIR)/%,$(TESTS:.$(SRCEXT)=.$(OBJEXT)))
-OBJECT_VAL_TESTS = $(patsubst $(TESTS_VAL_DIR)/%,$(BUILDDIR)/%,$(TESTS_VAL:.$(SRCEXT)=.$(OBJEXT)))
-OBJECT_REDIR_TESTS = $(patsubst $(TESTS_REDIR_DIR)/%,$(BUILDDIR)/%,$(TESTS_REDIR:.$(SRCEXT)=.$(OBJEXT)))
 
-all: directories $(TARGETDIR)/$(NAME) $(TARGETDIR)/$(NAME_TESTS) $(TARGETDIR)/$(NAME_REDIR_TESTS) $(TARGETDIR)/$(NAME_VAL_TESTS)
+all: directories $(TARGETDIR)/$(NAME)
 
 directories:
 	@mkdir -p $(TARGETDIR)
@@ -58,15 +143,6 @@ fclean: clean
 	
 re:	fclean all
 
-test: all 
-	cp $(TESTSDIR)/tests.txt $(TARGETDIR)/ && cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
-test2: all 
-	cp $(TESTS_REDIR_DIR)/tests_redir.txt $(TARGETDIR)/ && cd bin && chmod 777 * && chmod +x * && ./tests_redir
-mem: re 
-	cd bin && chmod 777 ./tests_valgrind && chmod +x ./tests_valgrind && ./tests_valgrind $(NUM_VALGRIND_CMDS)	
-exec: re 
-	cd bin && ./minishell
-
 $(TARGETDIR)/$(NAME): $(OBJECTS)
 	@$(MAKE) -C $(LIBFT_DIR)
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -o $(TARGETDIR)/$(NAME) $^ $(POST_CFLAGS) $(LIBFT)
@@ -74,34 +150,5 @@ $(TARGETDIR)/$(NAME): $(OBJECTS)
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
-
-$(TARGETDIR)/$(NAME_TESTS): $(OBJECT_TESTS)
-	cp $(TESTSDIR)/tests.txt $(TARGETDIR)/
-	$(CC) $(CFLAGS) -o $(TARGETDIR)/$(NAME_TESTS) $^
-	
-$(BUILDDIR)/%.$(OBJEXT): $(TESTSDIR)/%.$(SRCEXT)
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(TARGETDIR)/$(NAME_REDIR_TESTS): $(OBJECT_REDIR_TESTS)
-	@$(MAKE) -C $(LIBFT_DIR)
-	cp $(TESTS_REDIR_DIR)/tests_redir.txt $(TARGETDIR)/
-	cp $(TESTS_REDIR_DIR)/in1 $(TARGETDIR)/
-	cp $(TESTS_REDIR_DIR)/in2 $(TARGETDIR)/
-	cp $(TESTS_REDIR_DIR)/in3 $(TARGETDIR)/
-	cp $(TESTS_REDIR_DIR)/outfile* $(TARGETDIR)/
-	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -o $(TARGETDIR)/$(NAME_REDIR_TESTS) $^ $(LIBFT)
-	
-$(BUILDDIR)/%.$(OBJEXT): $(TESTS_REDIR_DIR)/%.$(SRCEXT)
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
-
-$(TARGETDIR)/$(NAME_VAL_TESTS): $(OBJECT_VAL_TESTS)
-	cp $(TESTS_VAL_DIR)/tests_valgrind.txt $(TARGETDIR)/
-	$(CC) $(CFLAGS) -o $(TARGETDIR)/$(NAME_VAL_TESTS) $^
-	
-$(BUILDDIR)/%.$(OBJEXT): $(TESTS_VAL_DIR)/%.$(SRCEXT)
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: all clean fclean re
