@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 21:05:36 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 22:32:55 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,10 @@ char	*try_get_relative_dir(char *name)
 			F_OK) == 0)
 	{
 		path = ft_strjoinfree(path, &name[2]);
-		if (access(path, X_OK) == 0)
+		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
+			return (path);
+		else if (access(path, F_OK) == 0)
 			write_err2(126, path, ": Permission denied\n");
-		else
-		{
-			if (access(path, F_OK) == 0)
-				return (path);
-		}
 	}
 	free_ptr(path);
 	return (NULL);
@@ -103,13 +100,10 @@ char	*try_get_relative_dir2(char *name)
 	if (access(path, F_OK) == 0)
 	{
 		path = ft_strjoinfree(path, &name[count * 3]);
-		if (access(path, X_OK) == 0)
+		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
+			return (path);
+		else if (access(path, F_OK) == 0)
 			write_err2(126, path, ": Permission denied\n");
-		else
-		{
-			if (access(path, F_OK) == 0)
-				return (path);
-		}
 	}
 	return (free(path), NULL);
 }

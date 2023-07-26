@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 14:40:08 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 22:42:46 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*get_path_to_change(t_cmd *cmd)
 	{
 		path = get_cwd();
 		if (!path)
-			return (ft_printf("minishell: cd: %s: No such file or directory\n",
+			return (ft_printf("cd: %s: No such file or directory\n",
 					path_to_change), NULL);
 		path = ft_strjoinfree(path, "/");
 		path_to_change = ft_strjoinfree(path, cmd->args[1]);
@@ -77,7 +77,7 @@ int	cd_cmd(t_cmd *cmd)
 	free_ptr(path_to_change);
 	if (result != 0)
 	{
-		ft_printf("minishell: cd: %s: No such file or directory\n",
+		ft_printf("cd: %s: No such file or directory\n",
 			cmd->args[1]);
 		return (1);
 	}

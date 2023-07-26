@@ -61,7 +61,7 @@ re:	fclean all
 test: all 
 	cp $(TESTSDIR)/tests.txt $(TARGETDIR)/ && cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
 test2: all 
-	cp $(TESTS_REDIR_DIR)/tests_redir.txt $(TARGETDIR)/ && cd bin && chmod 777 ./* && chmod +x ./* && ./tests_redir
+	cp $(TESTS_REDIR_DIR)/tests_redir.txt $(TARGETDIR)/ && cd bin && chmod 777 * && chmod +x * && ./tests_redir
 mem: re 
 	cd bin && chmod 777 ./tests_valgrind && chmod +x ./tests_valgrind && ./tests_valgrind $(NUM_VALGRIND_CMDS)	
 exec: re 

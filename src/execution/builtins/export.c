@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 15:48:15 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 22:39:44 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	export_no_variable(void)
 	while (current)
 	{
 		if (current->value != NULL)
-			ft_printf("declare -x %s=\"%s\"\n", current->variable, current->value);
+			ft_printf("declare -x %s=\"%s\"\n", current->variable,
+					current->value);
 		else
 			ft_printf("declare -x %s", current->variable);
 		current = current->next;
@@ -81,8 +82,6 @@ int32_t	handle_export(t_process *data, char *arg)
 
 	current = data->env_cpy;
 	value = ft_strchr(arg, '=');
-	if (value == NULL)
-		return (0);
 	name = ft_substr(arg, 0, value - arg);
 	if (value && value[0])
 		value = ft_strdup(&value[1]);
@@ -93,6 +92,8 @@ int32_t	handle_export(t_process *data, char *arg)
 		print_not_valid_identifier(0, name);
 		return (1);
 	}
+	if (value == NULL)
+		return (0);
 	len = ft_strlen(name);
 	swap = update_env_variable(current, name, value, len);
 	if (!swap)

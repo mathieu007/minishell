@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 21:12:03 by math             ###   ########.fr       */
+/*   Updated: 2023/07/25 22:25:21 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ char	*get_file_path(char *name)
 	char	*path;
 
 	path = get_file_path_name(name);
-	ft_printf("name : %s\n", path);
 	if (name && name[0] == '/')
 	{
 		free_ptr(path);
