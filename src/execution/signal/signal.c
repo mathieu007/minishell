@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 21:06:37 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 11:18:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	{
 		write(1, "\n", 1);
 		kill(proc->pid, SIGTERM);
+		proc->errnum = 130;
 		proc->pid = 0;
 	}
 	else if (siginfo->si_signo == SIGINT)
@@ -77,6 +78,7 @@ void	sigquit_handler(int val)
 		write(1, "QUIT : 3\n", 10);
 		rl_on_new_line();
 		rl_replace_line("", 0);
+		proc->errnum = 131;
 		kill(proc->pid, SIGTERM);
 		proc->pid = 0;
 	}

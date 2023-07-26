@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 17:51:34 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 11:23:39 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,6 @@ int32_t	exec_pipes_cmds(t_cmd *pipes)
 	if (pipes)
 		pipes = fork_last_child(pipes);
 	wait_childs(start);
+	proc->execution = EXEC_END;
 	return (proc->errnum);
 }

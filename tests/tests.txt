@@ -2,6 +2,7 @@ ech1 || echo $?
 unset HOME && cd && echo $?
 echo ' tata '
 echo "toto"
+echo "" "" 
 echo '"'toto'"'
 echo """totot"""
 echo "'""totot""'"
@@ -173,3 +174,5 @@ echo 1 || ech6 6 || ech2 2 && ech23 23 && ech3 3 || ech10 10 || ech1 11 || ls | 
 (echo 1 || ech6 6) || echo 2 && (ech23 23 && ech3 3 || ech10 10) || (echo 11 || ls) | cat | wc
 (ech1 1 || ech6 6) || ech2 2 && (ech23 23 && echo 3 || ech10 10) || (ech11 11 || ls) | cat | wc
 (echo 1 || ech6 6) || ech2 2 && (ech23 23 && ech3 3 || ech10 10) || (echo 11 || ls) | cat | wc
+ls | cat | cat | ls | ddddfd | wc
+ls | cat | cat | ls | ddddfd | wc | cat | ls | grep "" 

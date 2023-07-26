@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 15:12:49 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 10:48:12 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	count_args(t_cmd *cmd)
 	int	i;
 
 	i = 0;
-	while (cmd->args && cmd->args[i] && cmd->args[i][0] != '\0')
+	while (cmd->args && cmd->args[i])
 		i++;
 	return (i);
 }

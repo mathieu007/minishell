@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 07:17:47 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 09:58:53 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,25 +90,25 @@ int32_t	calculate_args_len(t_token *token, int32_t args_len)
 int32_t	get_args_len(t_token *token)
 {
 	int32_t	args_len;
-	int32_t	old_arg_len;
 
-	args_len = 0;
+	args_len = 5;
 	token = token->child;
 	if (!token)
 		return (0);
 	while (token)
 	{
-		if (token->str && token->str[0] && token->next)
-		{
-			while (token && token->next)
-			{
-				old_arg_len = args_len;
-				args_len = calculate_args_len(token, args_len);
-				if (old_arg_len != args_len)
-					break ;
-				token = token->next;
-			}
-		}
+		if ((token->type == TK_SPACE || token->type == TK_END)
+			&& !ft_strcontains(token->str, "*"))
+			args_len++;
+		else if ((token->type == TK_SPACE || token->type == TK_END)
+			&& ft_strcontains(token->str, "*"))
+			args_len = calculate_args_len(token, args_len);
+		else if ((token->type == TK_START || token->type == TK_CMD)
+			&& ft_strcontains(token->str, "*"))
+			args_len = calculate_args_len(token, args_len);
+		else if (!is_token_delimiter(token->type) 
+			&& ft_strcontains(token->str, "*"))
+			args_len = calculate_args_len(token, args_len);
 		token = token->next;
 	}
 	return (args_len);

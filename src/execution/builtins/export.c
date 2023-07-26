@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 07:43:46 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 08:19:10 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ int32_t	handle_export(t_process *data, char *arg)
 	if (value)
 		name = ft_substr(arg, 0, value - arg);
 	else
-		name = value;
+		name = arg;
 	if (value && value[0])
 		value = ft_strdup(&value[1]);
-	if (is_valid_identifier(name) == 0)
+	if (name && is_valid_identifier(name) == 0)
 	{
 		print_not_valid_identifier(0, name);
 		return (1);

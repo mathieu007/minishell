@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 06:33:50 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 10:19:59 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ size_t	count_matches(char **patterns, char *start_with, char *end_with)
 	dp = opendir(cwd);
 	entry = readdir(dp);
 	if (!patterns || !*patterns)
-		return (count_all_files(entry, dp));
+		return (free(cwd), count_all_files(entry, dp));
 	count = 1;
 	while (entry)
 	{
@@ -74,7 +74,7 @@ char	**find_matching_files(char *cwd, char **patterns, char *start_with,
 	int32_t			count;
 
 	count = count_matches(patterns, start_with, end_with);
-	new = ft_calloc((count + 1), sizeof(char *));
+	new = ft_calloc((count + 10), sizeof(char *));
 	if (!new)
 		return (NULL);
 	new[count] = NULL;
