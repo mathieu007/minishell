@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 11:37:50 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 11:41:42 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
-	write_err2(2, "signal\n", "r");
+	write_err2(2, "signal:\n");
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
 			|| proc->execution == EXEC_SLEEP))
 	{
