@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 13:47:43 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 13:50:52 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 	line = readline("> ");
 	while (is_valid_line(line, delimiter, delimiter_len) && proc->errnum == 0)
 	{
-		write_err3(2, "error: ", ft_itoa(proc->errnum), "\n");
+		// write_err3(2, "error: ", ft_itoa(proc->errnum), "\n");
 		write(main->in_redir->fd, line, ft_strlen(line));
 		write(main->in_redir->fd, "\n", 1);
 		line = free_ptr(line);
