@@ -15,29 +15,28 @@
 void	export_no_variable(void)
 {
 	t_env_cpy	*head;
-	t_env_cpy	*current;
+	t_env_cpy	*cur;
 
 	head = copy_env();
-	current = head;
-	while (current && current->next)
+	cur = head;
+	while (cur && cur->next)
 	{
-		if (strcmp(current->variable, current->next->variable) > 0)
+		if (strcmp(cur->variable, cur->next->variable) > 0)
 		{
-			swap_node_value(current, current->next);
-			current = head;
+			swap_node_value(cur, cur->next);
+			cur = head;
 		}
 		else
-			current = current->next;
+			cur = cur->next;
 	}
-	current = head;
-	while (current)
+	cur = head;
+	while (cur)
 	{
-		if (current->value != NULL)
-			ft_printf("declare -x %s=\"%s\"\n", current->variable,
-					current->value);
+		if (cur->value != NULL)
+			ft_printf("declare -x %s=\"%s\"\n", cur->variable, cur->value);
 		else
-			ft_printf("declare -x %s", current->variable);
-		current = current->next;
+			ft_printf("declare -x %s", cur->variable);
+		cur = cur->next;
 	}
 	free_t_env_cpy(head);
 }
@@ -89,10 +88,7 @@ int32_t	handle_export(t_process *data, char *arg)
 	if (value && value[0])
 		value = ft_strdup(&value[1]);
 	if (name && is_valid_identifier(name) == 0)
-	{
-		print_not_valid_identifier(0, name);
-		return (1);
-	}
+		return (print_not_valid_identifier(0, name), 1);
 	if (!value)
 		return (0);
 	len = ft_strlen(name);

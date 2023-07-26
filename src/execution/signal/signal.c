@@ -16,8 +16,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	t_process	*proc;
 
-	(void)context;
-	(void)sig;
+	(void)context, (void)sig;
 	proc = get_process();
 	if (siginfo->si_signo == SIGINT && proc->execution == EXEC_CONTINUATION)
 		return ;

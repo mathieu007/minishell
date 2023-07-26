@@ -30,7 +30,6 @@ static void	free_split_on_equal(char **split_on_equal)
 static void	process_env_node(t_env_cpy **head, t_env_cpy **current,
 		char **split_on_equal)
 {
-
 	char		*tmp_str;
 	t_env_cpy	*node;
 
