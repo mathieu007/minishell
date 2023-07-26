@@ -6,32 +6,13 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 20:05:01 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 07:26:50 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	set_args(t_token *token, char **split)
-// {
-// 	int32_t	i;
-
-// 	i = 0;
-// 	token = token->child;
-// 	while (token)
-// 	{
-// 		if (token->str && token->str[0] && token->next)
-// 		{
-// 			while (token && token->next)
-// 			{
-// 				process_token(&token, split, &i);
-// 			}
-// 		}
-// 		token = token->next;
-// 	}
-// }
-
-char	**insert_files_as_args(char **split, char **files)
+char	**insert_files(char **split, char **files)
 {
 	if (!files)
 		return (split);
@@ -45,13 +26,14 @@ char	**insert_files_as_args(char **split, char **files)
 
 char	**process_token(t_token *token, char **split)
 {
-	if (!ft_strcontains(token->str, "*"))
+	if ((!ft_strcontains(token->str, "*") && !is_token_delimiter(token->type)))
+		*split = ft_strjoinfree(*split, token->str);
+	else if (is_token_delimiter(token->type))
 		*split = ft_strjoinfree(*split, token->str);
 	if (token->next->type == TK_SPACE || token->next->type == TK_END)
 	{
-		if (ft_strcontains(token->str, "*"))
-			split = insert_files_as_args(split, get_cwd_files_array(token->str,
-						" "));
+		if (ft_strcontains(token->str, "*") && !is_token_delimiter(token->type))
+			split = insert_files(split, get_cwd_files_array(token->str, " "));
 		else
 			split++;
 	}

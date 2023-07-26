@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 20:09:12 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 07:17:47 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,11 @@ int32_t	count_wildcards_matches(char *pattern)
 
 int32_t	calculate_args_len(t_token *token, int32_t args_len)
 {
-	if (token->next->type == TK_SPACE || token->next->type == TK_END)
+	if (is_token_delimiter(token->type) && token->next && token->next->next
+		&& (token->next->next->type == TK_SPACE
+			|| token->next->next->type == TK_END))
+		args_len++;
+	else if (token->next->type == TK_SPACE || token->next->type == TK_END)
 	{
 		if (ft_strcontains(token->str, "*"))
 			args_len += count_wildcards_matches(token->str);

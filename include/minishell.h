@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 20:41:26 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 05:23:08 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,7 @@ char					**find_matching_files(char *cwd, char **patterns,
 							char *start_with, char *end_with);
 char					*add_files_to_str(char **matching_files,
 							char *separators);
-char					**insert_files_as_args(char **split, char **files);
+char					**insert_files(char **split, char **files);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
 void					create_cmd_redirections(t_token *token, t_cmd *cmd);

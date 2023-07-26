@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 22:39:44 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 07:43:46 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,18 @@ int32_t	handle_export(t_process *data, char *arg)
 
 	current = data->env_cpy;
 	value = ft_strchr(arg, '=');
-	name = ft_substr(arg, 0, value - arg);
+	if (value)
+		name = ft_substr(arg, 0, value - arg);
+	else
+		name = value;
 	if (value && value[0])
 		value = ft_strdup(&value[1]);
-	else
-		value = NULL;
 	if (is_valid_identifier(name) == 0)
 	{
 		print_not_valid_identifier(0, name);
 		return (1);
 	}
-	if (value == NULL)
+	if (!value)
 		return (0);
 	len = ft_strlen(name);
 	swap = update_env_variable(current, name, value, len);

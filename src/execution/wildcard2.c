@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 21:47:08 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 06:33:50 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,12 @@ size_t	count_matches(char **patterns, char *start_with, char *end_with)
 	entry = readdir(dp);
 	if (!patterns || !*patterns)
 		return (count_all_files(entry, dp));
-	count = 0;
+	count = 1;
 	while (entry)
 	{
-		if (*patterns[0] != '.')
-		{
-			if (entry->d_name[0] != '.' && match_patterns(entry->d_name,
-					patterns, start_with, end_with))
-				count++;
-		}
-		else if (match_patterns(entry->d_name, patterns, start_with, end_with))
+		if ((!ft_strequal(entry->d_name, ".")
+				&& !ft_strequal(entry->d_name, ".."))
+			&& match_patterns(entry->d_name, patterns, start_with, end_with))
 			count++;
 		entry = readdir(dp);
 	}
@@ -59,12 +55,9 @@ size_t	count_matches(char **patterns, char *start_with, char *end_with)
 char	*get_matching_entry(struct dirent *entry, char **patterns,
 		char *start_with, char *end_with)
 {
-	if ((!patterns || !*patterns) && entry->d_name[0] != '.')
-		return (ft_strdup(entry->d_name));
-	else if ((!patterns || !*patterns) && entry->d_name[0] == '.')
+	if (ft_strequal(entry->d_name, ".") || ft_strequal(entry->d_name, ".."))
 		return (NULL);
-	if (patterns[0][0] != '.' && entry->d_name[0] != '.'
-		&& match_patterns(entry->d_name, patterns, start_with, end_with))
+	if ((!patterns || !*patterns))
 		return (ft_strdup(entry->d_name));
 	else if (match_patterns(entry->d_name, patterns, start_with, end_with))
 		return (ft_strdup(entry->d_name));
@@ -81,7 +74,7 @@ char	**find_matching_files(char *cwd, char **patterns, char *start_with,
 	int32_t			count;
 
 	count = count_matches(patterns, start_with, end_with);
-	new = malloc((count + 1) * sizeof(char *));
+	new = ft_calloc((count + 1), sizeof(char *));
 	if (!new)
 		return (NULL);
 	new[count] = NULL;
