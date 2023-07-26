@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 10:22:03 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:31:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void	write_lines(t_redirect *redir)
 		line = readline("> ");
 	}
 	line = free_ptr(line);
-	close(redir->fd);
+	if (redir->fd > 2)
+		close(redir->fd);
 }
 
 int32_t	write_non_empty_continuation(void)
@@ -72,7 +73,8 @@ int32_t	write_non_empty_continuation(void)
 	proc->errnum = ft_waitpid(pid);
 	if (proc->errnum == 2)
 		proc->errnum = 258;
-	close(proc->continuation->fd);
+	if (proc->continuation->fd > 2)
+		close(proc->continuation->fd);
 	proc->execution = EXEC_END;
 	return (proc->errnum);
 }

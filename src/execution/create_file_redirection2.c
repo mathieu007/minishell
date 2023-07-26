@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 10:21:59 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:30:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	close_out_fds(t_cmd *redir)
 	{
 		if (redir->out_redir && redir->out_redir->fd > 0)
 		{
-			close(redir->out_redir->fd);
+			if (redir->out_redir->fd > 2)
+				close(redir->out_redir->fd);
 			redir->out_redir->fd = -1;
 		}
 		redir = redir->prev;
@@ -32,7 +33,8 @@ void	close_in_fds(t_cmd *redir)
 		if (redir->in_redir && redir->in_redir->fd > 0
 			&& !redir->in_redir->is_here_doc)
 		{
-			close(redir->in_redir->fd);
+			if (redir->in_redir->fd > 2)
+				close(redir->in_redir->fd);
 			redir->in_redir->fd = -1;
 		}
 		redir = redir->prev;
@@ -72,9 +74,9 @@ t_cmd	*create_fd_redir(t_cmd *main, t_cmd *redir)
 		create_redir_in(main, redir);
 	else if (redir && redir->type == CMD_HEREDOC)
 		proc->errnum = write_here_document(redir->name, main, redir);
-	if (redir->out_redir && redir->out_redir->fd > 0)
+	if (redir->out_redir && redir->out_redir->fd > 2)
 		close(redir->out_redir->fd);
-	if (redir->in_redir && redir->in_redir->fd > 0)
+	if (redir->in_redir && redir->in_redir->fd > 2)
 		close(redir->in_redir->fd);
 	redir = create_fd_redir(main, redir->next);
 	return (redir);

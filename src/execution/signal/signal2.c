@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 12:47:15 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:24:04 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	close_all_fds(void)
 			close_all_child_fds(cmd->child);
 		cmd = cmd->next;
 	}
-	if (proc->continuation && proc->continuation->fd > 0)
+	if (proc->continuation && proc->continuation->fd > 2)
 	{
 		close(proc->continuation->fd);
 		proc->continuation->fd = -1;

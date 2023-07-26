@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 13:47:13 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:29:13 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	close_files_redirections(t_cmd *cmd)
 		return ;
 	if (cmd->in_redir && cmd->in_redir->fd > 2)
 	{
-		close(cmd->in_redir->fd);
+		if (cmd->in_redir->fd > 2)
+			close(cmd->in_redir->fd);
 		cmd->in_redir->fd = -1;
 		cmd->in_redir->dup_fd = -1;
 	}
@@ -42,7 +43,8 @@ void	close_files_redirections(t_cmd *cmd)
 	{
 		if (cmd->out_redir->dup_fd >= 0)
 			dup2(cmd->out_redir->dup_fd, STDOUT_FILENO);
-		close(cmd->out_redir->fd);
+		if (cmd->out_redir->fd > 2)	
+			close(cmd->out_redir->fd);
 		cmd->out_redir->fd = -1;
 		cmd->out_redir->dup_fd = -1;
 	}
@@ -57,7 +59,7 @@ void	redirect_input(t_cmd *cmd, bool is_in_child_process)
 		free_all_and_exit2(errno, "Could not redirect input");
 	if (cmd->type == CMD && is_in_child_process)
 	{
-		if (close(cmd->in_redir->fd) == -1)
+		if (cmd->in_redir->fd > 2 && close(cmd->in_redir->fd) == -1)
 			free_all_and_exit2(errno, "Could not close the fd");
 		cmd->in_redir->fd = -1;
 	}
@@ -76,7 +78,7 @@ void	redirect_output(t_cmd *cmd, bool is_in_child_process)
 	if ((cmd->type == CMD || cmd->type == CMD_PARENTHESES)
 		&& is_in_child_process)
 	{
-		if (close(cmd->out_redir->fd) == -1)
+		if (cmd->out_redir->fd > 2 && close(cmd->out_redir->fd) == -1)
 			free_all_and_exit2(errno, "Could not close the fd");
 		cmd->out_redir->fd = -1;
 	}

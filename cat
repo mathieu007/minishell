@@ -1,0 +1,26 @@
+Makefile
+VALGRIND TEST COMMAND
+a.out
+bin
+cat
+cd
+dir1
+in1
+in2
+in3
+include
+libft
+methods.txt
+minishell.sup
+minishellcopy.sup
+obj
+out
+out2
+outfile1
+readline-master
+src
+tests
+tests_redir
+tests_valgrind
+testssss
+wildcard

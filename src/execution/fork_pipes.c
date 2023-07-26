@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 12:43:47 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:27:39 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	if (pid == 0)
 	{
 		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
-		close(pipe->pipe->fd_out);
-		close(pipe->pipe->fd_in);
+		close_pipes(pipe->pipe);
 		proc->errnum = dispatch_command(cmd, true);
 		free_all_and_exit(proc->errnum);
 	}

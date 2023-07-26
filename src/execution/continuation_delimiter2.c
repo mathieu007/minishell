@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation_delimiter2.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 18:40:22 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:32:33 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int32_t	write_delimiter_continuation(const char *delimiter, t_redirect *redir)
 	}
 	reset_signal_handlers();
 	proc->errnum = ft_waitpid(pid);
-	close(redir->fd);
+	if (redir->fd > 2)
+		close(redir->fd);
 	proc->execution = EXEC_END;
 	return (proc->errnum);
 }
