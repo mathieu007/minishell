@@ -1,0 +1,9 @@
+grep "rw-r--r--" < in2 > outfile1 < in3 > outfile2
+grep -e "rw-r--r--" < in2 > outfile1 < in3
+grep -e "rw-r--r--" > outfile1 < in3 > outfile2
+grep -e "rw-r--r--" > outfile1 < in3
+echo "123 test" | cat > outfile1
+echo "123 test" | wc > outfile1
+grep > outfile1 < in3 "rw-r--r--" > outfile2 < in2 | wc -l
+ls -la > in1 && cd .. && cd bin && pwd && ech0 1 || echo 1 && grep > outfile1 < in3 "rw-r--r--" > outfile2 < in2 | wc -l
+ls -la > in1 && cd .. && cd bin && pwd && ech0 1 || echo 1 && ((grep > outfile1 < in3 "rw-r--r--" > outfile2 < in2 | wc -l > outfile5 && echo "should be in outfile3") > outfile3 && echo "should be in outfile4") > outfile4

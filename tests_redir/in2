@@ -1,0 +1,16 @@
+total 120
+drwxr-xr-x  15 mroy  2022_quebec   510 Jun 13 08:21 .
+drwxr-xr-x  24 mroy  2022_quebec   816 Jun 13 08:20 ..
+-rw-r--r--   1 mroy  2022_quebec  5566 May 30 13:19 additionnal_tester.txt
+-rw-r--r--   1 mroy  2022_quebec     1 May 30 13:19 file.txt
+-rw-r--r--   1 mroy  2022_quebec   162 Jun 13 08:21 in
+-rw-r--r--   1 mroy  2022_quebec     0 Jun 13 08:22 in2
+-rw-r--r--   1 mroy  2022_quebec     0 Jun 13 08:21 in3
+-rw-r--r--   1 mroy  2022_quebec    61 May 30 13:19 minishell_update.code-workspace
+-rw-r--r--   1 mroy  2022_quebec    14 May 30 13:19 test
+-rw-r--r--   1 mroy  2022_quebec  6648 Jun  9 12:16 tester.c
+-rw-r--r--   1 mroy  2022_quebec  9588 Jun  9 12:16 tester.txt
+-rw-r--r--   1 mroy  2022_quebec  6648 Jun 13 08:04 tester_redirection.c
+-rw-r--r--   1 mroy  2022_quebec  3589 Jun  9 12:16 tests copy.txt
+-rw-r--r--   1 mroy  2022_quebec  3355 Jun  9 12:16 tests.txt
+-rw-r--r--   1 mroy  2022_quebec     0 Jun 13 08:20 tests_redir.txt

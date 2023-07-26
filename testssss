@@ -1,0 +1,18 @@
+MiniShell> echo "" ""
+ 
+MiniShell> 
+
+
+Bash output:
+[ 
+]
+Bash err output:
+[(null)]
+Bash exit status: 0
+
+Minishell output:
+[
+]
+Minishell err output:
+[(null)]
+Minishell exit status: 0
