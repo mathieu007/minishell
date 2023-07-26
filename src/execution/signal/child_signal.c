@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 13:35:35 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:08:20 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_HEREDOC
 			|| proc->execution == EXEC_CONTINUATION))
 	{
-		write(1, "\n", 1);
-		proc->signal = SIGINT;
 		proc->errnum = 1;
+		close_all_fds();
+		free_all_and_exit(proc->errnum);
 	}
 	else if (siginfo->si_signo == SIGTERM)
 		proc->signal = SIGTERM;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 05:23:08 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 13:52:22 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,7 @@ typedef struct s_process
 	t_cmd				*last_cmd;
 }						t_process;
 
+size_t					count_entries_size(char **entries);
 char					*get_home(void);
 bool					set_cwd(char *cwd);
 bool					dir_exist(const char *path);

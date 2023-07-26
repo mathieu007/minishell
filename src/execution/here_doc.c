@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 13:50:52 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 15:10:25 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 	t_process	*proc;
 
 	proc = get_process();
+	proc->signal = 0;
 	delimiter_len = ft_strlen(delimiter);
 	line = readline("> ");
-	while (is_valid_line(line, delimiter, delimiter_len) && proc->errnum == 0)
+	while (is_valid_line(line, delimiter, delimiter_len))
 	{
-		// write_err3(2, "error: ", ft_itoa(proc->errnum), "\n");
 		write(main->in_redir->fd, line, ft_strlen(line));
 		write(main->in_redir->fd, "\n", 1);
 		line = free_ptr(line);
@@ -61,7 +61,7 @@ int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)
 	{
 		write_here_doc_lines(main, delimiter);
 		close_files_redirections(main);
-		free_all_and_exit(0);
+		free_all_and_exit(proc->errnum);
 	}
 	reset_signal_handlers();
 	proc->errnum = ft_waitpid(pid);
