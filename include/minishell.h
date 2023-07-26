@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/06/26 15:41:18 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 20:41:26 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,8 +304,7 @@ char					**find_matching_files(char *cwd, char **patterns,
 							char *start_with, char *end_with);
 char					*add_files_to_str(char **matching_files,
 							char *separators);
-int32_t					insert_files_as_args(char **split, int32_t i,
-							char **files);
+char					**insert_files_as_args(char **split, char **files);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
 void					create_cmd_redirections(t_token *token, t_cmd *cmd);
@@ -489,6 +488,7 @@ t_cmd					*parse_cmd(t_cmd *cmd);
 int32_t					count_env_words(char *str);
 char					**parse_args(t_token *group);
 char					**get_options(t_token *group);
+char					*get_file_path(char *name);
 int32_t					get_args_len(t_token *group);
 void					set_args(t_token *group, char **split);
 t_token					*get_quotes_str(t_token *token, char *str,

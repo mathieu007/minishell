@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cwd3.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 13:17:35 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 18:52:58 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,14 @@ char	*recursive_search_helper(DIR *dir, ino_t ino, char *path)
 
 char	*recursive_search_dir(char *path, ino_t ino)
 {
-	DIR			*dir;
-	t_process	*proc;
-	char		*result;
+	DIR		*dir;
+	char	*result;
 
 	if (path == NULL)
 		return (NULL);
 	dir = opendir(path);
 	if (!dir)
 		return (free(path), NULL);
-	proc = get_process();
 	result = recursive_search_helper(dir, ino, path);
 	return (result);
 }

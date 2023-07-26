@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 13:16:06 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 21:47:08 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+size_t	count_all_files(struct dirent *entry, DIR *dp)
+{
+	size_t	count;
+
+	count = 0;
+	while (entry)
+	{
+		if (entry->d_name[0] != '.')
+			count++;
+		entry = readdir(dp);
+	}
+	return (count);
+}
 
 size_t	count_matches(char **patterns, char *start_with, char *end_with)
 {
@@ -22,6 +36,8 @@ size_t	count_matches(char **patterns, char *start_with, char *end_with)
 	cwd = get_cwd();
 	dp = opendir(cwd);
 	entry = readdir(dp);
+	if (!patterns || !*patterns)
+		return (count_all_files(entry, dp));
 	count = 0;
 	while (entry)
 	{
@@ -43,6 +59,10 @@ size_t	count_matches(char **patterns, char *start_with, char *end_with)
 char	*get_matching_entry(struct dirent *entry, char **patterns,
 		char *start_with, char *end_with)
 {
+	if ((!patterns || !*patterns) && entry->d_name[0] != '.')
+		return (ft_strdup(entry->d_name));
+	else if ((!patterns || !*patterns) && entry->d_name[0] == '.')
+		return (NULL);
 	if (patterns[0][0] != '.' && entry->d_name[0] != '.'
 		&& match_patterns(entry->d_name, patterns, start_with, end_with))
 		return (ft_strdup(entry->d_name));
@@ -65,6 +85,7 @@ char	**find_matching_files(char *cwd, char **patterns, char *start_with,
 	if (!new)
 		return (NULL);
 	new[count] = NULL;
+	new[0] = NULL;
 	dp = opendir(cwd);
 	entry = readdir(dp);
 	i = 0;

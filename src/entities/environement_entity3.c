@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environement_entity3.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 13:09:59 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/25 18:52:33 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,10 @@ static void	free_split_on_equal(char **split_on_equal)
 static void	process_env_node(t_env_cpy **head, t_env_cpy **current,
 		char **split_on_equal)
 {
-	int32_t		count;
+
 	char		*tmp_str;
 	t_env_cpy	*node;
 
-	count = count_splits(split_on_equal);
 	tmp_str = join_splits(&split_on_equal[1], "=");
 	node = create_env_node(split_on_equal[0], tmp_str);
 	free(tmp_str);
