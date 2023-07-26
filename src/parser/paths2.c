@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 22:25:21 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 13:02:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*get_file_path_name(char *name)
 		path = ft_strjoinfree(get_cwd_with_backslash(), name);
 	if (path[0] == '/')
 		return (path);
-	return (ft_strdup(name));
+	return (free(path), ft_strdup(name));
 }
 
 char	*get_file_path(char *name)

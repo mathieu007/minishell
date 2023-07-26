@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 16:46:46 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 11:53:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static int32_t	fork_exec(t_cmd *cmd)
 	pid = ft_fork();
 	if (pid == 0)
 	{
-		enable_ctrl_c_output();
 		return (exec_from_child_process(cmd));
 	}
 	reset_signal_handlers();

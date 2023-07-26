@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 11:42:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 13:35:35 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_HEREDOC
 			|| proc->execution == EXEC_CONTINUATION))
 	{
+		write(1, "\n", 1);
 		proc->signal = SIGINT;
 		proc->errnum = 1;
 	}
@@ -49,7 +50,6 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
-	write_err(2, "signal:\n");
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
 			|| proc->execution == EXEC_SLEEP))
 	{
@@ -67,10 +67,7 @@ void	setup_child_signal_handlers(t_cmd *cmd)
 
 	proc = get_process();
 	if (ft_strequal(cmd->name, "cat"))
-	{
-		ft_printf("exec cat\n");
 		proc->execution = EXEC_CAT;
-	}
 	else if (ft_strequal(cmd->name, "sleep"))
 		proc->execution = EXEC_SLEEP;
 	sa.sa_sigaction = sig_child_handler;
@@ -78,5 +75,5 @@ void	setup_child_signal_handlers(t_cmd *cmd)
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
-	signal(SIGQUIT, sigquit_handler);
+	signal(SIGQUIT, sigquit_handler); 
 }

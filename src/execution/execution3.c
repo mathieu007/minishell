@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 11:53:55 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/26 12:19:42 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	reset_cmd(void)
 	proc->tokens = NULL;
 	proc->cmds = NULL;
 	proc->last_cmd = NULL;
+	proc->last_errnum = proc->errnum;
 	proc->tokens = NULL;
 	proc->execution = EXEC_END;
 	proc->continuation = NULL;

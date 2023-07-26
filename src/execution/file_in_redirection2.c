@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_in_redirection2.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 20:42:55 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 13:09:45 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int32_t	open_in_redir_fd(t_cmd *cmd)
 	proc = get_process();
 	f_name = get_name(cmd);
 	if (proc->errnum)
-		return (-1);
+		return (free(f_name), -1);
 	if (!f_name)
 		free_all_and_exit2(errno, "malloc error");
 	if (!cmd->in_redir)

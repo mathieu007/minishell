@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 18:41:15 by math             ###   ########.fr       */
+/*   Updated: 2023/07/26 13:47:43 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ static bool	is_valid_line(char *line, const char *delimiter,
 	}
 	if (ft_strncmp(line, delimiter, delimiter_len) == 0
 		&& ft_strlen(line) == delimiter_len)
-	{
-		free(line);
 		return (false);
-	}
 	return (true);
 }
 
@@ -39,8 +36,9 @@ void	write_here_doc_lines(t_cmd *main, const char *delimiter)
 	proc = get_process();
 	delimiter_len = ft_strlen(delimiter);
 	line = readline("> ");
-	while (is_valid_line(line, delimiter, delimiter_len) && proc->signal == 0)
+	while (is_valid_line(line, delimiter, delimiter_len) && proc->errnum == 0)
 	{
+		write_err3(2, "error: ", ft_itoa(proc->errnum), "\n");
 		write(main->in_redir->fd, line, ft_strlen(line));
 		write(main->in_redir->fd, "\n", 1);
 		line = free_ptr(line);
