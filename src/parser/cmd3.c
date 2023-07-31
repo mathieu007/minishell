@@ -18,7 +18,8 @@ void	*handle_parentheses_syntax_error(t_cmd *redir)
 	return (NULL);
 }
 
-void	*set_main_command_properties(t_cmd *main, t_cmd *redir, int32_t args_count)
+void	*set_main_command_properties(t_cmd *main, t_cmd *redir	
+, int32_t args_count)
 {
 	int32_t	index;
 	char	**new_args;

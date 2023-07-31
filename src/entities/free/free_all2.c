@@ -22,6 +22,7 @@ void	free_exit_no_perr3(int32_t status, char *msg, char *msg2)
 	close_all_pipes();
 	close_all_fds();
 	free_all();
+	rl_clear_history();
 	exit(status);
 }
 
@@ -34,5 +35,6 @@ void	free_exit_no_perr(int32_t status)
 	close_all_pipes();
 	close_all_fds();
 	free_all();
+	rl_clear_history();
 	exit(status);
 }

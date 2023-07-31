@@ -239,16 +239,16 @@ void					setup_child_signal_handlers(t_cmd *cmd);
 void					setup_child_realine_signal_handlers(void);
 void					close_all_fds(void);
 bool					is_sequence_type(t_token_type type);
-int32_t	check_environement_continuation(int32_t i,
-										t_token *parent);
-int32_t	check_dbl_quotes_continuation(int32_t i,
-										t_token *parent);
-int32_t	check_substitution_continuation(int32_t i,
-										t_token *parent);
-int32_t	check_sgl_quotes_continuation(int32_t i,
-										t_token *parent);
-int32_t	check_parenthese_continuation(int32_t i,
-										t_token *parent);
+int32_t					check_environement_continuation(int32_t i,
+							t_token *parent);
+int32_t					check_dbl_quotes_continuation(int32_t i,
+							t_token *parent);
+int32_t					check_substitution_continuation(int32_t i,
+							t_token *parent);
+int32_t					check_sgl_quotes_continuation(int32_t i,
+							t_token *parent);
+int32_t					check_parenthese_continuation(int32_t i,
+							t_token *parent);
 char					*get_cwd_with_backslash(void);
 void					unlink_files_redirections(t_redirect *redir);
 int32_t					write_here_document(const char *delimiter, t_cmd *main,
@@ -269,8 +269,8 @@ int32_t					build_cmd(t_cmd *cmd);
 bool					has_token_sequence(t_token *parent);
 bool					has_token_semicolon_sequence(t_token *parent);
 bool					check_syntax_error_near(char *str, char *token_err);
-void	exec_delimiter_continuation(char *delimiter,
-									t_token *parent);
+void					exec_delimiter_continuation(char *delimiter,
+							t_token *parent);
 void					exec_continuation(t_token *parent);
 void					create_temp_file(t_redirect *redir);
 char					*get_temp_dir(void);
@@ -301,14 +301,14 @@ int32_t					count_arr(char **arr);
 char					**resize_array(char **arr, int32_t add_count);
 char					*join_path(char *path1, char *path2);
 t_token_type			*get_tokens_lookup_table(void);
-void	write_delimiter_lines(t_redirect *redir,
+void					write_delimiter_lines(t_redirect *redir,
 							const char *delimiter);
 bool					match_patterns(char *file, char **patterns,
 							char *start_with, char *end_with);
 char					**find_matching_files(char *cwd, char **patterns,
 							char *start_with, char *end_with);
-char	*add_files_to_str(char **matching_files,
-						char *separators);
+char					*add_files_to_str(char **matching_files,
+							char *separators);
 char					**insert_files(char **split, char **files);
 void					close_files_redirections(t_cmd *cmd);
 void					copy_redirection(t_redirect *main, t_redirect *redir);
@@ -382,8 +382,8 @@ bool					has_token_and(t_token *token);
 bool					has_token_or(t_token *token);
 bool					has_token_parenthese(t_token *token);
 t_redirect				*open_write_continuation(void);
-int32_t	write_delimiter_continuation(const char *delimiter,
-										t_redirect *redir);
+int32_t					write_delimiter_continuation(const char *delimiter,
+							t_redirect *redir);
 int32_t					write_non_empty_continuation(void);
 t_cmd					*last_in_redir(t_cmd *cmd);
 t_cmd					*last_out_redir(t_cmd *cmd);
@@ -404,8 +404,8 @@ int32_t					get_token_single_quote_len(char *str);
 int32_t					get_token_len(char *str, t_token_type type);
 char					*get_env_variable(char *str);
 char					*get_end_of_cmd(char *str);
-char	*get_cwd_files_as_string(char *str_pattern,
-								char *separator);
+char					*get_cwd_files_as_string(char *str_pattern,
+							char *separator);
 int32_t					exec_subshell(t_cmd *cmd);
 bool					is_end_of_seq(t_token_type type);
 bool					is_esc_env_var(char *str, int32_t i);
@@ -436,12 +436,10 @@ int32_t					check_syntax_error_after_near(char *str, int32_t i,
 							char *token_err);
 int32_t					check_syntax_error_before_near(char *str, int32_t i,
 							char *token_err);
-int32_t	check_redirection_syntax_errors(char *str,
-										t_token_type type,
-										int32_t i);
-int32_t	check_sequence_syntax_errors(int32_t i,
-										t_token_type type,
-										t_token *parent);
+int32_t					check_redirection_syntax_errors(char *str,
+							t_token_type type, int32_t i);
+int32_t					check_sequence_syntax_errors(int32_t i,
+							t_token_type type, t_token *parent);
 
 /// get full path from relative path, absolute or env path.
 char					*get_full_path(char *name);
@@ -453,8 +451,8 @@ t_token					*add_cmd_parenthese(t_token *token, t_cmd *parent);
 t_cmd_seq				get_sequence_type(t_token *token);
 void					split_tokens(t_token *parent);
 t_token					*tokenize_dbl_quotes_tokens(t_token *parent);
-void	*build_redir_token(t_token *token,
-						t_cmd_seq cmd_type);
+void					*build_redir_token(t_token *token,
+							t_cmd_seq cmd_type);
 void					*build_token_environement(t_token *parent);
 void					split_token_sequence(t_token *parent);
 void					split_token_groups(t_token *parent);
@@ -548,15 +546,15 @@ char					*get_start_with(char *str_pattern);
 char					**get_patterns(char *str);
 size_t					count_matches(char **patterns, char *start_with,
 							char *end_with);
-char	**get_cwd_files_array(char *str_pattern,
+char					**get_cwd_files_array(char *str_pattern,
 							char *separator);
 int						is_valid_identifier(char *identifier);
-void	print_not_valid_identifier(int export_or_unset,
-								char *identifier);
+void					print_not_valid_identifier(int export_or_unset,
+							char *identifier);
 int32_t					count_splits(char **split);
 char					*join_splits(char **split, char *join);
-void	print_not_valid_identifier(int export_or_unset,
-								char *identifier);
+void					print_not_valid_identifier(int export_or_unset,
+							char *identifier);
 int						is_valid_identifier(char *identifier);
 void					add_env_node(t_process *data, char *variable,
 							char *value);

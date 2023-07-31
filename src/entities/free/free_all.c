@@ -32,6 +32,7 @@ void	*free_all_and_exit(int32_t status)
 	close_all_fds();
 	close_all_pipes();
 	free_all();
+	rl_clear_history();
 	exit(status);
 	return (NULL);
 }
@@ -46,6 +47,7 @@ void	free_all_and_exit2(int32_t status, char *msg)
 	close_all_pipes();
 	close_all_fds();
 	free_all();
+	rl_clear_history();
 	exit(status);
 }
 
@@ -59,5 +61,6 @@ void	free_exit_no_perr2(int32_t status, char *msg)
 	close_all_pipes();
 	close_all_fds();
 	free_all();
+	rl_clear_history();
 	exit(status);
 }

@@ -153,3 +153,5 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	$(CC) $(CFLAGS) $(INCDEP) $(INCLIBFTDEP) -c -o $@ $<
 
 .PHONY: all clean fclean re
+
+#valgrind --leak-check=full  --show-reachable=yes --track-fds=yes --track-origins=yes --suppressions=./minishell.sup ./bin/minishell
