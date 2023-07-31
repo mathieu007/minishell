@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 11:20:10 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 14:51:35 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ bool	has_token(char *tk, t_token *parent)
 		return (false);
 	i = 0;
 	type = get_token_type(tk);
+	if (!parent->str)
+		return (false);
 	while (parent->str[i])
 	{
 		cur_tk = get_token_type(&parent->str[i]);

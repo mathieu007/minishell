@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generic_tokenizer2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 17:33:24 by math             ###   ########.fr       */
+/*   Updated: 2023/07/31 15:04:10 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int32_t	skip_token_delimiter(t_token_type type, int32_t i, t_token *parent)
 		i = goto_closing_parenthese(parent->str, i + 1);
 	else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
 		i = goto_closing_environement(parent->str, i + 1);
+	if (!parent->str[i])
+		return (i);
 	return (i + 1);
 }
 
