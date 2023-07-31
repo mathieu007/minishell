@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:02:29 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/31 14:02:32 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 14:04:04 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	setup_signal_handlers(void)
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
-	signal(SIGQUIT, sigquit_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	reset_signal_handlers(void)

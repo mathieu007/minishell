@@ -6,46 +6,51 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 13:15:32 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 14:24:05 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	check_parentheses_syntax_error(char *str)
+bool	check_parentheses_syntax_error(char *str, t_token *parent)
 {
 	int32_t		i;
 
 	i = 0;
 	while (str[i] && str[i] == ' ')
 		i++;
-	if (str[i] != '(')
+	if (has_token("(", parent) && str[i] != '(')
 	{
 		get_process()->syntax_error = true;
 		write_err(258, "syntax error near unexpected token `(");
 		return (true);
 	}
-	while (str[i])
+	if (has_token(")", parent))
 	{
-		if (str[i] == ')')
+		while (str[i])
 		{
-			while (str[i])
+			if (str[i] == ')')
 			{
-				if (str[i] == ' ')
-					i++;
-				else if (str_is_redirection(&str[i]))
-					break ;
-				else
+				i++;
+				while (str[i])
 				{
-					get_process()->syntax_error = true;
-					write_err(258, "syntax error near unexpected token `)");
-					return (true);
+					if (str[i] == ' ')
+						i++;
+					else if (str_is_redirection(&str[i]))
+						break ;
+					else
+					{
+						get_process()->syntax_error = true;
+						write_err(258, "syntax error near unexpected token `)");
+						return (true);
+					}
 				}
+				break ;
 			}
-			break ;
+			i++;
 		}
-		i++;
 	}
+	
 	return (false);
 }
 

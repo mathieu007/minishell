@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 13:04:17 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 14:15:54 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ typedef struct s_process
 
 bool					str_is_redirection(char *str);
 void					missing_closing_parenthese_error();
-bool					check_parentheses_syntax_error(char *str);
+bool					check_parentheses_syntax_error(char *str, t_token *parent);
 bool					start_with_parentheses(t_token *parent);
 size_t					count_entries_size(char **entries);
 char					*get_home(void);

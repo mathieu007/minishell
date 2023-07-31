@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 12:42:24 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 14:18:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	exit_cmd(t_cmd *cmd)
 	}
 	if (cmd->args && cmd->args[1] && !ft_isnum(cmd->args[1]))
 		free_exit_no_perr3(255, cmd->args[1], ": numeric argument required");
-	else if (cmd->args && cmd->args[1] && ft_isnum(cmd->args[1]) && !cmd->args[2])
+	else if (cmd->args && cmd->args[1] && ft_isnum(cmd->args[1])
+		&& !cmd->args[2])
 	{
 		printf("exit\n");
 		ft_strlcpy(args, cmd->args[1], 32);
