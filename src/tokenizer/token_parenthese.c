@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 11:47:19 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 12:49:24 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int32_t	add_token_parenthese(char *str, int32_t i, t_token *parent)
 
 	i_open = i;
 	i = goto_closing_parenthese(str, i + 1);
+	if (str[i] != ')')
+		missing_closing_parenthese_error();
 	add_tk("(", TK_PARENTHESE_OPEN, i_open, parent);
 	add_tk(")", TK_PARENTHESE_CLOSE, i, parent);
 	i++;
@@ -54,8 +56,8 @@ t_token	*parentheses_tokenizer(t_token *parent)
 	i = 0;
 	if (!has_token("(", parent))
 		return (NULL);
-	if (!start_with_parentheses(parent))
-		return (syntax_error("("), NULL);
+	if (check_parentheses_syntax_error(parent->str))
+		return (NULL);
 	i = add_token_parenthese(parent->str, i, parent);
 	while (parent->str[i])
 	{

@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 11:44:02 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 13:04:17 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,14 +220,16 @@ typedef struct s_process
 	t_cmd				*last_cmd;
 }						t_process;
 
-void					syntax_error(char *token_err);
+bool					str_is_redirection(char *str);
+void					missing_closing_parenthese_error();
+bool					check_parentheses_syntax_error(char *str);
 bool					start_with_parentheses(t_token *parent);
 size_t					count_entries_size(char **entries);
 char					*get_home(void);
 bool					set_cwd(char *cwd);
 bool					dir_exist(const char *path);
-int32_t	write_delimiter_continuation(const char *delimiter,
-										t_redirect *redir);
+int32_t					write_delimiter_continuation(const char *delimiter,
+							t_redirect *redir);
 void					disable_echoctl(struct termios *old_termios);
 void					re_enable_echoctl(struct termios *old_termios);
 void					setup_signal_handlers(void);

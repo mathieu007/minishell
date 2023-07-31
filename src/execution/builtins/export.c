@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 18:38:37 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 12:35:16 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int32_t	handle_export(t_process *data, char *arg)
 	if (value)
 		name = ft_substr(arg, 0, value - arg);
 	else
-		name = arg;
+		name = ft_strdup(arg);
 	if (value && value[0])
 		value = &value[1];
 	if (name && is_valid_identifier(name) == 0)
