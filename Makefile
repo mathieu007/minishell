@@ -106,6 +106,7 @@ src/parser/environements_parser.c	\
 src/parser/options.c	\
 src/parser/paths.c	\
 src/parser/paths2.c	\
+src/tokenizer/syntax_error.c	\
 src/tokenizer/generic_tokenizer.c	\
 src/tokenizer/generic_tokenizer2.c	\
 src/tokenizer/generic_tokenizer3.c	\

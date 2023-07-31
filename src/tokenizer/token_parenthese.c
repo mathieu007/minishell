@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 18:43:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 11:47:19 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ t_token	*parentheses_tokenizer(t_token *parent)
 	i = 0;
 	if (!has_token("(", parent))
 		return (NULL);
+	if (!start_with_parentheses(parent))
+		return (syntax_error("("), NULL);
 	i = add_token_parenthese(parent->str, i, parent);
 	while (parent->str[i])
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generic_tokenizer3.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 17:34:09 by math             ###   ########.fr       */
+/*   Updated: 2023/07/31 11:20:10 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,26 @@ bool	has_token_sequence(t_token *parent)
 		else
 			i += t_len;
 	}
+	return (false);
+}
+
+bool	start_with_parentheses(t_token *parent)
+{
+	int32_t			i;
+	char			*str;
+
+	if (get_process()->syntax_error)
+		return (false);
+	i = 0;
+	str = parent->str;
+	while (str[i])
+	{
+		if (str[i] != ' ')
+			break ;
+		i++;
+	}
+	if (str[i] == '(')
+		return (true);
 	return (false);
 }
 

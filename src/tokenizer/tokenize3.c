@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 11:51:13 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 11:47:51 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int32_t	process_token_type(t_token *token, t_token_type type, int32_t i)
 		return (check_sgl_quotes_continuation(i, token));
 	else if (type == TK_COMMANDSUBSTITUTION_OPEN)
 		return (substitution_syntax_error());
-	else if (type == TK_PARENTHESE_OPEN)
-		return (check_parenthese_continuation(i, token));
 	else if (type == TK_DOLLAR_SIGN_CURLYBRACE)
 		return (check_environement_continuation(i, token));
 	else if (is_token_redirection(type))
