@@ -27,7 +27,7 @@ int	exit_cmd(t_cmd *cmd)
 	}
 	if (cmd->args && cmd->args[1] && !ft_isnum(cmd->args[1]))
 		free_exit_no_perr3(255, cmd->args[1], ": numeric argument required");
-	else if (cmd->args && cmd->args[1] && ft_isnum(cmd->args[1]))
+	else if (cmd->args && cmd->args[1] && ft_isnum(cmd->args[1]) && !cmd->args[2])
 	{
 		printf("exit\n");
 		ft_strlcpy(args, cmd->args[1], 32);
@@ -35,7 +35,7 @@ int	exit_cmd(t_cmd *cmd)
 	}
 	else
 	{
-		ft_printf("exit: too many arguments");
+		ft_printf("exit: too many arguments\n");
 		proc->errnum = 1;
 	}
 	return (proc->errnum);

@@ -111,6 +111,14 @@ export A
 export allo
 export al#
 export a=a=a && echo $a
+export a============1
+export abcd==========1243546576635241
+export "add s d d "
+export "ascsaca"=123
+export "'csacssa'""=""abcde"
+export " "
+export "      "
+export "csacsa=csacsacsa+_cececa-"
 unset a=a=a && echo $a
 unset 1
 unset _1
@@ -120,6 +128,11 @@ unset a
 unset A
 unset allo
 unset al#
+unset " "
+unset " csjdncdijnbcijds     cdjs cidsc"
+unset ' '
+unset 'cbsacnosanocsaocnosa     csa csa csa csa csa '
+unset "a" "b" "bfcuehiwbchiuebceiuwhbcfehiuwbcewbc"
 cd .
 cd ..
 cd .. && cd libft && pwd && cd .. && pwd

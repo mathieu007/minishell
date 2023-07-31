@@ -67,7 +67,7 @@ int	unset_cmd(t_cmd *cmd)
 	{
 		if (is_valid_identifier(cmd->args[i]) == 0)
 		{
-			print_not_valid_identifier(1, cmd->args[i]);
+			print_not_valid_identifier(1, ft_strdup(cmd->args[i]));
 			ret = 1;
 			i++;
 			continue ;
