@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 12:19:42 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/27 08:40:20 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*re_parse_at_execution(t_cmd *cmd)
+t_cmd	*parse_before_execution(t_cmd *cmd)
 {
 	cmd = parse_cmd(cmd);
 	if (!cmd)

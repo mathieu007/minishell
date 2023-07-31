@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   continuation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 15:31:57 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/27 08:37:40 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int32_t	write_non_empty_continuation(void)
 	{
 		proc = get_process();
 		write_lines(proc->continuation);
-		free_exit_no_perr(proc->errnum);
+		free_all_and_exit(proc->errnum);
 	}
 	reset_signal_handlers();
 	proc->errnum = ft_waitpid(pid);

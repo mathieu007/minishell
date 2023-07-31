@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 14:26:34 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/27 08:40:20 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int32_t	build_cmd(t_cmd *cmd)
 	if (!cmd->args)
 	{
 		build_token_environement(cmd->token);
-		cmd = re_parse_at_execution(cmd);
+		cmd = parse_before_execution(cmd);
 		if (!cmd)
 			return (-1);
 		if (proc->errnum > 0)
