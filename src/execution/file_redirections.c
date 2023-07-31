@@ -43,7 +43,7 @@ void	close_files_redirections(t_cmd *cmd)
 	{
 		if (cmd->out_redir->dup_fd >= 0)
 			dup2(cmd->out_redir->dup_fd, STDOUT_FILENO);
-		if (cmd->out_redir->fd > 2)	
+		if (cmd->out_redir->fd > 2)
 			close(cmd->out_redir->fd);
 		cmd->out_redir->fd = -1;
 		cmd->out_redir->dup_fd = -1;
