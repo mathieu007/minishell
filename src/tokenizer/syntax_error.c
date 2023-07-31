@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 14:24:05 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 14:38:02 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,28 @@ bool	check_parentheses_syntax_error(char *str, t_token *parent)
 		write_err(258, "syntax error near unexpected token `(");
 		return (true);
 	}
-	if (has_token(")", parent))
+	while (str[i])
 	{
-		while (str[i])
+		if (str[i] == ')')
 		{
-			if (str[i] == ')')
-			{
-				i++;
-				while (str[i])
-				{
-					if (str[i] == ' ')
-						i++;
-					else if (str_is_redirection(&str[i]))
-						break ;
-					else
-					{
-						get_process()->syntax_error = true;
-						write_err(258, "syntax error near unexpected token `)");
-						return (true);
-					}
-				}
-				break ;
-			}
 			i++;
+			while (str[i])
+			{
+				if (str[i] == ' ')
+					i++;
+				else if (str_is_redirection(&str[i]))
+					break ;
+				else
+				{
+					get_process()->syntax_error = true;
+					write_err(258, "syntax error near unexpected token `)");
+					return (true);
+				}
+			}
+			break ;
 		}
+		i++;
 	}
-	
 	return (false);
 }
 
