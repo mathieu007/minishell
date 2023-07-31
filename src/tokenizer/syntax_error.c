@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 14:38:02 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 15:39:07 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 bool	check_parentheses_syntax_error(char *str, t_token *parent)
 {
-	int32_t		i;
+	int32_t			i;
+	t_token_type	type;
+	int32_t			len;
 
 	i = 0;
 	while (str[i] && str[i] == ' ')
@@ -27,7 +29,9 @@ bool	check_parentheses_syntax_error(char *str, t_token *parent)
 	}
 	while (str[i])
 	{
-		if (str[i] == ')')
+		type = get_token_type(&str[i]);
+		len = get_token_len(&str[i], type);
+		if (type == TK_PARENTHESE_CLOSE)
 		{
 			i++;
 			while (str[i])
@@ -45,7 +49,7 @@ bool	check_parentheses_syntax_error(char *str, t_token *parent)
 			}
 			break ;
 		}
-		i++;
+		i += len;
 	}
 	return (false);
 }
