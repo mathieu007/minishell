@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/24 11:50:25 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 07:50:44 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ int32_t	check_dbl_quotes_continuation(int32_t i, t_token *parent)
 
 	str = &parent->str[i];
 	if (!str)
-		return (2);
+		return (i + 1);
 	i = goto_closing_double_quote(parent->str, i + 1);
-	if (parent->str[i] != '\"')
+	if (parent->str[i] != '"')
 	{
 		exec_delimiter_continuation("\"", parent);
 		return (goto_closing_double_quote(parent->str, i));

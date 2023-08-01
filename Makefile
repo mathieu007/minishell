@@ -59,7 +59,7 @@ fclean: clean
 re:	fclean all
 
 test: all 
-	cp $(TESTSDIR)/tests.txt $(TARGETDIR)/ && cd bin && chmod 777 ./tests && chmod +x ./tests && ./tests
+	cp $(TESTSDIR)/tests.txt $(TARGETDIR)/ && cd bin && chmod 777 * && chmod +x * && ./tests
 test2: all 
 	cp $(TESTS_REDIR_DIR)/tests_redir.txt $(TARGETDIR)/ && cd bin && chmod 777 ./* && chmod +x ./* && ./tests_redir
 mem: re 

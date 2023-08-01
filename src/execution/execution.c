@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 15:01:09 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 10:03:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@ int32_t	execve_cmd(t_cmd *cmd)
 	char	**env;
 
 	env = get_env();
+	if (!check_path_is_execve(cmd->full_path_name))
+	{
+		free_2d_char_array(env);
+		free_all_and_exit2(1, "cannot exec binary");
+	}
 	if (execve(cmd->full_path_name, cmd->args, env) == -1)
 	{
 		free_2d_char_array(env);

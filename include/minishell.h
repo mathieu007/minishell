@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 20:23:33 by math             ###   ########.fr       */
+/*   Updated: 2023/08/01 10:46:52 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,10 @@ typedef struct s_process
 	t_cmd				*last_cmd;
 }						t_process;
 
+char					*get_path(char *name);
+char					*get_shell_path(char *name);
+bool					check_path_exist(char *full_path_name);
+bool					check_path_is_execve(char *full_path_name);
 bool					str_is_redirection(char *str);
 void					missing_closing_parenthese_error(void);
 bool					check_parentheses_syntax_error(char *str);
@@ -269,8 +273,8 @@ int32_t					build_cmd(t_cmd *cmd);
 bool					has_token_sequence(t_token *parent);
 bool					has_token_semicolon_sequence(t_token *parent);
 bool					check_syntax_error_near(char *str, char *token_err);
-void	exec_delimiter_continuation(char *delimiter,
-									t_token *parent);
+void					exec_delimiter_continuation(char *delimiter,
+							t_token *parent);
 void					exec_continuation(t_token *parent);
 void					create_temp_file(t_redirect *redir);
 char					*get_temp_dir(void);

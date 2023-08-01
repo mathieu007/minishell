@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 11:37:06 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 08:15:20 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,11 @@ static bool	is_any_of(char c, char *values)
 int32_t	check_newline_syntax_error(char *str, int32_t len, int32_t i)
 {
 	char	*syntax_error;
+	int32_t	start_i;
 
 	syntax_error = "syntax error near unexpected token: newline";
 	i += len;
+	start_i = i;
 	while (str[i] && str[i] == ' ')
 		i++;
 	if (!str[i])
@@ -49,7 +51,7 @@ int32_t	check_newline_syntax_error(char *str, int32_t len, int32_t i)
 		write_err(258, syntax_error);
 		return (-1);
 	}
-	return (i);
+	return (start_i);
 }
 
 int32_t	check_syntax_error_before_near(char *str, int32_t i, char *token_err)
@@ -79,7 +81,9 @@ int32_t	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
 {
 	char		*illegal_token;
 	char		*c;
+	int32_t		starti;
 
+	starti = i;
 	illegal_token = "syntax error near unexpected token `";
 	while (str[i] && str[i] == ' ')
 		i++;
@@ -92,5 +96,5 @@ int32_t	check_syntax_error_after_near(char *str, int32_t i, char *token_err)
 		free(c);
 		return (-1);
 	}
-	return (i);
+	return (starti);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_space_quotes2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/21 17:33:36 by math             ###   ########.fr       */
+/*   Updated: 2023/08/01 07:37:51 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ t_token	*space_quotes_tokenizer(t_token *parent)
 
 	i = 0;
 	str = parent->str;
+	if (!str)
+		return (NULL);
 	add_tk("", TK_START, 0, parent);
 	while (str[i])
 	{

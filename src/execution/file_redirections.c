@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 15:43:23 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 08:33:38 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ void	close_files_redirections(t_cmd *cmd)
 	if (cmd->out_redir && cmd->out_redir->fd > 2)
 	{
 		if (cmd->out_redir->dup_fd >= 0)
+		{
 			dup2(cmd->out_redir->dup_fd, STDOUT_FILENO);
+			close(cmd->out_redir->dup_fd);
+		}
 		if (cmd->out_redir->fd > 2)
 			close(cmd->out_redir->fd);
 		cmd->out_redir->fd = -1;
