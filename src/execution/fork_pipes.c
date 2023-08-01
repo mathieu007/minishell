@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 14:25:27 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 15:06:23 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	}
 	reset_signal_handlers();
 	pipe->pid = pid;
-	close_prev_pipes(pipe);
+	if (prev_pipe(pipe))
+		close(prev_pipe(pipe)->fd_in);
 	return (pipe->next);
 }
 
