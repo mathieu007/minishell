@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 10:46:52 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 13:27:27 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,8 @@ typedef struct s_process
 	t_cmd				*last_cmd;
 }						t_process;
 
+
+void					close_all_process(void);
 char					*get_path(char *name);
 char					*get_shell_path(char *name);
 bool					check_path_exist(char *full_path_name);
