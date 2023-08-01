@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_parenthese.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 15:30:20 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 18:45:39 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_token	*parentheses_tokenizer(t_token *parent)
 	int32_t			t_len;
 
 	i = 0;
-	if (check_parentheses_syntax_error(parent->str, parent))
+	if (check_parentheses_syntax_error(parent->str))
 		return (NULL);
 	if (!has_token("(", parent))
 		return (NULL);

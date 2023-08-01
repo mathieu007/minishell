@@ -3,60 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 15:39:07 by mroy             ###   ########.fr       */
+/*   Updated: 2023/07/31 20:32:00 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	check_parentheses_syntax_error(char *str, t_token *parent)
+bool	check_open_parenthese_error(char *str)
 {
-	int32_t			i;
-	t_token_type	type;
-	int32_t			len;
+	int32_t	i;
 
 	i = 0;
-	while (str[i] && str[i] == ' ')
-		i++;
-	if (has_token("(", parent) && str[i] != '(')
+	i = goto_closing_parenthese(str, i + 1);
+	if (str[i] != ')')
 	{
-		get_process()->syntax_error = true;
-		write_err(258, "syntax error near unexpected token `(");
+		write_syntax_error("syntax error near unexpected token `('\n");
 		return (true);
 	}
-	while (str[i])
+	i++;
+	while (str[i] && str[i] == ' ')
+		i++;
+	if (!str[i] || str_is_redirection(&str[i]))
+		return (false);
+	else if (str[i] == '(')
+		write_syntax_error("syntax error near unexpected token `('\n");
+	else if (str[i] == ')')
+		write_syntax_error("syntax error near unexpected token `)'\n");
+	else
+		write_syntax_error2("syntax error near unexpected token `", &str[i]);
+	return (true);
+}
+
+bool	srch_error_parenthese(char *str)
+{
+	int32_t	i;
+	char	*srch;
+
+	i = 0;
+	srch = ft_strchr(&str[i], '(');
+	if (srch)
+		return (check_open_parenthese_error(&str[i]));
+	else
 	{
-		type = get_token_type(&str[i]);
-		len = get_token_len(&str[i], type);
-		if (type == TK_PARENTHESE_CLOSE)
+		srch = ft_strchr(&str[i], ')');
+		if (srch)
 		{
-			i++;
-			while (str[i])
-			{
-				if (str[i] == ' ')
-					i++;
-				else if (str_is_redirection(&str[i]))
-					break ;
-				else
-				{
-					get_process()->syntax_error = true;
-					write_err(258, "syntax error near unexpected token `)");
-					return (true);
-				}
-			}
-			break ;
+			write_syntax_error("syntax error near unexpected token `)'\n");
+			return (true);
 		}
-		i += len;
 	}
 	return (false);
 }
 
-void	missing_closing_parenthese_error()
+bool	check_parentheses_syntax_error(char *str)
 {
-	char		*illegal_token;
+	int32_t	i;
+
+	i = 0;
+	while (str[i] && str[i] == ' ')
+		i++;
+	if (str[i] == ')')
+	{
+		write_syntax_error("syntax error near unexpected token `)'\n");
+		return (true);
+	}
+	else if (str[i] == '(')
+		return (check_open_parenthese_error(&str[i]));
+	else
+		return (srch_error_parenthese(&str[i]));
+	return (false);
+}
+
+void	missing_closing_parenthese_error(void)
+{
+	char	*illegal_token;
 
 	illegal_token = "syntax error misssing clossing parenthese";
 	get_process()->syntax_error = true;
