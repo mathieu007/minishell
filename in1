@@ -1,12 +1,15 @@
-total 232
-drwxr-xr-x   34 mroy  2022_quebec   1156 Aug  1 08:58 .
+total 272
+drwxr-xr-x   39 mroy  2022_quebec   1326 Aug  1 12:02 .
 drwxr-xr-x   20 mroy  2022_quebec    680 Jul 24 11:24 ..
 -rw-r--r--    1 mroy  2022_quebec   6148 Jul 31 14:01 .DS_Store
-drwxr-xr-x   14 mroy  2022_quebec    476 Aug  1 07:25 .git
+drwxr-xr-x   14 mroy  2022_quebec    476 Aug  1 10:50 .git
 -rw-r--r--    1 mroy  2022_quebec    864 Jul 31 14:01 .gitignore
 drwxr-xr-x    6 mroy  2022_quebec    204 May  4 08:24 .vscode
 -rwxr-xr-x    1 mroy  2022_quebec      2 Aug  1 07:25 1
 -rwxr-xr-x    1 mroy  2022_quebec      0 Aug  1 07:38 234567890-{:
+-rwxr-xr-x    1 mroy  2022_quebec      9 Aug  1 10:07 322231433
+-rwxr-xr-x    1 mroy  2022_quebec      9 Aug  1 10:07 32223143\;].3
+-rwxr-xr-x    1 mroy  2022_quebec      9 Aug  1 10:07 333
 -rwxr-xr-x    1 mroy  2022_quebec      4 Aug  1 07:42 ??
 
 -rwxr-xr-x    1 mroy  2022_quebec      0 Aug  1 07:38 ?ewfrefrw}
@@ -20,22 +23,24 @@ sdsd
 }
 ?
 
--rw-r--r--    1 mroy  2022_quebec   3547 Jul 31 15:09 Makefile
--rwxr-xr-x    1 mroy  2022_quebec  49792 Jun 27 11:21 a.out
-drwxr-xr-x   31 mroy  2022_quebec   1054 Aug  1 08:59 bin
+-rw-r--r--    1 mroy  2022_quebec   3535 Aug  1 10:19 Makefile
+-rwxr-xr-x    1 mroy  2022_quebec  49960 Aug  1 11:42 a.out
+drwxr-xr-x   36 mroy  2022_quebec   1224 Aug  1 12:05 bin
 -rwxr-xr-x    1 mroy  2022_quebec      0 Aug  1 07:48 dewfew
 drwxr-xr-x    2 mroy  2022_quebec     68 Jul 24 11:32 dir1
 -rwxr-xr-x    1 mroy  2022_quebec   1275 Aug  1 07:25 eee
--rwxr-xr-x    1 mroy  2022_quebec      0 Aug  1 09:00 in1
+-rwxr-xr-x    1 mroy  2022_quebec      0 Aug  1 12:05 in1
 drwxr-xr-x   14 mroy  2022_quebec    476 Aug  1 07:25 include
-drwxr-xr-x   12 mroy  2022_quebec    408 Aug  1 08:58 libft
+-rw-r--r--    1 mroy  2022_quebec     21 Aug  1 11:42 input.txt
+drwxr-xr-x   12 mroy  2022_quebec    408 Aug  1 11:54 libft
 -rw-r--r--    1 mroy  2022_quebec   3515 Apr 27 14:06 methods.txt
 -rwxr-xr-x    1 mroy  2022_quebec   2663 Jul 31 14:01 minishell.sup
 -rw-r--r--    1 mroy  2022_quebec    645 Jun 23 12:01 minishellcopy.sup
-drwxr-xr-x   13 mroy  2022_quebec    442 Aug  1 08:58 obj
--rwxr-xr-x    1 mroy  2022_quebec     13 Aug  1 08:39 out
+drwxr-xr-x   13 mroy  2022_quebec    442 Aug  1 11:54 obj
+-rwxr-xr-x    1 mroy  2022_quebec      7 Aug  1 11:30 out
 -rwxr-xr-x    1 mroy  2022_quebec      9 Aug  1 08:28 out1
--rw-r--r--    1 mroy  2022_quebec      8 Aug  1 08:23 out2
+-rw-r--r--    1 mroy  2022_quebec     13 Aug  1 12:04 out111
+-rw-r--r--    1 mroy  2022_quebec      5 Aug  1 11:38 out2
 -rw-r--r--    1 mroy  2022_quebec      8 Aug  1 08:24 out3
 drwxr-xr-x  123 mroy  2022_quebec   4182 May 24 08:19 readline-master
 drwxr-xr-x   10 mroy  2022_quebec    340 Jul 25 08:23 src

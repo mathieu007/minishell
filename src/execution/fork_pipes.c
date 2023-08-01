@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 15:27:39 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 11:53:49 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	pipe_cmd(pipe);
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
-	if (proc->errnum > 0 || proc->errnum == -1)
+	if (proc->errnum == -1)
 		return (close_prev_pipes(pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
@@ -30,6 +30,8 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	{
 		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
 		close_pipes(pipe->pipe);
+		if (proc->errnum > 0)
+			free_all_and_exit(proc->errnum);
 		proc->errnum = dispatch_command(cmd, true);
 		free_all_and_exit(proc->errnum);
 	}
@@ -47,7 +49,7 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 	cmd = pipe->child;
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
-	if (proc->errnum > 0 || proc->errnum == -1)
+	if (proc->errnum == -1)
 		return (close_prev_pipes(pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
@@ -55,6 +57,8 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 	{
 		dup2(pipe->prev->pipe->fd_in, STDIN_FILENO);
 		close_prev_pipes(pipe);
+		if (proc->errnum > 0)
+			free_all_and_exit(proc->errnum);
 		proc->errnum = dispatch_command(cmd, true);
 		free_all_and_exit(proc->errnum);
 	}
@@ -96,13 +100,15 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	pipe_cmd(pipe);
 	proc = get_process();
 	proc->errnum = build_cmd(cmd);
-	if (proc->errnum > 0 || proc->errnum == -1)
+	if (proc->errnum == -1)
 		return (close_prev_pipes(pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
 	if (pid == 0)
 	{
 		dup_close_middle_pipes(cmd, pipe);
+		if (proc->errnum > 0)
+			free_all_and_exit(proc->errnum);
 		proc->errnum = dispatch_command(cmd, true);
 		free_all_and_exit(proc->errnum);
 	}

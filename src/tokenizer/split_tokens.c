@@ -6,11 +6,18 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/31 13:57:47 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 11:15:24 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*process_token_env_redir(t_token *child, char *val)
+{
+	val = ft_strjoin("${", child->str);
+	val = ft_strjoinfree(val, "}");
+	return (val);
+}
 
 char	*process_token_value(t_process *proc, t_token *child)
 {
@@ -28,10 +35,7 @@ char	*process_token_value(t_process *proc, t_token *child)
 		val = ft_strjoin("$", child->str);
 	else if (child->type == TK_DOLLAR_SIGN_CURLYBRACE
 		&& child->parent->type == TK_LESSLESS)
-	{
-		val = ft_strjoin("${", child->str);
-		val = ft_strjoinfree(val, "}");
-	}
+		val = process_token_env_redir(child, val);
 	else if (child->type == TK_ENVIRONEMENT_VAR
 		|| child->type == TK_DOLLAR_SIGN_CURLYBRACE)
 		val = parse_env_var_value(child);

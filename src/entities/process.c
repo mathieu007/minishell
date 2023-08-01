@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 10:49:14 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 11:07:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,21 @@ char	*copy_path(char *program_path, char *buffer, char *prog_name)
 	char			*path;
 
 	copy = buffer;
+	path = NULL;
 	len = ft_strlen(buffer);
-	path = get_shell_path(prog_name);
+	if (!prog_name || ft_strisempty(prog_name))
+		path = get_shell_path("./bin/minishell");
+	if (!path)
+		path = get_shell_path("./minishell");
+	if (!path)
+		path = get_shell_path(prog_name);
 	if (path)
 		ft_strcpy(buffer, path);
 	else
 		free_all_and_exit2(1, "error could not get shell path.");
 	add_env_node(get_process(), "full_program_name", buffer);
 	program_path = get_env_value("full_program_name");
-	free(path);
+	free_ptr(path);
 	return (program_path);
 }
 
