@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 13:27:11 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 14:40:28 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	close_child_pipes(t_cmd *cmd)
 			close(cmd->pipe->fd_out);
 			cmd->pipe->fd_out = -1;
 		}
+		close_child_pipes(cmd->child);
 		cmd = cmd->next;
 	}
 }

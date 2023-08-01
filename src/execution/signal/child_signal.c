@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 12:23:32 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 14:33:10 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
+	ft_printf("sig_child_readline_handler :%d \n", proc->execution);
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_HEREDOC
 			|| proc->execution == EXEC_CONTINUATION))
 	{
@@ -51,6 +52,7 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
+	ft_printf("sig_child_readline_handler :%d \n", proc->execution);
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
 			|| proc->execution == EXEC_SLEEP))
 	{

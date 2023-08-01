@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 15:10:25 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 14:35:41 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int32_t	write_here_document(const char *delimiter, t_cmd *main, t_cmd *redir)
 
 	proc = get_process();
 	create_redir_heredoc(main, redir);
-	proc->execution = EXEC_CONTINUATION;
+	proc->execution = EXEC_HEREDOC;
 	setup_child_realine_signal_handlers();
 	pid = ft_fork();
 	if (pid == 0)
