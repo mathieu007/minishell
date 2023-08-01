@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 13:20:37 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 15:01:01 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,8 @@ void	wait_childs(t_cmd *cmd)
 	{
 		if (cmd->pid)
 			proc->errnum = ft_waitpid(cmd->pid);
-		// printf("cmd %s err: %d\n", cmd->child->name, proc->errnum);
-		// if (proc->errnum == 0)
-		// {
-		// 	cmd = cmd->next;
-		// 	while (cmd)
-		// 	{
-		// 		kill(cmd->pid, SIGTERM);
-		// 		cmd = cmd->next;
-		// 	}
-		// 	break ;
-		// }
+		if (proc->errnum == 1)
+			close_all_process();
 		cmd = cmd->next;
 	}
 }
