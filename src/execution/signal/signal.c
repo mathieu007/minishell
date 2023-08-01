@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:02:29 by mroy              #+#    #+#             */
-/*   Updated: 2023/07/31 14:04:04 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 12:18:03 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	if (siginfo->si_signo == SIGINT && proc->execution == EXEC_CONTINUATION)
 		return ;
 	else if (siginfo->si_signo == SIGINT && proc->execution == EXEC_HEREDOC)
-		return ;
+		return (close_all_pipes());
 	else if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
 			|| proc->execution == EXEC_SLEEP))
 	{

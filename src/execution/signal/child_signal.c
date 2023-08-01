@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/26 16:13:44 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 12:23:32 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 			|| proc->execution == EXEC_CONTINUATION))
 	{
 		proc->errnum = 1;
+		close_all_pipes();
 		close_all_fds();
 		free_all_and_exit(proc->errnum);
 	}
@@ -53,6 +54,7 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
 			|| proc->execution == EXEC_SLEEP))
 	{
+		close_all_pipes();
 		proc->signal = SIGINT;
 		proc->errnum = 130;
 	}
