@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:02:29 by mroy              #+#    #+#             */
-/*   Updated: 2023/08/01 14:41:00 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 15:01:22 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 
 	(void)context, (void)sig;
 	proc = get_process();
-	ft_printf("sig handler :%d \n", proc->execution);
-	close_all_process();
+	// close_all_process();
 	if (siginfo->si_signo == SIGINT && proc->execution == EXEC_CONTINUATION)
 		return ;
 	else if (siginfo->si_signo == SIGINT && proc->execution == EXEC_HEREDOC)
