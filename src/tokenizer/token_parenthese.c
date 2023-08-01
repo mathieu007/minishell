@@ -73,6 +73,5 @@ t_token	*parentheses_tokenizer(t_token *parent)
 	while (parent->str[i] == ' ')
 		i--;
 	add_tk("", TK_END, i, parent);
-	split_token_parentheses(parent);
-	return (parent->child);
+	return (split_token_parentheses(parent), parent->child);
 }

@@ -57,6 +57,5 @@ t_token	*space_quotes_tokenizer(t_token *parent)
 			i += t_len;
 	}
 	add_tk("", TK_END, i, parent);
-	split_token_space_quotes(parent);
-	return (parent->child);
+	return (split_token_space_quotes(parent), parent->child);
 }

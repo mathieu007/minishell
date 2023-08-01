@@ -18,7 +18,6 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 
 	(void)context, (void)sig;
 	proc = get_process();
-	// close_all_process();
 	if (siginfo->si_signo == SIGINT && proc->execution == EXEC_CONTINUATION)
 		return ;
 	else if (siginfo->si_signo == SIGINT && proc->execution == EXEC_HEREDOC)
@@ -26,7 +25,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 	else if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
 			|| proc->execution == EXEC_SLEEP))
 	{
-		write(1, "\n", 1);		
+		write(1, "\n", 1);
 		kill(proc->pid, SIGTERM);
 		proc->errnum = 130;
 	}

@@ -220,7 +220,6 @@ typedef struct s_process
 	t_cmd				*last_cmd;
 }						t_process;
 
-
 void					close_all_process(void);
 char					*get_path(char *name);
 char					*get_shell_path(char *name);
