@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/02 11:15:10 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/02 11:25:53 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ bool	srch_error_parenthese(char *str)
 			write_syntax_error("syntax error near unexpected token `)'\n");
 			return (true);
 		}
+		if (!str[i])
+			break ;
 		i++;
 	}
 	return (false);
