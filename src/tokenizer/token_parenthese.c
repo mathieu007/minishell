@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/02 10:54:15 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/02 12:48:31 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,25 @@ void	split_token_parentheses(t_token *parent)
 	}
 }
 
+int32_t	search_parenthese(t_token *parent, int32_t i)
+{
+	t_token_type	type;
+	int32_t			t_len;
+
+	while (parent->str[i])
+	{
+		type = get_token_type(&parent->str[i]);
+		t_len = get_token_len(&parent->str[i], type);
+		if (type != TK_PARENTHESE_OPEN && is_token_delimiter(type))
+			i = skip_token_delimiter(type, i, parent);
+		else if (type == TK_PARENTHESE_OPEN)
+			return (i);
+		else
+			i += t_len;
+	}
+	return (i);
+}
+
 t_token	*parentheses_tokenizer(t_token *parent)
 {
 	int32_t			i;
@@ -58,6 +77,7 @@ t_token	*parentheses_tokenizer(t_token *parent)
 		return (NULL);
 	if (!has_token("(", parent))
 		return (NULL);
+	i = search_parenthese(parent, i);
 	i = add_token_parenthese(parent->str, i, parent);
 	while (parent->str[i])
 	{

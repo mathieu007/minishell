@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 11:15:24 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/02 12:10:20 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ char	*process_token_value(t_process *proc, t_token *child)
 		val = ft_strdup(child->str);
 	else if (child->type == TK_ENVIRONEMENT_VAR && ft_strisempty(child->str))
 		val = ft_strdup("$");
-	else if (child->type == TK_ENVIRONEMENT_VAR && child->str[0] == ' ')
+	else if (child->type == TK_ENVIRONEMENT_VAR && (child->str[0] == ' '
+			|| child->str[0] == '\'' || child->str[0] == '"'
+			|| child->str[0] == ')'))
 		val = ft_strjoinfree(val, child->str);
 	else if (child->type == TK_ENVIRONEMENT_VAR
 		&& child->parent->type == TK_LESSLESS)
