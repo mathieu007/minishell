@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:02:29 by mroy              #+#    #+#             */
-/*   Updated: 2023/08/01 19:12:10 by math             ###   ########.fr       */
+/*   Updated: 2023/08/02 09:15:31 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 		&& (proc->execution == EXEC_CAT || proc->execution == EXEC_SLEEP))
 	{
 		write(1, "\n", 1);
+		proc->signal = 0;
 		kill(proc->pid, SIGTERM);
 		proc->errnum = 130;
 	}

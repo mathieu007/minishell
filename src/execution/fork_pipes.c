@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 20:37:16 by math             ###   ########.fr       */
+/*   Updated: 2023/08/02 09:09:16 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,14 @@ void	dup_close_middle_pipes(t_cmd *cmd, t_cmd *pipe)
 	dup2(pipe->prev->pipe->fd_in, STDIN_FILENO);
 	if (cmd->has_redirection)
 	{
-		if (pipe->prev->pipe->fd_in > 2)
-			close(pipe->prev->pipe->fd_in);
-		if (pipe->prev->pipe->fd_out > 2)
-			close(pipe->prev->pipe->fd_out);
+		close_prev_pipes(pipe);
 		close_pipes(pipe->pipe);
 	}
 	else
 	{
 		dup2(pipe->pipe->fd_out, STDOUT_FILENO);
 		close_prev_pipes(pipe);
-		if (pipe->pipe->fd_in > 2)
-			close(pipe->pipe->fd_in);
-		if (pipe->pipe->fd_out > 2)
-			close(pipe->pipe->fd_out);
+		close_pipes(pipe->pipe);
 	}
 }
 
