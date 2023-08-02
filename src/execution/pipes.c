@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/25 17:13:30 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/02 08:54:39 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ t_pipe	*prev_pipe(t_cmd *cmd)
 
 void	close_pipes(t_pipe *pipe)
 {
+	if (!pipe)
+		return ;
 	if (pipe->fd_in > 2)
 	{
 		close(pipe->fd_in);

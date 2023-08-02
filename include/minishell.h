@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 07:26:48 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 13:27:27 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/02 11:14:52 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -452,6 +452,7 @@ char					*get_cwd(void);
 
 /// tokenizer functions
 
+void					write_syn_errors2(char *str, int32_t i);
 void					write_syntax_error(char *msg);
 t_token					*add_cmd_parenthese(t_token *token, t_cmd *parent);
 t_cmd_seq				get_sequence_type(t_token *token);
