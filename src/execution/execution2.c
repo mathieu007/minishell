@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/27 08:40:20 by math             ###   ########.fr       */
+/*   Updated: 2023/08/01 20:23:17 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int32_t	build_cmd(t_cmd *cmd)
 	t_process	*proc;
 
 	proc = get_process();
+	if (proc->signal == SIGINT)
+		return (-1);
 	proc->errnum = 0;
 	if (!cmd->args)
 	{
@@ -48,6 +50,8 @@ int32_t	build_cmd(t_cmd *cmd)
 			return (proc->errnum);
 		if (cmd->has_redirection)
 			create_fd_redir(cmd, cmd->next);
+		if (proc->signal == SIGINT)
+			return (-1);
 		return (proc->errnum);
 	}
 	return (proc->errnum);
@@ -97,7 +101,7 @@ int32_t	dispatch_command(t_cmd *cmd, bool is_in_child_process)
 		proc->errnum = exec_logical_or(cmd);
 	else if (cmd->type == CMD_PARENTHESES)
 		proc->errnum = exec_subshell(cmd);
-	else if (cmd->type == CMD)
+	else if (cmd->type == CMD && proc->signal == 0)
 	{
 		proc->errnum = exec_command(cmd, is_in_child_process);
 		proc->last_errnum = proc->errnum;

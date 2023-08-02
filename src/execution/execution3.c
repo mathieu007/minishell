@@ -6,7 +6,7 @@
 /*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/07/27 08:40:20 by math             ###   ########.fr       */
+/*   Updated: 2023/08/01 19:05:27 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	reset_cmd(void)
 	proc->tokens = NULL;
 	proc->cmds = NULL;
 	proc->last_cmd = NULL;
+	proc->signal = 0;
 	proc->last_errnum = proc->errnum;
 	proc->tokens = NULL;
 	proc->execution = EXEC_END;

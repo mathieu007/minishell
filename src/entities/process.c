@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 11:07:41 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 18:47:25 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,9 @@ inline t_process	*get_process(void)
 
 char	*copy_path(char *program_path, char *buffer, char *prog_name)
 {
-	char			*copy;
-	int32_t			len;
-	char			*path;
+	char	*path;
 
-	copy = buffer;
 	path = NULL;
-	len = ft_strlen(buffer);
 	if (!prog_name || ft_strisempty(prog_name))
 		path = get_shell_path("./bin/minishell");
 	if (!path)
