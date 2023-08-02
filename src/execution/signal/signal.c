@@ -12,6 +12,14 @@
 
 #include "minishell.h"
 
+void	print_sigint(void)
+{
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
 void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	t_process	*proc;
@@ -32,12 +40,7 @@ void	sig_handler(int sig, siginfo_t *siginfo, void *context)
 		proc->errnum = 130;
 	}
 	else if (siginfo->si_signo == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+		print_sigint();
 	else if (siginfo->si_signo == SIGTERM)
 		proc->signal = SIGTERM;
 }
