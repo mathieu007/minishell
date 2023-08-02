@@ -127,6 +127,7 @@ src/tokenizer/token_space_quotes2.c	\
 src/tokenizer/tokenize.c	\
 src/tokenizer/tokenize2.c	\
 src/tokenizer/tokenize3.c	\
+src/tokenizer/syntax.c \
 
 
 OBJECTS		 = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
