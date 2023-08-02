@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_signal.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 14:52:20 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 19:09:37 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	sig_child_readline_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
+	proc->signal = siginfo->si_signo;
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_HEREDOC
 			|| proc->execution == EXEC_CONTINUATION))
 	{
@@ -51,6 +52,7 @@ void	sig_child_handler(int sig, siginfo_t *siginfo, void *context)
 	(void)context;
 	(void)sig;
 	proc = get_process();
+	proc->signal = siginfo->si_signo;
 	if (siginfo->si_signo == SIGINT && (proc->execution == EXEC_CAT
 			|| proc->execution == EXEC_SLEEP))
 	{

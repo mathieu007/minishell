@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 15:55:56 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/02 07:46:38 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int32_t	exec_logical_or(t_cmd *or_cmd)
 	{
 		child = or_cmd->child;
 		type = child->type;
+		if (proc->signal == SIGINT)
+			return (proc->errnum);
 		if (proc->errnum > 0 && (type == CMD_PARENTHESES || type == CMD))
 			proc->errnum = dispatch_command(child, false);
 		else if (proc->errnum > 0)

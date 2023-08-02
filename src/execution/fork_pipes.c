@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 15:28:56 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 20:37:16 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ t_cmd	*fork_first_child(t_cmd *pipe)
 	cmd = pipe->child;
 	pipe_cmd(pipe);
 	proc = get_process();
-	proc->errnum = build_cmd(cmd);
-	if (proc->errnum == -1)
+	if (build_cmd(cmd) == -1)
 		return (close_prev_pipes(pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
@@ -48,8 +47,7 @@ t_cmd	*fork_last_child(t_cmd *pipe)
 
 	cmd = pipe->child;
 	proc = get_process();
-	proc->errnum = build_cmd(cmd);
-	if (proc->errnum == -1)
+	if (build_cmd(cmd) == -1)
 		return (close_prev_pipes(pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();
@@ -99,8 +97,7 @@ t_cmd	*fork_middle_child(t_cmd *pipe)
 	cmd = pipe->child;
 	pipe_cmd(pipe);
 	proc = get_process();
-	proc->errnum = build_cmd(cmd);
-	if (proc->errnum == -1)
+	if (build_cmd(cmd) == -1)
 		return (close_prev_pipes(pipe), pipe->next);
 	setup_child_signal_handlers(cmd);
 	pid = ft_fork();

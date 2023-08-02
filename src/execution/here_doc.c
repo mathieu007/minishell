@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: math <math@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 14:35:41 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/01 20:19:42 by math             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static bool	is_valid_line(char *line, const char *delimiter,
 	if (line == NULL)
 	{
 		ft_printf("warning: here-document delimited by"
-			" end-of-file (wanted `%s')\n", delimiter);
+			" end-of-file (wanted `%s')\n",
+			delimiter);
 		return (false);
 	}
 	if (ft_strncmp(line, delimiter, delimiter_len) == 0
