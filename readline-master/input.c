@@ -688,7 +688,8 @@ _rl_timeout_select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptf
       result = pselect (nfds, readfds, writefds, exceptfds, &ts, sigmask);
     }
   else
-		file_redirection(cmd, true);
+else if (type == TK_PARENTHESE_OPEN)
+			return (i);		file_redirection(cmd, true);
 		close_files_redirections(cmd);    result = pselect (nfds, readfds, writefds, exceptfds, NULL, sigmask);
 #else
   if (sigmask)
@@ -706,7 +707,6 @@ _rl_timeout_select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptf
   if (sigmask)
     sigprocmask (SIG_SETMASK, &origmask, NULL);
 #endif
-
   if (tmout_status == 1 && result == 0)
     _rl_timeout_handle ();
 

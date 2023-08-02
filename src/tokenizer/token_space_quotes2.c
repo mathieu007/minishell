@@ -6,7 +6,7 @@
 /*   By: mroy <mroy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 07:02:30 by math              #+#    #+#             */
-/*   Updated: 2023/08/01 07:37:51 by mroy             ###   ########.fr       */
+/*   Updated: 2023/08/02 12:11:57 by mroy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,21 @@ t_token	*space_quotes_tokenizer(t_token *parent)
 	int32_t			i;
 	t_token_type	type;
 	int32_t			t_len;
-	char			*str;
 
 	i = 0;
-	str = parent->str;
-	if (!str)
+	if (!parent->str)
 		return (NULL);
 	add_tk("", TK_START, 0, parent);
-	while (str[i])
+	while (parent->str[i])
 	{
-		type = get_token_type(&str[i]);
-		t_len = get_token_len(&str[i], type);
+		type = get_token_type(&parent->str[i]);
+		t_len = get_token_len(&parent->str[i], type);
 		if (type == TK_SINGLEQUOTE)
-			i = add_sgl_quote_token(str, i, parent);
+			i = add_sgl_quote_token(parent->str, i, parent);
 		else if (type == TK_DOUBLEQUOTE)
-			i = add_dbl_quote_token(str, i, parent);
+			i = add_dbl_quote_token(parent->str, i, parent);
 		else if (type == TK_SPACE)
-			i = add_token_space(str, i, parent);
+			i = add_token_space(parent->str, i, parent);
 		else
 			i += t_len;
 	}
